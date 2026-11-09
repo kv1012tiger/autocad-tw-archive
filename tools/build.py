@@ -130,7 +130,6 @@ def write_home(boards, by_board):
                 "e": s["icon"],
                 "sub": s["tagline"],
                 "url": s["url"],
-                "locked": bool(s.get("locked")),
                 "topics": [topic_card(b["id"], m) for m in metas if m.get("sub") == s["id"]],
             }
             for s in b.get("subs", [])

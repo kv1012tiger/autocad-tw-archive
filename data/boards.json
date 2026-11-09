@@ -95,16 +95,14 @@
         "name": "功能分享區",
         "icon": "🔧",
         "tagline": "功能使用教學及說明",
-        "url": "https://www.autocad-tw.com/f7-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f7-forum/"
       },
       {
         "id": "f4",
         "name": "資源分享區",
         "icon": "📦",
         "tagline": "技術文件及說明手冊下載",
-        "url": "https://www.autocad-tw.com/f4-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f4-forum/"
       },
       {
         "id": "f43",
@@ -239,16 +237,14 @@
         "name": "功能分享區",
         "icon": "🔧",
         "tagline": "功能使用教學及說明",
-        "url": "https://www.autocad-tw.com/f28-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f28-forum/"
       },
       {
         "id": "f17",
         "name": "資源分享區",
         "icon": "📦",
         "tagline": "功能教學及相關檔案下載",
-        "url": "https://www.autocad-tw.com/f17-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f17-forum/"
       },
       {
         "id": "f57",
@@ -368,8 +364,7 @@
         "name": "影音專區",
         "icon": "🎬",
         "tagline": "影音教學分享",
-        "url": "https://www.autocad-tw.com/f41-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f41-forum/"
       }
     ]
   },
@@ -412,16 +407,14 @@
         "name": "功能分享區",
         "icon": "🔧",
         "tagline": "功能使用教學及說明",
-        "url": "https://www.autocad-tw.com/f69-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f69-forum/"
       },
       {
         "id": "f40",
         "name": "程式分享區",
         "icon": "💻",
         "tagline": "程式使用教學及說明",
-        "url": "https://www.autocad-tw.com/f40-forum/",
-        "locked": true
+        "url": "https://www.autocad-tw.com/f40-forum/"
       },
       {
         "id": "f70",
