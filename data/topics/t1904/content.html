@@ -1,0 +1,24 @@
+<p>我使用AUTOCAD繪圖</p>
+<p>我在B圖中貼附入A圖作為我的外部參考</p>
+<p>之後我在B圖開著的情況下修改了A圖</p>
+<p>修改好存檔</p>
+<p>此時B圖右下角就跳出&quot;外部參考檔案已變更&quot;</p>
+<p>我就點進去外部參考管理員</p>
+<p>然後選了A圖的外部參考</p>
+<p>再點右邊的&quot;重新載入&quot;</p>
+<p>此時AUTOCAD主畫面下方的指令列就說</p>
+<p>&quot;找不到符合的外部參考名稱。&quot;</p>
+<p>可是我路徑沒動</p>
+<p>兩個檔案都在原來位置</p>
+<p>但我把B圖關掉再打開</p>
+<p>就有反映出A圖修正的位置</p>
+<p>可是在外部參考管理員中不論做什麼他都說</p>
+<p>&quot;找不到符合的外部參考名稱。&quot;</p>
+<p>到底是為什麼勒</p>
+<p>快被這問題搞瘋了</p>
+<p>研判你所使用的AutoCAD版本為2004或2005版本，由於參考的 A圖檔名 為 XREF-平面，而從2004版本開始增加了 貼附外部參考的通知，但是在2004版本中有一個明顯的BUG，就是參考名稱不能有&quot;-&quot;(負號符號)，這樣會造成 &quot;找不到符合的外部參考名稱&quot;，而2002以前的版本沒有此問題，從2006以後的版本也已克服這個問題(BUG)。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>如果你必須使用2004版本來工作的話，建議你在儲存圖檔命名時，盡量避免圖檔名稱中有 &quot;-&quot;(負號符號)，而既有的圖檔可以使用 更名 的方式來解決，這樣一來以後就可以找的到外部參考，並及時更新A圖的圖面更新。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/KkbSJiRk8ig" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>※貼附外部參考的通知：</p>
+<p>在外部參考貼附到圖面後，應用程式視窗的右下角 (狀態列匣) 將顯示一個外部參考圖示。</p>

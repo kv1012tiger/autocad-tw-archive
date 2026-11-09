@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D 對齊-3DALIGN | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad3d">← 回3D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#5ef0e0;--g1:#6ff5e6;--g2:#0e8f9a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🦎</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦕</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦅</b></i></span></div>
+    <span class="topic-badge">🏢 3D 討論島</span>
+    <h1 class="topic-title">🧊 3D 對齊-3DALIGN</h1>
+    <p class="topic-tagline">3D建模時關於模型的對齊有很多方式，除了旋轉UCS調整工作平面或是3D旋轉等…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-08-04</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>3D建模時關於模型的對齊有很多方式，除了旋轉UCS調整工作平面或是3D旋轉等方式，這裡AutoCAD還提供了一種對齊方式供各位參考，並且不同的版本對齊方式也不太一樣!</p>
+<p>AutoCAD 2007之後的版本在 3D 中，使用 3DALIGN 指令指定最多三個點來定義來源平面，然後指定最多三個點來定義目標平面。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>1.物件上的第一個來源點 (稱為基準點) 始終被移至第一個目標點。</p>
+<p>2.指定第二個來源點或目標點將旋轉所選取的物件。</p>
+<p>3.來源或目標中的第三個點會導致所選取物件的進一步旋轉。</p>
+<p>影片展示(建議使用高畫質HQ播放較佳)：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/8zSK8__TTdU" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>PS:如果不習慣使用 3DALIGN 指令，在AutoCAD 2007以上版本你仍然可以使用 ALIGN 指令來進行對齊!!</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t21423/index.html">← AutoCAD 3D 卡比獸建模步驟</a>
+    <a class="btn-ghost" href="../t98/index.html">輪廓 SOLPROF 指令介紹 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t3684-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

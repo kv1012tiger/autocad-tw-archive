@@ -1,0 +1,21 @@
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/nK9g_1otOLM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/HybMkGBjyXw" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=HybMkGBjyXw" target="_blank" rel="noopener">https://www.youtube.com/watch?v=HybMkGBjyXw</a></p>
+<p>--------------------------------------------------------------------</p>
+<p>FILEDIA 系統變數 &gt;&gt; 抑制檔案導覽對話方塊的顯示。</p>
+<p>&lt;0&gt; 不顯示對話方塊。</p>
+<p>&lt;1&gt; 顯示對話方塊。</p>
+<p>--------------------------------------------------------------------</p>
+<p>補充說明：</p>
+<p>1.把系統變數 FILEDIA 設為 0 ,在開啟圖檔或另存新檔就不顯示對話方塊，而變成指令行方式。</p>
+<p>指令: FILEDIA</p>
+<p>輸入 FILEDIA 的新值 &lt;1&gt;: 0</p>
+<p>指令: OPEN</p>
+<p>指令:輸入欲開啟的圖檔名稱 &lt;.&gt;:</p>
+<p>指令: _saveas</p>
+<p>目前的檔案格式: AutoCAD 2000(LT2000) 圖面</p>
+<p>輸入檔案格式 [2000(LT2000)/2004/標準(S)/DXF/樣板(T)] :</p>
+<p>2.把系統變數 FILEDIA 設為 1 (初始值),在開啟圖檔或另存新檔就會顯示對話方塊。</p>
+<p>指令: FILEDIA</p>
+<p>輸入 FILEDIA 的新值 &lt;0&gt;: 1</p>
+<p>PS:研判這是程式的bug之一，也可能有人誤改了系統變數，或是你在CAD有執行某些外掛的LISP，也有可能執行了某些腳本檔，這些程式寫的不是那麼完整，而程式把系統變數 FILEDIA 改了，卻忘了將系統變數 FILEDIA 回副為初始值了。</p>

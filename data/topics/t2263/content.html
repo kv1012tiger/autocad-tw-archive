@@ -1,0 +1,11 @@
+<p>我是autocad R14及 R2000版本</p>
+<p>畫完橢圓後想炸開但炸不開</p>
+<p>橢圓物件是無法炸開的，一般最快的方式是使用 AutoLISP程式來轉換處理，但若沒有程式又無程式基礎，倒是可以使用一個小技巧來達到 橢圓轉弧(聚合線) 的效果喔!</p>
+<p>方法一:</p>
+<p>1.請將 PELLIPSE系統變數 設定為 1 ，建立聚合線表現法的橢圓。</p>
+<p>2.重新畫一次橢圓，這樣就可以分解炸開了。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/64XMkPMP5w0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=64XMkPMP5w0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=64XMkPMP5w0</a></p>
+<p>方法二(更正):</p>
+<p>輸入WMFOUT指令 &gt;&gt; 選擇橢圓(匯出為WMF) &gt;&gt; 輸入WMFIN指令 &gt;&gt; 選擇WMF &gt;&gt; 插入後即可分解。</p>
+<p>謝謝 sai 熱心測試回報狀況。</p>

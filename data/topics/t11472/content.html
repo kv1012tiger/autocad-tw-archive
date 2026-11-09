@@ -1,0 +1,76 @@
+<img src="images/01.png" alt="" loading="lazy">
+<p>當在傳輸交流DWG圖檔時，我們必須提供對方圖檔相關聯的檔案（如:字體檔及大字體檔），對方才可以正常顯示圖面中所有文字內容，雖然可以透過<b>「電子傳送」ETRANSMIT指令</b>，自動將DWG圖檔所有字體檔打包成ZIP格式檔，連同DWG圖檔一併提供給對方，但有了字體檔使用者本身還是必須手動方式，放置到<b>AutoCAD</b>系統預設的字型支援路徑中，這樣開啟DWG圖檔才能正確找到字體顯示文字內容。</p>
+<p><b>AutoCAD</b>一直以來沒有自動指定替代<b>「中文大字體檔(SHX)」</b>功能，簡單說就是打開DWG圖檔後，圖面中若找不到的中文大字體，可透過介面設定以<b>「chineset.shx」</b>大字體暫時替換。目前使用者依預設當找不到中文大字體時，螢幕畫面會出現「替換字體」對話方塊，需以手動方式逐一選用<b>「替代字體檔」</b>，通常選用<b>「chineset.shx」</b>大字體暫時替換。</p>
+<p><b>註:</b>這邊的「<b>暫時替換」</b>意思是說，在目前圖面中暫時顯示正確文字內容而已，既有的文字型式大字體並不會替換，也就是說下次關閉AutoCAD後，再開啟圖檔或不同電腦開啟仍然需要手動方式選用<b>「替代字體檔」</b>。</p>
+<p>所以目前業界選用<b>「chineset.shx」</b>大字體方式千其百種，在我的工作經歷及教學過程也提到了不少方式，但是截至目前為止AutoCAD仍然沒有一個簡單又有效率的方式，在這裡特別整理出心得與解決方法供大家參考，希望能對各界朋友在工作中能夠順利的解決替代大字體問題。</p>
+<div class="section-title">字體檔概述：</div>
+<p>關於 DWG 圖檔中使用的文字字體，可以分別選用 Windows「TrueType字體」或 AutoCAD「SHX字體」這二種。</p>
+<p><b>1、TrueType字體：</b>使用者在 DWG 圖檔中比較常用的為「細明體」及「標楷體」</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>TrueType字體優點可以同時顯示「英文/數字/中文」，缺點若是圖面中大量使用相當耗資源，會造成開圖及改圖延遲緩慢等狀況。當您使用特殊TrueType字體（如:華康中黑體、全真中圓體等其他字體），在其他的使用者電腦中若沒有這些特殊字體，系統將自動使預設字體替換。</p>
+<p>註:選用「TrueType字體」時，無法選擇大字體。</p>
+<p><b>2、SHX字體：</b>使用者在 DWG 圖檔中比較常用的依照預設為「txt字體」及「chineset大字體」這二種</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>txt（字體檔）主要用於顯示「英文/數字」，chineset（大字體檔）則用來顯示「繁體中文」，一般「文字型式」使用「SHX字體」及「SHX大字體」組合，優點可以有效降低資源消耗，開圖及改圖不會有延遲緩慢等狀況。若是使用特殊SHX大字體（如:lsp.shx、china.shx等其他大字體），在其他的使用者電腦中若沒有這些特殊大字體，當開啟DWG圖檔時系統將會出現「替換字體」對話方塊，使用者需手動選擇替換大字體。</p>
+<p>註:通常在亞洲使用SHX字體均需選用「大字體檔」，並依照不同版本語系選用不同的大字體檔（如:簡體中文字體gbcbig.shx 及 日文字體bigfont.shx 等其他字體）。</p>
+<div class="section-title">替代字體檔說明：</div>
+<p>AutoCAD目前提供二種方式，依照不同的「字體」有不同的替代方法。</p>
+<p><b>1、「替代字體檔」FONTALT系統變數：</b>這個功能目的在自動替代電腦找不到的字體（TrueType字體及SHX字體），系統預設字體為 simplex(SHX字體)。</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>若是DWG圖檔中TrueType字體的文字字串內容為「英文/數字/中文」，多行文字(MTEXT)「英文/數字」部分會使用simplex.shx替代字體，「中文」部分會使用Windows中一個類似字體替換（如:細明體），單行文字(TEXT)「英文/數字」部分會使用simplex.shx替代字體，「中文」部分無法使用字體替換TrueType字體，文字內容則會以問號顯示。</p>
+<p>註:FONTALT系統變數僅處理透過 MTEXT指令建立的文字。</p>
+<p><b>二、「字體對映檔」FONTMAP系統變數：</b>這個功能目的在於DWG圖檔關於中文的大字體檔替代</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>使用者可透過記事本開啟 acad.fmp（字體對映檔），加入對映行內容語法（lsp;chineset.shx），優點日後當電腦找不到的特殊SHX大字體（如:lsp.shx），會自動使用 chineset（大字體檔）替代，螢幕畫面不會出現「替換字體」對話方塊。</p>
+<p>缺點若有五種以上大字體找不到，使用者本身需要自行逐一加入對映行內容語法，需要先開起DWG圖檔查詢找不到的特殊SHX大字體名稱。</p>
+<div class="section-title">替代大字體解決方案：</div>
+<p><b>2、新增大字體（@chineset.shx）</b></p>
+<p>將預設的 chineset.shx（大字體檔），複製後在更名為「@chineset.shx」，目的在於日後開起DWG圖檔時找不到大字體檔，螢幕畫面出現「替換字體」對話方塊，利用檔名名稱排序特性，@chineset.shx大字體檔會置頂為第一個顯示，使用者只需要連續點選「確定」按鈕，不用花時間選用預設「chineset.shx」。</p>
+<img src="images/06.png" alt="" loading="lazy">
+<p>chineset.shx大字體檔位置:</p>
+<p>C:\Program Files\AutoCAD *版本*\fonts（autocad 2011 以下版本）</p>
+<p>C:\program files\autodesk\autocad 2012 - traditional chinese\fonts（autocad 2012 版本）</p>
+<p>C:\program files\autodesk\autocad *版本*\fonts（autocad 2013 以上版本）</p>
+<p><b>影片操作：</b></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/QftOUbXZswY" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>二、字體對映檔（FMP）</b></p>
+<p>字體對映檔（FMP）為字體及其替換字體的清單。找不到圖面中使用的字體（SHX）時，會使用「字體對映檔」將缺少的字體替換為其他字體。請注意不是自動置換字體而是暫時替換取代字體。</p>
+<p>字體對映檔位置:</p>
+<p>XP系統： C:\Documents and Settings\使用者帳號\Application Data\Autodesk\AutoCAD 版本\版本代號\cht\support\acad.fmp</p>
+<p>Win7以上系統： C:\Users\使用者帳號\appdata\roaming\autodesk\autocad 版本\版本代號\cht\support\acad.fmp</p>
+<p><b>影片操作：</b></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/ueh0hG4mJKg" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>字體對映檔相關文章：</b></p>
+<p><a href="https://www.autocad-tw.com/t110-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t110-topic</a></p>
+<p><b>三、開發程式（chinesetshx.lsp）</b></p>
+<p>透過AutoLISP開發程式，將目前的DWG圖檔的所有文字型式的大字體，全部變更為「chineset.shx」大字體，日後不同的電腦或AutoCAD版本開啟DWG圖檔，都不需要再選用替換大字體。</p>
+<img src="images/07.png" alt="" loading="lazy">
+<p>註:若是公司自己的圖檔有字型檔規範，建議將原始DWG圖檔另存後再執行程式，若為對方的圖檔則可以直接執行程式轉換（若有必要可以備份對方的原始DWG圖檔）。</p>
+<p><b>影片操作：</b></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/L0PD_QtKRYQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>四、自動替換大字型檔（CorelCAD）</b></p>
+<p>1.使用自動選用替代大字型檔，透過「工具(T)」功能表 →「選項」→ 螢幕畫面中會出現「選項」視窗</p>
+<p>2.「檔案位置(F)」→「工程圖支援」→「替換字型檔案」→「大字型」→「瀏覽」</p>
+<p>3.請選擇預設的 chineset.shx 大字型檔 →「確定」，這樣日後 CorelCAD 將自動幫您選用替代大字型檔</p>
+<p>4.確認指定好「大字型」，下次開圖就不再會出現 &quot;找不到字型檔，請指定替代字型檔&quot; 訊息</p>
+<img src="images/08.png" alt="" loading="lazy">
+<p><b>影片操作：</b></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/08uvGkwqgwg" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>2019.09.05 補充: 如果圖面沒有顯示文字</p>
+<p>1.一般輸入 STYLE 可以查看每個字體型式名稱，有黃色 ! 驚嘆號表示電腦中沒有此SHX字體，使用者需要手動指定替代字體(指定預設字體 chineset.shx)</p>
+<img src="images/09.png" alt="" loading="lazy">
+<p>2.如果使用者勾選&quot;永遠執行我目前的選擇&quot;，並選擇「忽略缺少的SHX檔並繼續」</p>
+<img src="images/10.png" alt="" loading="lazy">
+<p>3.這樣下次遇到需要替換「SHX字體」的圖檔時，AutoCAD就不會再提示「替換SHX字體」，這樣會造成看不到圖面文字的問題</p>
+<img src="images/11.png" alt="" loading="lazy">
+<p><b>解決方法：</b>只要再將訊息提示開啟即可顯示「替換SHX字體」訊息</p>
+<p>「選項」→「系統」頁籤 → 一般選項「隱藏訊息設定」→ 打勾「缺少SHX檔」</p>
+<img src="images/12.png" alt="" loading="lazy">
+<p><b>👇相關文章討論：</b></p>
+<p><a href="https://www.autocad-tw.com/t18145-topic" target="_blank" rel="noopener">[互助]字體檔分享交流~</a></p>
+<p><a href="https://www.autocad-tw.com/t31-topic" target="_blank" rel="noopener">「問題」範例 AUTOCAD 2006...找不到字型檔</a></p>
+<p><a href="https://www.autocad-tw.com/t2280-topic" target="_blank" rel="noopener">[知識]TrueType字體轉SHX字體</a></p>
+<p><a href="https://www.autocad-tw.com/t3260-topic" target="_blank" rel="noopener">[討論]請問如何讓AUTOCAD開檔的速度加快及字型可以自動化!</a></p>
+<p><a href="https://www.autocad-tw.com/t3380-topic" target="_blank" rel="noopener">[已解決]關於開啟圖面時 CHINA.SHX 字型找不到,而要手動指定成 chineset.shx 字型檔問題的回覆</a></p>
+<p><a href="https://www.autocad-tw.com/t3763-topic" target="_blank" rel="noopener">[知識]AUTOCAD指定文字型式</a></p>
+<p><a href="https://www.autocad-tw.com/t19911-topic" target="_blank" rel="noopener">[已解決]無法選擇字型</a></p>

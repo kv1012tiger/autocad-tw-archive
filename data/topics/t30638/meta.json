@@ -1,0 +1,12 @@
+{
+  "id": "t30638",
+  "board": "realtime",
+  "order": 7,
+  "icon": "📘",
+  "title": "檔案總管增加 AutoCAD 唯讀開啟",
+  "tagline": "1. 執行 \"Install_DWG_Open_ReadOnly.bat\"",
+  "tags": [],
+  "author": "AutoCAD顧問",
+  "posted_at": "2026-06-05",
+  "source_url": "https://www.autocad-tw.com/t30638-topic"
+}
