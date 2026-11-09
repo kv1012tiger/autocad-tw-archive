@@ -1,9 +1,98 @@
 [
   {
+    "id": "realtime",
+    "name": "即時動態群島",
+    "icon": "📰",
+    "tagline": "CAD 問題即時討論、好康資源不錯過",
+    "critter": "🐇",
+    "order": 1
+  },
+  {
+    "id": "career",
+    "name": "職場交流群島",
+    "icon": "💼",
+    "tagline": "職場經驗分享、最新職缺情報站",
+    "critter": "🦉",
+    "order": 2
+  },
+  {
+    "id": "courses",
+    "name": "光碟課程群島",
+    "icon": "💿",
+    "tagline": "AutoCAD 光碟教材及線上課程資源",
+    "critter": "🐧",
+    "order": 3
+  },
+  {
+    "id": "cad2d",
+    "name": "2D討論群島",
+    "icon": "📐",
+    "tagline": "2D 軟體操作、正確觀念教學分享",
+    "critter": "🐜",
+    "order": 4
+  },
+  {
+    "id": "cad3d",
+    "name": "3D討論群島",
+    "icon": "🧊",
+    "tagline": "3D 建模技巧、實作過程展示分享",
+    "critter": "🦎",
+    "order": 5
+  },
+  {
+    "id": "advanced",
+    "name": "進階討論群島",
+    "icon": "⚙️",
+    "tagline": "介面客製、系統規劃與 LISP 程式討論",
+    "critter": "🦊",
+    "order": 6
+  },
+  {
+    "id": "announce",
+    "name": "最新公告群島",
+    "icon": "📯",
+    "tagline": "論壇最新公告與重要訊息發佈",
+    "critter": "🦜",
+    "order": 7
+  },
+  {
     "id": "f44",
     "name": "專案報告群島",
     "icon": "🗺️",
     "tagline": "AutoCAD 綜合應用教學，LISP、圖塊、巨集通通有",
-    "order": 1
+    "critter": "🐒",
+    "order": 8
+  },
+  {
+    "id": "member",
+    "name": "會員留言群島",
+    "icon": "💬",
+    "tagline": "會員留言、帳號權限問題交流",
+    "critter": "🐬",
+    "order": 9
+  },
+  {
+    "id": "videos",
+    "name": "影片教學群島",
+    "icon": "🎬",
+    "tagline": "實務運用教學短片、步驟示範",
+    "critter": "🦭",
+    "order": 10
+  },
+  {
+    "id": "quiz",
+    "name": "測驗練習群島",
+    "icon": "📝",
+    "tagline": "2D/3D 範例練習與影片教學",
+    "critter": "🐿️",
+    "order": 11
+  },
+  {
+    "id": "beginner",
+    "name": "初階入門群島",
+    "icon": "🌱",
+    "tagline": "基礎觀念討論、新手學習心得分享",
+    "critter": "🐣",
+    "order": 12
   }
 ]

@@ -113,18 +113,20 @@ def back_pill(href: str, label: str) -> str:
     return f'<a class="back-pill" href="{href}">{label}</a>'
 
 
-def island_html(href: str, icon: str, name: str, meta: str, num: int = None, soon: bool = False, big: bool = False) -> str:
+def island_html(href: str, icon: str, name: str, meta: str, num: int = None, soon: bool = False, big: bool = False, critter: str = None) -> str:
     cls = "island"
     if soon:
         cls += " soon"
     if big:
         cls += " big"
     num_html = f'<div class="num">{num:02d}</div>' if num is not None else ""
+    critter_html = f'<div class="critter">{critter}</div>' if critter else ""
     tag = "a" if href else "div"
     href_attr = f' href="{href}"' if href else ""
     return (
         f'<{tag} class="{cls}"{href_attr}>'
         f'<div class="shell">{num_html}{icon}</div>'
+        f'{critter_html}'
         f'<div class="name">{name}</div>'
         f'<div class="meta">{meta}</div>'
         f'</{tag}>'
@@ -160,7 +162,7 @@ def main():
     for b in boards:
         topic_n = len(topics_by_board.get(b["id"], []))
         board_islands.append(
-            island_html(f'{b["id"]}/index.html', b["icon"], b["name"], f'{topic_n} 篇祕笈', big=True)
+            island_html(f'{b["id"]}/index.html', b["icon"], b["name"], f'{topic_n} 篇祕笈', big=True, critter=b.get("critter"))
         )
     board_islands.append(island_html("", "🔒", "未知群島", "敬請期待", soon=True, big=True))
 
@@ -195,6 +197,7 @@ def main():
                 island_html(
                     f'{meta["id"]}/index.html', meta["icon"], meta["title"],
                     f'{meta["_video_count"]} 支影片', num=idx,
+                    critter=meta.get("critter", board.get("critter")),
                 )
             )
         topic_islands.append(island_html("", "🔒", "下一座島", "敬請期待", soon=True))
