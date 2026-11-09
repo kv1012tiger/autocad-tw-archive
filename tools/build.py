@@ -19,7 +19,7 @@ TOPIC_PAGE = Template("""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>$title | $site_name</title>
-<meta name="theme-color" content="#12061f">
+<meta name="theme-color" content="#053049">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@ TOPIC_PAGE = Template("""<!doctype html>
   </header>
   <section class="t-hero" style="--c:$c;--g1:$g1;--g2:$g2">
     <div class="res-band" aria-hidden="true">$residents</div>
-    <span class="topic-badge">$board_icon $board_name</span>
+    <span class="topic-badge">$board_icon $board_label</span>
     <h1 class="topic-title">$icon $title</h1>
     <p class="topic-tagline">$tagline</p>
     <p class="t-meta">✍ $author · $posted_at</p>
@@ -93,9 +93,31 @@ def load_topics():
     return by_board
 
 
+def topic_card(board_id, m):
+    return {
+        "e": m["icon"],
+        "title": m["title"],
+        "tagline": m["tagline"],
+        "videos": m["_videos"],
+        "href": f'{board_id}/{m["id"]}/index.html',
+    }
+
+
 def write_home(boards, by_board):
     forum = []
     for b in boards:
+        metas = by_board.get(b["id"], [])
+        subs = [
+            {
+                "name": s["name"],
+                "e": s["icon"],
+                "sub": s["tagline"],
+                "url": s["url"],
+                "locked": bool(s.get("locked")),
+                "topics": [topic_card(b["id"], m) for m in metas if m.get("sub") == s["id"]],
+            }
+            for s in b.get("subs", [])
+        ]
         forum.append({
             "id": b["id"],
             "route": b["route"],
@@ -109,16 +131,9 @@ def write_home(boards, by_board):
             "g": b["g"],
             "dc": b["dc"],
             "res": b["res"],
-            "topics": [
-                {
-                    "e": m["icon"],
-                    "title": m["title"],
-                    "tagline": m["tagline"],
-                    "videos": m["_videos"],
-                    "href": f'{b["id"]}/{m["id"]}/index.html',
-                }
-                for m in by_board.get(b["id"], [])
-            ],
+            "topics": [topic_card(b["id"], m) for m in metas if not m.get("sub")],
+            "subs": subs,
+            "total": len(metas),
         })
     template = HOME_TEMPLATE.read_text(encoding="utf-8")
     if template.count(FORUM_MARKER) != 1:
@@ -129,7 +144,11 @@ def write_home(boards, by_board):
 
 def write_topics(board, topics, site_name):
     island_href = f'../../index.html#isle-{board["id"]}'
+    sub_names = {s["id"]: s["name"] for s in board.get("subs", [])}
     for idx, meta in enumerate(topics):
+        label = board["name"]
+        if meta.get("sub"):
+            label += f'・{sub_names[meta["sub"]]}'
         topic_dir = DOCS / board["id"] / meta["id"]
         topic_dir.mkdir(parents=True, exist_ok=True)
 
@@ -166,6 +185,7 @@ def write_topics(board, topics, site_name):
             source_url=html.escape(meta["source_url"], quote=True),
             island_href=island_href,
             board_name=html.escape(board["name"]),
+            board_label=html.escape(label),
             board_icon=board["icon"],
             c=board["c"],
             g1=board["g"][0],

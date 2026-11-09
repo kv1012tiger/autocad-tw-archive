@@ -1,98 +1,641 @@
 [
   {
-    "id": "beginner", "route": 2, "name": "初階入門島", "icon": "🌱", "forum": "初階入門",
+    "id": "beginner",
+    "route": 2,
+    "name": "初階入門島",
+    "icon": "🌱",
+    "forum": "初階入門",
     "url": "https://www.autocad-tw.com/f33-forum/",
     "tagline": "基礎觀念討論、學習心得分享",
     "guide": "基礎觀念從這裡打底，一步一步走，不用怕。",
-    "c": "#b6f28c", "g": ["#c8f59a", "#4fb03a"], "dc": ["🌻", "🍀", "🌷"],
-    "res": [["🐣", "w"], ["🐢", "w"], ["🐤", "f"]]
+    "c": "#b6f28c",
+    "g": [
+      "#c8f59a",
+      "#4fb03a"
+    ],
+    "dc": [
+      "🌻",
+      "🍀",
+      "🌷"
+    ],
+    "res": [
+      [
+        "🐣",
+        "w"
+      ],
+      [
+        "🐢",
+        "w"
+      ],
+      [
+        "🐤",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f42",
+        "name": "認證討論",
+        "icon": "🎓",
+        "tagline": "認證、證照解題討論及解題影片分享",
+        "url": "https://www.autocad-tw.com/f42-forum/"
+      },
+      {
+        "id": "f55",
+        "name": "投票所",
+        "icon": "🙋",
+        "tagline": "歡迎大家來投票，投票完請發表意見",
+        "url": "https://www.autocad-tw.com/f55-forum/"
+      }
+    ]
   },
   {
-    "id": "cad2d", "route": 4, "name": "2D 討論島", "icon": "📐", "forum": "2D討論",
+    "id": "cad2d",
+    "route": 4,
+    "name": "2D 討論島",
+    "icon": "📐",
+    "forum": "2D討論",
     "url": "https://www.autocad-tw.com/f12-forum/",
     "tagline": "軟體操作、正確觀念教學分享",
     "guide": "2D 指令、正確繪圖觀念，都在這座島上討論。",
-    "c": "#7ee081", "g": ["#9be86f", "#2f8f3a"], "dc": ["📏", "📌", "📎"],
-    "res": [["🐌", "w"], ["🦗", "w"], ["🐝", "f"]]
+    "c": "#7ee081",
+    "g": [
+      "#9be86f",
+      "#2f8f3a"
+    ],
+    "dc": [
+      "📏",
+      "📌",
+      "📎"
+    ],
+    "res": [
+      [
+        "🐌",
+        "w"
+      ],
+      [
+        "🦗",
+        "w"
+      ],
+      [
+        "🐝",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f65",
+        "name": "Autodesk 討論區",
+        "icon": "💬",
+        "tagline": "Autodesk 相關軟體討論",
+        "url": "https://www.autocad-tw.com/f65-forum/"
+      },
+      {
+        "id": "f7",
+        "name": "功能分享區",
+        "icon": "🔧",
+        "tagline": "功能使用教學及說明",
+        "url": "https://www.autocad-tw.com/f7-forum/",
+        "locked": true
+      },
+      {
+        "id": "f4",
+        "name": "資源分享區",
+        "icon": "📦",
+        "tagline": "技術文件及說明手冊下載",
+        "url": "https://www.autocad-tw.com/f4-forum/",
+        "locked": true
+      },
+      {
+        "id": "f43",
+        "name": "已解決主題精華區",
+        "icon": "💎",
+        "tagline": "2D 討論區已解決主題分類彙整",
+        "url": "https://www.autocad-tw.com/f43-forum/"
+      },
+      {
+        "id": "f47",
+        "name": "精華區・繪圖運用",
+        "icon": "📐",
+        "tagline": "基礎指令、幾何繪圖觀念技巧、系統變數、圖層運用",
+        "url": "https://www.autocad-tw.com/f47-forum/"
+      },
+      {
+        "id": "f52",
+        "name": "精華區・字型標註",
+        "icon": "🔤",
+        "tagline": "字型、線型、剖面線、標註尺寸",
+        "url": "https://www.autocad-tw.com/f52-forum/"
+      },
+      {
+        "id": "f48",
+        "name": "精華區・圖塊外參",
+        "icon": "🧱",
+        "tagline": "圖塊、外部參考、OLE 物件、工具選項板",
+        "url": "https://www.autocad-tw.com/f48-forum/"
+      },
+      {
+        "id": "f49",
+        "name": "精華區・模型配置",
+        "icon": "📄",
+        "tagline": "模型及配置空間出圖、批次出圖、圖紙集",
+        "url": "https://www.autocad-tw.com/f49-forum/"
+      },
+      {
+        "id": "f50",
+        "name": "精華區・使用介面",
+        "icon": "📱",
+        "tagline": "新舊版本工具指令、新增功能",
+        "url": "https://www.autocad-tw.com/f50-forum/"
+      },
+      {
+        "id": "f51",
+        "name": "精華區・其他相關",
+        "icon": "🧰",
+        "tagline": "Express 工具、Office 應用",
+        "url": "https://www.autocad-tw.com/f51-forum/"
+      }
+    ]
   },
   {
-    "id": "quiz", "route": 6, "name": "測驗練習島", "icon": "📝", "forum": "測驗練習",
+    "id": "quiz",
+    "route": 6,
+    "name": "測驗練習島",
+    "icon": "📝",
+    "forum": "測驗練習",
     "url": "https://www.autocad-tw.com/f54-forum/",
     "tagline": "2D 及 3D 範例練習與影片教學",
     "guide": "2D、3D 範例拿來練手，練完再看影片對答案。",
-    "c": "#dcf36a", "g": ["#e4f77a", "#8aa51a"], "dc": ["💯", "🎯", "📚"],
-    "res": [["🐖", "w"], ["🐑", "w"], ["🦉", "f"]]
+    "c": "#dcf36a",
+    "g": [
+      "#e4f77a",
+      "#8aa51a"
+    ],
+    "dc": [
+      "💯",
+      "🎯",
+      "📚"
+    ],
+    "res": [
+      [
+        "🐖",
+        "w"
+      ],
+      [
+        "🐑",
+        "w"
+      ],
+      [
+        "🦉",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f15",
+        "name": "作品展示區",
+        "icon": "🎨",
+        "tagline": "個人作品分享及展示",
+        "url": "https://www.autocad-tw.com/f15-forum/"
+      }
+    ]
   },
   {
-    "id": "cad3d", "route": 8, "name": "3D 討論島", "icon": "🏢", "forum": "3D討論",
+    "id": "cad3d",
+    "route": 8,
+    "name": "3D 討論島",
+    "icon": "🏢",
+    "forum": "3D討論",
     "url": "https://www.autocad-tw.com/f16-forum/",
     "tagline": "軟體操作、建模過程展示分享",
     "guide": "建模流程、3D 操作分享，把平面變成立體。",
-    "c": "#5ef0e0", "g": ["#6ff5e6", "#0e8f9a"], "dc": ["🧱", "🔷", "🏠"],
-    "res": [["🦎", "w"], ["🦕", "w"], ["🦅", "f"]]
+    "c": "#5ef0e0",
+    "g": [
+      "#6ff5e6",
+      "#0e8f9a"
+    ],
+    "dc": [
+      "🧱",
+      "🔷",
+      "🏠"
+    ],
+    "res": [
+      [
+        "🦎",
+        "w"
+      ],
+      [
+        "🦕",
+        "w"
+      ],
+      [
+        "🦅",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f28",
+        "name": "功能分享區",
+        "icon": "🔧",
+        "tagline": "功能使用教學及說明",
+        "url": "https://www.autocad-tw.com/f28-forum/",
+        "locked": true
+      },
+      {
+        "id": "f17",
+        "name": "資源分享區",
+        "icon": "📦",
+        "tagline": "功能教學及相關檔案下載",
+        "url": "https://www.autocad-tw.com/f17-forum/",
+        "locked": true
+      },
+      {
+        "id": "f57",
+        "name": "已解決主題精華區",
+        "icon": "💎",
+        "tagline": "3D 討論區已解決主題分類彙整",
+        "url": "https://www.autocad-tw.com/f57-forum/"
+      },
+      {
+        "id": "f58",
+        "name": "精華區・建模運用",
+        "icon": "🧊",
+        "tagline": "基礎建模指令、繪圖及編輯指令",
+        "url": "https://www.autocad-tw.com/f58-forum/"
+      },
+      {
+        "id": "f59",
+        "name": "精華區・三維空間",
+        "icon": "🧭",
+        "tagline": "UCS 座標、3D 標註及三視圖",
+        "url": "https://www.autocad-tw.com/f59-forum/"
+      },
+      {
+        "id": "f60",
+        "name": "精華區・材質彩現",
+        "icon": "🌈",
+        "tagline": "材質材料、貼圖、燈光及彩現",
+        "url": "https://www.autocad-tw.com/f60-forum/"
+      },
+      {
+        "id": "f61",
+        "name": "精華區・動畫功能",
+        "icon": "🎥",
+        "tagline": "3D 透視、相機及背景路徑規劃",
+        "url": "https://www.autocad-tw.com/f61-forum/"
+      },
+      {
+        "id": "f62",
+        "name": "精華區・其他相關",
+        "icon": "🧰",
+        "tagline": "3D 新舊版本功能、使用介面",
+        "url": "https://www.autocad-tw.com/f62-forum/"
+      }
+    ]
   },
   {
-    "id": "f44", "route": 10, "name": "專案報告島", "icon": "📊", "forum": "專案報告",
+    "id": "f44",
+    "route": 10,
+    "name": "專案報告島",
+    "icon": "📊",
+    "forum": "專案報告",
     "url": "https://www.autocad-tw.com/f44-forum/",
     "tagline": "AutoCAD 綜合應用教學，LISP、圖塊、巨集通通有",
     "guide": "蘋果爸的綜合應用教學：LISP、圖塊、巨集組合技，從這裡開挖。",
-    "c": "#ffb066", "g": ["#ffc078", "#d9661a"], "dc": ["📁", "📌", "🔍"],
-    "res": [["🐒", "w"], ["🦧", "w"], ["🦜", "f"]]
+    "c": "#ffb066",
+    "g": [
+      "#ffc078",
+      "#d9661a"
+    ],
+    "dc": [
+      "📁",
+      "📌",
+      "🔍"
+    ],
+    "res": [
+      [
+        "🐒",
+        "w"
+      ],
+      [
+        "🦧",
+        "w"
+      ],
+      [
+        "🦜",
+        "f"
+      ]
+    ],
+    "subs": []
   },
   {
-    "id": "videos", "route": 12, "name": "影片教學島", "icon": "🎬", "forum": "影片教學",
+    "id": "videos",
+    "route": 12,
+    "name": "影片教學島",
+    "icon": "🎬",
+    "forum": "影片教學",
     "url": "https://www.autocad-tw.com/f29-forum/",
     "tagline": "實務運用教學短片分享",
     "guide": "實務運用教學短片，邊看邊做最快上手。",
-    "c": "#ff86a6", "g": ["#ff9ab5", "#b81e58"], "dc": ["🍿", "🎥", "📺"],
-    "res": [["🐘", "w"], ["🦭", "s"], ["🦋", "f"]]
+    "c": "#ff86a6",
+    "g": [
+      "#ff9ab5",
+      "#b81e58"
+    ],
+    "dc": [
+      "🍿",
+      "🎥",
+      "📺"
+    ],
+    "res": [
+      [
+        "🐘",
+        "w"
+      ],
+      [
+        "🦭",
+        "s"
+      ],
+      [
+        "🦋",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f41",
+        "name": "影音專區",
+        "icon": "🎬",
+        "tagline": "影音教學分享",
+        "url": "https://www.autocad-tw.com/f41-forum/",
+        "locked": true
+      }
+    ]
   },
   {
-    "id": "advanced", "route": 14, "name": "進階討論島", "icon": "💻", "forum": "進階討論",
+    "id": "advanced",
+    "route": 14,
+    "name": "進階討論島",
+    "icon": "💻",
+    "forum": "進階討論",
     "url": "https://www.autocad-tw.com/f38-forum/",
     "tagline": "介面、系統規劃及 LISP 程式討論分享",
     "guide": "介面自訂、系統規劃、LISP 程式，高手都在這裡。",
-    "c": "#a5b8ff", "g": ["#b3c4f0", "#3b4a98"], "dc": ["🔧", "🧩", "💾"],
-    "res": [["🐅", "w"], ["🐆", "w"], ["🦇", "f"]]
+    "c": "#a5b8ff",
+    "g": [
+      "#b3c4f0",
+      "#3b4a98"
+    ],
+    "dc": [
+      "🔧",
+      "🧩",
+      "💾"
+    ],
+    "res": [
+      [
+        "🐅",
+        "w"
+      ],
+      [
+        "🐆",
+        "w"
+      ],
+      [
+        "🦜",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f69",
+        "name": "功能分享區",
+        "icon": "🔧",
+        "tagline": "功能使用教學及說明",
+        "url": "https://www.autocad-tw.com/f69-forum/",
+        "locked": true
+      },
+      {
+        "id": "f40",
+        "name": "程式分享區",
+        "icon": "💻",
+        "tagline": "程式使用教學及說明",
+        "url": "https://www.autocad-tw.com/f40-forum/",
+        "locked": true
+      },
+      {
+        "id": "f70",
+        "name": "已解決主題精華區",
+        "icon": "💎",
+        "tagline": "進階討論區已解決主題分類彙整",
+        "url": "https://www.autocad-tw.com/f70-forum/"
+      }
+    ]
   },
   {
-    "id": "courses", "route": 16, "name": "光碟課程島", "icon": "💿", "forum": "光碟/線上課程",
+    "id": "courses",
+    "route": 16,
+    "name": "光碟課程島",
+    "icon": "💿",
+    "forum": "光碟/線上課程",
     "url": "https://www.autocad-tw.com/f25-forum/",
     "tagline": "AutoCAD 光碟及線上課程版區",
     "guide": "AutoCAD 光碟教材與線上課程，想系統學就來這。",
-    "c": "#d6b4ff", "g": ["#dcbfff", "#7a3fd0"], "dc": ["📀", "🎧", "📖"],
-    "res": [["🐐", "w"], ["🐄", "w"], ["🐦", "f"]]
+    "c": "#d6b4ff",
+    "g": [
+      "#dcbfff",
+      "#7a3fd0"
+    ],
+    "dc": [
+      "📀",
+      "🎧",
+      "📖"
+    ],
+    "res": [
+      [
+        "🐐",
+        "w"
+      ],
+      [
+        "🐄",
+        "w"
+      ],
+      [
+        "🐦",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f72",
+        "name": "課程討論",
+        "icon": "📚",
+        "tagline": "光碟課程及線上課程學習問題討論",
+        "url": "https://www.autocad-tw.com/f72-forum/"
+      }
+    ]
   },
   {
-    "id": "realtime", "route": 18, "name": "即時動態島", "icon": "📰", "forum": "即時動態",
+    "id": "realtime",
+    "route": 18,
+    "name": "即時動態島",
+    "icon": "📰",
+    "forum": "即時動態",
     "url": "https://www.autocad-tw.com/f46-forum/",
     "tagline": "CAD 問題討論及好康分享",
     "guide": "CAD 問題即時討論、好康資訊，最新動態看這裡。",
-    "c": "#ff9a76", "g": ["#ff9470", "#b3261e"], "dc": ["🔔", "⚡", "🌟"],
-    "res": [["🐇", "w"], ["🐕", "w"], ["🐦", "f"]]
+    "c": "#ff9a76",
+    "g": [
+      "#ff9470",
+      "#b3261e"
+    ],
+    "dc": [
+      "🔔",
+      "⚡",
+      "🌟"
+    ],
+    "res": [
+      [
+        "🐇",
+        "w"
+      ],
+      [
+        "🐕",
+        "w"
+      ],
+      [
+        "🐦",
+        "f"
+      ]
+    ],
+    "subs": []
   },
   {
-    "id": "announce", "route": 19, "name": "最新公告島", "icon": "📢", "forum": "最新公告",
+    "id": "announce",
+    "route": 19,
+    "name": "最新公告島",
+    "icon": "📢",
+    "forum": "最新公告",
     "url": "https://www.autocad-tw.com/f14-forum/",
     "tagline": "公告訊息及論壇最新狀態發佈",
     "guide": "論壇公告與最新狀態，第一手消息都貼在這裡。",
-    "c": "#ffe066", "g": ["#ffe878", "#d99a12"], "dc": ["🏁", "🎉", "📌"],
-    "res": [["🐓", "w"], ["🦃", "w"], ["🦜", "f"]]
+    "c": "#ffe066",
+    "g": [
+      "#ffe878",
+      "#d99a12"
+    ],
+    "dc": [
+      "🏁",
+      "🎉",
+      "📌"
+    ],
+    "res": [
+      [
+        "🐓",
+        "w"
+      ],
+      [
+        "🦃",
+        "w"
+      ],
+      [
+        "🦜",
+        "f"
+      ]
+    ],
+    "subs": []
   },
   {
-    "id": "career", "route": 20, "name": "職場交流島", "icon": "💼", "forum": "職場交流",
+    "id": "career",
+    "route": 20,
+    "name": "職場交流島",
+    "icon": "💼",
+    "forum": "職場交流",
     "url": "https://www.autocad-tw.com/f31-forum/",
     "tagline": "職場經驗分享、最新職缺訊息",
     "guide": "職場經驗、最新職缺情報，前輩的過來人心得。",
-    "c": "#7fb0ff", "g": ["#86b6ff", "#2148a8"], "dc": ["☕", "🤝", "📈"],
-    "res": [["🐎", "w"], ["🦫", "w"], ["🦅", "f"]]
+    "c": "#7fb0ff",
+    "g": [
+      "#86b6ff",
+      "#2148a8"
+    ],
+    "dc": [
+      "☕",
+      "🤝",
+      "📈"
+    ],
+    "res": [
+      [
+        "🐎",
+        "w"
+      ],
+      [
+        "🦫",
+        "w"
+      ],
+      [
+        "🦅",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f37",
+        "name": "職缺快遞",
+        "icon": "💼",
+        "tagline": "公司企業徵才資訊",
+        "url": "https://www.autocad-tw.com/f37-forum/"
+      },
+      {
+        "id": "f36",
+        "name": "求職訊息",
+        "icon": "📝",
+        "tagline": "求職應徵資訊",
+        "url": "https://www.autocad-tw.com/f36-forum/"
+      }
+    ]
   },
   {
-    "id": "member", "route": 21, "name": "會員留言島", "icon": "💬", "forum": "會員留言",
+    "id": "member",
+    "route": 21,
+    "name": "會員留言島",
+    "icon": "💬",
+    "forum": "會員留言",
     "url": "https://www.autocad-tw.com/f8-forum/",
     "tagline": "權限及帳號登入問題",
     "guide": "權限與帳號登入問題，留言給蘋果爸就對了。",
-    "c": "#ffa6d0", "g": ["#ffb0d6", "#c93a86"], "dc": ["💌", "📮", "🌸"],
-    "res": [["🐈", "w"], ["🐬", "s"], ["🐦", "f"]]
+    "c": "#ffa6d0",
+    "g": [
+      "#ffb0d6",
+      "#c93a86"
+    ],
+    "dc": [
+      "💌",
+      "📮",
+      "🌸"
+    ],
+    "res": [
+      [
+        "🐈",
+        "w"
+      ],
+      [
+        "🐬",
+        "s"
+      ],
+      [
+        "🐦",
+        "f"
+      ]
+    ],
+    "subs": [
+      {
+        "id": "f5",
+        "name": "註冊/登入問題",
+        "icon": "🔑",
+        "tagline": "完成註冊程序但是無法登入等帳號問題",
+        "url": "https://www.autocad-tw.com/f5-forum/"
+      }
+    ]
   }
 ]
