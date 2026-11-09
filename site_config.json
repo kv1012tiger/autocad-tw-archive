@@ -1,0 +1,16 @@
+{
+  "site_name": "AutoCAD顧問論壇 備份",
+  "site_tagline": "原始論壇 autocad-tw.com 的個人原創文章備份（不含會員回覆）",
+  "github_owner": "kv1012tiger",
+  "github_repo": "REPLACE_WITH_REPO_NAME",
+  "site_url": "https://kv1012tiger.github.io/REPLACE_WITH_REPO_NAME/",
+  "giscus": {
+    "enabled": false,
+    "repo": "kv1012tiger/REPLACE_WITH_REPO_NAME",
+    "repo_id": "",
+    "category": "Comments",
+    "category_id": "",
+    "mapping": "pathname",
+    "theme": "preferred_color_scheme"
+  }
+}
