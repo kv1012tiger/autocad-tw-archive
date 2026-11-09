@@ -22,6 +22,7 @@ PAGE_SHELL = Template("""<!doctype html>
 <div class="wrap">
 $body
 </div>
+<script src="$js_path"></script>
 </body>
 </html>
 """)
@@ -166,6 +167,7 @@ def main():
     home_html = PAGE_SHELL.substitute(
         title=config["site_name"],
         css_path="assets/css/style.css",
+        js_path="assets/js/map-path.js",
         body=HOME_BODY.substitute(
             topbar=TOPBAR.substitute(home_href="index.html", site_name=config["site_name"], back_pill=""),
             site_eyebrow=config["site_eyebrow"],
@@ -200,6 +202,7 @@ def main():
         board_html = PAGE_SHELL.substitute(
             title=f'{board["name"]} | {config["site_name"]}',
             css_path="../assets/css/style.css",
+            js_path="../assets/js/map-path.js",
             body=BOARD_BODY.substitute(
                 topbar=TOPBAR.substitute(
                     home_href="../index.html", site_name=config["site_name"],
@@ -245,6 +248,7 @@ def main():
             topic_html = PAGE_SHELL.substitute(
                 title=f'{meta["title"]} | {config["site_name"]}',
                 css_path="../../assets/css/style.css",
+                js_path="../../assets/js/map-path.js",
                 body=TOPIC_BODY.substitute(
                     topbar=TOPBAR.substitute(
                         home_href="../../index.html", site_name=config["site_name"],

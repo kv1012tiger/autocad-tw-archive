@@ -104,16 +104,17 @@ a{color:inherit;}
 /* ---------- island map ---------- */
 .map{
   position:relative;margin-top:28px;padding:30px 12px;
-  border-radius:28px;
+  border-radius:28px;overflow:hidden;
   background:
     repeating-linear-gradient(100deg, rgba(255,255,255,.035) 0 2px, transparent 2px 70px),
     linear-gradient(180deg, rgba(5,45,60,.6), rgba(4,30,42,.75));
   border:1px solid rgba(255,255,255,.08);
 }
-.map-hint{text-align:center;font-size:.8rem;color:var(--dim);margin-bottom:18px;}
+.map-hint{text-align:center;font-size:.8rem;color:var(--dim);margin-bottom:18px;position:relative;z-index:1;}
+.map-path-svg{position:absolute;top:0;left:0;z-index:0;pointer-events:none;}
 .map-grid{
   display:flex;flex-wrap:wrap;justify-content:center;
-  gap:30px 18px;
+  gap:30px 18px;position:relative;z-index:1;
 }
 .map-grid .island:nth-child(even){margin-top:36px;}
 .map-grid .island:nth-child(3n){margin-top:12px;}
