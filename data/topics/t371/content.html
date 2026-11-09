@@ -1,0 +1,67 @@
+<p>相信很多的使用者常常會使用 鍵盤快速鍵，例如使用 [F8]功能鍵 來快速切換正交模式，而在AutoCAD的預設中這些 鍵盤快速鍵，每個按鍵都有他的功能在，功能如下：</p>
+<p>-------------------------------------------------</p>
+<p>F1 顯示說明</p>
+<p>F2 開啟或關閉文字視窗</p>
+<p>F3 切換物件鎖點模式：OSNAP</p>
+<p>F4 切換數位板：TABMODE</p>
+<p>F5 切換等角平面：ISOPLANE</p>
+<p>F6 切換座標模式：COORDS</p>
+<p>F7 切換格點模式：GRIDMODE</p>
+<p>F8 切換座標模式：ORTHOMODE</p>
+<p>F9 切換鎖點模式：SNAPMODE</p>
+<p>F10 切換極座標追蹤</p>
+<p>F11 切換物件鎖點追蹤</p>
+<p>F12 切換動態輸入</p>
+<p>-------------------------------------------------</p>
+<p>[Ctrl]+0 切換「清除螢幕」</p>
+<p>[Ctrl]+1 切換「性質」選項板</p>
+<p>[Ctrl]+2 切換設計中心</p>
+<p>[Ctrl]+3 切換「工具選項板」視窗</p>
+<p>[Ctrl]+4 切換「圖紙集管理員」</p>
+<p>[Ctrl]+5 切換「資訊選項板」</p>
+<p>[Ctrl]+6 切換「資料庫連結管理員」</p>
+<p>[Ctrl]+7 切換「標記集管理員」</p>
+<p>[Ctrl]+8 切換 QuickCalc 計算器</p>
+<p>[Ctrl]+9 切換指令視窗</p>
+<p>-------------------------------------------------</p>
+<p>Ctrl+A 選取圖面中的物件</p>
+<p>Ctrl+B 切換鎖點</p>
+<p>Ctrl+C 將物件複製到剪貼簿</p>
+<p>Ctrl+D 切換座標顯示</p>
+<p>Ctrl+E 所有循環等角平面</p>
+<p>Ctrl+F 切換常駐式物件鎖點</p>
+<p>Ctrl+G 切換格點</p>
+<p>Ctrl+H 切換 PICKSTYLE</p>
+<p>Ctrl+J 重複上一指令</p>
+<p>Ctrl+L 切換正交模式</p>
+<p>Ctrl+M 重複上一指令</p>
+<p>Ctrl+N 建立新圖面</p>
+<p>Ctrl+O 開啟既有圖面</p>
+<p>Ctrl+P 列印目前圖面</p>
+<p>Ctrl+R 循環選取配置視埠</p>
+<p>Ctrl+S 儲存目前圖面</p>
+<p>Ctrl+T 切換數位板模式</p>
+<p>Ctrl+V 自剪貼簿貼上資料</p>
+<p>Ctrl+X 剪下物件並置於剪貼簿</p>
+<p>Ctrl+Y 取消前一個復原動作</p>
+<p>Ctrl+Z 反轉上一動作</p>
+<p>Ctrl+[ 取消目前指令</p>
+<p>Ctrl+\ 取消目前指令</p>
+<p>Ctrl+Shift+U 英文說明轉換大寫</p>
+<p>Ctrl+Shift+L 英文說明轉換小寫</p>
+<p>Ctrl+Shift+C 以基準點將物件複製到剪貼簿</p>
+<p>Ctrl+Shift+V 自剪貼簿貼上資料(圖塊)</p>
+<p>-------------------------------------------------</p>
+<p>但是其中以[F4]功能鍵及[F5]功能鍵這二個按鍵最為少用，請各位使用者考量您的使用需求，再來判斷是否要變更[F4]功能鍵及[F5]功能鍵，以下二則範例自訂功能鍵的方式與各位分享，有問題請隨時提出來討論~</p>
+<div class="section-title">自訂[F4]功能鍵：切換模型配置空間</div>
+<p>「切換模型配置空間」巨集：</p>
+<p>^P'_.TILEMODE $M=$(if,$(eq,$(getvar,TILEMODE),1),0,1)</p>
+<p>全屏展示：</p>
+<p><a href="https://s143.photobucket.com/player.swf?file=https://vid143.photobucket.com/albums/r134/op90o/GS0006a.flv&amp;fs=1&amp;os=1&amp;ap=1" target="_blank" rel="noopener">https://s143.photobucket.com/player.swf?file=https://vid143.photobucket.com/albums/r134/op90o/GS0006a.flv&amp;fs=1&amp;os=1&amp;ap=1</a></p>
+<div class="section-title">自訂[F5]功能鍵：切換線粗</div>
+<p>「切換線粗」巨集：</p>
+<p>^P'_.LWDISPLAY $M=$(if,$(eq,$(getvar,LWDISPLAY),1),0,1)</p>
+<p>全屏展示：</p>
+<p><a href="https://s143.photobucket.com/player.swf?file=https://vid143.photobucket.com/albums/r134/op90o/GS0006b.flv&amp;fs=1&amp;os=1&amp;ap=1" target="_blank" rel="noopener">https://s143.photobucket.com/player.swf?file=https://vid143.photobucket.com/albums/r134/op90o/GS0006b.flv&amp;fs=1&amp;os=1&amp;ap=1</a></p>
+<div class="section-title">CUI自訂檔_建立鍵盤快速鍵</div>
+<p><a href="http://autocad.bestoforum.net/t52-topic" target="_blank" rel="noopener">http://autocad.bestoforum.net/t52-topic</a></p>

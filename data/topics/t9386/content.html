@@ -1,0 +1,58 @@
+<p>這個是之前網路上有熱心的網友分享的，忘記是在哪看到的~</p>
+<p>大家可以試用看看!</p>
+<p>代碼:</p>
+<p>(DEFUN C:Layer2Draw()</p>
+<p>(setvar &quot;cmdecho&quot; 0)</p>
+<p>(command &quot;undo&quot; &quot;mark&quot;)</p>
+<p>(setq qua (getstring &quot;n各圖層全部轉換至各圖檔(Y=自動/N=單選&lt;N&gt;)?&quot;))</p>
+<p>(if (or (= qua &quot;Y&quot;) (= qua &quot;y&quot;))</p>
+<p>;-----------------------</p>
+<p>(progn ; 自動全部轉換</p>
+<p>(setq b (cdr (assoc 2 (tblnext &quot;layer&quot; t))))</p>
+<p>(setq obj (cdr (assoc 2 (tblnext &quot;layer&quot;))))</p>
+<p>(if (not (eq obj nil))</p>
+<p>(progn</p>
+<p>(setq b (list obj b))</p>
+<p>(while (not (eq obj nil))</p>
+<p>(setq obj (cdr (assoc 2 (tblnext &quot;layer&quot;))))</p>
+<p>(if (not (eq obj nil))</p>
+<p>(setq b (cons obj b))</p>
+<p>)</p>
+<p>)</p>
+<p>(setq num 0)</p>
+<p>(setq nb b)</p>
+<p>(while b</p>
+<p>(setq num (1+ num))</p>
+<p>(setq obj (car b))</p>
+<p>(setq b (cdr b))</p>
+<p>(2part)</p>
+<p>)</p>
+<p>)</p>
+<p>)</p>
+<p>(prompt &quot;n===輸出完成===&quot;)</p>
+<p>(PRINC)</p>
+<p>)</p>
+<p>;-----------------------</p>
+<p>(progn ; 單選</p>
+<p>(setq rp 5000)</p>
+<p>(setq num 0)</p>
+<p>(repeat rp</p>
+<p>(princ &quot;n選擇要轉換至圖檔的圖層物體:&quot;)</p>
+<p>(setq e (entget (car (entsel))))</p>
+<p>(setq obj (cdr (assoc 8 e)))</p>
+<p>(2part) ) )</p>
+<p>;-----------------------</p>
+<p>)</p>
+<p>(PRINC))</p>
+<p>;===========================</p>
+<p>(defun 2PART(); (/ L S)</p>
+<p>(setq L obj)</p>
+<p>;if exist file</p>
+<p>(SETQ S (ssget &quot;X&quot; (list (cons 8 L)))) ; Get all entities on layer</p>
+<p>(SETVAR &quot;expert&quot; 2) ;MUST RESET TO ZERO see startup section</p>
+<p>(command &quot;setvar&quot; &quot;clayer&quot; L)</p>
+<p>(setq pa (getvar &quot;dwgprefix&quot;) )</p>
+<p>(setq paL (STRCAT pa L) )</p>
+<p>(if S (command &quot;.wblock&quot; paL &quot;&quot; &quot;0,0&quot; S &quot;&quot;) )</p>
+<p>(princ) )</p>
+<p>(princ)</p>

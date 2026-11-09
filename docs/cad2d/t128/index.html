@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>錯誤的圖層過濾器--造成檔案異常容量變大 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・功能分享區</span>
+    <h1 class="topic-title">📚 錯誤的圖層過濾器--造成檔案異常容量變大</h1>
+    <p class="topic-tagline">可能因素是因為跨版本，而圖檔本身隱藏了錯誤訊息而造成 錯誤的圖層過濾器，所以…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>可能因素是因為跨版本，而圖檔本身隱藏了錯誤訊息而造成 錯誤的圖層過濾器，所以圖檔變的很大。</p>
+<p>會產生 錯誤的圖層過濾器 原因不明，研判是執行了不完整的程式或檔案非AutoCAD產生的可信任DWG檔。</p>
+<p>而且 錯誤的圖層過濾器 由於數量太多(1、2萬個以上)，所以CPU當然不堪負荷，還會造成檔案大小異常的大。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>至於 解決方案 依照版本的不同各有不同的方式，其中以 AutoCAD 2006 以上版本最方便且快速。</p>
+<p>處理完畢檔案大小會大幅度縮小。</p>
+<p>PS:如果圖檔不只一張，那就必須依靠 LISP 搭配 腳本檔(*.scr) 方式來快速解決。</p>
+<p>※※※ AutoCAD 2006 以上版本 ※※※</p>
+<p>方法1:使用 LAYER 指令 → 出現 是否刪除圖層過濾器? 對話方塊 → 點選 Y(是) 即可。</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>方法2:使用 FILTERS 指令 → 出現 刪除圖層過濾器 對話方塊 → 點選 刪除過濾器 即可。</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>※※※ AutoCAD 2005 以下版本 ※※※</p>
+<p>方法:使用 LAYER 指令 → 出現 圖層性質管理員 對話方塊 → 點選 具名的圖層過濾器 → 點選 刪除全部 即可。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t123/index.html">← 指定 QNEW 自訂樣板檔</a>
+    <a class="btn-ghost" href="../t1857/index.html">網站 BROWSER指令 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t128-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

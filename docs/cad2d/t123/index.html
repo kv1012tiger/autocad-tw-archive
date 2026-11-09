@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>指定 QNEW 自訂樣板檔 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・功能分享區</span>
+    <h1 class="topic-title">📘 指定 QNEW 自訂樣板檔</h1>
+    <p class="topic-tagline">圖面樣板檔包含標準設定</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p><b>圖面樣板檔包含標準設定</b></p>
+<p>您可以從提供的樣板檔中選取一種，或者建立自己的樣板檔。圖面樣板檔的副檔名為<b>.dwt</b>。</p>
+<p>當根據既有的樣板檔建立新圖檔並進行變更時，新圖檔的變更不會影響樣板檔。您可以使用程式提供的其中一個樣板檔，也可以建立您自己的樣板檔。</p>
+<p><b>建立圖面樣板檔</b></p>
+<p>當需要建立數個使用相同慣例與預設設定的圖面時，可以建立或自訂樣板檔，而不是在每次啟動時都指定慣例與預設設定，這樣可以節省一些時間。通常儲存在樣板檔中的慣用法與設定包括</p>
+<p>·單位類型與精確度</p>
+<p>·標題欄框、邊框與徽標</p>
+<p>·圖層名稱</p>
+<p>·鎖點、格線與正交設定</p>
+<p>·格線限制</p>
+<p>·標註型式</p>
+<p>·文字型式</p>
+<p>·線型</p>
+<p>註:依預設，圖面樣板檔儲存在易於存取的<b>「template」</b>資料夾中。</p>
+<p><b>恢復預設圖面樣板檔</b></p>
+<p>如果圖面樣板檔 <b>acad.dwt</b> 或 <b>acadiso.dwt</b> 中設定的原始預設已經變更，您可透過以下方式對其進行重置: 開始不使用樣板的新圖面，然後將圖面儲存為圖面樣板檔，取代 <b>acad.dwt</b> 或 <b>acadiso.dwt</b>。</p>
+<p>如果指定「<b>3D 塑型</b>」工作區，則預設圖面樣板檔為 <b>acad3d.dwt</b> 和 <b>acadiso3d.dwt</b>。</p>
+<p>透過使用 <b>NEW</b> 來顯示「<b>選取樣板</b>」對話方塊，您可以啟動具有原始預設新圖面。</p>
+<p>為此，請按一下「<b>開啟</b>」按鈕旁邊的箭頭，然後按一下清單中其中一個「<b>無樣板</b>」選項。</p>
+<p>建立新圖面的快捷方式是從草圖開始，使用預設圖面樣板檔中的設定開始繪製圖面。</p>
+<p><b>NEW 指令或 QNEW 指令</b></p>
+<p>要從草圖開始繪製圖面，可以使用「建立新圖面」對話方塊或「選取樣板」對話方塊，也可以不使用任何對話方塊。</p>
+<p>無論選擇哪種方式，都可以使用 NEW 指令或 QNEW 指令。</p>
+<p><b>步驟1：</b>將檔案另存成 樣板檔(<b>STAN.dwt</b>)</p>
+<p><b>步驟2：</b>指定 <b>QNEW</b> 自訂樣板檔位置</p>
+<img src="images/01.gif" alt="" loading="lazy">
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t3845/index.html">← 關於機電系統的3D管線圖使用軟體!!</a>
+    <a class="btn-ghost" href="../t128/index.html">錯誤的圖層過濾器--造成檔案異常容量變大 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t123-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

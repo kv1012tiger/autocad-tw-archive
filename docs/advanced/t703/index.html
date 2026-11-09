@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>自訂指令別名(PGP) | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-advanced">← 回進階討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#a5b8ff;--g1:#b3c4f0;--g2:#3b4a98">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐅</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🐆</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">💻 進階討論島・程式分享區</span>
+    <h1 class="topic-title">📘 自訂指令別名(PGP)</h1>
+    <p class="topic-tagline">您可以不輸入 LINE 啟動 LINE 指令，而是輸入 L。縮寫的指令名稱為…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-10-14</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/wYYOcdl0Wh0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>補充說明：</p>
+<div class="section-title">2006以上版本：</div>
+<p>一、「工具」功能表: → 「自訂」→「編輯程式參數」....會以 記事本 來開啟 指令別名定義檔(acad.pgp)</p>
+<p>如:</p>
+<p>CI, *CIRCLE</p>
+<p>CP, *COPY</p>
+<p>CC, *COPY</p>
+<p>三.新增別名完存檔後關閉 記事本。</p>
+<p>四.在指令行輸入 REINIT ，將 PGP檔 打勾案確定，即可使用 CC 別名。</p>
+<p>PS:爾後啟動 AutoCAD 時， CC 別名 即變成 常駐式別名。</p>
+<p>※注意※</p>
+<p>不建議更改原使別名，而且新增別名不能重複，還有請把原始檔(acad.pgp)保留備份，以備不時之需。</p>
+<div class="section-title">2004版本：</div>
+<p>「工具」功能表: → 「自訂」→「編輯自訂檔數」→「程式參數」....會以 記事本 來開啟 指令別名定義檔(acad.pgp)</p>
+<p>※別名(PGP)檔位置:</p>
+<p>C:\Documents and Settings\使用者帳號\Application Data\Autodesk\AutoCAD 版本\版本代號\cht\support\acad.pgp</p>
+<p>※搜尋不到pgp檔是因為 cad系統資料夾 是隱藏的請使用以下方法即可找到：</p>
+<p>檔案總管 → 工具 → 資料夾選項 → 「檢視」標籤 → 進階設定 →</p>
+<p>□ 隱藏已知檔案類型的副檔名 .....把打勾取消</p>
+<p>○ 顯示所有檔案及資料夾..........點選選擇</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t14053/index.html">← LISP選取相同圖塊</a>
+    <a class="btn-ghost" href="../t9386/index.html">圖層全部轉換至各圖檔 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t703-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
