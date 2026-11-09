@@ -1,8 +1,9 @@
 [
   {
     "id": "f44",
-    "name": "專案報告",
-    "breadcrumb": "AutoCAD顧問 :: 公告 :: 專案報告",
-    "source_url": "https://www.autocad-tw.com/f44-topic"
+    "name": "專案報告群島",
+    "icon": "🗺️",
+    "tagline": "AutoCAD 綜合應用教學，LISP、圖塊、巨集通通有",
+    "order": 1
   }
 ]

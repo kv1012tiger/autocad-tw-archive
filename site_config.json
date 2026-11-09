@@ -1,16 +1,9 @@
 {
-  "site_name": "AutoCAD顧問論壇 備份",
-  "site_tagline": "原始論壇 autocad-tw.com 的個人原創文章備份（不含會員回覆）",
+  "site_name": "論壇資源島",
+  "site_eyebrow": "FORUM RESOURCE ISLANDS",
+  "site_tagline": "蘋果爸整理的 AutoCAD 教學藏寶圖，點一座島，挖一份祕笈",
+  "captain_line": "嗨！我是蘋果爸船長，帶你上船去挖 AutoCAD 的寶藏吧 ⚓️",
   "github_owner": "kv1012tiger",
-  "github_repo": "REPLACE_WITH_REPO_NAME",
-  "site_url": "https://kv1012tiger.github.io/REPLACE_WITH_REPO_NAME/",
-  "giscus": {
-    "enabled": false,
-    "repo": "kv1012tiger/REPLACE_WITH_REPO_NAME",
-    "repo_id": "",
-    "category": "Comments",
-    "category_id": "",
-    "mapping": "pathname",
-    "theme": "preferred_color_scheme"
-  }
+  "github_repo": "autocad-tw-archive",
+  "site_url": "https://kv1012tiger.github.io/autocad-tw-archive/"
 }

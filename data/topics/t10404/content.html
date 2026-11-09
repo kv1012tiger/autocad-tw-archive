@@ -1,66 +1,74 @@
-這次升級作法不一定貼上座標圖塊，可以自由貼上剪貼簿物件，讓程式更加彈性活用滿足業界需求。<br>
-👉自動標註座標: COORDINATE指令 (COO)<br>
-👉自動插入剪貼簿: COORDINATE1指令 (CO1)<br>
+<p>這次升級作法不一定要貼上座標圖塊，也可以自由貼上剪貼簿物件，讓程式更加彈性、活用滿足業界需求。</p>
+<p>
+  👉 自動標註座標：<span class="tag-chip">COORDINATE 指令（COO）</span>
+  👉 自動插入剪貼簿：<span class="tag-chip">COORDINATE1 指令（CO1）</span>
+</p>
 
-<div class="video-wrap" style="padding-top:56.27%">
+<div class="video-frame">
   <iframe src="https://www.youtube.com/embed/QJ5FJiOWHJ4" title="AutoCAD 自動標註座標圖塊 + 剪貼簿貼上" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 
-<br><font color="blue">這次與各位朋友分享綜合應用篇，底下範例結合了 </font><br>
-屬性圖塊(Attdef)、功能變數(Field)、工具選項板(ToolPalettes)、Lisp程式、資料萃取(dataextraction)、自訂別名(acad.pgp)<br>
-<font color="blue">算是一個很有趣、很活潑的範例主題，大家趕緊來練習吧~ </font>
-<img src="images/smile-286961.gif" alt="微笑" style="display:inline">
-<br><br>
+<p>這次分享的是綜合應用篇，底下範例結合了屬性圖塊（Attdef）、功能變數（Field）、工具選項板（ToolPalettes）、Lisp 程式、資料萃取（dataextraction）、自訂別名（acad.pgp），是一個很有趣、很活潑的範例主題，大家趕緊來練習吧 ✨</p>
 
-1.之前有分享過 自訂座標圖塊，還有掛入工具選項板的方式<br>
-<div class="video-wrap" style="padding-top:75%">
+<div class="section-title">① 自訂座標圖塊 + 工具選項板</div>
+<p>之前有分享過自訂座標圖塊，還有掛入工具選項板的方式：</p>
+<div class="video-frame r43">
   <iframe src="https://www.youtube.com/embed/0gUY89a68Ac" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 
-<br>2.這回我把它結合使用LISP程式(Coordinate指令)，使用lisp幫助快速自動標註圓孔座標<br>
-<div class="video-wrap" style="padding-top:75%">
+<div class="section-title">② LISP 自動標註圓孔座標</div>
+<p>這回把它結合使用 LISP 程式（Coordinate 指令），用 LISP 幫助快速自動標註圓孔座標：</p>
+<div class="video-frame r43">
   <iframe src="https://www.youtube.com/embed/t1jv_wef8QE" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
+<div class="callout callout--tip">
+  <b>🧭 船長小提醒</b>
+  可使用 <strong>UNITS 指令</strong> 控制小數點位數，並透過 <strong>DIMSCALE 系統變數</strong> 控制座標圖塊的整體比例。
+</div>
 
-<font color="red">註:</font>可使用 <strong>單位UNITS指令</strong> 控制小數點，並透過 <strong>DIMSCALE系統變數</strong> 控制座標圖塊的整體比例。<br><br>
-
-3.另外可以搭配使用 資料萃取 dataextraction 產生表格喔~<br>
-<div class="video-wrap" style="padding-top:75%">
+<div class="section-title">③ 資料萃取產生表格</div>
+<p>另外可以搭配使用資料萃取（Data Extraction）產生表格喔～</p>
+<div class="video-frame r43">
   <iframe src="https://www.youtube.com/embed/YMfHx1X3Iqk" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 
-<font color="red">※</font>LISP檔及DWG檔下載網址（此備份版本不收錄「回覆可見」的隱藏連結，請至原始論壇以會員身份查看）。<br>
-<font color="#ff0000">原文分享時限：2022.12.02 截止</font><br><br><br>
-
-<h3>👇專屬B會員請直接前往專屬資源區下載(有更新):</h3>
-[專屬分享]Coordinate-v2(座標程式檔)及Coordinate.dwg(座標圖塊檔)<br>
-<a href="https://www.autocad-tw.com/t10379-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t10379-topic</a>
-<hr>
-
-<strong>掛入方式：</strong><br>
-附件中有LISP檔及DWG檔，請參考以下說明:<br>
-<strong>步驟一:</strong><br>
-將二個檔案放置在以下資料夾(椅2008版本為例)<br>
-C:\Program Files\AutoCAD 2008\support<br>
-<strong>步驟二:</strong><br>
-Coordinate.lsp需要加載掛入到cui中，AutoCAD才能執行，掛入lisp方式請參考以下文章:<br>
-<div class="video-wrap" style="padding-top:75%">
-  <iframe src="https://www.youtube.com/embed/gf5PwrcmEcc" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+<div class="callout callout--note">
+  <b>💰 寶藏下載</b>
+  LISP 檔及 DWG 檔的下載連結，請到原文的回覆區查看（需一般會員權限）。<br>
+  👇 專屬 B 會員可直接前往專屬資源區下載最新版：
+  <a href="https://www.autocad-tw.com/t10379-topic" target="_blank" rel="noopener">Coordinate-v2（座標程式檔）及 Coordinate.dwg（座標圖塊檔）</a>
 </div>
-[影片]自訂CUI 載入LISP<br>
-<a href="https://www.autocad-tw.com/t3999-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t3999-topic</a><br>
-<strong>步驟三:</strong><br>
-掛入後就可以使用 Coordinate指令 執行自動標註圓孔座標。<br>
-<font color="red">註:</font>如果覺得指令太長可以自訂別名(把指令名精簡)，方式如下:<br>
-<div class="video-wrap" style="padding-top:75%">
-  <iframe src="https://www.youtube.com/embed/wYYOcdl0Wh0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+
+<div class="section-title">🔧 掛入方式</div>
+<ul class="step-list">
+  <li>
+    <div class="step-num">1</div>
+    <div>將 LISP 檔與 DWG 檔放到以下資料夾（以 2008 版本為例）：<br><code>C:\Program Files\AutoCAD 2008\support</code></div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div>
+      Coordinate.lsp 需要加載掛入到 CUI 中，AutoCAD 才能執行，掛入方式請參考：<br>
+      <a href="https://www.autocad-tw.com/t3999-topic" target="_blank" rel="noopener">[影片]自訂CUI 載入LISP</a>
+      <div class="video-frame r43" style="margin-top:10px;">
+        <iframe src="https://www.youtube.com/embed/gf5PwrcmEcc" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div>
+      掛入後就可以使用 Coordinate 指令執行自動標註圓孔座標。如果覺得指令太長，可以自訂別名（把指令名精簡）：<br>
+      <a href="https://www.autocad-tw.com/t703-topic" target="_blank" rel="noopener">[教學]自訂指令別名（PGP）</a>
+      <div class="video-frame r43" style="margin-top:10px;">
+        <iframe src="https://www.youtube.com/embed/wYYOcdl0Wh0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<div class="section-title">🔗 相關主題</div>
+<div class="tag-row">
+  <a class="tag-chip" href="https://www.autocad-tw.com/t10378-topic" target="_blank" rel="noopener">多個孔 X/Y 座標包含牙多大都標示出來</a>
+  <a class="tag-chip" href="https://www.autocad-tw.com/forum-f12/topic-t2753.htm" target="_blank" rel="noopener">有沒有可以顯示 XY 座標的功能變數？</a>
 </div>
-<strong>[教學]自訂指令別名(PGP)_權限：初級會員(積分1)</strong><br>
-<a href="https://www.autocad-tw.com/t703-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t703-topic</a>
-<hr>
-
-<strong>相關主題：[已解決]多個孔X跟Y座標包含牙多大都標示出來</strong><br>
-<a href="https://www.autocad-tw.com/t10378-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t10378-topic</a><br><br>
-
-<strong>相關主題：有沒有可以顯示XY座標的功能變數？</strong><br>
-<a href="https://www.autocad-tw.com/forum-f12/topic-t2753.htm" target="_blank" rel="noopener">https://www.autocad-tw.com/forum-f12/topic-t2753.htm</a>

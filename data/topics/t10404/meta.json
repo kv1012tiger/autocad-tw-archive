@@ -1,11 +1,12 @@
 {
   "id": "t10404",
   "board": "f44",
+  "order": 1,
+  "icon": "📍",
   "title": "自動插入座標圖塊綜合應用+自動插入剪貼簿",
+  "tagline": "一鍵自動標座標、貼剪貼簿，屬性圖塊+Lisp+資料萃取組合技",
+  "tags": ["Attdef 屬性圖塊", "Field 功能變數", "ToolPalettes 工具選項板", "Lisp 程式", "資料萃取", "acad.pgp 別名"],
   "author": "Tiger&蘋果爸",
-  "author_role": "系統管理員",
-  "posted_at": "2011-07-05, 12:32",
-  "edited_at": "2022-11-27, 09:55",
-  "edited_note": "第 16 次修改，原因：自動標註座標圖塊+剪貼簿貼上",
+  "posted_at": "2011-07-05",
   "source_url": "https://www.autocad-tw.com/t10404-topic"
 }

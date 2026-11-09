@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Generate the static archive site (docs/) from data/ into a board -> topic tree."""
+"""Generate the pirate-island archive site (docs/) from data/."""
 import json
+import re
 import shutil
 from pathlib import Path
 from string import Template
@@ -25,78 +26,81 @@ $body
 </html>
 """)
 
+TOPBAR = Template("""
+  <div class="topbar">
+    <a class="brand" href="$home_href">🦜 $site_name</a>
+    $back_pill
+  </div>
+""")
+
 HOME_BODY = Template("""
-  <div class="card meta-card">
+$topbar
+  <div class="hero">
+    <span class="eyebrow">$site_eyebrow</span>
     <h1>$site_name</h1>
-    <div class="meta">$site_tagline</div>
+    <p>$site_tagline</p>
+    <div class="captain">
+      <div class="avatar">🧑‍✈️</div>
+      <p>$captain_line</p>
+    </div>
+    <div style="margin-top:22px;">
+      <a class="btn btn-primary" href="#map">⚓️ 開始探索</a>
+    </div>
   </div>
-  <div class="card">
-    <h2>看板</h2>
-    <ul class="board-list">
-$board_items
-    </ul>
+  <div class="stats">
+    <div><b>$board_count</b> 座群島</div>
+    <div><b>$topic_count</b> 篇祕笈</div>
+    <div><b>$video_count</b> 支教學影片</div>
   </div>
-  <footer class="site-footer">靜態備份網站，由原站管理員維護。</footer>
+  <div class="map" id="map">
+    <div class="map-hint">點一座群島，划船過去看看裡面有什麼 🧭</div>
+    <div class="map-grid">
+$board_islands
+    </div>
+  </div>
+  <footer class="site-footer">整理自 AutoCAD顧問論壇，由管理員蘋果爸維護更新。</footer>
 """)
 
 BOARD_BODY = Template("""
-  <div class="breadcrumb"><a href="../index.html">$site_name</a> &gt; $board_name</div>
-  <div class="card meta-card">
-    <h1>$board_name</h1>
-    <div class="meta">$board_breadcrumb</div>
+$topbar
+  <div class="hero">
+    <span class="eyebrow">ISLAND GROUP</span>
+    <h1>$board_icon $board_name</h1>
+    <p>$board_tagline</p>
   </div>
-  <div class="card">
-    <ul class="topic-list">
-$topic_items
-    </ul>
+  <div class="stats">
+    <div><b>$topic_count</b> 篇祕笈</div>
+    <div><b>$video_count</b> 支教學影片</div>
   </div>
-  <footer class="site-footer">靜態備份網站，由原站管理員維護。</footer>
+  <div class="map" id="map">
+    <div class="map-hint">點一座島，看看蘋果爸留下的祕笈 📜</div>
+    <div class="map-grid">
+$topic_islands
+    </div>
+  </div>
+  <footer class="site-footer">整理自 AutoCAD顧問論壇，由管理員蘋果爸維護更新。</footer>
 """)
 
 TOPIC_BODY = Template("""
-  <div class="breadcrumb"><a href="../../index.html">$site_name</a> &gt; <a href="../index.html">$board_name</a> &gt; $title</div>
-  <div class="card meta-card">
-    <span class="archive-tag">備份 Archived Copy</span>
-    <h1>$title</h1>
-    <div class="meta">
-      <div>發表者：$author（$author_role）</div>
-      <div>發表時間：$posted_at</div>
-      $edited_line
-      <div>板區：$board_breadcrumb</div>
-    </div>
-    <a class="source-link" href="$source_url" target="_blank" rel="noopener">原始網址：$source_url</a>
-  </div>
+$topbar
   <div class="card">
-    <div class="content">
-$content
+    <span class="topic-badge">ISLAND $order_padded · $board_name</span>
+    <h1 class="topic-title">$icon $title</h1>
+    <p class="topic-tagline">$tagline</p>
+    <div class="tag-row">
+$tag_chips
     </div>
   </div>
-$comments_block
-  <footer class="site-footer">
-    此頁為「AutoCAD顧問論壇」主題文章之管理員原創首篇內容備份，不含其他會員回覆。<br>
-    原始連結：<a href="$source_url" target="_blank" rel="noopener">$source_url_display</a>
-  </footer>
-""")
-
-GISCUS_BLOCK = Template("""
-  <div class="card comments-card">
-    <h2>留言</h2>
-    <script src="https://giscus.app/client.js"
-      data-repo="$repo"
-      data-repo-id="$repo_id"
-      data-category="$category"
-      data-category-id="$category_id"
-      data-mapping="$mapping"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="top"
-      data-theme="$theme"
-      data-lang="zh-TW"
-      crossorigin="anonymous"
-      async>
-    </script>
+  <div class="card content">
+$content
   </div>
+  <div class="topic-nav">
+$nav_prev
+$nav_next
+  </div>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · 🔗 <a href="$source_url" target="_blank" rel="noopener">原文連結</a>
+  </footer>
 """)
 
 
@@ -104,110 +108,158 @@ def load_json(p: Path):
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+def back_pill(href: str, label: str) -> str:
+    return f'<a class="back-pill" href="{href}">{label}</a>'
+
+
+def island_html(href: str, icon: str, name: str, meta: str, num: int = None, soon: bool = False, big: bool = False) -> str:
+    cls = "island"
+    if soon:
+        cls += " soon"
+    if big:
+        cls += " big"
+    num_html = f'<div class="num">{num:02d}</div>' if num is not None else ""
+    tag = "a" if href else "div"
+    href_attr = f' href="{href}"' if href else ""
+    return (
+        f'<{tag} class="{cls}"{href_attr}>'
+        f'<div class="shell">{num_html}{icon}</div>'
+        f'<div class="name">{name}</div>'
+        f'<div class="meta">{meta}</div>'
+        f'</{tag}>'
+    )
+
+
 def main():
     config = load_json(ROOT / "site_config.json")
-    boards = load_json(DATA / "boards.json")
+    boards = sorted(load_json(DATA / "boards.json"), key=lambda b: b.get("order", 0))
 
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
 
     topics_by_board = {}
-    topic_dirs = sorted((DATA / "topics").iterdir())
-    for tdir in topic_dirs:
+    total_videos = 0
+    for tdir in sorted((DATA / "topics").iterdir()):
         meta_path = tdir / "meta.json"
         if not meta_path.exists():
             continue
         meta = load_json(meta_path)
+        content = (tdir / "content.html").read_text(encoding="utf-8")
+        meta["_video_count"] = len(re.findall(r"<iframe", content))
+        total_videos += meta["_video_count"]
         topics_by_board.setdefault(meta["board"], []).append((tdir, meta))
 
-    # Homepage
-    board_items = "\n".join(
-        f'      <li><a href="{b["id"]}/index.html">{b["name"]}</a></li>' for b in boards
-    )
+    for board_id, topics in topics_by_board.items():
+        topics.sort(key=lambda t: t[1].get("order", 0))
+
+    total_topics = sum(len(v) for v in topics_by_board.values())
+
+    # ---------- Homepage ----------
+    board_islands = []
+    for b in boards:
+        topic_n = len(topics_by_board.get(b["id"], []))
+        board_islands.append(
+            island_html(f'{b["id"]}/index.html', b["icon"], b["name"], f'{topic_n} 篇祕笈', big=True)
+        )
+    board_islands.append(island_html("", "🔒", "未知群島", "敬請期待", soon=True, big=True))
+
     home_html = PAGE_SHELL.substitute(
         title=config["site_name"],
         css_path="assets/css/style.css",
         body=HOME_BODY.substitute(
+            topbar=TOPBAR.substitute(home_href="index.html", site_name=config["site_name"], back_pill=""),
+            site_eyebrow=config["site_eyebrow"],
             site_name=config["site_name"],
             site_tagline=config["site_tagline"],
-            board_items=board_items,
+            captain_line=config["captain_line"],
+            board_count=len(boards),
+            topic_count=total_topics,
+            video_count=total_videos,
+            board_islands="\n".join(board_islands),
         ),
     )
     (DOCS / "index.html").write_text(home_html, encoding="utf-8")
 
-    # Board pages + topic pages
+    # ---------- Board + topic pages ----------
     for board in boards:
         board_id = board["id"]
         board_dir = DOCS / board_id
         board_dir.mkdir(exist_ok=True)
-
         topics = topics_by_board.get(board_id, [])
-        topic_items = []
-        for tdir, meta in topics:
-            topic_items.append(
-                f'      <li><a href="{meta["id"]}/index.html">{meta["title"]}'
-                f'<span class="topic-date">{meta["posted_at"]}</span></a></li>'
+
+        topic_islands = []
+        for idx, (tdir, meta) in enumerate(topics, start=1):
+            topic_islands.append(
+                island_html(
+                    f'{meta["id"]}/index.html', meta["icon"], meta["title"],
+                    f'{meta["_video_count"]} 支影片', num=idx,
+                )
             )
+        topic_islands.append(island_html("", "🔒", "下一座島", "敬請期待", soon=True))
 
         board_html = PAGE_SHELL.substitute(
             title=f'{board["name"]} | {config["site_name"]}',
             css_path="../assets/css/style.css",
             body=BOARD_BODY.substitute(
-                site_name=config["site_name"],
+                topbar=TOPBAR.substitute(
+                    home_href="../index.html", site_name=config["site_name"],
+                    back_pill=back_pill("../index.html", "⬅ 回首頁"),
+                ),
+                board_icon=board["icon"],
                 board_name=board["name"],
-                board_breadcrumb=board["breadcrumb"],
-                topic_items="\n".join(topic_items) or "      <li>（尚無文章）</li>",
+                board_tagline=board["tagline"],
+                topic_count=len(topics),
+                video_count=sum(m["_video_count"] for _, m in topics),
+                topic_islands="\n".join(topic_islands),
             ),
         )
         (board_dir / "index.html").write_text(board_html, encoding="utf-8")
 
-        for tdir, meta in topics:
+        for idx, (tdir, meta) in enumerate(topics):
             topic_dir = board_dir / meta["id"]
             topic_dir.mkdir(exist_ok=True)
 
-            # copy images
             src_images = tdir / "images"
-            if src_images.exists():
+            if src_images.exists() and any(src_images.iterdir()):
                 dst_images = topic_dir / "images"
                 if dst_images.exists():
                     shutil.rmtree(dst_images)
                 shutil.copytree(src_images, dst_images)
 
             content_html = (tdir / "content.html").read_text(encoding="utf-8")
+            tag_chips = "\n".join(f'      <span class="tag-chip">{t}</span>' for t in meta.get("tags", []))
 
-            edited_line = ""
-            if meta.get("edited_at"):
-                note = f'（{meta["edited_note"]}）' if meta.get("edited_note") else ""
-                edited_line = f'<div>最後編輯：{meta["edited_at"]}{note}</div>'
-
-            comments_block = ""
-            if config.get("giscus", {}).get("enabled"):
-                g = config["giscus"]
-                comments_block = GISCUS_BLOCK.substitute(
-                    repo=g["repo"],
-                    repo_id=g["repo_id"],
-                    category=g["category"],
-                    category_id=g["category_id"],
-                    mapping=g["mapping"],
-                    theme=g["theme"],
-                )
+            nav_prev = ""
+            nav_next = ""
+            if idx > 0:
+                prev_meta = topics[idx - 1][1]
+                nav_prev = f'    <a class="btn-ghost" href="../{prev_meta["id"]}/index.html">⬅ {prev_meta["title"]}</a>'
+            else:
+                nav_prev = f'    <a class="btn-ghost" href="../index.html">⬅ 回群島地圖</a>'
+            if idx < len(topics) - 1:
+                next_meta = topics[idx + 1][1]
+                nav_next = f'    <a class="btn-ghost" href="../{next_meta["id"]}/index.html">{next_meta["title"]} ➡</a>'
+            else:
+                nav_next = f'    <a class="btn-ghost" href="../index.html">回群島地圖 ➡</a>'
 
             topic_html = PAGE_SHELL.substitute(
                 title=f'{meta["title"]} | {config["site_name"]}',
                 css_path="../../assets/css/style.css",
                 body=TOPIC_BODY.substitute(
-                    site_name=config["site_name"],
+                    topbar=TOPBAR.substitute(
+                        home_href="../../index.html", site_name=config["site_name"],
+                        back_pill=back_pill("../index.html", f'⬅ 回{board["name"]}'),
+                    ),
+                    order_padded=f"{idx + 1:02d}",
                     board_name=board["name"],
-                    board_breadcrumb=board["breadcrumb"],
+                    icon=meta["icon"],
                     title=meta["title"],
-                    author=meta["author"],
-                    author_role=meta["author_role"],
-                    posted_at=meta["posted_at"],
-                    edited_line=edited_line,
-                    source_url=meta["source_url"],
-                    source_url_display=meta["source_url"].replace("https://", ""),
+                    tagline=meta["tagline"],
+                    tag_chips=tag_chips,
                     content=content_html,
-                    comments_block=comments_block,
+                    nav_prev=nav_prev,
+                    nav_next=nav_next,
+                    source_url=meta["source_url"],
                 ),
             )
             (topic_dir / "index.html").write_text(topic_html, encoding="utf-8")
