@@ -1,30 +1,23 @@
-# AutoCAD顧問論壇 備份
+# 論壇資源島
 
-這是 [autocad-tw.com](https://www.autocad-tw.com) 論壇管理員自行維護的個人原創文章備份站，
-只收錄管理員自己發表的「主題首篇」內容（文字、圖片、影片嵌入、相關連結），
-**不包含其他會員的回覆**，因此沒有著作權或個資疑慮；原文本來就是公開、免費瀏覽的內容。
+蘋果爸的 AutoCAD 教學大島群：12 座論壇教學島，加上 AI 知識島的 9 座問答島、蘋果爸小屋、課程城堡與報名碼頭。
 
-備份目的：論壇架設在國外主機、採付費租用，若主機商或服務到期關閉，原站內容可能全部消失，
-此處作為長期保存與離線閱讀用。
+收錄內容僅限管理員自己發表的主題首篇，不包含其他會員的回覆，也不包含「回覆可見」的內容。
 
-## 瀏覽
+- 網站：https://kv1012tiger.github.io/autocad-tw-archive/
 
-網站發布於 GitHub Pages：`docs/` 目錄即為發布內容，採看板 → 主題兩層結構：
+## 結構
 
 ```
-docs/<board-id>/index.html         看板頁（主題列表）
-docs/<board-id>/<topic-id>/index.html   主題頁（原創首篇內容）
+templates/island-home.html   首頁模板（由 AI 知識島 knowledge.html 沿用改寫）
+data/boards.json             12 座論壇島的名稱、地貌、居民、航線順序
+data/topics/<id>/            每篇教學的 meta.json、content.html、images/
+tools/build.py               由 data/ 與 templates/ 產生 docs/
+docs/                        GitHub Pages 發布內容
 ```
 
-## 新增一篇備份文章
+## 新增一篇教學
 
-1. 在 `data/topics/<topic-id>/` 建立 `meta.json`（標題、作者、發表時間、原始網址等）與
-   `content.html`（內文片段，相對路徑圖片放在同層 `images/`）。
-2. 若該文章屬於新看板，於 `data/boards.json` 新增一筆。
-3. 執行 `python tools/build.py` 重新產生 `docs/`。
-4. `git commit` + `git push`。
-
-## 留言
-
-主題頁使用 [giscus](https://giscus.app) 留言元件，留言實際存放在本 repo 的 GitHub Discussions，
-訪客需使用 GitHub 帳號留言，管理員可直接在 GitHub 上回覆。
+1. 在 `data/topics/<topic-id>/` 建立 `meta.json` 與 `content.html`，`meta.json` 的 `board` 填 `boards.json` 裡的島嶼 id。
+2. 執行 `python tools/build.py`。
+3. `git commit`、`git push`。
