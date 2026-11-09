@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>外部參考（XREF）的參考路徑觀念 | 論壇資源島</title>
+<meta name="theme-color" content="#12061f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">🔗 外部參考（XREF）的參考路徑觀念</h1>
+    <p class="topic-tagline">圖檔給別人卻找不到外部參考？關鍵就在相對路徑</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2017-05-24</p>
+    <div class="tag-row">
+      <span class="tag-chip">XREF 外部參考</span>
+      <span class="tag-chip">相對路徑</span>
+      <span class="tag-chip">參考管理員</span>
+      <span class="tag-chip">ETRANSMIT 電子傳送</span>
+    </div>
+  </section>
+  <article class="card content">
+<img src="images/01.png" alt="外部參考請記得用相對路徑" loading="lazy">
+<p>如果你有使用過「外部參考（XREF）」，那你一定要了解「參考路徑」要用哪一種！</p>
+<p>多年來我一直推廣要使用「相對路徑」，終於 AutoCAD 2018 版本插入「外部參考」時，預設改為使用「相對路徑」。</p>
+<p>這樣一個簡單「相對路徑」設置，可以讓其他公司或其他單位，開啟圖檔時可以找到「外部參考」檔～如此一來不會發生找不到「外部參考」的窘境。</p>
+<div class="callout callout--tip"><b>注意事項</b>1. 如果插入時無法指定「相對路徑」，請先儲存 DWG 檔案，再來就可以指定「相對路徑」。<br>2. 「外部參考」使用時機：當你有一張圖需要給所有的圖面使用（跨檔案使用同一張圖），例如圖框，這時就可以使用插入「外部參考」圖框，千萬別用插入「圖塊」圖框！</div>
+<div class="section-title">為什麼常常找不到外部參考</div>
+<p>若使用「完整路徑」，可以在開啟「目前圖檔」時，順利找到路徑中的「外部參考檔」圖框.dwg：</p>
+<p><code>K:\Project\AT0001\S\XREFS\S2\圖框.dwg</code></p>
+<p>但是若把「目前圖檔」及「外部參考」檔提供給其他公司（單位），其他公司肯定是沒有「K 槽」這個完整路徑！當其他公司（單位）開啟「目前圖檔」時，就會發生無法找到路徑中的「外部參考檔」圖框.dwg，也就無法正常顯示。</p>
+<p>正因為常常找不到「外部參考檔」的狀況，大家索性不用！這就是大多數人不願意使用「外部參考檔」的原因之一。</p>
+<div class="section-title">外部參考路徑轉換方式</div>
+<p>一般可使用<b>參考管理員</b>將路徑變更為「相對路徑」、「無路徑」或是「完整路徑」。在改成「相對路徑」時須了解路徑語法，這樣才能將原來的無路徑變更為相對路徑。</p>
+<p>另外，也可以使用<b>電子傳送 ETRANSMIT</b> 來轉換路徑。若原始路徑為完整路徑，可以在「修改傳送設置」對話方塊的路徑選項，透過以下設定來轉換參考路徑：</p>
+<ul class="tip-list"><li><b>使用已經整理的資料夾結構</b>：將外部參考路徑改為「相對路徑」</li><li><b>將所有檔案置於一個資料夾中</b>：將外部參考路徑改為「無路徑」</li><li><b>保持檔案與資料夾不變</b>：將外部參考路徑維持為「完整路徑」</li></ul>
+<div class="section-title">相關影片操作</div>
+<div class="tag-row"><a class="tag-chip" href="https://www.autocad-tw.com/t706-topic" target="_blank" rel="noopener">外部參考 XREF（路徑問題解決）</a><a class="tag-chip" href="https://www.autocad-tw.com/t707-topic" target="_blank" rel="noopener">電子傳送 ETRANSMIT</a></div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../../index.html#isle-cad2d">← 回2D 討論島</a>
+    <a class="btn-ghost" href="../../index.html">回大地圖 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t21170-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+</body>
+</html>

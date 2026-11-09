@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>論壇資源島｜蘋果爸的 AutoCAD 教學大島群</title>
-<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：12 座論壇教學島、9 座 AI 問答島、課程城堡與報名碼頭，邊玩邊學。">
+<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：12 座論壇教學島、9 座 AI 問答島，還有蘋果爸小屋與課程城堡，邊玩邊學。">
 <meta property="og:title" content="論壇資源島｜蘋果爸的 AutoCAD 教學大島群">
 <meta property="og:description" content="點一座島開始探險，翻開問答卡拿糖果，拿到 5 顆送你提示詞禮物包。">
 <meta property="og:type" content="website">
@@ -179,16 +179,9 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .il.done .st{color:var(--gold)}
 .reset{display:block;margin:16px auto 0;background:none;border:0;color:var(--dim);text-decoration:underline;cursor:pointer;font-size:14px}
 
-/* ===== 結尾 ===== */
-.end{padding:40px 0 60px;text-align:center}
-.end-box{max-width:820px;margin:0 auto;padding:34px 26px}
-.end-box h2{font-size:clamp(26px,4vw,40px);font-weight:900}
-.end-box p{color:var(--muted);margin:10px 0 0}
-.cta-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
 .foot{padding:28px 0 40px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;text-align:center;background:rgba(22,6,34,.92)}
 .foot p{margin:4px 0}
 .foot a{color:var(--muted)}
-.mbar{display:none}
 
 /* ===== 面板 ===== */
 .backdrop{position:fixed;inset:0;z-index:90;background:rgba(1,2,10,.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
@@ -249,8 +242,6 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .p-sec{margin-top:22px}
 .p-sec h4{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin-bottom:12px}
 .p-sec h4::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pc,var(--cyan));box-shadow:0 0 10px var(--pc,var(--cyan))}
-.facts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.facts li{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:14.5px;font-weight:700}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;counter-reset:s}
 .steps span{position:relative;padding:12px 8px 10px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);text-align:center;font-size:13.5px;font-weight:700;line-height:1.45}
 .steps span::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:28px;height:28px;margin:0 auto 6px;border-radius:50%;background:linear-gradient(135deg,#ffb347,#ff6a3d);color:#fff;font-weight:900}
@@ -274,71 +265,7 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .vid i{display:block;aspect-ratio:16/9;background:#000 center/cover no-repeat;position:relative}
 .vid i::after{content:"▶";position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,77,109,.92);display:grid;place-items:center;font-style:normal;color:#fff;font-size:18px}
 .vid span{display:block;padding:8px 12px;font-size:14px;font-weight:700}
-.dls{display:grid;gap:10px}
-.dls .btn{width:100%}
-.prep{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14.5px}
-.prep li{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
-.ss-list{display:grid;gap:10px}
-.ss{display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid var(--line);cursor:pointer;text-align:left;transition:transform .2s,background .2s}
-.ss:hover{transform:translateY(-2px);background:rgba(255,138,42,.12)}
-.ss.past{opacity:.5}
-.ss .sd{flex:none;width:62px;height:62px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1.5px solid var(--sc)}
-.ss .sd b{font-size:19px;font-weight:900;line-height:1.1}
-.ss .sd small{font-size:11.5px;color:var(--muted)}
-.ss .si{flex:1;min-width:0}
-.ss .si b{display:block;font-size:16.5px}
-.ss .si small{display:block;font-size:13px;color:var(--muted);line-height:1.5}
-.ss .sl{flex:none;text-align:center;font-size:12px;color:var(--muted);line-height:1.3}
-.ss .sl b{display:block;font-size:24px;color:var(--gold);font-weight:900}
-.ss .sl.hot b{color:#ff7a5a}
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.plan{padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
-.plan.best{border-color:rgba(255,190,90,.7);background:linear-gradient(135deg,rgba(255,179,71,.14),rgba(255,77,109,.08))}
-.plan h5{margin:0;font-size:15px;font-weight:900}
-.plan s{font-size:12.5px;color:var(--dim)}
-.plan .amt{font-size:28px;font-weight:900;line-height:1.2}
-.plan .amt small{font-size:13px;color:var(--muted)}
-.plan p{margin:6px 0 0;font-size:13px;color:var(--muted)}
-.gifts{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:14.5px}
-.gifts li{padding:8px 12px;border-radius:12px;background:rgba(255,209,102,.07);border:1px solid rgba(255,209,102,.3)}
-.refer{margin-top:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(255,179,71,.18),rgba(255,77,109,.12));box-shadow:0 0 0 1.5px rgba(255,190,90,.8)}
-.refer b{display:block;color:#ffe2a8;font-size:15.5px}
-.refer span{display:block;font-size:14px;margin-top:4px}
-.refer em{font-style:normal;color:var(--gold);font-weight:900}
-.back{display:inline-flex;margin:4px 0 6px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;font-size:14px;font-weight:700}
-/* 場次詳情（沿用標準招生頁） */
-.s-date{flex:none;width:78px;height:78px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1.5px solid var(--sc)}
-.s-date b{font-size:24px;font-weight:900;line-height:1.1}
-.s-date span{font-size:12px;color:var(--muted)}
-.seat{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 6px;width:100%;margin:10px 0 10px;padding:10px 14px;border-radius:14px;border:1.5px solid rgba(255,209,102,.6);background:rgba(255,209,102,.08);font-weight:900}
-.seat b{display:inline-block;font-size:30px;line-height:1;color:var(--gold)}
-.seat em{font-style:normal;font-size:14px;width:100%}
-.seat.hot{background:linear-gradient(135deg,#ff7a1a,#ff3b5c);border-color:transparent}
-.seat.hot b{color:#fff}
-.seat.full{border-color:var(--line);background:rgba(255,255,255,.06);color:var(--dim)}
-.s-status{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
-.s-status span{padding:5px 12px;border-radius:999px;font-size:13px;font-weight:700;background:rgba(255,255,255,.06);border:1px solid var(--line)}
-.s-status .hot{background:rgba(255,138,42,.16);border-color:rgba(255,138,42,.5);color:#ffc58f}
-.s-status .off{color:var(--dim)}
-.info{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.info li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:14.5px}
-.info li b{color:var(--muted)}
-.pay{display:grid;gap:10px}
-.pay .orig{font-size:13.5px;color:var(--dim)}
-.pay .orig s{margin-right:6px}
-.pay a.btn{justify-content:space-between;width:100%;white-space:normal;text-align:left;padding:14px 20px;border-radius:16px}
-.pay a.btn small{display:block;font-size:12px;font-weight:500;opacity:.9}
-.pay a.btn b{font-size:18px;font-weight:900;white-space:nowrap}
-.hint{font-size:13px;color:var(--muted);margin:8px 0 0}
-.warn{font-size:13.5px;color:#ffd7a8;padding:10px 14px;border-radius:12px;background:rgba(255,138,42,.1);border:1px solid rgba(255,138,42,.35);margin:0}
-.bank{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:grid;gap:6px;font-size:14.5px}
-.bank div{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.bank div b{color:var(--muted);width:44px}
-.bank .acct{font-size:18px;font-weight:900;letter-spacing:.04em;color:#fff}
-.copy{padding:4px 12px;border-radius:999px;border:1px solid rgba(155,240,107,.5);background:rgba(155,240,107,.12);color:var(--cyan);font-size:12.5px;font-weight:700;cursor:pointer}
-.tpl{margin:0;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.35);border:1px dashed var(--line);font-family:inherit;font-size:13.5px;white-space:pre-wrap}
 .row2{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.notes{margin:0;padding-left:20px;color:var(--muted);font-size:14px;display:grid;gap:4px}
 .forum{display:inline-block;margin-top:14px;font-size:13.5px;color:var(--cyan)}
 /* 蘋果爸小屋 */
 .home-top{display:flex;flex-direction:column;align-items:center;margin:4px 0 6px}
@@ -368,16 +295,7 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .sbox input::placeholder{color:var(--dim)}
 .s-count{font-size:13.5px;color:var(--muted);margin:2px 0 10px}
 
-/* ===== PDF 下載 ===== */
 .howto{margin:16px auto 0;padding:10px 16px;max-width:560px;border-radius:14px;border:1px dashed rgba(255,209,102,.5);background:rgba(255,209,102,.08);font-size:14.5px;color:var(--ink)}
-.dl-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
-.dl-cnt{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 20px;margin:10px 0 0;min-height:20px;font-size:14.5px;font-weight:700;color:var(--gold)}
-.dltip{position:fixed;inset:0;z-index:145;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:20px}
-.dltip[hidden]{display:none}
-.dltip-box{max-width:380px;padding:24px 22px;background:var(--card-strong)}
-.dltip-box h3{font-size:18px;font-weight:900;margin-bottom:10px}
-.dltip-box p{margin:0 0 8px;font-size:15px}
-.dltip-box p.sm{font-size:13.5px;color:var(--muted)}
 
 /* ===== 寶箱、提示、特效 ===== */
 .chest{position:fixed;inset:0;z-index:140;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,0,12,.78)}
@@ -441,16 +359,9 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
   .map{border-radius:24px}
   .spot .tag{font-size:14px;padding:3px 10px}
   .isle-list{grid-template-columns:1fr}
-  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:75;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(26,8,40,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
-  .mbar .p{font-size:13px;color:var(--muted);line-height:1.3}
-  .mbar .p b{display:block;font-size:18px;color:var(--gold);font-weight:900}
-  .mbar .btn{padding:11px 20px;font-size:15px}
-  .foot{padding-bottom:110px}
   .p-body{padding:8px 16px 26px}
   .ph-e{width:68px;height:68px;font-size:38px;border-radius:20px}
-  .facts{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr 1fr}
-  .plans{grid-template-columns:1fr}
   .vids{grid-template-columns:1fr}
   .links{grid-template-columns:1fr}
   .p-foot .btn{padding:10px 14px;font-size:14px}
@@ -526,7 +437,7 @@ body{font-size:18px}
 .rel b{font-size:17px}
 .chip{font-size:16px}
 .p-sec h4{font-size:19px}
-.facts li,.prep li,.gifts li,.unit .ub ul{font-size:16.5px}
+.unit .ub ul{font-size:16.5px}
 .unit summary b{font-size:18.5px}
 .unit summary small{font-size:15px}
 .bio{font-size:18px}
@@ -559,13 +470,7 @@ body{font-size:18px}
   .spot .cnt{font-size:16.5px}
   .mdeco{font-size:28px}
   .boat{font-size:40px}
-  .mbar .p{font-size:14px}
-  .mbar .p b{font-size:20px}
-  .mbar .btn{font-size:16px}
   .p-foot .btn{font-size:15px}
-}
-@media (max-width:520px){
-  .hud .btn{display:none}
 }
 </style>
 </head>
@@ -579,7 +484,6 @@ body{font-size:18px}
   <div class="hud-r">
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋問答">🔍</button>
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
-    <button class="btn btn-primary btn-sm" type="button" data-open="dock">報名</button>
   </div>
 </header>
 
@@ -595,15 +499,9 @@ body{font-size:18px}
       <button class="qbtn" type="button" id="randBtn">🎲 隨機抽一題</button>
       <button class="qbtn" type="button" id="searchBtn2">🔍 找我的問題</button>
       <button class="qbtn" type="button" data-open="castle">🏰 課程城堡</button>
-      <button class="qbtn" type="button" data-open="dock">⛵ 報名碼頭</button>
       <button class="qbtn hot" type="button" id="giftBtn" hidden>🎁 提示詞禮物包</button>
     </div>
     <p class="howto"><b>🍬 怎麼拿糖果？</b> ① 點一座島　② 翻開 3 張問答卡　③ 拿到 1 顆糖果。<br>拿滿 <b>5 顆</b>，送你 <b>🎁 提示詞禮物包</b>：教你做出自己的知識島，主題與風格自己設定。</p>
-    <div class="dl-row">
-      <a class="btn btn-ghost" href="https://kv1012tiger.github.io/ai-course/AI幫你做_課程大綱與主題介紹.pdf" data-dl>⬇ 下載課程大綱 PDF</a>
-      <a class="btn btn-ghost" href="https://kv1012tiger.github.io/ai-course/AI幫你做_課前準備.pdf" data-dl="prep">⬇ 下載課前準備 PDF</a>
-    </div>
-    <p class="dl-cnt"><span>課程大綱 <span data-dl-count></span></span><span>課前準備 <span data-dl-count="prep"></span></span></p>
     <div class="stats"><span><b id="stF">12</b>座論壇島</span><span><b id="stI">9</b>座問答島</span><span><b id="stQ">0</b>則學員提問</span><span><b>6</b>隻毛孩陪你逛</span></div>
   </div>
 </section>
@@ -627,25 +525,6 @@ body{font-size:18px}
   </div>
 </section>
 
-<section class="end">
-  <div class="wrap">
-    <div class="card end-box">
-      <span class="eyebrow">Next Stop</span>
-      <h2>這些願望，<span class="grad-fire">實體課一起做出來。</span></h2>
-      <p>週六下午 5 小時，小班制實作。台北・高雄・台南・台中。</p>
-      <div class="cta-row">
-        <button class="btn btn-primary" type="button" data-open="dock">⛵ 前往報名碼頭</button>
-        <button class="btn btn-ghost" type="button" data-open="castle">🏰 看課程城堡</button>
-        <a class="btn btn-ghost" href="https://kv1012tiger.github.io/ai-course/" data-std>📘 標準招生頁（AI探索島）</a>
-      </div>
-      <div class="dl-row">
-        <a class="btn btn-ghost" href="https://kv1012tiger.github.io/ai-course/AI幫你做_課程大綱與主題介紹.pdf" data-dl>⬇ 下載課程大綱 PDF</a>
-        <a class="btn btn-ghost" href="https://kv1012tiger.github.io/ai-course/AI幫你做_課前準備.pdf" data-dl="prep">⬇ 下載課前準備 PDF</a>
-      </div>
-      <p class="dl-cnt"><span>課程大綱 <span data-dl-count></span></span><span>課前準備 <span data-dl-count="prep"></span></span></p>
-    </div>
-  </div>
-</section>
 </main>
 
 <footer class="foot">
@@ -656,10 +535,6 @@ body{font-size:18px}
   </div>
 </footer>
 
-<div class="mbar">
-  <div class="p">早鳥實體課程<b>NT$3,600 起</b></div>
-  <button class="btn btn-primary" type="button" data-open="dock">⛵ 報名碼頭</button>
-</div>
 
 <div class="backdrop" id="backdrop"></div>
 <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" aria-hidden="true">
@@ -715,10 +590,9 @@ body{font-size:18px}
 ■ 第五步：驗收與修改
 我開啟後若有問題，會用白話描述（例如「第 3 座島點了沒反應」），請只修改那一部分，並重新給我完整檔案。
 
-（以下是備註，不需要處理）這份提示詞出自蘋果爸「AI 幫你做什麼」。想把 AutoCAD × AI 做成自己的工具，歡迎來上實體課。</pre>
+（以下是備註，不需要處理）這份提示詞出自蘋果爸「AI 幫你做什麼」。</pre>
     <div class="row2"><button class="btn btn-primary" type="button" id="giftCopy">📋 複製提示詞</button></div>
-    <p>這些學員的願望，實體課帶你一起動手做出來。</p>
-    <div class="row2"><button class="btn btn-primary" type="button" data-open="dock">⛵ 去報名碼頭</button><button class="btn btn-ghost" type="button" id="chestClose">繼續逛逛</button></div>
+    <div class="row2"><button class="btn btn-ghost" type="button" id="chestClose">繼續逛逛</button></div>
   </div>
 </div>
 
@@ -738,15 +612,6 @@ body{font-size:18px}
     <p class="intro-sub">蘋果爸的 AutoCAD 教學大島群</p>
     <button class="btn btn-primary intro-go" id="introGo" type="button">🎃 按一下，登上論壇資源島</button>
     
-    <a class="intro-back" href="https://kv1012tiger.github.io/ai-course/" data-std>← 改去 AI探索島（標準招生頁）</a>
-  </div>
-</div>
-<div class="dltip" id="dlTip" role="dialog" aria-modal="true" aria-labelledby="dlTipT" hidden>
-  <div class="card dltip-box">
-    <h3 id="dlTipT">這個 App 無法直接下載檔案</h3>
-    <p>請點畫面右上角「⋯」，選擇「以瀏覽器開啟」，再按一次「下載」。</p>
-    <p class="sm">也可以複製下載連結，貼到 Safari 或 Chrome 開啟。</p>
-    <div class="row2"><button class="btn btn-primary btn-sm" id="dlCopy" type="button">📋 複製下載連結</button><button class="btn btn-ghost btn-sm" id="dlClose" type="button">關閉</button></div>
   </div>
 </div>
 <div id="fx" aria-hidden="true"></div>
@@ -756,15 +621,7 @@ body{font-size:18px}
 (function(){
 'use strict';
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var LINE='https://lin.ee/4xw8yKI',AIC='https://kv1012tiger.github.io/ai-course/',PDF_NAME='AI幫你做_課程大綱與主題介紹.pdf',PREP_NAME='AI幫你做_課前準備.pdf',PDF_URL=AIC+PDF_NAME,PREP_FILE=AIC+PREP_NAME,COUNT_API='https://abacus.jasoncameron.dev/{op}/kv1012tiger-ai-course/{key}';
-var SHOP='https://autocad-tw.my1shop.com/la4v2u#Type=Product&ID=';
-var PAY={
-  taipei:{b:'ZrLgxyBe1OoymBdQ1RGDQb9n',n:'eobJKaG21M0jZPOpzA4BqnwO'},
-  kaohsiung:{b:'vEg6odmj75Z48LwmkNA3BXpV',n:'9wNBG6m3kYKw2b531vQYZAKR'},
-  tainan:{b:'aovEX3VGzavJmnBR1jy9xdYm',n:'ndwgBoML1AZMyE5d7lD8O52Z'},
-  taichung:{b:'KmEBAGDMzKbQjlodkZ3l52W4',n:'P02rqdam78eVvW9RkNbvx6p8'}
-};
-var BANK={bank:'合作金庫銀行 雙和分行',code:'006',acct:'1449872294172',name:'黃婕瀅'};
+var LINE='https://lin.ee/4xw8yKI';
 
 var UNITS=[
  {id:'01',e:'🎃',fig:[['初稿','先把需求說清楚'],['修正','指出位置與條件'],['技能','保存可重用規則']],moon:false,name:'訓練 AI 技能',short:'AI 技能',star:'技能島',tag:'Gemini',tagline:'把一次次修正，變成下次可用的規則',desc:'把需求、規則與範例說清楚。',
@@ -814,14 +671,6 @@ var UNITS=[
   tex:{t:'europa',seed:97},size:46}
 ];
 
-var SESSIONS=[
- {d:'2026-11-07',dl:'2026-11-04',name:'台北場 1',left:0,tm:'13:15–18:15',place:'台北市（捷運國父紀念館站附近）',room:'捷運國父紀念館站 1 號出口左後轉彎，步行約 3 分鐘',pay:'taipei',url:'https://www.autocad-tw.com/t30749-topic',c:'#5ee7ff',u:3},
- {d:'2026-11-21',dl:'2026-11-18',name:'台北場 2',left:0,tm:'13:15–18:15',place:'台北市（捷運國父紀念館站附近）',room:'捷運國父紀念館站 1 號出口左後轉彎，步行約 3 分鐘',pay:'taipei',url:'https://www.autocad-tw.com/t30751-topic',c:'#a78bfa',u:0},
- {d:'2026-12-05',dl:'2026-11-19',name:'高雄場',left:2,tm:'13:00–18:00',place:'高雄市（輕軌或車站附近）',room:'高雄輕軌籬仔內站附近',pay:'kaohsiung',url:'https://www.autocad-tw.com/t30752-topic',c:'#f5c6a8',u:4},
- {d:'2026-12-19',dl:'2026-12-03',name:'台南場',left:4,tm:'13:00–18:00',place:'台南市（車站附近）',room:'台南火車站附近',pay:'tainan',url:'https://www.autocad-tw.com/t30753-topic',c:'#f0a070',u:2},
- {d:'2027-01-02',dl:'2026-12-17',name:'台中場',left:2,tm:'13:00–18:00',place:'台中市（捷運文心中清站附近）',room:'距離台中捷運文心中清站，步行約 6 分鐘',pay:'taichung',url:'https://www.autocad-tw.com/t30754-topic',c:'#9ee8f0',u:1},
- {d:'2027-01-16',dl:'2027-01-13',name:'台北場 3',left:10,tm:'13:15–18:15',place:'台北市（捷運國父紀念館站附近）',room:'捷運國父紀念館站 1 號出口左後轉彎，步行約 3 分鐘',pay:'taipei',url:'https://www.autocad-tw.com/t30763-topic',c:'#6aa0ff',u:5}
-];
 var QA={"3": ["周OO", "繪圖", "沒問題 很簡單🤭"], "4": ["張OO", "放樣", "可以幫你繪製放樣尺寸👌"], "5": ["高OO", "想了解", "上課多提問對你幫很大😁"], "6": ["謝OO", "丈量圖轉CAD\nCAD轉3D", "丈量手稿需清晰清楚 即可完成CAD圖及3D"], "7": ["陳OO", "CAD圖說修正、詳圖繪製", "先餵資料訓練AI即可"], "8": ["吳OO", "簡化機械式的工作流程，不可能2025了還要按指令畫平面圖", "簡化重複性流程可以用lsp程式達成😙"], "9": ["君OO", "想了解能怎麼使用", "當天盡量提問 技能學起來💪"], "10": ["蘇OO", "轉換圖面跟送審圖跟剖面", "要如何有效轉換 當天上課我們一起研討😽"], "11": ["誱OO", "幫我畫圖", "小菜一疊 快來參加😚"], "14": ["H 同學", "3D", "2D圖準 3D就準"], "15": ["W 同學", "備註：人不在台灣，無法到線下實體課上課，請問可以看線上直播或視頻回放學習嗎？", "後續會上架線上課程，可以自行觀看及練習，有問題可以再提出研討😎"], "16": ["傅OO", "可以把不同圖的圖層、尺寸，統一化", "Ok的 需提供你的規劃需要跟AI說😄"], "17": ["黃OO", "照片或掃描的PDF\nAi能自動判別尺寸架構 生成建築平面圖\n或在零件產品能勾勒線條 供大樣圖使用\n上課地點希望能大眾運輸方便到達的地方 \n感謝", "這次就是這個範例，會找到方便到達的地方喔😙"], "18": ["賴OO", "能針對Autocad 進行建簡易平面圖，減輕工作的負擔", "沒問題，這點需求現在真的可以實現😁"], "20": ["陳OO", "當我的工作助理", "現在就是我的助理了，來上課把這技能學起來😉"], "21": ["顏OO", "靠提示詞產生圖檔", "這個範例目前用了12回產生dwg檔，還有數量及3D喔🐶"], "22": ["A 同學", "所短制式但又必須之工作流程", "來上課規劃自己的流程，當天我們好好交流😎"], "25": ["林OO", "都可以", "沒問題的👌"], "27": ["R 同學", "製作建築圖紙，3d及rendering", "作圖紙沒問題，rendering 是我下一階段要試的😂"], "28": ["黃OO", "縮短CAD作業時間", "快來用AI，你會超有感的💪"], "29": ["H 同學", "重複畫圖的工作", "我現在工作就是這樣做，小需求可以請AI寫程式完成重複工作😊"], "30": ["蔡OO", "製圖", "這個簡單啦😄"], "31": ["楊OO", "畫CAD、文書、3D繪圖生成", "這個沒問題，要好好培養訓練你的AI助理即可☺️"], "32": ["呂OO", "製圖", "設置你的標準就沒問題😎"], "35": ["L 同學", "起草平面图/图转CAD，希望开放海外用户（马来西亚）能够旁听学习", "未來會推出線上課程給不能來上課的朋友😚"], "36": ["徐OO", "室內設計", "這部分也是ok的👌"], "37": ["黃OO", "3D建模及圖面套匯", "3D建模我已經成功，圖面套繪我們當天再研討😙"], "39": ["黃OO", "互動式網頁模型", "這個需要範本，需要描述給AI看即可😉"], "40": ["高OO", "CAD製圖  3D製圖", "這個需求現在沒問題，就是這回的上課範例😁"], "44": ["劉OO", "平面圖牆量計算", "這次的範本也有幫我計算數量，我們第一次需要驗證，再來訓練成技能工具👍"], "45": ["陳OO", "繪圖Autocad", "沒問題，正確描述給提示詞，但是需多次修改校正😊"], "48": ["李OO", "圖面計算工程材料數量", "這個我用lsp做很久了，現在可以輕鬆做到😆"], "49": ["陳OO", "講需求自動畫圖，或者自動撿料", "這算大型工作流程，可以提供範本數據給AI訓練，就可以達成☺️"], "50": ["楊OO", "室內設計製圖", "這個可以達成的😁"], "54": ["江OO", "工程圖面清圖。", "沒問題的，我的工作都請AI幫我，可以寫程式也可直接算給你算囉"], "56": ["洪OO", "想知道AI可以處理到什麼程度", "我也想知道，目前的AI已經讓我非常驚艷，持續使用中"], "57": ["R 同學", "繪圖，我不在台灣，在香港", "繪圖已經沒問題，看你如何訓練及引導AI。未來會推出線上課程給無法來上課的朋友喔"], "58": ["陳OO", "Cad平面放樣，平面配置確認後水電點位、剖面圖等基本作業", "這些通通跟AI說，他會說明你需要提供哪些資料，然後即可變給你😁"], "59": ["H 同學", "畫3d 施工圖 法規檢討 簡報", "你的需求就是要請AI幫手來做，本次課程就是教你培養專屬你的AI助手"], "60": ["戴OO", "可以將業主提供的圖面自動分辨零件", "這次上課有說明這概念，已經成功沒問題"], "61": ["莊OO", "草圖、拆圖", "可以，這次課程會提到拆圖概念"], "62": ["陳OO", "CAD動態圖塊及圖層整理", "動態圖塊這技能很有趣，我來試試看AI的能耐。圖層整理小菜一碟喔"], "65": ["林OO", "繪圖、檢核、套圖", "可以輕鬆達成，快來學習訓練你的AI幫手"], "67": ["陳OO", "水電繪圖配置，核算水電管線數量", "只要你的圖層圖塊分的好，AI核算數量沒煩惱"], "69": ["洪OO", "3D空間建立", "這個很輕鬆沒問題"], "70": ["T 同學", "平面圖轉.dwg 、3D。3D轉施工圖", "本次的教學課程主軸，來上課把此技能及流程學起來吧"], "71": ["陳OO", "提供數據可產出規劃線路圖/圖像化/報價單", "本次課程重點就是學習如何餵資料給AI當你的智庫，然後需要什麼資料都可輕鬆取得"], "72": ["謝OO", "AI自動標註距離、自動連結外部參考圖、自動刪除不需要的圖層和字形、自動算相同圖塊的數量", "這個以前的AI要花一些時間，現在AI訓練好後，這些都輕鬆完成，課程中教你引導AI來達成任務"], "73": ["陳OO", "圖檔轉換成AutoCAD或是sketch up", "可以的 沒問題\n補充細節繪製更完全完整"], "74": ["陳OO", "cad設計", "給 AI 你的設計原則說明"], "75": ["陳OO", "繪圖", "沒問題 已經可以辦到"], "76": ["阿OO", "規劃圖設計", "給AI原則說明即可"], "77": ["K 同學", "Agent", "可以訓練一個屬於自己的Agent"], "80": ["林OO", "取代SKP-3D繪圖軟體，並能更好渲染，比例精準，建築零件家具可客製化不必特意下載3D模型，導入互動系統讓不懂繪圖軟體的客戶端也能操作。", "相當於請AI生成SKP外掛，以及請AI幫你做及完成互動3D展示，然後我們再來驗收"], "81": ["劉OO", "工作上CSD or SEM圖說", "給足資訊就能完成"], "83": ["W 同學", "使用AI繪製鋼構螺栓", "一開始先訓練AI讓他認識你的工作圖面即可輕鬆達成"], "84": ["B 同學", "CAD2D轉3D以及建築施工圖/建照圖/結構圖清圖(門窗編號及尺寸/樑編好及尺寸)", "你的問題就是這次課程第一個主要教學內容喔"], "85": ["林OO", "這就是最大迷茫，AI的切入點不知從何找起", "正式大多數人的盲點，這次課程就是為你設計，我來告訴你如何讓AI幫你做"], "86": ["N 同學", "幫我繪圖、做企劃書、做簡報", "這個沒問題，還可以做網頁"]};
 
 
@@ -857,7 +706,6 @@ var SP=[{k:'home',e:'🏡',name:'蘋果爸小屋',sub:'講師介紹・三貓三�
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
 SP.push({k:'castle',e:'🏰',name:'課程城堡',sub:'9 個單元・課程內容',c:'#c08bff',g:['#b08aff','#4a2a9a'],dc:['🦇','🕯️','🎃'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
-SP.push({k:'dock',e:'⛵',name:'報名碼頭',sub:'場次・費用・報名方式',c:'#ff8a2a',g:['#ffb066','#b0601a'],dc:['🎃','🏮','🍬'],res:[['🦀','w'],['🐕','w'],['🐬','s'],['🐦','f']]});
 SP.forEach(function(s,i){s.si=i});
 function pad(n){return (n<10?'0':'')+n}
 var ISLE_OF={};ISLES.forEach(function(s,i){s.rows.forEach(function(r){ISLE_OF[r]=i})});
@@ -887,7 +735,7 @@ var PETS=[
  {n:'三花貓',k:'貓',kind:'cat',base:'#fbf6ee',p:[['#f0a04b',30,44,17],['#2b2b2b',70,40,14]],say:'喵～我是三花貓，先點一座島看看吧！'},
  {n:'乳牛貓',k:'貓',kind:'cat',base:'#fbfbfb',p:[['#1f1f1f',68,42,19],['#1f1f1f',24,74,10],['#1f1f1f',34,30,8]],say:'黑白分明的我，最喜歡整整齊齊的圖層。'},
  {n:'橘貓',k:'貓',kind:'cat',base:'#f3a24a',stripe:'#c96f1e',say:'橘貓報到！拿到糖果，記得分我一顆。'},
- {n:'小黑',k:'米克斯狗',kind:'dog',base:'#2a2a2a',ear:'#151515',snout:'#4a4a4a',say:'汪！我是小黑，帶你去報名碼頭看看。'},
+ {n:'小黑',k:'米克斯狗',kind:'dog',base:'#2a2a2a',ear:'#151515',snout:'#4a4a4a',say:'汪！我是小黑，帶你到處逛逛。'},
  {n:'小白',k:'米克斯狗',kind:'dog',base:'#f6f2ea',ear:'#e0d2bc',snout:'#ffffff',say:'汪汪～我是小白，有問題都可以問蘋果爸喔！'},
  {n:'黑寶',k:'10 歲狗狗',kind:'dog',base:'#1f1f1f',ear:'#101010',snout:'#9a9a9a',old:1,say:'我是黑寶，今年 10 歲！慢慢逛，不用急。'}
 ];
@@ -1040,7 +888,7 @@ function refresh(){
     var nx=!done&&!nextSet;if(nx)nextSet=true;s.el.classList.toggle('next',nx);
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🍬 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
-  $('guideTxt').textContent=n===ISLES.length?'太厲害了！所有島的糖果都拿到了，送你一份 🎁 提示詞禮物包，再去報名碼頭找我吧 ⛵':n>=5?'已經拿到 '+n+' 顆糖果，🎁 提示詞禮物包送你了！繼續往下一座島前進！':n?'已經拿到 '+n+' 顆糖果，繼續往下一座島前進！':'嗨！我是蘋果爸。坐上小船，從第一座島出發吧 👇';
+  $('guideTxt').textContent=n===ISLES.length?'太厲害了！所有島的糖果都拿到了，送你一份 🎁 提示詞禮物包！':n>=5?'已經拿到 '+n+' 顆糖果，🎁 提示詞禮物包送你了！繼續往下一座島前進！':n?'已經拿到 '+n+' 顆糖果，繼續往下一座島前進！':'嗨！我是蘋果爸。坐上小船，從第一座島出發吧 👇';
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
 
@@ -1097,19 +945,17 @@ function renderHome(){
     '<p class="bio">我喜歡知識分享、騎腳踏車、球類活動(籃球/撞球)、健行及爬山，家裡有三喵咪&amp;三狗勾(六畜興旺)😁</p>'+
     '<div class="p-sec" style="--pc:#ffd166"><h4>家裡的三貓三狗</h4><div class="pets">'+PETS.map(function(p,k){return '<button class="pc" type="button" data-pet="'+k+'">'+petSVG(p)+'<b>'+p.n+'</b><small>'+p.k+'</small></button>'}).join('')+'</div></div>'+
     '<div class="p-sec"><h4>找到蘋果爸</h4><div class="links">'+
-      '<a class="lk" href="https://autocad-tw.1shop.tw" target="_blank" rel="noopener"><i>🎓</i><span><b>蘋果爸課程百寶箱</b><small>所有 AutoCAD 課程一次看</small></span></a>'+
       '<a class="lk" href="https://www.youtube.com/user/kv1012tiger" target="_blank" rel="noopener"><i>🍄</i><span><b>蘋果爸愛分享頻道</b><small>免費教學影片看到飽</small></span></a>'+
       '<a class="lk" href="http://www.autocad-tw.com/" target="_blank" rel="noopener"><i>🚀</i><span><b>AutoCAD 顧問基地</b><small>問題、範例、程式都在這</small></span></a>'+
       '<a class="lk" href="https://www.facebook.com/groups/autocad.tw/" target="_blank" rel="noopener"><i>📢</i><span><b>CAD 同好交流圈</b><small>一起討論、互相幫忙</small></span></a>'+
       '<a class="lk" href="https://www.facebook.com/autocad.tw/" target="_blank" rel="noopener"><i>🍤</i><span><b>最新消息快報站</b><small>開課與活動第一手</small></span></a>'+
-      '<a class="lk" href="'+LINE+'" target="_blank" rel="noopener"><i>🎁</i><span><b>LINE 一對一問蘋果爸</b><small>報名、課程問題直接問・@sni5329r</small></span></a>'+
+      '<a class="lk" href="'+LINE+'" target="_blank" rel="noopener"><i>🎁</i><span><b>LINE 一對一問蘋果爸</b><small>有問題直接問・@sni5329r</small></span></a>'+
     '</div></div>';
   $('pStep').textContent='🏡 蘋果爸小屋';
   footSimple('← 回地圖','🪄 第一座島 →');
 }
 function renderCastle(){
-  pBody.innerHTML='<div class="ph" style="--c:#c08bff"><span class="ph-e">🏰</span><div><div class="p-kicker">COURSE CASTLE・課程內容</div><h3 id="pTitle">課程城堡</h3><p>AI 幫你做什麼｜AutoCAD × AI 實體課程</p></div></div>'+
-    '<ul class="facts"><li>📅 週六下午 5 小時實作</li><li>👥 小班制，每場 10 名</li><li>📍 台北・高雄・台南・台中</li><li>💻 AutoCAD 2026・Windows</li></ul>'+
+  pBody.innerHTML='<div class="ph" style="--c:#c08bff"><span class="ph-e">🏰</span><div><div class="p-kicker">COURSE CASTLE・課程內容</div><h3 id="pTitle">課程城堡</h3><p>AI 幫你做什麼｜AutoCAD × AI 課程單元</p></div></div>'+
     '<div class="p-sec"><h4>上課怎麼走</h4><div class="steps"><span>你的圖片與需求</span><span>AI 協作與檢查</span><span>DWG 圖面整理</span><span>互動 3D 展示</span></div></div>'+
     '<div class="p-sec" style="--pc:#ffd166"><h4>9 個單元（6 個範例＋3 個加碼附錄）</h4>'+UNITS.map(function(u){
       return '<details class="unit" data-u="'+u.id+'" style="--c1:'+u.c1+';--c2:'+u.c2+'"><summary><span class="ue">'+u.e+'</span><span><b>'+(u.moon?'附錄 ':'')+esc(u.id)+' '+esc(u.name)+(u.moon?'<span class="gift-tag">兩種方案皆送</span>':'')+'</b><small>'+esc(u.tagline)+'</small></span></summary>'+
@@ -1119,62 +965,9 @@ function renderCastle(){
     '<div class="p-sec"><h4>先看影片</h4><div class="vids">'+
       '<a class="vid" href="https://www.youtube.com/watch?v=bd1DHrGW9Qs" target="_blank" rel="noopener"><i style="background-image:url(https://i.ytimg.com/vi/bd1DHrGW9Qs/hqdefault.jpg)"></i><span>課程成果展示 ↗</span></a>'+
       '<a class="vid" href="https://www.youtube.com/watch?v=bj2FKTcKO8s" target="_blank" rel="noopener"><i style="background-image:url(https://i.ytimg.com/vi/bj2FKTcKO8s/hqdefault.jpg)"></i><span>課程初步講解 ↗</span></a>'+
-    '</div></div>'+
-    '<div class="p-sec"><h4>課前準備</h4><ul class="prep"><li>💻 Windows 版 AutoCAD・筆電、滑鼠、充電器</li><li>🔑 先登入 Google、ChatGPT・安裝並登入 Codex</li><li>🗂️ 帶一張平面圖、手繪圖或 DWG</li><li>⚙️ LISPSYS 設 0 → 重開 AutoCAD → 輸入 VLIDE</li><li>🎒 沒有筆電？可旁聽做筆記，回家看錄影重播</li></ul></div>'+
-    '<div class="p-sec"><h4>下載資料</h4><div class="dls"><a class="btn btn-ghost" href="'+PDF_URL+'" data-dl>⬇ 課程大綱 PDF（12 頁）</a><a class="btn btn-ghost" href="'+PREP_FILE+'" data-dl="prep">⬇ 課前準備 PDF（4 頁）</a></div></div>';
+    '</div></div>';
   $('pStep').textContent='🏰 課程城堡';
-  footSimple('← 回地圖','⛵ 去報名碼頭 →');
-}
-var WD=['日','一','二','三','四','五','六'];
-var today=new Date();today.setHours(0,0,0,0);
-function toDate(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
-function fmtDate(s){var d=toDate(s);return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+'（'+WD[d.getDay()]+'）'}
-function daysTo(s){return Math.round((toDate(s)-today)/86400000)}
-function renderDock(){
-  pBody.innerHTML='<div class="ph" style="--c:#ff8a2a"><span class="ph-e">⛵</span><div><div class="p-kicker">DOCK・報名方式</div><h3 id="pTitle">報名碼頭</h3><p>選場次 → 付款 → 用 LINE@ 回報資料</p></div></div>'+
-    '<div class="p-sec" style="--pc:#ff8a2a"><h4>上課場次（點場次看付款方式）</h4><div class="ss-list">'+SESSIONS.map(function(s,i){
-      var dt=toDate(s.d),past=dt<today,left=daysTo(s.dl),hot=s.left>0&&s.left<=3;
-      return '<button class="ss'+(past?' past':'')+'" type="button" data-ss="'+i+'"><span class="sd" style="--sc:'+s.c+'"><b>'+(dt.getMonth()+1)+'/'+dt.getDate()+'</b><small>週'+WD[dt.getDay()]+'</small></span>'+
-        '<span class="si"><b>'+esc(s.name)+'</b><small>'+esc(s.tm)+'・'+esc(s.place)+'</small>'+(!past&&s.left<=0?'':'<small>'+(past?'課程已結束':left>0?'報名倒數 '+left+' 天':left===0?'今天截止報名':'已截止報名')+'</small>')+'</span>'+
-        '<span class="sl'+(hot?' hot':'')+'">'+(s.left<=0?'已額滿':'剩<b>'+s.left+'</b>位')+'</span></button>'}).join('')+'</div></div>'+
-    '<div class="p-sec" style="--pc:#ffd166"><h4>費用方案（早鳥優惠）</h4><div class="plans">'+
-      '<div class="plan"><h5>實作課程</h5><s>原價 NT$7,000</s><div class="amt"><small>NT$</small>3,600</div><p>5 小時實體課程・不含論壇專屬 B 會員</p></div>'+
-      '<div class="plan best"><h5>課程＋專屬 B 會員</h5><s>原價 NT$7,000</s><div class="amt"><small>NT$</small>4,200</div><p>5 小時實體課程・含專屬 B 會員 1 年（價值 1,500 元）</p></div>'+
-    '</div><ul class="gifts"><li>🎁 3 個加碼附錄：PDF 轉 CAD・牆體修補・DCL 介面</li><li>🎬 上課錄影回看：兩種方案皆贈送・觀看 4 個月</li><li>💻 AI 程式入門線上課程：價值 4,200 元・兩種方案皆贈送・觀看 4 個月</li></ul>'+
-    '<div class="refer"><b>🎁 特別優惠｜推薦好友一起報名 4,200 元方案</b><span>推薦成功，你和朋友各多送 <em>1 年專屬 B 會員</em>！報名時請用 LINE@ 告知推薦人姓名與論壇會員名稱。</span></div></div>'+
-    '<div class="p-sec"><h4>還有問題？</h4><div class="row2"><a class="btn btn-line btn-sm" href="'+LINE+'" target="_blank" rel="noopener">LINE@ 問蘋果爸 ↗</a><a class="btn btn-ghost btn-sm" href="https://autocad-tw.my1shop.com/qm62pc" target="_blank" rel="noopener">了解專屬 B 會員 ↗</a></div></div>';
-  $('pStep').textContent='⛵ 報名碼頭';
-  footSimple('← 回地圖','🏰 看課程城堡 →');
-}
-function seatHTML(s){var full=s.left<=0,hot=!full&&s.left<=3;return '<div class="seat'+(full?' full':hot?' hot':'')+'">'+(full?'已額滿':'剩餘名額 <b>'+s.left+'</b> 位'+(hot?'<em>🔥 名額將滿</em>':''))+'</div>'}
-function tplFor(s){return '報名場次：'+s.name+'（'+fmtDate(s.d)+'）\n方案：4,200（含專屬B）／3,600（無專屬B）\n姓名：\n電話：\n論壇會員名稱：\nGmail 信箱：\n銀行帳號後5碼（轉帳者填寫）：'}
-function renderSession(i){
-  var s=SESSIONS[i],dt=toDate(s.d),past=dt<today,left=daysTo(s.dl),full=s.left<=0,closed=past||left<0||full,pay=PAY[s.pay];
-  var status=past?'<span class="off">課程已結束</span>':left<0?'<span class="off">已截止報名</span>':'<span class="hot">報名截止 '+fmtDate(s.dl)+' · '+(left===0?'今天截止':'倒數 '+left+' 天')+'</span>';
-  var dis=closed?' aria-disabled="true" tabindex="-1"':'';
-  pBody.innerHTML='<button class="back" type="button" data-open="dock">← 回報名碼頭</button>'+
-    '<div class="ph"><span class="s-date" style="--sc:'+s.c+'"><b>'+(dt.getMonth()+1)+'/'+dt.getDate()+'</b><span>週'+WD[dt.getDay()]+'</span></span>'+
-    '<div><div class="p-kicker">場次 '+(i+1)+'・實體課程</div><h3 id="pTitle">'+esc(s.name)+'</h3><p>'+fmtDate(s.d)+' '+esc(s.tm)+'</p></div></div>'+
-    seatHTML(s)+
-    '<div class="s-status">'+status+'<span>每場 10 名・先繳費先確定名額</span></div>'+
-    '<ul class="info"><li><b>地點</b><span>'+esc(s.place)+'</span></li><li><b>教室</b><span>'+esc(s.room)+'</span></li><li><b>時數</b><span>5 小時（'+esc(s.tm)+'）</span></li><li><b>講師</b><span>Tiger＆蘋果爸</span></li><li><b>軟體</b><span>AutoCAD 2026 · Microsoft Windows</span></li></ul>'+
-    '<div class="p-sec"><h4>信用卡付款（另開 1shop 付款頁）</h4><div class="pay">'+
-      '<span class="orig"><s>原價 NT$7,000</s>早鳥優惠中</span>'+
-      '<a class="btn btn-primary" href="'+SHOP+pay.b+'" target="_blank" rel="noopener"'+dis+'><span>含專屬 B 會員一年<small>價值 1,500 元 · 信用卡付款 ↗</small></span><b>NT$4,200</b></a>'+
-      '<a class="btn btn-ghost" href="'+SHOP+pay.n+'" target="_blank" rel="noopener"'+dis+'><span>無專屬 B 會員<small>信用卡付款 ↗</small></span><b>NT$3,600</b></a>'+
-      (full?'<p class="warn">本場已額滿，請用 LINE@ 登記候補。</p>':'')+
-      (s.pay==='taipei'?'<p class="warn">台北場次共用同一付款頁，付款後請用 LINE@ 告知上課日期（'+SESSIONS.filter(function(o){return o.pay===s.pay&&o.left>0}).map(function(o){return o.d.slice(5).replace('-','/')}).join(' 或 ')+'）。</p>':'')+
-      '<p class="hint">付款完成後，請用 LINE@ 告知姓名與論壇會員名稱。</p></div></div>'+
-    '<div class="p-sec"><h4>銀行轉帳（ATM／臨櫃）</h4><div class="bank">'+
-      '<div><b>銀行</b><span>'+BANK.bank+'</span></div><div><b>代號</b><span>'+BANK.code+'</span></div>'+
-      '<div><b>帳號</b><span class="acct">'+BANK.acct+'</span><button class="copy" type="button" data-copy="'+BANK.acct+'" data-msg="已複製帳號">複製帳號</button></div>'+
-      '<div><b>戶名</b><span>'+BANK.name+'</span></div></div><p class="hint">轉帳完成後，請用 LINE@ 回報下方報名資料（含帳號後 5 碼）。</p></div>'+
-    '<div class="p-sec"><h4>LINE@ 報名與回報</h4><pre class="tpl">'+esc(tplFor(s))+'</pre>'+
-      '<div class="row2"><a class="btn btn-line btn-sm" href="'+LINE+'" target="_blank" rel="noopener">開啟官方 LINE@ ↗</a><button class="btn btn-ghost btn-sm" type="button" data-tpl="'+i+'">📋 複製報名資料</button></div></div>'+
-    '<div class="p-sec"><h4>注意事項</h4><ul class="notes"><li>報名截止：'+fmtDate(s.dl)+'。</li><li>報名確定後，會通知教室位置及地址。</li><li>採用投影機教學；練習範例需自備 Windows 筆電與 AutoCAD 軟體。</li><li>沒有筆電也沒關係，可以旁聽、做筆記，回去看上課錄影重播。</li><li>課後可觀看上課錄影與 AI 程式入門線上課程（各 4 個月）；附 DWG 範例與教學筆記。</li></ul>'+
-    '<a class="forum" href="'+s.url+'" target="_blank" rel="noopener">論壇場次原文 ↗</a></div>';
-  $('pStep').textContent='⛵ 報名碼頭・場次詳情';
-  footSimple('← 報名碼頭','🗺️ 回地圖');
+  footSimple('← 回地圖','🏡 蘋果爸小屋 →');
 }
 var SEARCH_KW=['繪圖','3D','數量','圖層','手稿','室內設計','LISP','助理','線上課程','清圖'];
 function renderSearch(){
@@ -1196,7 +989,7 @@ function doSearch(v){
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
 function render(dir){
   if(V.t==='isle')renderIsle(V.i);else if(V.t==='forum')renderForum(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();
-  else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='search')renderSearch();
+  else if(V.t==='search')renderSearch();
   pBody.scrollTop=0;
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
 }
@@ -1217,17 +1010,14 @@ $('pClose').addEventListener('click',closePanel);
 backdrop.addEventListener('click',closePanel);
 pPrev.addEventListener('click',function(){
   if(V.t==='isle'||V.t==='forum')openSi(curSi()-1,-1);
-  else if(V.t==='session')openPanel('dock',0,-1);
   else closePanel();
 });
 pNext.addEventListener('click',function(){
   if(V.t==='isle'||V.t==='forum')openSi(curSi()+1);
   else if(V.t==='home')openPanel('isle',0);
-  else if(V.t==='castle')openPanel('dock');
-  else if(V.t==='dock')openPanel('castle');
-  else if(V.t==='session')closePanel();
+  else if(V.t==='castle')openPanel('home');
   else if(V.t==='search')randomQ();
-  if(V.t==='isle'||V.t==='forum')placeBoat(curSi());else if(V.t==='castle'||V.t==='dock'||V.t==='home')placeBoat(spotIdx(V.t));
+  if(V.t==='isle'||V.t==='forum')placeBoat(curSi());else if(V.t==='castle'||V.t==='home')placeBoat(spotIdx(V.t));
 });
 function flip(card){
   if(!card||card.classList.contains('open'))return;
@@ -1250,11 +1040,8 @@ pBody.addEventListener('click',function(e){
   if(t.classList.contains('qa-flip')){flip(t.closest('.qa'));return}
   if(t.dataset.isle!=null){openPanel('isle',+t.dataset.isle);return}
   if(t.dataset.unit){openPanel('castle');var d=pBody.querySelector('[data-u="'+t.dataset.unit+'"]');if(d){d.open=true;setTimeout(function(){d.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})},80)}return}
-  if(t.dataset.ss!=null){var sx=SESSIONS[+t.dataset.ss];if(sx&&sx.left<=0){toast(sx.name+' 實體課已經額滿');return}openPanel('session',+t.dataset.ss);return}
   if(t.dataset.pet!=null){var p=PETS[+t.dataset.pet],ps=$('petSay');if(ps){ps.textContent=p.n+'：'+p.say;ps.classList.remove('pop');void ps.offsetWidth;ps.classList.add('pop')}playSfx(p.kind);return}
   if(t.dataset.kw){var inp=$('qIn');inp.value=t.dataset.kw;doSearch(inp.value);return}
-  if(t.dataset.copy){copyText(t.dataset.copy,t.dataset.msg);return}
-  if(t.dataset.tpl!=null){copyText(tplFor(SESSIONS[+t.dataset.tpl]),'已複製報名資料');return}
 });
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-open]');if(!t)return;
@@ -1294,36 +1081,6 @@ function burst(x,y,em){
     fx.appendChild(e);setTimeout(function(el){return function(){el.remove()}}(e),1200)}
 }
 
-/* ---------- PDF 下載與次數（與標準招生頁共用計數；按下載 +1） ---------- */
-var DLS={outline:{key:'outline-pdf-v2',file:PDF_NAME},prep:{key:'prep-pdf',file:PREP_NAME}};
-function dlId(el,attr){var v=el.getAttribute(attr);return DLS[v]?v:'outline'}
-function showCount(id,n){[].forEach.call(document.querySelectorAll('[data-dl-count]'),function(el){if(dlId(el,'data-dl-count')===id)el.textContent='📥 已下載 '+n.toLocaleString()+' 次'})}
-function saveCount(id,n){showCount(id,n);try{sessionStorage.setItem('aic-dl-'+id+'-v3',JSON.stringify({t:Date.now(),n:n}))}catch(e){}}
-function getCount(id,op,opt){
-  if(!window.fetch||(op==='hit'&&location.protocol==='file:'))return;/* 本機開啟只顯示次數、不累加 */
-  fetch(COUNT_API.replace('{op}',op).replace('{key}',DLS[id].key),opt||{}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&typeof j.value==='number')saveCount(id,j.value)}).catch(function(){});
-}
-Object.keys(DLS).forEach(function(id){
-  var cached=null;try{cached=JSON.parse(sessionStorage.getItem('aic-dl-'+id+'-v3')||'null')}catch(e){}
-  if(cached&&Date.now()-cached.t<60000)showCount(id,cached.n);else getCount(id,'get');
-});
-/* App 內建瀏覽器（LINE、Facebook、Instagram 等）不支援下載檔案：
-   LINE 改用官方的 openExternalBrowser 參數跳到手機瀏覽器；其他 App 提示改用瀏覽器開啟 */
-var UA=navigator.userAgent||'',IN_LINE=/\bLine\//i.test(UA),IN_APP=!IN_LINE&&/FBAN|FBAV|FB_IAB|Instagram|Messenger|MicroMessenger|KAKAOTALK/i.test(UA);
-var PDF_HREF='',dlTip=$('dlTip');
-function closeDlTip(){dlTip.hidden=true}
-document.addEventListener('click',function(e){
-  var a=e.target.closest('[data-dl]');if(!a)return;
-  var id=dlId(a,'data-dl'),href=a.href;PDF_HREF=href;
-  if(IN_APP){e.preventDefault();dlTip.hidden=false;$('dlCopy').focus({preventScroll:true});return}
-  if(IN_LINE){e.preventDefault();location.href=href+(href.indexOf('?')<0?'?':'&')+'openExternalBrowser=1'}
-  else a.setAttribute('download',DLS[id].file);
-  toast(IN_LINE?'將用手機瀏覽器開啟 PDF':'開始下載 PDF');
-  getCount(id,'hit',{keepalive:true});
-});
-$('dlCopy').addEventListener('click',function(){copyText(PDF_HREF,'已複製下載連結')});
-$('dlClose').addEventListener('click',closeDlTip);
-dlTip.addEventListener('click',function(e){if(e.target===dlTip)closeDlTip()});
 
 /* ---------- 音效與背景音樂（瀏覽器即時合成） ---------- */
 /* 預設靜音：每次新來都從靜音開始；按喇叭打開後，同一個分頁內換頁沿用 */
@@ -1393,9 +1150,8 @@ document.addEventListener('pointerdown',firstGesture,{once:true});
 document.addEventListener('keydown',firstGesture,{once:true});
 document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(SFX_ON)AC.resume()});
 
-/* ---------- 開場畫面：同一次瀏覽只出現一次；從標準招生頁按「AI知識島」過來的不再顯示 ---------- */
+/* ---------- 開場畫面：同一次瀏覽只出現一次 ---------- */
 var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
-if(/[?&]from=std/.test(location.search))seen=true;
 var HASH=location.hash.match(/^#isle-(.+)$/),HASH_SP=-1;
 if(HASH){SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(HASH[1]))HASH_SP=s.si});if(HASH_SP>=0)seen=true}
 if(seen)intro.hidden=true;
@@ -1416,8 +1172,6 @@ function closeIntro(withSound){
   setTimeout(function(){intro.hidden=true},650);setTimeout(showMission,800);
 }
 $('introGo').addEventListener('click',function(){closeIntro(SFX_ON)});
-/* 回標準招生頁時，略過那邊的開場畫面 */
-[].forEach.call(document.querySelectorAll('[data-std]'),function(a){a.addEventListener('click',function(){try{sessionStorage.setItem('aic-intro','1')}catch(e){}})});
 
 var rzT;
 window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){initStars();layout()},120)});

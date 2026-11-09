@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD 3D 卡比獸建模步驟 | 論壇資源島</title>
+<meta name="theme-color" content="#12061f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <a class="back-pill" href="../../index.html#isle-cad3d">← 回3D 討論島</a>
+  </header>
+  <section class="t-hero" style="--c:#5ef0e0;--g1:#6ff5e6;--g2:#0e8f9a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🦎</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦕</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦅</b></i></span></div>
+    <span class="topic-badge">🏢 3D 討論島</span>
+    <h1 class="topic-title">🧸 AutoCAD 3D 卡比獸建模步驟</h1>
+    <p class="topic-tagline">從雲形線輪廓到彩現完成，18 步做出一隻卡比獸</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2017-09-08</p>
+    <div class="tag-row">
+      <span class="tag-chip">斷面混成</span>
+      <span class="tag-chip">SURFSCULPT</span>
+      <span class="tag-chip">布林運算</span>
+      <span class="tag-chip">圓角</span>
+      <span class="tag-chip">彩現</span>
+    </div>
+  </section>
+  <article class="card content">
+<p>範例圖片下載：<a href="https://goo.gl/NJYPz1" target="_blank" rel="noopener">https://goo.gl/NJYPz1</a></p>
+<div class="callout callout--tip"><b>注意</b>請把製作過程分 DWG 儲存個別檔案，方便日後修改模型用。</div>
+<img src="images/04.png" alt="製作過程分別儲存的 DWG 檔案清單" loading="lazy">
+<div class="section-title">建模步驟</div>
+<ul class="step-list"><li><div class="step-num">1</div><div>插入 IMAGE，雲形線描繪立面輪廓。（圖面畫圓輔助定位，依照各斷面 3D 組合用）<img src="images/05.png" alt="步驟 1 畫面" loading="lazy"></div></li><li><div class="step-num">2</div><div>陣列 4 個立面輪廓，補上身體上視圖斷面（黃色橢圓）。（雲形線輪廓可以再隨時調整）<img src="images/06.png" alt="步驟 2 畫面" loading="lazy"></div></li><li><div class="step-num">3</div><div>斷面混成，使用 [導引(G)] 選項。<img src="images/07.png" alt="步驟 3 畫面" loading="lazy"></div></li><li><div class="step-num">4</div><div>頭部分按照身體步驟完成。<img src="images/08.png" alt="步驟 4 畫面" loading="lazy"><img src="images/09.png" alt="步驟 4 畫面" loading="lazy"></div></li><li><div class="step-num">5</div><div>頭及身體聯集，圓角脖子部分（頭及身體）。（有時會因為建模順序及精確度等衝突導致圓角失敗，需要重新製作頭或身體）<img src="images/10.png" alt="步驟 5 畫面" loading="lazy"></div></li><li><div class="step-num">6</div><div>耳朵輪廓，斷面混成。<img src="images/11.png" alt="步驟 6 畫面" loading="lazy"></div></li><li><div class="step-num">7</div><div>圓角（頭及耳朵）。<img src="images/12.png" alt="步驟 7 畫面" loading="lazy"></div></li><li><div class="step-num">8</div><div>手及腳輪廓，迴轉完成（封閉輪廓的建立模式 = 曲面），SURFSCULPT 指令將曲面轉換為實體。（轉為實體方便布林運算）<img src="images/13.png" alt="步驟 8 畫面" loading="lazy"></div></li><li><div class="step-num">9</div><div>依照圖面畫輔助圓，組合 3D 零件模型（頭、身體及四肢）。<img src="images/14.png" alt="步驟 9 畫面" loading="lazy"></div></li><li><div class="step-num">10</div><div>圓角細部（身體及四肢）。<img src="images/15.png" alt="步驟 10 畫面" loading="lazy"></div></li><li><div class="step-num">11</div><div>雲形線描繪立面輪廓。<img src="images/16.png" alt="步驟 11 畫面" loading="lazy"></div></li><li><div class="step-num">12</div><div>布林運算，這部份做二次（差集及交集）。<img src="images/17.png" alt="步驟 12 畫面" loading="lazy"></div></li><li><div class="step-num">13</div><div>製作爪子，耳朵輪廓，斷面混成。<img src="images/18.png" alt="步驟 13 畫面" loading="lazy"><img src="images/19.png" alt="步驟 13 畫面" loading="lazy"></div></li><li><div class="step-num">14</div><div>眼睛嘴巴牙齒輪廓，布林運算，這部份做二次（差集及交集）。<img src="images/20.jpg" alt="步驟 14 畫面" loading="lazy"><img src="images/21.png" alt="步驟 14 畫面" loading="lazy"></div></li><li><div class="step-num">15</div><div>完成組合眼睛嘴巴牙齒。<img src="images/22.png" alt="步驟 15 畫面" loading="lazy"></div></li><li><div class="step-num">16</div><div>整體完成，可以再細部微調。<img src="images/23.png" alt="步驟 16 畫面" loading="lazy"></div></li><li><div class="step-num">17</div><div>完成一個主體原型模型之後，日後可以做出其他變化。<img src="images/24.png" alt="步驟 17 畫面" loading="lazy"></div></li><li><div class="step-num">18</div><div>最後一樣使用 AutoCAD 貼材質彩現（渲染），超有成就感的 ^_^<img src="images/25.png" alt="步驟 18 畫面" loading="lazy"></div></li></ul>
+<p>我的作品傳送門：<a href="https://www.autocad-tw.com/t20459-topic" target="_blank" rel="noopener">AutoCAD 3D Pokémon Go 卡比獸-進化了</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../../index.html#isle-cad3d">← 回3D 討論島</a>
+    <a class="btn-ghost" href="../../index.html">回大地圖 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t21423-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+</body>
+</html>

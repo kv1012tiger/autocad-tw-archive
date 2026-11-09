@@ -37,6 +37,7 @@ TOPIC_PAGE = Template("""<!doctype html>
     <span class="topic-badge">$board_icon $board_name</span>
     <h1 class="topic-title">$icon $title</h1>
     <p class="topic-tagline">$tagline</p>
+    <p class="t-meta">✍ $author · $posted_at</p>
     <div class="tag-row">
 $tag_chips
     </div>
@@ -156,6 +157,8 @@ def write_topics(board, topics, site_name):
             title=html.escape(meta["title"]),
             icon=meta["icon"],
             tagline=html.escape(meta["tagline"]),
+            author=html.escape(meta["author"]),
+            posted_at=html.escape(meta["posted_at"]),
             tag_chips="\n".join(f'      <span class="tag-chip">{html.escape(t)}</span>' for t in meta.get("tags", [])),
             content=meta["_content"],
             nav_prev=nav_prev,

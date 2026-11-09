@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>載入 LISP 應用程式：APPLOAD 指令 | 論壇資源島</title>
+<meta name="theme-color" content="#12061f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <a class="back-pill" href="../../index.html#isle-advanced">← 回進階討論島</a>
+  </header>
+  <section class="t-hero" style="--c:#a5b8ff;--g1:#b3c4f0;--g2:#3b4a98">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐅</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🐆</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦇</b></i></span></div>
+    <span class="topic-badge">💻 進階討論島</span>
+    <h1 class="topic-title">📦 載入 LISP 應用程式：APPLOAD 指令</h1>
+    <p class="topic-tagline">收到 LISP 檔要怎麼掛進 AutoCAD？啟動套件設定一次就好</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+      <span class="tag-chip">APPLOAD</span>
+      <span class="tag-chip">啟動套件</span>
+      <span class="tag-chip">LISP</span>
+      <span class="tag-chip">自訂指令</span>
+    </div>
+  </section>
+  <article class="card content">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/m7V7wKh-Avo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>當收到 LISP 檔案時要如何掛入 AutoCAD 系統，以下使用「工具」功能表：「載入應用程式」appload 指令，並透過「啟動套件」中加入 LISP 程式檔案。以後每次啟動 AutoCAD 時都會載入 LISP 程式。</p>
+<div class="section-title">方法如下（適用於各版本）</div>
+<ul class="step-list"><li><div class="step-num">1</div><div>請將以下程式語法複製後，使用記事本貼上程式語法，然後儲存副檔名為 LSP 的檔案，如 ABC.LSP（fas 檔也可以掛入使用）。<br>※ TEST 為指令名稱。你也可以更改指令名稱，只需修改這一行語法 (DEFUN C:TEST () 即可。<pre class="code">(DEFUN C:TEST ()
+(COMMAND "ZOOM" "E")
+(SETQ A1 (GETVAR "EXTMIN")
+ A3 (GETVAR "EXTMAX")
+)
+(COMMAND "RECTANG" A1 A3)
+(PRINC)
+)</pre></div></li><li><div class="step-num">2</div><div>以 2006 版本為例，將 ABC.LSP 程式（檔名可以自訂），放置到 <code>c:\Program Files\AutoCAD 2006\support</code> 底下。</div></li><li><div class="step-num">3</div><div>請在指令行輸入 APPLOAD 指令來載入該程式，並使用加入啟動套件功能，包含一份應用程式列示，每次當您啟動 AutoCAD 時，都會載入這些應用程式。從檔案列示或從具有拖曳功能的應用程式（如 Windows 檔案總管）中，將應用程式檔拖曳至「啟動套件」區，便可將檔案新增至「啟動套件」中。<img src="images/01.gif" alt="將 LISP 檔加入啟動套件的操作畫面" loading="lazy"></div></li><li><div class="step-num">4</div><div>上述載入程式步驟只需執行一遍，以後即可在 AutoCAD 裡執行 LISP 程式的 TEST 新指令。</div></li></ul>
+<div class="section-title">範例演練：CAD 畫出最大尺寸的功能</div>
+<img src="images/02.gif" alt="執行 TEST 指令畫出最大尺寸的畫面" loading="lazy">
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../../index.html#isle-advanced">← 回進階討論島</a>
+    <a class="btn-ghost" href="../../index.html">回大地圖 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t111-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+</body>
+</html>
