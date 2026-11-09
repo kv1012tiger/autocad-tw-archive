@@ -30,7 +30,7 @@ TOPIC_PAGE = Template("""<!doctype html>
 <div class="wrap">
   <header class="topbar">
     <a class="brand" href="../../index.html"><span>🏝️</span>$site_name</a>
-    <a class="back-pill" href="$island_href">← 回$board_name</a>
+    <div class="top-r"><a class="back-pill" href="$island_href">← 回$board_name</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
   </header>
   <section class="t-hero" style="--c:$c;--g1:$g1;--g2:$g2">
     <div class="res-band" aria-hidden="true">$residents</div>
@@ -53,6 +53,23 @@ $nav_next
     整理自 AutoCAD顧問論壇 · <a href="$source_url" target="_blank" rel="noopener">論壇原文 ↗</a>
   </footer>
 </div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
 </body>
 </html>
 """)

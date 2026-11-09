@@ -502,10 +502,13 @@ body{background:linear-gradient(180deg,#0e86a8 0%,#0a5f80 32%,#074560 68%,#05304
 /* 大海地圖與島上場景 */
 html,body{height:100%}
 body{overflow:hidden;background:#1581bd}
-.world{position:fixed;left:0;right:0;top:var(--hud,60px);bottom:0;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;background:#1581bd;overscroll-behavior:contain}
+.world{position:fixed;left:0;right:0;top:var(--hud,60px);bottom:0;display:flex;touch-action:pan-x pan-y;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;background:#fff;overscroll-behavior:contain}
 .world::-webkit-scrollbar{display:none}
 .world.drag{cursor:grabbing;user-select:none}
 .map{margin:0;max-width:none;border:0;border-radius:0;box-shadow:none;background:radial-gradient(38% 30% at 30% 30%,rgba(86,205,235,.55),transparent 70%),radial-gradient(42% 34% at 72% 62%,rgba(86,205,235,.5),transparent 70%),radial-gradient(34% 26% at 62% 18%,rgba(40,130,205,.6),transparent 70%),linear-gradient(160deg,#1b8fd0,#0f6fb4 55%,#1b86c6)}
+.map-size{position:relative;flex:none;margin:auto;overflow:hidden}
+.map{transform-origin:0 0}
+.map.pinching{will-change:transform}
 .map::before{animation:none;opacity:.32}
 .map::after{display:none}
 .islets{position:absolute;left:0;top:0;pointer-events:none}
@@ -526,7 +529,9 @@ body{overflow:hidden;background:#1581bd}
 .rs.f{font-size:max(20px,calc(var(--w) * .1));top:2%}
 .rs.s{font-size:max(22px,calc(var(--w) * .13))}
 .mini-orbit{bottom:20%;width:58%}
-.spot .tag{font-size:22px;padding:5px 14px;margin-top:-8px}
+.spot .tag{font-size:22px;padding:5px 14px;margin-top:-8px;transform:scale(var(--tk,1));transform-origin:50% 0}
+.far .spot .tag{padding:2px 5px}
+.far .spot .tag em,.far .spot .cnt,.far .rs,.far .route .r1{display:none}
 .spot .cnt{font-size:17px}
 .quest{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;display:flex;flex-wrap:nowrap;gap:5px;margin:0;padding:6px;border-radius:20px;background:rgba(3,42,60,.92);border:2px solid #ffd166;box-shadow:0 8px 24px rgba(0,30,50,.5)}
 .quest .qbtn{display:flex;flex-direction:column;align-items:center;min-width:62px;padding:5px 7px;border-radius:14px;font-size:16px;line-height:1.3;white-space:nowrap}
@@ -560,11 +565,21 @@ body{overflow:hidden;background:#1581bd}
 .hut.main .hut-n{background:linear-gradient(135deg,#ffd166,#f4a259);border-color:#fff4d6;color:#3a2410;text-shadow:none}
 .scene-ship{position:absolute;z-index:2;width:96px;animation:float 3.2s ease-in-out infinite}
 .scene-ship svg{display:block;width:100%;height:auto}
+.reader{position:fixed;inset:0;z-index:120;display:flex;flex-direction:column;background:#053049}
+.reader[hidden]{display:none}
+.reader-bar{flex:none;display:flex;align-items:center;gap:12px;padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top));background:rgba(3,42,60,.96);border-bottom:2px solid #ffd166}
+.reader-bar .btn{flex:none}
+.reader-bar b{min-width:0;font-size:18px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reader iframe{flex:1;width:100%;border:0;background:#053049}
+#fsBtn[hidden]{display:none}
 @media (max-width:720px){
   .spot .tag{font-size:20px;padding:4px 12px}
   .spot .cnt{font-size:16px}
   .boat span{width:58px}
   .isle .ico{font-size:calc(var(--w) * .3)}
+}
+@media (max-width:520px){
+  #searchBtn{display:none}
 }
 </style>
 </head>
@@ -577,17 +592,18 @@ body{overflow:hidden;background:#1581bd}
   <div class="hud-r">
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋問答">🔍</button>
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
+    <button class="hb" id="fsBtn" type="button" aria-label="全螢幕"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   </div>
 </header>
 
 <main>
 <section class="world" id="world" aria-label="論壇資源島地圖">
-  <div class="map" id="map">
+  <div class="map-size" id="mapSize"><div class="map" id="map">
     <svg class="islets" id="islets" aria-hidden="true"></svg>
     <svg class="route" id="route" aria-hidden="true"><path class="r1" id="r1"/><path class="r2" id="r2"/></svg>
     <div id="spots"></div>
     <div class="boat" id="boat" aria-hidden="true"><span><svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 6v50" stroke="#4a2a12" stroke-width="3"/><path d="M40 8l18 5-18 5z" fill="#e11d2e"/><path d="M42 20c14 2 22 11 22 28H42z" fill="#20222c" stroke="#0b0c10" stroke-width="1.5"/><path d="M38 20c-14 2-22 11-22 28h22z" fill="#2c2f3b" stroke="#0b0c10" stroke-width="1.5"/><g fill="#fff"><circle cx="53" cy="33" r="5"/><rect x="50.6" y="36.5" width="4.8" height="4" rx="1"/></g><g fill="#20222c"><circle cx="51.2" cy="32.6" r="1.3"/><circle cx="54.8" cy="32.6" r="1.3"/></g><path d="M46 42l14 3M60 42l-14 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M8 52h64l-8 17a5 5 0 0 1-4.5 3h-39a5 5 0 0 1-4.5-3z" fill="#8a5527" stroke="#3b2210" stroke-width="2"/><path d="M12 59h56" stroke="#5f3816" stroke-width="2"/><circle cx="26" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="40" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="54" cy="64" r="2.4" fill="#2a1a0c"/></svg></span></div>
-  </div>
+  </div></div>
 </section>
 <button class="guide guide-float" id="guideBox" type="button"><span class="tav" aria-hidden="true"></span><span class="bubble" id="guideTxt">嗨！我是蘋果爸。上船囉，從第一座島出發吧 👇</span></button>
 <nav class="quest" aria-label="快速功能">
@@ -632,6 +648,11 @@ body{overflow:hidden;background:#1581bd}
 <div class="scene" id="scene" hidden>
   <div class="scene-bar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button">⛵ 回大海</button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div></div>
   <div class="land" id="land"></div>
+</div>
+
+<div class="reader" id="reader" hidden>
+  <div class="reader-bar"><button class="btn btn-primary btn-sm" id="readerBack" type="button">← 回小屋</button><b id="readerT"></b></div>
+  <iframe id="readerF" title="文章內容" allow="fullscreen" allowfullscreen></iframe>
 </div>
 
 
@@ -877,7 +898,7 @@ function ringHTML(btn){
 
 
 /* ---------- 大海地圖 ---------- */
-var world=$('world'),map=$('map'),spotsEl=$('spots'),boat=$('boat'),boatAt=0,busy=false;
+var world=$('world'),mapSize=$('mapSize'),map=$('map'),spotsEl=$('spots'),boat=$('boat'),boatAt=0,busy=false;
 function rnd(i,k){var x=Math.sin(i*127.1+k*311.7)*43758.5453;return x-Math.floor(x)}
 function mix(a,b,t){var o='#';[1,3,5].forEach(function(p){var v=Math.round(parseInt(a.substr(p,2),16)*(1-t)+parseInt(b.substr(p,2),16)*t);o+=(v<16?'0':'')+v.toString(16)});return o}
 function crPath(P){
@@ -976,6 +997,7 @@ function layout(){
   var d=crPath(SP);$('r1').setAttribute('d',d);$('r2').setAttribute('d',d);
   drawIslets(W,H,f,pad);
   placeBoat(boatAt,true);
+  baseFont=port?20:22;fitZoom();applyZoom();
 }
 function placeBoat(i,instant){
   var s=SP[i];if(!s||s.x==null)return;
@@ -985,7 +1007,7 @@ function placeBoat(i,instant){
   if(instant){boat.offsetWidth;boat.style.transition=''}
   boatAt=i;
 }
-function centerOn(i,smooth){var s=SP[i];world.scrollTo({left:s.x-world.clientWidth/2,top:s.y-world.clientHeight/2,behavior:smooth&&!reduce?'smooth':'auto'})}
+function centerOn(i,smooth){var s=SP[i];world.scrollTo({left:s.x*Z+mapSize.offsetLeft-world.clientWidth/2,top:s.y*Z+mapSize.offsetTop-world.clientHeight/2,behavior:smooth&&!reduce?'smooth':'auto'})}
 function visit(i,after){
   if(busy)return;
   var go=function(){openSpot(i);if(after)after()};
@@ -994,6 +1016,48 @@ function visit(i,after){
   setTimeout(function(){busy=false;go()},900);
 }
 function openSpot(i){var s=SP[i];if(s.k==='forum'){location.hash='isle-'+encodeURIComponent(s.id);return}if(s.k==='isle')openPanel('isle',s.n);else openPanel(s.k,0)}
+/* 雙指縮放：最小可看整張地圖 */
+var Z=1,Zmin=.3,Zmax=1.6,baseFont=20,zRaf=0,pinch=null;
+function fitZoom(){Zmin=Math.min(world.clientWidth/G.w,world.clientHeight/G.h)}
+function clampZ(v){return Math.max(Zmin,Math.min(Zmax,v))}
+function applyZoom(){
+  Z=clampZ(Z);
+  map.style.transform='scale('+Z.toFixed(4)+')';
+  mapSize.style.width=Math.round(G.w*Z)+'px';mapSize.style.height=Math.round(G.h*Z)+'px';
+  map.style.setProperty('--tk',Math.max(1,10.2/(baseFont*Z)).toFixed(3));
+  map.classList.toggle('far',Z<.62);
+}
+function mapPoint(cx,cy){var r=world.getBoundingClientRect(),px=cx-r.left,py=cy-r.top;return {x:(world.scrollLeft+px-mapSize.offsetLeft)/Z,y:(world.scrollTop+py-mapSize.offsetTop)/Z}}
+function zoomTo(nz,pt,cx,cy){
+  Z=clampZ(nz);applyZoom();
+  var r=world.getBoundingClientRect();
+  world.scrollLeft=pt.x*Z+mapSize.offsetLeft-(cx-r.left);
+  world.scrollTop=pt.y*Z+mapSize.offsetTop-(cy-r.top);
+}
+function touchGap(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY)}
+function touchMid(t){return {x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2}}
+world.addEventListener('touchstart',function(e){
+  if(e.touches.length!==2)return;
+  e.preventDefault();
+  var m=touchMid(e.touches);pinch={gap:touchGap(e.touches),z:Z,pt:mapPoint(m.x,m.y)};
+  map.classList.add('pinching');
+},{passive:false});
+world.addEventListener('touchmove',function(e){
+  if(!pinch||e.touches.length!==2)return;
+  e.preventDefault();
+  var gap=touchGap(e.touches),m=touchMid(e.touches),p=pinch;
+  cancelAnimationFrame(zRaf);
+  zRaf=requestAnimationFrame(function(){zoomTo(p.z*gap/p.gap,p.pt,m.x,m.y)});
+},{passive:false});
+function endPinch(e){if(pinch&&e.touches.length<2){pinch=null;map.classList.remove('pinching')}}
+world.addEventListener('touchend',endPinch);
+world.addEventListener('touchcancel',endPinch);
+world.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});
+world.addEventListener('wheel',function(e){
+  if(!e.ctrlKey)return;
+  e.preventDefault();
+  zoomTo(Z*Math.exp(-e.deltaY*.01),mapPoint(e.clientX,e.clientY),e.clientX,e.clientY);
+},{passive:false});
 var dragS=null,dragged=false;
 world.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;dragS={x:e.clientX,y:e.clientY,l:world.scrollLeft,t:world.scrollTop};dragged=false});
 window.addEventListener('pointermove',function(e){if(!dragS)return;var dx=e.clientX-dragS.x,dy=e.clientY-dragS.y;if(Math.abs(dx)+Math.abs(dy)>6){dragged=true;world.classList.add('drag')}if(dragged){world.scrollLeft=dragS.l-dx;world.scrollTop=dragS.t-dy}});
@@ -1064,6 +1128,19 @@ function route(){
 window.addEventListener('hashchange',route);
 $('sceneBack').addEventListener('click',function(){location.hash=''});
 land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
+
+/* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
+var reader=$('reader'),readerF=$('readerF'),readerT=$('readerT');
+function openReader(href,title){
+  readerT.textContent=title;reader.hidden=false;
+  readerF.contentWindow.location.replace(href);
+  history.pushState({reader:1},'');
+}
+function closeReader(){if(reader.hidden)return;reader.hidden=true;readerF.contentWindow.location.replace('about:blank')}
+readerF.addEventListener('load',function(){try{var t=readerF.contentDocument.title.split(' | ')[0];if(t&&!reader.hidden)readerT.textContent=t}catch(e){}});
+$('readerBack').addEventListener('click',function(){history.back()});
+window.addEventListener('popstate',closeReader);
+window.addEventListener('message',function(e){if(e.origin===location.origin&&e.data==='close-reader'&&!reader.hidden)history.back()});
 function spotIdx(k){for(var i=0;i<SP.length;i++)if(SP[i].k===k)return i;return 0}
 
 /* ---------- 進度顯示 ---------- */
@@ -1237,6 +1314,7 @@ function flip(card){
 }
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button,a');if(!t)return;
+  if(t.classList.contains('t-card')){e.preventDefault();openReader(t.getAttribute('href'),t.querySelector('b').textContent);return}
   if(t.classList.contains('qa-flip')){flip(t.closest('.qa'));return}
   if(t.dataset.isle!=null){openPanel('isle',+t.dataset.isle);return}
   if(t.dataset.unit){openPanel('castle');var d=pBody.querySelector('[data-u="'+t.dataset.unit+'"]');if(d){d.open=true;setTimeout(function(){d.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})},80)}return}
@@ -1392,5 +1470,6 @@ layout();refresh();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
   });
 })();
 </script>
+<script src="assets/js/fullscreen.js"></script>
 </body>
 </html>
