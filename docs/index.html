@@ -504,13 +504,15 @@ body{background:linear-gradient(180deg,#0e86a8 0%,#0a5f80 32%,#074560 68%,#05304
 /* 大海地圖與島上場景 */
 html,body{height:100%}
 body{overflow:hidden;background:#1581bd}
-.world{position:fixed;left:0;right:0;top:var(--hud,60px);bottom:0;display:flex;touch-action:pan-x pan-y;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;background:#fff;overscroll-behavior:contain}
+.world{position:fixed;left:0;right:0;top:var(--hud,60px);bottom:0;display:flex;touch-action:pan-x pan-y;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;background:#0f6fb4;overscroll-behavior:contain}
 .world::-webkit-scrollbar{display:none}
 .world.drag{cursor:grabbing;user-select:none}
 .map{margin:0;max-width:none;border:0;border-radius:0;box-shadow:none;background:radial-gradient(38% 30% at 30% 30%,rgba(86,205,235,.55),transparent 70%),radial-gradient(42% 34% at 72% 62%,rgba(86,205,235,.5),transparent 70%),radial-gradient(34% 26% at 62% 18%,rgba(40,130,205,.6),transparent 70%),linear-gradient(160deg,#1b8fd0,#0f6fb4 55%,#1b86c6)}
-.map-size{position:relative;flex:none;margin:auto;overflow:hidden;transform-origin:0 0;will-change:transform}
+.map-size{position:relative;flex:none;margin:auto;overflow:hidden;transform-origin:0 0}
 .map{transform-origin:0 0}
-.world.zooming .rs,.world.zooming .rs *,.world.zooming .mdeco,.world.zooming .spot.fav::before{animation-play-state:paused}
+/* 縮放時藏起小動畫，減少顯示卡圖層；畫面外的島不畫裝飾 */
+.world.zooming .rs,.world.zooming .mdeco,.world.zooming .spot.fav::before,.world.zooming .spot.next .isle::after{visibility:hidden;animation-play-state:paused}
+.spot:not(.awake) .dc{visibility:hidden}
 /* 收藏島：地圖上一圈慢慢閃的金色光環 */
 .spot.fav::before{content:"";position:absolute;left:50%;top:40%;width:116%;height:84%;border-radius:50%;transform:translate(-50%,-50%);border:calc(5px * var(--tk,1)) solid #ffd166;box-shadow:0 0 calc(24px * var(--tk,1)) rgba(255,209,102,.9),inset 0 0 calc(18px * var(--tk,1)) rgba(255,209,102,.55);pointer-events:none;z-index:1;animation:favPulse 1.6s ease-in-out infinite}
 @keyframes favPulse{0%,100%{opacity:.3}50%{opacity:1}}
@@ -1177,14 +1179,12 @@ function drawIslets(W,H,f,edge){
   }
   var step=88,c='';
   function puff(px,py,k){var rr=(62+rnd(k,13)*72)*(f<.8?.85:1);c+='<circle cx="'+px+'" cy="'+py+'" r="'+rr.toFixed(0)+'" fill="#fff"/>'}
-  for(i=0,x=0;x<=W;x+=step,i++){puff(x,rnd(i,14)*34,i);puff(x,H-rnd(i,15)*34,i+300)}
-  for(i=0,y=0;y<=H;y+=step,i++){puff(rnd(i,16)*34,y,i+600);puff(W-rnd(i,17)*34,y,i+900)}
   var svg=$('islets');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.innerHTML=o+c;
 }
 var G={};
 function layout(){
   document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?260:400,ch=port?280:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?240:400,ch=port?262:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -1192,7 +1192,7 @@ function layout(){
   var d=crPath(SP);$('r1').setAttribute('d',d);$('r2').setAttribute('d',d);
   drawIslets(W,H,f,pad);
   placeBoat(boatAt,true);
-  baseFont=port?20:22;fitZoom();applyZoom();
+  baseFont=port?20:22;Zmax=port?1.2:1.6;fitZoom();applyZoom();
 }
 function placeBoat(i,instant){
   var s=SP[i];if(!s||s.x==null)return;
@@ -1233,7 +1233,7 @@ function zoomBegin(){
   if(zg)return zg;
   var r=world.getBoundingClientRect();
   zg={x0:r.left+mapSize.offsetLeft,y0:r.top+mapSize.offsetTop,vx:r.left,vy:r.top,vw:world.clientWidth,vh:world.clientHeight,zv:Z,tz:Z,tx:0,ty:0,pt:null,cx:0,cy:0};
-  world.classList.add('zooming');
+  mapSize.style.willChange='transform';world.classList.add('zooming');
   return zg;
 }
 function visualPoint(g,cx,cy){return {x:(cx-g.x0+world.scrollLeft-g.tx)/g.zv,y:(cy-g.y0+world.scrollTop-g.ty)/g.zv}}
@@ -1253,7 +1253,7 @@ function zoomPaint(){
 function zoomEnd(){
   var g=zg;if(!g)return;
   zg=null;cancelAnimationFrame(zRaf);zRaf=0;clearTimeout(wheelT);
-  mapSize.style.transform='';
+  mapSize.style.transform='';mapSize.style.willChange='';
   world.classList.remove('zooming');
   if(g.pt)zoomTo(g.zv,g.pt,g.cx,g.cy);
   if(hasIO)SP.forEach(function(s){s.el.classList.toggle('awake',!!s.el._vis)});
