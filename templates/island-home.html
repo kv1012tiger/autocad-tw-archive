@@ -665,9 +665,10 @@ body{overflow:hidden;background:#1581bd}
 .pg:disabled{opacity:.35;cursor:default}
 .pg-gap{color:var(--muted);font-weight:900;padding:0 2px}
 @media (max-width:480px){.pg{min-width:36px;height:36px;padding:0 9px;font-size:15px}.pg .tx{display:none}}
-.isearch{position:absolute;left:50%;top:22px;z-index:5;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:min(520px,calc(100% - 48px));padding:12px 20px;border-radius:999px;border:3px solid #ffd166;background:rgba(255,253,245,.95);color:#6b4220;font:inherit;font-size:18px;font-weight:900;text-align:left;cursor:pointer;box-shadow:0 6px 18px rgba(0,50,30,.35)}
-.isearch small{margin-left:auto;font-size:14px;color:#a0764a}
-.isearch:hover{background:#fff}
+.hut-s{margin-top:14px}
+.scope{display:flex;flex-wrap:wrap;gap:16px;margin:8px 4px 0;font-size:15px;font-weight:700;color:var(--muted)}
+.scope label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.scope input{width:18px;height:18px;accent-color:#ffd166;cursor:pointer}
 .sync{margin-top:22px;padding:14px 16px;border-radius:16px;border:1.5px dashed rgba(125,211,252,.5);background:rgba(255,255,255,.04)}
 .sync .s-h{margin-top:0}
 .sync-box{display:block;width:100%;min-height:74px;margin-top:10px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(0,0,0,.25);color:#e8f6ff;font:13px/1.5 ui-monospace,Consolas,monospace;word-break:break-all;resize:vertical}
@@ -1374,7 +1375,7 @@ function rectBlob(x0,y0,x1,y1,seed,step){
 }
 function drawScene(){
   var s=SCN;if(!s)return;
-  var H=s.huts,w=land.clientWidth,cols=w<560?2:w<860?3:4,rows=Math.ceil(H.length/cols),cw=(w-40)/cols,hw=Math.min(190,Math.round(cw*.96)),rh=hw*.92+96,top=hw*.5+150,h=Math.round(top+(rows-1)*rh+hw*.5+290);
+  var H=s.huts,w=land.clientWidth,cols=w<560?2:w<860?3:4,rows=Math.ceil(H.length/cols),cw=(w-40)/cols,hw=Math.min(190,Math.round(cw*.96)),rh=hw*.92+96,top=hw*.5+84,h=Math.round(top+(rows-1)*rh+hw*.5+290);
   var P=H.map(function(x,i){var r=Math.floor(i/cols),c=i%cols,cc=r%2?cols-1-c:c;return {x:Math.round(20+(cc+.5)*cw),y:Math.round(top+r*rh+(cc%2?rh*.22:0))}});
   var sd=s.si+3,g1=mix(s.g[0],'#5cbc3f',.4),g2=mix(s.g[1],'#359a32',.4),tr=mix(s.g[1],'#1f7a2c',.72),lf=mix(tr,'#a6e36f',.55),dx=Math.round(w/2),T=[],i,x,y;
   var o='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
@@ -1397,7 +1398,7 @@ function drawScene(){
     return '<button class="hut'+(u.main?' main':'')+(u.topics.length?'':' empty')+'" type="button" data-k="'+k+'" style="left:'+P[k].x+'px;top:'+P[k].y+'px;--hw:'+hw+'px"><span class="hut-art">'+cottage(k,u.main)+'<span class="hut-ic" style="top:'+(u.main?'56%':'63%')+'">'+u.e+'</span></span><span class="hut-n">'+esc(u.name)+'</span><span class="hut-c">'+c+'</span></button>';
   }).join('');
   land.style.height=h+'px';
-  land.innerHTML=o+'<button class="isearch" type="button">🔍 搜尋本島文章…<small>'+s.total+' 篇</small></button>'+rs+huts+'<div class="scene-ship" style="left:'+(dx+30)+'px;top:'+(h-150)+'px">'+boat.querySelector('svg').outerHTML+'</div>';
+  land.innerHTML=o+rs+huts+'<div class="scene-ship" style="left:'+(dx+30)+'px;top:'+(h-150)+'px">'+boat.querySelector('svg').outerHTML+'</div>';
 }
 function showScene(s){
   closeLog();if(panel.classList.contains('open'))closePanel();
@@ -1458,7 +1459,7 @@ document.addEventListener('click',function(e){
   else if(t.dataset.fav!=null)toggleFav(SP[+t.dataset.fav]);
   else{closePanel();visit(+t.dataset.go)}
 });
-land.addEventListener('click',function(e){if(e.target.closest('.isearch')){openPanel('isearch');return}var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
+land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
 
 /* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
 var reader=$('reader'),readerF=$('readerF'),readerT=$('readerT');
@@ -1564,9 +1565,27 @@ function renderHut(k){
   var s=SCN,h=s.huts[k],t=h.topics,n=s.huts.length;
   pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+h.e+'</span><div><div class="p-kicker">'+esc(s.name)+'・小屋 '+(k+1)+' / '+n+'</div><h3 id="pTitle">'+esc(h.name)+'</h3><p>'+esc(h.sub)+'</p></div></div>'+
     (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span>'+s.res.map(function(r){return r[0]}).join(' ')+'</span></div>':'')+
-    (t.length?'<p class="s-count">共 '+t.length+' 篇文章</p><div id="hutBox"></div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+
+    (t.length?'<div class="sbox hut-s"><input id="hutIn" type="search" placeholder="🔍 搜尋這裡的文章…" autocomplete="off" aria-label="搜尋這裡的文章"></div>'+
+      (n>1?'<div class="scope" role="radiogroup" aria-label="搜尋範圍"><label><input type="radio" name="hsc" value="hut" checked> 只找這間小屋</label><label><input type="radio" name="hsc" value="isle"> 找整座島</label></div>':'')+
+      '<p class="s-count" id="hutCount"></p><div id="hutBox"></div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+
     '<a class="forum" href="'+esc(h.url)+'" target="_blank" rel="noopener">到論壇看「'+esc(h.main?s.forum:h.name)+'」↗</a>';
-  if(t.length)pagedList('hutBox','hut:'+s.id+'/'+k,t,function(x){return tCard(x,s.c)});
+  if(t.length){
+    var inp=$('hutIn');
+    var fill=function(){
+      if(V.t!=='hut'||!$('hutCount'))return;
+      var v=inp.value.trim().toLowerCase(),cnt=$('hutCount'),sc=pBody.querySelector('input[name="hsc"]:checked'),isle=sc&&sc.value==='isle';
+      if(!v){cnt.textContent='共 '+t.length+' 篇文章';pagedList('hutBox','hut:'+s.id+'/'+k,t,function(x){return tCard(x,s.c)});return}
+      if(!ART){cnt.textContent='搜尋準備中…';loadArt().then(fill);return}
+      var r=ART.filter(function(a){return a[2]===s.id&&(isle||a[3]===h.name)&&(a[1]+' '+a[5]).toLowerCase().indexOf(v)>=0});
+      r.sort(function(a,b){return (b[1].toLowerCase().indexOf(v)>=0)-(a[1].toLowerCase().indexOf(v)>=0)});
+      cnt.textContent=r.length?'找到 '+r.length+' 篇'+(isle?'（整座島）':''):'沒找到，換個關鍵字'+(n>1&&!isle?'，或改成「找整座島」':'')+'，也可以到 🔮 占卜島搜尋全部島嶼';
+      var key=v+'|'+isle;if(key!==fill.q){PG.hutq=1;fill.q=key}
+      pagedList('hutBox','hutq',r,function(a){return artCard(a,v)});
+    };
+    inp.addEventListener('input',fill);
+    pBody.querySelectorAll('input[name="hsc"]').forEach(function(x){x.addEventListener('change',fill)});
+    fill();loadArt();
+  }
   $('pStep').textContent='🏠 主題小屋';
   pFoot.hidden=false;pDots.hidden=true;
   pPrev.textContent=k>0?'← '+s.huts[k-1].name:'← 回島上';
@@ -1642,26 +1661,6 @@ function doSearch(v){
   if(v!==doSearch.q){PG.search=1;doSearch.q=v}
   if(ah.length)pagedList('sArtBox','search',ah,function(a){return artCard(a,v)});
   res.innerHTML=(hit.length?'<h4 class="s-h">💬 AI 問答 <small>'+hit.length+' 則</small></h4>':'')+hit.map(function(r){return qaHTML(r,true)}).join('');
-}
-/* 島上搜尋：只找這座島的文章（標題與內文） */
-function renderISearch(){
-  var s=SCN;if(!s){closePanel();return}
-  pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">🔍</span><div><div class="p-kicker">'+esc(s.name)+'・本島搜尋</div><h3 id="pTitle">搜尋本島文章</h3><p>只找「'+esc(s.name)+'」的 '+s.total+' 篇文章，標題和內文都會搜</p></div></div>'+
-    '<div class="sbox"><input id="iIn" type="search" placeholder="輸入關鍵字…" autocomplete="off" aria-label="搜尋本島文章"></div><p class="s-count" id="iCount"></p><div id="iRes"></div>';
-  $('pStep').textContent='🔍 本島搜尋';pFoot.hidden=true;
-  var inp=$('iIn');
-  function go(){
-    var v=inp.value.trim().toLowerCase(),cnt=$('iCount');if(!cnt)return;
-    if(!ART){cnt.textContent='水晶球暖機中…';return}
-    var r=ART.filter(function(a){return a[2]===s.id&&(!v||(a[1]+' '+a[3]+' '+a[5]).toLowerCase().indexOf(v)>=0)});
-    if(v)r.sort(function(a,b){return (b[1].toLowerCase().indexOf(v)>=0)-(a[1].toLowerCase().indexOf(v)>=0)});
-    cnt.textContent=v?(r.length?'找到 '+r.length+' 篇':'這座島沒有相關文章，可以到 🔮 占卜島搜尋全部島嶼'):'本島共 '+r.length+' 篇文章，輸入關鍵字縮小範圍';
-    if(v!==go.q){PG.isearch=1;go.q=v}
-    pagedList('iRes','isearch',r,function(a){return artCard(a,v)});
-  }
-  inp.addEventListener('input',go);go();
-  loadArt().then(function(){if(V.t==='isearch')go()});
-  setTimeout(function(){if($('iIn'))$('iIn').focus({preventScroll:true})},380);
 }
 function randomArt(){
   loadArt().then(function(d){if(!d.length)return;var a=d[Math.floor(Math.random()*d.length)];toast('🔮 水晶球幫你抽到：'+a[1]);openReader(a[0],a[1])});
@@ -1753,7 +1752,7 @@ function actsHTML(){
 }
 function render(dir){
   if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();
-  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();else if(V.t==='isearch')renderISearch();
+  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
