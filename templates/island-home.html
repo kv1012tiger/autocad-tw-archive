@@ -658,6 +658,16 @@ body{overflow:hidden;background:#1581bd}
 .s-h small{font-size:14px;color:var(--muted);font-weight:700;margin-left:6px}
 .s-art mark,.s-art b mark{background:#ffd166;color:#3a2410;border-radius:4px;padding:0 2px}
 .s-art .tm{color:var(--muted)}
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:12px 0}
+.pg{min-width:40px;height:40px;padding:0 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(255,255,255,.07);color:#fff;font:inherit;font-weight:900;font-size:16px;cursor:pointer}
+.pg:hover:not(:disabled){background:rgba(255,209,102,.18)}
+.pg.on{background:linear-gradient(135deg,#ffd166,#ff9f1c);border-color:#ffe6a3;color:#3a1a08}
+.pg:disabled{opacity:.35;cursor:default}
+.pg-gap{color:var(--muted);font-weight:900;padding:0 2px}
+@media (max-width:480px){.pg{min-width:36px;height:36px;padding:0 9px;font-size:15px}.pg .tx{display:none}}
+.isearch{position:absolute;left:50%;top:22px;z-index:5;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:min(520px,calc(100% - 48px));padding:12px 20px;border-radius:999px;border:3px solid #ffd166;background:rgba(255,253,245,.95);color:#6b4220;font:inherit;font-size:18px;font-weight:900;text-align:left;cursor:pointer;box-shadow:0 6px 18px rgba(0,50,30,.35)}
+.isearch small{margin-left:auto;font-size:14px;color:#a0764a}
+.isearch:hover{background:#fff}
 .sync{margin-top:22px;padding:14px 16px;border-radius:16px;border:1.5px dashed rgba(125,211,252,.5);background:rgba(255,255,255,.04)}
 .sync .s-h{margin-top:0}
 .sync-box{display:block;width:100%;min-height:74px;margin-top:10px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(0,0,0,.25);color:#e8f6ff;font:13px/1.5 ui-monospace,Consolas,monospace;word-break:break-all;resize:vertical}
@@ -1364,7 +1374,7 @@ function rectBlob(x0,y0,x1,y1,seed,step){
 }
 function drawScene(){
   var s=SCN;if(!s)return;
-  var H=s.huts,w=land.clientWidth,cols=w<560?2:w<860?3:4,rows=Math.ceil(H.length/cols),cw=(w-40)/cols,hw=Math.min(190,Math.round(cw*.96)),rh=hw*.92+96,top=hw*.5+84,h=Math.round(top+(rows-1)*rh+hw*.5+290);
+  var H=s.huts,w=land.clientWidth,cols=w<560?2:w<860?3:4,rows=Math.ceil(H.length/cols),cw=(w-40)/cols,hw=Math.min(190,Math.round(cw*.96)),rh=hw*.92+96,top=hw*.5+150,h=Math.round(top+(rows-1)*rh+hw*.5+290);
   var P=H.map(function(x,i){var r=Math.floor(i/cols),c=i%cols,cc=r%2?cols-1-c:c;return {x:Math.round(20+(cc+.5)*cw),y:Math.round(top+r*rh+(cc%2?rh*.22:0))}});
   var sd=s.si+3,g1=mix(s.g[0],'#5cbc3f',.4),g2=mix(s.g[1],'#359a32',.4),tr=mix(s.g[1],'#1f7a2c',.72),lf=mix(tr,'#a6e36f',.55),dx=Math.round(w/2),T=[],i,x,y;
   var o='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
@@ -1387,7 +1397,7 @@ function drawScene(){
     return '<button class="hut'+(u.main?' main':'')+(u.topics.length?'':' empty')+'" type="button" data-k="'+k+'" style="left:'+P[k].x+'px;top:'+P[k].y+'px;--hw:'+hw+'px"><span class="hut-art">'+cottage(k,u.main)+'<span class="hut-ic" style="top:'+(u.main?'56%':'63%')+'">'+u.e+'</span></span><span class="hut-n">'+esc(u.name)+'</span><span class="hut-c">'+c+'</span></button>';
   }).join('');
   land.style.height=h+'px';
-  land.innerHTML=o+rs+huts+'<div class="scene-ship" style="left:'+(dx+30)+'px;top:'+(h-150)+'px">'+boat.querySelector('svg').outerHTML+'</div>';
+  land.innerHTML=o+'<button class="isearch" type="button">🔍 搜尋本島文章…<small>'+s.total+' 篇</small></button>'+rs+huts+'<div class="scene-ship" style="left:'+(dx+30)+'px;top:'+(h-150)+'px">'+boat.querySelector('svg').outerHTML+'</div>';
 }
 function showScene(s){
   closeLog();if(panel.classList.contains('open'))closePanel();
@@ -1448,7 +1458,7 @@ document.addEventListener('click',function(e){
   else if(t.dataset.fav!=null)toggleFav(SP[+t.dataset.fav]);
   else{closePanel();visit(+t.dataset.go)}
 });
-land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
+land.addEventListener('click',function(e){if(e.target.closest('.isearch')){openPanel('isearch');return}var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
 
 /* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
 var reader=$('reader'),readerF=$('readerF'),readerT=$('readerT');
@@ -1535,12 +1545,28 @@ function renderIsle(n){
 function tCard(x,c){
   return '<a class="t-card" style="--c:'+c+'" href="'+esc(x.href)+'"><span class="te">'+x.e+'</span><span class="tb"><b>'+esc(x.title)+'</b><small>'+esc(x.tagline)+'</small><span class="tm">'+(x.videos?'🎬 '+x.videos+' 支影片':'📖 圖文教學')+'</span></span></a>';
 }
+/* ---------- 分頁：每頁 10 篇，上下各一排頁碼 ---------- */
+var PER=10,PG={},PGFN={};
+function pagerHTML(p,n,key){
+  if(n<=1)return '';
+  var b=function(i,lab,dis,on,aria){return '<button class="pg'+(on?' on':'')+'" type="button" data-pg="'+i+'" data-pk="'+esc(key)+'"'+(dis?' disabled':'')+(aria?' aria-label="'+aria+'"':'')+(on?' aria-current="page"':'')+'>'+lab+'</button>'},o='<nav class="pager" aria-label="頁碼">'+b(p-1,'‹<span class="tx"> 上一頁</span>',p<=1,false,'上一頁'),last=0;
+  for(var i=1;i<=n;i++){if(i===1||i===n||Math.abs(i-p)<=1){if(last&&i-last>1)o+='<span class="pg-gap">…</span>';o+=b(i,i,false,i===p);last=i}}
+  return o+b(p+1,'<span class="tx">下一頁 </span>›',p>=n,false,'下一頁')+'</nav>';
+}
+function pagedList(boxId,key,items,card){
+  var box=$(boxId);if(!box)return;
+  var n=Math.max(1,Math.ceil(items.length/PER)),p=Math.min(Math.max(1,PG[key]||1),n);PG[key]=p;
+  var pg=pagerHTML(p,n,key);
+  box.innerHTML=pg+'<div class="t-list">'+items.slice((p-1)*PER,p*PER).map(card).join('')+'</div>'+pg;
+  PGFN[key]=function(){pagedList(boxId,key,items,card);var bx=$(boxId);if(bx)bx.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})};
+}
 function renderHut(k){
   var s=SCN,h=s.huts[k],t=h.topics,n=s.huts.length;
   pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+h.e+'</span><div><div class="p-kicker">'+esc(s.name)+'・小屋 '+(k+1)+' / '+n+'</div><h3 id="pTitle">'+esc(h.name)+'</h3><p>'+esc(h.sub)+'</p></div></div>'+
     (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span>'+s.res.map(function(r){return r[0]}).join(' ')+'</span></div>':'')+
-    (t.length?'<div class="t-list">'+t.map(function(x){return tCard(x,s.c)}).join('')+'</div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+
+    (t.length?'<p class="s-count">共 '+t.length+' 篇文章</p><div id="hutBox"></div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+
     '<a class="forum" href="'+esc(h.url)+'" target="_blank" rel="noopener">到論壇看「'+esc(h.main?s.forum:h.name)+'」↗</a>';
+  if(t.length)pagedList('hutBox','hut:'+s.id+'/'+k,t,function(x){return tCard(x,s.c)});
   $('pStep').textContent='🏠 主題小屋';
   pFoot.hidden=false;pDots.hidden=true;
   pPrev.textContent=k>0?'← '+s.huts[k-1].name:'← 回島上';
@@ -1612,8 +1638,30 @@ function doSearch(v){
   var ah=(ART||[]).filter(function(a){return (a[1]+' '+a[3]+' '+a[5]).toLowerCase().indexOf(v)>=0});
   ah.sort(function(a,b){return (b[1].toLowerCase().indexOf(v)>=0)-(a[1].toLowerCase().indexOf(v)>=0)});
   cnt.textContent=ah.length||hit.length?'找到 '+ah.length+' 篇文章、'+hit.length+' 則問答':(ART?'沒找到，換個關鍵字，或直接用 LINE@ 問蘋果爸！':'水晶球暖機中…');
-  art.innerHTML=ah.length?'<h4 class="s-h">📖 教學文章 <small>'+ah.length+' 篇</small></h4><div class="t-list">'+ah.slice(0,60).map(function(a){return artCard(a,v)}).join('')+'</div>'+(ah.length>60?'<p class="s-count">只列出前 60 篇，再多加幾個字可以縮小範圍。</p>':''):'';
+  art.innerHTML=ah.length?'<h4 class="s-h">📖 教學文章 <small>'+ah.length+' 篇</small></h4><div id="sArtBox"></div>':'';
+  if(v!==doSearch.q){PG.search=1;doSearch.q=v}
+  if(ah.length)pagedList('sArtBox','search',ah,function(a){return artCard(a,v)});
   res.innerHTML=(hit.length?'<h4 class="s-h">💬 AI 問答 <small>'+hit.length+' 則</small></h4>':'')+hit.map(function(r){return qaHTML(r,true)}).join('');
+}
+/* 島上搜尋：只找這座島的文章（標題與內文） */
+function renderISearch(){
+  var s=SCN;if(!s){closePanel();return}
+  pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">🔍</span><div><div class="p-kicker">'+esc(s.name)+'・本島搜尋</div><h3 id="pTitle">搜尋本島文章</h3><p>只找「'+esc(s.name)+'」的 '+s.total+' 篇文章，標題和內文都會搜</p></div></div>'+
+    '<div class="sbox"><input id="iIn" type="search" placeholder="輸入關鍵字…" autocomplete="off" aria-label="搜尋本島文章"></div><p class="s-count" id="iCount"></p><div id="iRes"></div>';
+  $('pStep').textContent='🔍 本島搜尋';pFoot.hidden=true;
+  var inp=$('iIn');
+  function go(){
+    var v=inp.value.trim().toLowerCase(),cnt=$('iCount');if(!cnt)return;
+    if(!ART){cnt.textContent='水晶球暖機中…';return}
+    var r=ART.filter(function(a){return a[2]===s.id&&(!v||(a[1]+' '+a[3]+' '+a[5]).toLowerCase().indexOf(v)>=0)});
+    if(v)r.sort(function(a,b){return (b[1].toLowerCase().indexOf(v)>=0)-(a[1].toLowerCase().indexOf(v)>=0)});
+    cnt.textContent=v?(r.length?'找到 '+r.length+' 篇':'這座島沒有相關文章，可以到 🔮 占卜島搜尋全部島嶼'):'本島共 '+r.length+' 篇文章，輸入關鍵字縮小範圍';
+    if(v!==go.q){PG.isearch=1;go.q=v}
+    pagedList('iRes','isearch',r,function(a){return artCard(a,v)});
+  }
+  inp.addEventListener('input',go);go();
+  loadArt().then(function(){if(V.t==='isearch')go()});
+  setTimeout(function(){if($('iIn'))$('iIn').focus({preventScroll:true})},380);
 }
 function randomArt(){
   loadArt().then(function(d){if(!d.length)return;var a=d[Math.floor(Math.random()*d.length)];toast('🔮 水晶球幫你抽到：'+a[1]);openReader(a[0],a[1])});
@@ -1647,7 +1695,7 @@ function histCard(x,v){
 }
 function renderHist(){
   pBody.innerHTML='<div class="ph" style="--c:#7dd3fc"><span class="ph-e">🕘</span><div><div class="p-kicker">HISTORY・瀏覽紀錄</div><h3 id="pTitle">看過的文章</h3><p>最近打開過的文章都在這裡，可以用關鍵字找</p></div></div>'+
-    (HIST.length?'<div class="sbox"><input id="hIn" type="search" placeholder="找看過的文章…" autocomplete="off" aria-label="搜尋瀏覽紀錄"></div><p class="s-count" id="hCount"></p><div class="t-list" id="hRes"></div>'
+    (HIST.length?'<div class="sbox"><input id="hIn" type="search" placeholder="找看過的文章…" autocomplete="off" aria-label="搜尋瀏覽紀錄"></div><p class="s-count" id="hCount"></p><div id="hRes"></div>'
       :'<div class="t-empty"><span>🕘</span><b>還沒有瀏覽紀錄</b><small>打開任何一篇文章，就會記在這裡。</small></div>')+
     '<div class="sync"><h4 class="s-h">🔄 換手機或電腦也要用？</h4><p class="fav-note" style="text-align:left;margin-top:0">產生「同步碼」複製到另一台裝置貼上，收藏、瀏覽紀錄和金幣就會一起帶過去（兩邊的資料會合併）。</p>'+
       '<div class="row2"><button class="btn btn-primary btn-sm" type="button" id="syncMake">📤 產生同步碼</button>'+(HIST.length?'<button class="btn btn-ghost btn-sm" type="button" id="histClear">🗑️ 清除紀錄</button>':'')+'</div>'+
@@ -1658,7 +1706,9 @@ function renderHist(){
   $('pStep').textContent='🕘 瀏覽紀錄';pFoot.hidden=true;
   var inp=$('hIn');
   function list(){var v=inp?inp.value.trim().toLowerCase():'',r=HIST.filter(function(x){return !v||x.t.toLowerCase().indexOf(v)>=0||((FORUM_BY[x.h.split('/')[0]]||{}).name||'').toLowerCase().indexOf(v)>=0});
-    $('hCount').textContent=v?'找到 '+r.length+' 篇':'共 '+HIST.length+' 篇';$('hRes').innerHTML=r.map(function(x){return histCard(x,v)}).join('')}
+    $('hCount').textContent=v?'找到 '+r.length+' 篇':'共 '+HIST.length+' 篇';
+    if(v!==list.q){PG.hist=1;list.q=v}
+    pagedList('hRes','hist',r,function(x){return histCard(x,v)})}
   if(inp){inp.addEventListener('input',list);list()}
   $('syncMake').addEventListener('click',function(){var o=$('syncOut');o.value=makeSync();o.hidden=false;o.select();copyText(o.value,'📤 已複製同步碼，到另一台裝置貼上')});
   var hc=$('histClear');if(hc)hc.addEventListener('click',function(){if(!confirm('要清除這台裝置的瀏覽紀錄嗎？'))return;HIST=[];saveHist();render();toast('已清除瀏覽紀錄')});
@@ -1703,7 +1753,7 @@ function actsHTML(){
 }
 function render(dir){
   if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();
-  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
+  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();else if(V.t==='isearch')renderISearch();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
@@ -1756,6 +1806,7 @@ function flip(card){
 }
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button,a');if(!t)return;
+  if(t.dataset.pg){var pk=t.dataset.pk;PG[pk]=+t.dataset.pg;if(PGFN[pk])PGFN[pk]();playSfx('tap');return}
   if(t.classList.contains('t-card')){e.preventDefault();openReader(t.getAttribute('href'),t.querySelector('b').textContent);return}
   if(t.classList.contains('qa-flip')){flip(t.closest('.qa'));return}
   if(t.dataset.isle!=null){openPanel('isle',+t.dataset.isle);return}
