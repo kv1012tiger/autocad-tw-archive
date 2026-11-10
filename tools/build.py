@@ -121,7 +121,22 @@ def topic_card(board_id, m):
     }
 
 
+def write_search_index(boards, by_board):
+    """Full-text index for the home page search, loaded only when search opens."""
+    rows = []
+    for b in boards:
+        sub_names = {s["id"]: s["name"] for s in b.get("subs", [])}
+        for m in by_board.get(b["id"], []):
+            text = html.unescape(re.sub(r"<[^>]+>", " ", m["_content"]))
+            text = re.sub(r"\s+", " ", text).strip()
+            hut = sub_names.get(m.get("sub")) or f'{b["forum"]} 主屋'
+            rows.append([f'{b["id"]}/{m["id"]}/index.html', m["title"], b["id"], hut, m["icon"], text])
+    data = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+    (DOCS / "assets" / "search.json").write_text(data, encoding="utf-8", newline="\n")
+
+
 def write_home(boards, by_board):
+    write_search_index(boards, by_board)
     forum = []
     for b in boards:
         metas = by_board.get(b["id"], [])

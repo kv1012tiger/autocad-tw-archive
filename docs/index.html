@@ -611,6 +611,23 @@ body{overflow:hidden;background:#1581bd}
 @media (max-width:520px){
   #searchBtn{display:none}
 }
+/* 教學島 📖、問答島 💬 一眼分開 */
+.spot.fi .tag::before{content:"📖";margin-right:6px}
+.spot.qai .tag{background:linear-gradient(180deg,#e0fbf6,#8fe6da);border-color:#fff;color:#063f40;text-shadow:none}
+.spot.qai .tag::before{content:"💬";margin-right:6px}
+.spot.qai .cnt{color:#b8fff4}
+/* 占卜島 */
+.spot.oracle .tag{background:linear-gradient(180deg,#f3e8ff,#c084fc);border:3px solid #fff;color:#2e1065;text-shadow:none;box-shadow:0 0 0 3px #6d28d9,0 0 22px rgba(192,132,252,.9),0 8px 20px rgba(0,0,0,.5)}
+.spot.oracle .tag::before{content:"🔮";margin-right:6px}
+.spot.oracle .cnt{font-weight:800;color:#f3e8ff}
+.spot.oracle .isle .ico{bottom:38%;font-size:0}
+.spot.oracle .isle .ico .mico{display:block;width:calc(var(--w) * .3);height:calc(var(--w) * .3);overflow:visible;filter:drop-shadow(0 0 calc(var(--w) * .03) rgba(233,213,255,.9))}
+/* 清單收藏、搜尋結果 */
+.card.il.fav b::after{content:" ⭐"}
+.s-h{margin:18px 0 10px;font-size:19px}
+.s-h small{font-size:14px;color:var(--muted);font-weight:700;margin-left:6px}
+.s-art mark,.s-art b mark{background:#ffd166;color:#3a2410;border-radius:4px;padding:0 2px}
+.s-art .tm{color:var(--muted)}
 /* 六座主島：放大、金色名牌、立體圖示 */
 .spot.major{z-index:3}
 .spot.major .isle .ico{bottom:40%;font-size:0}
@@ -632,7 +649,7 @@ body{overflow:hidden;background:#1581bd}
   <a class="logo" href="#"><span>🏝️</span>論壇資源島</a>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
   <div class="hud-r">
-    <button class="hb" id="searchBtn" type="button" aria-label="搜尋問答">🔍</button>
+    <button class="hb" id="searchBtn" type="button" aria-label="搜尋文章與問答">🔍</button>
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
     <button class="hb" id="fsBtn" type="button" aria-label="全螢幕"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   </div>
@@ -651,7 +668,7 @@ body{overflow:hidden;background:#1581bd}
 <nav class="quest" aria-label="快速功能">
   <button class="qbtn hot" type="button" id="startBtn"><i>⛵</i>探險</button>
   <button class="qbtn" type="button" id="randBtn"><i>🎲</i>隨機</button>
-  <button class="qbtn" type="button" id="searchBtn2"><i>🔍</i>找題</button>
+  <button class="qbtn" type="button" id="searchBtn2"><i>🔮</i>搜尋</button>
   <button class="qbtn" type="button" data-open="castle"><i>🏰</i>城堡</button>
   <button class="qbtn" type="button" id="favBtn"><i>⭐</i>收藏</button>
   <button class="qbtn" type="button" id="logBtn"><i>📜</i>清單</button>
@@ -672,9 +689,11 @@ body{overflow:hidden;background:#1581bd}
 </section>
 <section class="list-sec" id="isles">
   <div class="wrap">
-    <div class="sec-h"><span class="eyebrow">Forum Islands</span><h2>論壇教學島</h2><p>不想開船？直接點這裡，挑一座島看教學。</p></div>
+    <div id="favSec" hidden><div class="sec-h"><span class="eyebrow">My Favorites</span><h2>⭐ 我的收藏</h2><p>點一下，船就開過去。</p></div>
+    <div class="isle-list" id="favList"></div></div>
+    <div class="sec-h sec-h2"><span class="eyebrow">Forum Islands</span><h2>📖 論壇教學島</h2><p>蘋果爸在論壇寫的 AutoCAD 教學文章。上島走進小屋讀文章，👑 是六座主島。</p></div>
     <div class="isle-list" id="forumList"></div>
-    <div class="sec-h sec-h2"><span class="eyebrow">Q&amp;A Islands</span><h2>問答島</h2><p>拿到金幣的島會亮起 🪙。</p></div>
+    <div class="sec-h sec-h2"><span class="eyebrow">Q&amp;A Islands</span><h2>💬 AI 問答島</h2><p>AI 實體課學員的提問，蘋果爸親自回答。翻開問答卡拿金幣，拿到金幣的島會亮起 🪙。</p></div>
     <div class="isle-list" id="isleList"></div>
     <button class="reset" type="button" id="resetBtn">↺ 清除進度，重新探險</button>
   </div>
@@ -867,7 +886,8 @@ var LOOK=[
 ];
 ISLES.forEach(function(s,i){s.k='isle';s.n=i;s.route=i*2+1;s.g=LOOK[i].g;s.res=LOOK[i].res});
 FORUM.forEach(function(s,i){s.k='forum';s.n=i});
-var SP=[{k:'home',e:'🏡',name:'蘋果爸小屋',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']}];
+var SP=[{k:'home',e:'🏡',name:'蘋果爸小屋',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']},
+  {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
 SP.push({k:'castle',e:'🏰',name:'課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
@@ -1005,9 +1025,32 @@ function majorIcon(s){
   else return s.e;
   return '<svg class="mico" viewBox="0 0 100 100"><defs>'+d+'</defs>'+b+'</svg>';
 }
+/* 問答島的問號牌、占卜島的帳篷與水晶球放大鏡 */
+function qSign(x,y,c){
+  return '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="5" ry="1.8" fill="#0a3a1e" opacity=".3"/><rect x="'+(x-1)+'" y="'+(y-22)+'" width="2" height="22" fill="#6b4220"/>'+
+    '<circle cx="'+x+'" cy="'+(y-27)+'" r="9" fill="#fff" stroke="'+c+'" stroke-width="2.6"/><text x="'+x+'" y="'+(y-22.6)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#0e6f73" font-family="sans-serif">?</text>';
+}
+function tent(x,y){
+  var k=' stroke="#3b1f6e" stroke-width=".8" stroke-linejoin="round"';
+  return '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="13" ry="3.5" fill="#1d0b3d" opacity=".3"/>'+
+    '<path d="M'+(x-12)+' '+y+'L'+x+' '+(y-24)+'L'+x+' '+(y+3)+'Z" fill="#8b5cf6"'+k+'/><path d="M'+x+' '+(y+3)+'L'+x+' '+(y-24)+'L'+(x+12)+' '+y+'Z" fill="#5b21b6"'+k+'/>'+
+    '<path d="M'+(x-6)+' '+(y-12)+'L'+x+' '+(y-24)+'L'+(x+6)+' '+(y-12)+'" fill="none" stroke="#ffd166" stroke-width="1.6"/>'+
+    '<path d="M'+(x-3.5)+' '+(y+1.6)+'L'+x+' '+(y-8)+'L'+(x+3.5)+' '+(y+1.6)+'Z" fill="#1d0b3d"/><circle cx="'+x+'" cy="'+(y-25.5)+'" r="1.8" fill="#ffd166"/>';
+}
+function oracleIcon(){
+  return '<svg class="mico" viewBox="0 0 100 100"><defs><radialGradient id="orb" cx=".38" cy=".34" r=".72"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#e9d5ff"/><stop offset=".8" stop-color="#8b5cf6"/><stop offset="1" stop-color="#4c1d95"/></radialGradient>'+
+    '<linearGradient id="orbH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58f"/><stop offset="1" stop-color="#c47a12"/></linearGradient></defs>'+
+    '<circle cx="42" cy="42" r="40" fill="#c084fc" opacity=".35"/>'+
+    '<path d="M64 66 L88 90" stroke="#4a2414" stroke-width="15" stroke-linecap="round"/><path d="M64 66 L88 90" stroke="url(#orbH)" stroke-width="10" stroke-linecap="round"/>'+
+    '<circle cx="42" cy="42" r="31" fill="url(#orb)" stroke="#ffd166" stroke-width="7"/><circle cx="42" cy="42" r="31" fill="none" stroke="#4a2414" stroke-width="2"/>'+
+    '<path d="M27 30 Q36 20 48 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".85"/>'+
+    '<path d="M50 44 l2.6 5.6 5.6 2.6-5.6 2.6-2.6 5.6-2.6-5.6-5.6-2.6 5.6-2.6z" fill="#fff"/><path d="M33 50 l1.4 3 3 1.4-3 1.4-1.4 3-1.4-3-3-1.4 3-1.4z" fill="#fff8e1"/></svg>';
+}
 function isleSVG(s){
   var sd=s.si+1,land=mix(s.g[0],'#56b43c',.5),deep=mix(s.g[1],'#2f8a2e',.55),tree=mix(s.g[1],'#1f7a2c',.72),leaf=mix(tree,'#a6e36f',.55),rx=62,ry=38,cy=46,i,I=[];
+  if(s.k==='search'){land='#a78bfa';deep='#5b3fb0';tree='#4c2a8f';leaf='#d8b4fe'}
   var o='<svg class="isl" viewBox="-14 -12 168 124" aria-hidden="true">'+
+    (s.k==='search'?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="#e9d5ff" opacity=".3"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="#e9d5ff" stroke-width="2.2" stroke-dasharray="1.5 6" stroke-linecap="round"/>':'')+
     (s.major?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="#ffe9a8" opacity=".28"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="#ffd166" stroke-width="2.4" stroke-dasharray="1.5 5" stroke-linecap="round"/>':'')+
     '<path d="'+blob(70,cy+10,rx,ry,1.24,sd)+'" fill="#0b5f86" opacity=".3"/><path d="'+blob(70,cy+6,rx,ry,1.17,sd)+'" fill="#6fdde0" opacity=".45"/><path d="'+blob(70,cy+5,rx,ry,1.07,sd)+'" fill="#a6f2e8" opacity=".75"/>'+
     '<path d="'+blob(70,cy+10,rx,ry,1,sd)+'" fill="#b98a52"/><path d="'+blob(70,cy+6,rx,ry,1,sd)+'" fill="#d9b678"/><path d="'+blob(70,cy,rx,ry,1,sd)+'" fill="#f6e2ac" stroke="#fff3cf" stroke-width=".6"/>'+
@@ -1018,6 +1061,8 @@ function isleSVG(s){
   for(i=0;i<n;i++){var a=rnd(sd,40+i)*6.28,f=.58+rnd(sd,70+i)*.32,tx=70+Math.cos(a)*50*f,ty=cy-3+Math.sin(a)*29*f;if(Math.abs(tx-70)<20&&ty>34)continue;I.push({y:ty,h:treeSVG(tx,ty,3.6+rnd(sd,100+i)*2.6,tree,leaf)})}
   if(s.subs){for(i=0;i<Math.min(s.subs.length,HUT_SPOTS.length);i++){var h=HUT_SPOTS[i];I.push({y:h[1],h:isoHut(h[0],h[1],7.5,s.c)})}}
   if(s.major){I.push({y:44,h:lighthouse(124,44)});I.push({y:40,h:bigFlag(17,40,s.c)})}
+  if(s.k==='isle')I.push({y:42,h:qSign(116,42,s.c)});
+  if(s.k==='search'){I.push({y:40,h:tent(110,40)});I.push({y:38,h:tent(30,38)})}
   I.sort(function(p,q){return p.y-q.y}).forEach(function(x){o+=x.h});
   return o+'</svg>';
 }
@@ -1031,18 +1076,18 @@ function islandHTML(s){
   return '<span class="isle">'+isleSVG(s)+
     (s.k==='home'?'<span class="mini-orbit"><span class="tav"></span>'+ringHTML(false)+'</span>':'')+
     '<span class="dc dc1">'+s.dc[0]+'</span><span class="dc dc2">'+s.dc[1]+'</span><span class="dc dc3">'+s.dc[2]+'</span>'+
-    '<span class="ico">'+(s.major?majorIcon(s):s.e)+'</span>'+resHTML(s)+'</span>';
+    '<span class="ico">'+(s.major?majorIcon(s):s.k==='search'?oracleIcon():s.e)+'</span>'+resHTML(s)+'</span>';
 }
 SP.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';
   var isl=s.k==='isle',frm=s.k==='forum',num=isl||frm;
-  var cnt=isl?s.rows.length+' 則問答':frm?(s.subs.length+1)+' 間小屋・'+s.total+' 篇':s.sub;
-  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:235;
+  var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 點我搜尋全部文章':s.sub;
+  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:235;
   if(s.major)s.base=Math.round(s.base*1.4);
-  b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(frm?' fi':'')+(s.major?' major':'');
+  b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(s.k==='search'?' oracle':'')+(isl?' qai':'')+(frm?' fi':'')+(s.major?' major':'');
   b.style.setProperty('--c',s.c);
   b.innerHTML=islandHTML(s)+'<span class="badge">🪙</span>'+
-    '<span class="tag">'+(num?'<em>'+pad(s.no)+'</em>':'')+esc(s.name)+'</span>'+
+    '<span class="tag">'+esc(s.name)+'</span>'+
     '<span class="cnt">'+esc(cnt)+'</span>';
   b.setAttribute('aria-label',s.name+'：'+cnt);
   b.addEventListener('click',function(){visit(i)});
@@ -1083,7 +1128,7 @@ function drawIslets(W,H,f,edge){
 var G={};
 function layout(){
   document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:6,rows=port?6:4,cw=port?260:400,ch=port?280:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?260:400,ch=port?280:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -1264,7 +1309,7 @@ function route(){
   if(t){if(SCN!==t)showScene(t);if(m[2]!=null&&+m[2]<SCN.huts.length)openPanel('hut',+m[2]);return}
   hideScene();
   if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
-  else if(h==='home'||h==='castle'){openPanel(h);placeBoat(spotIdx(h),true)}
+  else if(h==='home'||h==='castle'||h==='search'){openPanel(h);placeBoat(spotIdx(h),true)}
 }
 window.addEventListener('hashchange',route);
 $('sceneBack').addEventListener('click',function(){location.hash=''});
@@ -1284,6 +1329,7 @@ function favPaint(){
   if(SCN)favBtn($('sceneFav'),SCN);
   var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   $('favBtn').classList.toggle('on',Object.keys(FAV).length>0);
+  if(typeof favListPaint==='function')favListPaint();
 }
 function toggleFav(s){
   var k=spotHash(s);if(FAV[k])delete FAV[k];else FAV[k]=1;
@@ -1320,16 +1366,28 @@ function spotIdx(k){for(var i=0;i<SP.length;i++)if(SP[i].k===k)return i;return 0
 var isleList=$('isleList'),forumList=$('forumList');
 ISLES.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';b.className='card il';b.style.setProperty('--c',s.c);
-  b.innerHTML='<span class="e">'+s.e+'</span><span><b>'+pad(s.no)+' '+esc(s.name)+'</b><small>'+esc(s.sub)+'・'+s.rows.length+' 則問答</small></span><span class="st"></span>';
+  b.innerHTML='<span class="e">'+s.e+'</span><span><b>'+esc(s.name)+'</b><small>'+esc(s.sub)+'・'+s.rows.length+' 則問答</small></span><span class="st"></span>';
   b.addEventListener('click',function(){openPanel('isle',i)});
   s.li=b;isleList.appendChild(b);
 });
 FORUM.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';b.className='card il';b.style.setProperty('--c',s.c);
-  b.innerHTML='<span class="e">'+s.e+'</span><span><b>'+pad(s.no)+' '+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">'+(s.total?s.total+' 篇教學':'整理中')+'</span>';
+  b.innerHTML='<span class="e">'+s.e+'</span><span><b>'+(s.major?'👑 ':'')+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">'+(s.total?s.total+' 篇教學':'整理中')+'</span>';
   b.addEventListener('click',function(){closeLog();openSpot(s.si)});
-  forumList.appendChild(b);
+  s.li=b;forumList.appendChild(b);
 });
+/* 清單最上面的「我的收藏」 */
+function favListPaint(){
+  var list=SP.filter(isFav),box=$('favList');
+  $('favSec').hidden=!list.length;box.innerHTML='';
+  list.forEach(function(s){
+    var b=document.createElement('button');b.type='button';b.className='card il';b.style.setProperty('--c',s.c);
+    b.innerHTML='<span class="e">'+s.e+'</span><span><b>'+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">⛵ 前往</span>';
+    b.addEventListener('click',function(){closeLog();visit(s.si)});
+    box.appendChild(b);
+  });
+  SP.forEach(function(s){if(s.li)s.li.classList.toggle('fav',isFav(s))});
+}
 function refresh(){
   var n=candyCount();var gf=n>=5;$('candyN').textContent=n+(gf?' 🎁':'');$('candyBtn').classList.toggle('gift',gf);$('giftBtn').hidden=!gf;
   var nextSet=false;
@@ -1360,7 +1418,7 @@ function progHTML(n){
 }
 function renderIsle(n){
   var s=ISLES[n];
-  pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+s.e+'</span><div><div class="p-kicker">ISLAND '+pad(s.no)+' / '+pad(ALL_ISLES)+'・'+s.rows.length+' 則問答</div><h3 id="pTitle">'+esc(s.name)+'</h3><p>'+esc(s.sub)+'</p></div></div>'+
+  pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+s.e+'</span><div><div class="p-kicker">💬 AI 問答島・'+s.rows.length+' 則問答</div><h3 id="pTitle">'+esc(s.name)+'</h3><p>'+esc(s.sub)+'</p></div></div>'+
     '<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div>'+
     progHTML(n)+
     '<div class="qa-list">'+s.rows.map(function(r){return qaHTML(r)}).join('')+'</div>'+
@@ -1420,28 +1478,48 @@ function renderCastle(){
   $('pStep').textContent='🏰 課程城堡';
   footSimple('← 回地圖','🏡 蘋果爸小屋 →');
 }
-var SEARCH_KW=['繪圖','3D','數量','圖層','手稿','室內設計','LISP','助理','線上課程','清圖'];
+var SEARCH_KW=['圖塊','LISP','出圖','標註','圖層','3D','外掛','配置','文字','數量','手稿','線上課程'];
+/* 全文搜尋：文章索引 assets/search.json 第一次打開搜尋才載入 */
+var ART=null,artLoading=null,FORUM_BY={};FORUM.forEach(function(s){FORUM_BY[s.id]=s});
+function loadArt(){
+  if(ART)return Promise.resolve(ART);
+  if(!artLoading)artLoading=fetch('assets/search.json').then(function(r){return r.json()}).then(function(d){ART=d;return d}).catch(function(){artLoading=null;return []});
+  return artLoading;
+}
+function mark(s,v){var i=s.toLowerCase().indexOf(v);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+v.length))+'</mark>'+esc(s.slice(i+v.length))}
+function snip(t,v){var i=t.toLowerCase().indexOf(v);if(i<0)return t.slice(0,60)+(t.length>60?'…':'');var a=Math.max(0,i-24),b=Math.min(t.length,i+v.length+40);return (a?'…':'')+t.slice(a,b)+(b<t.length?'…':'')}
+function artCard(a,v){
+  var s=FORUM_BY[a[2]]||{c:'#5eead4',name:''};
+  return '<a class="t-card s-art" style="--c:'+s.c+'" href="'+esc(a[0])+'"><span class="te">'+a[4]+'</span><span class="tb"><b>'+mark(a[1],v)+'</b><small>'+mark(snip(a[5],v),v)+'</small><span class="tm">📍 '+esc(s.name)+'・'+esc(a[3])+'</span></span></a>';
+}
 function renderSearch(){
-  pBody.innerHTML='<div class="ph" style="--c:#5eead4"><span class="ph-e">🔍</span><div><div class="p-kicker">SEARCH・找我的問題</div><h3 id="pTitle">搜尋問答</h3><p>輸入關鍵字，看看有沒有人問過一樣的問題</p></div></div>'+
-    '<div class="sbox"><input id="qIn" type="search" placeholder="例如：3D、數量、手稿、圖層…" autocomplete="off" aria-label="搜尋問答"></div>'+
+  pBody.innerHTML='<div class="ph" style="--c:#c084fc"><span class="ph-e">🔮</span><div><div class="p-kicker">占卜島・關鍵字搜尋</div><h3 id="pTitle">搜尋文章與問答</h3><p>對著水晶球說出關鍵字，幫你找出相關的教學文章和問答</p></div></div>'+
+    '<div class="sbox"><input id="qIn" type="search" placeholder="例如：圖塊、LISP、出圖、3D…" autocomplete="off" aria-label="搜尋文章與問答"></div>'+
     '<div class="chips" id="kw">'+SEARCH_KW.map(function(k){return '<button class="chip" type="button" data-kw="'+k+'">'+k+'</button>'}).join('')+'</div>'+
-    '<p class="s-count" id="sCount"></p><div class="qa-list" id="sRes"></div>';
-  $('pStep').textContent='🔍 搜尋';
-  footSimple('← 回地圖','🎲 隨機抽一題');
+    '<p class="s-count" id="sCount"></p><div id="sArt"></div><div class="qa-list" id="sRes"></div>';
+  $('pStep').textContent='🔮 占卜島';
+  footSimple('← 回地圖','🔮 占卜一篇');
   var inp=$('qIn');inp.addEventListener('input',function(){doSearch(inp.value)});doSearch('');
+  loadArt().then(function(){if(V.t==='search')doSearch(inp.value)});
 }
 function doSearch(v){
-  v=v.trim().toLowerCase();var res=$('sRes'),cnt=$('sCount');
-  if(!v){res.innerHTML='';cnt.textContent='共 '+TOTAL+' 則問答，點上面的關鍵字試試看。';return}
+  v=v.trim().toLowerCase();var res=$('sRes'),art=$('sArt'),cnt=$('sCount');if(!res)return;
+  if(!v){res.innerHTML='';art.innerHTML='';cnt.textContent='共 '+(ART?ART.length:'')+' 篇教學文章、'+TOTAL+' 則問答，輸入關鍵字或點上面的詞試試看。';return}
   var hit=Object.keys(QA).filter(function(r){var q=QA[r];return (q[1]+' '+q[2]).toLowerCase().indexOf(v)>=0});
-  cnt.textContent=hit.length?'找到 '+hit.length+' 則':'沒找到，換個關鍵字，或直接用 LINE@ 問蘋果爸！';
-  res.innerHTML=hit.map(function(r){return qaHTML(r,true)}).join('');
+  var ah=(ART||[]).filter(function(a){return (a[1]+' '+a[3]+' '+a[5]).toLowerCase().indexOf(v)>=0});
+  ah.sort(function(a,b){return (b[1].toLowerCase().indexOf(v)>=0)-(a[1].toLowerCase().indexOf(v)>=0)});
+  cnt.textContent=ah.length||hit.length?'找到 '+ah.length+' 篇文章、'+hit.length+' 則問答':(ART?'沒找到，換個關鍵字，或直接用 LINE@ 問蘋果爸！':'水晶球暖機中…');
+  art.innerHTML=ah.length?'<h4 class="s-h">📖 教學文章 <small>'+ah.length+' 篇</small></h4><div class="t-list">'+ah.slice(0,60).map(function(a){return artCard(a,v)}).join('')+'</div>'+(ah.length>60?'<p class="s-count">只列出前 60 篇，再多加幾個字可以縮小範圍。</p>':''):'';
+  res.innerHTML=(hit.length?'<h4 class="s-h">💬 AI 問答 <small>'+hit.length+' 則</small></h4>':'')+hit.map(function(r){return qaHTML(r,true)}).join('');
+}
+function randomArt(){
+  loadArt().then(function(d){if(!d.length)return;var a=d[Math.floor(Math.random()*d.length)];toast('🔮 水晶球幫你抽到：'+a[1]);openReader(a[0],a[1])});
 }
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
 function renderFav(){
   var list=SP.filter(isFav);
   pBody.innerHTML='<div class="ph" style="--c:#ffd166"><span class="ph-e">⭐</span><div><div class="p-kicker">FAVORITES・我的收藏</div><h3 id="pTitle">收藏的島</h3><p>點一下，船就開過去</p></div></div>'+
-    (list.length?'<div class="fav-list">'+list.map(function(s){return '<button class="card il" type="button" data-go="'+s.si+'" style="--c:'+s.c+'"><span class="e">'+s.e+'</span><span><b>'+(s.k==='isle'||s.k==='forum'?pad(s.no)+' ':'')+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">⛵ 前往</span></button>'}).join('')+'</div>'
+    (list.length?'<div class="fav-list">'+list.map(function(s){return '<button class="card il" type="button" data-go="'+s.si+'" style="--c:'+s.c+'"><span class="e">'+s.e+'</span><span><b>'+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">⛵ 前往</span></button>'}).join('')+'</div>'
       :'<div class="t-empty"><span>☆</span><b>還沒有收藏的島</b><small>進到島上或打開島的介紹，點「☆ 收藏」，那座島就會在地圖上發光，也會出現在這裡。</small></div>')+
     '<p class="fav-note">收藏只存在這台裝置的瀏覽器裡。</p>';
   $('pStep').textContent='⭐ 我的收藏';
@@ -1449,7 +1527,7 @@ function renderFav(){
 }
 function actsHTML(){
   var s=null,h='',title='';
-  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle')s=SP[spotIdx(V.t)];
+  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search')s=SP[spotIdx(V.t)];
   if(V.t==='hut'&&SCN){h=spotHash(SCN)+'/'+V.i;title=SCN.name+'・'+SCN.huts[V.i].name}
   else if(s){h=spotHash(s);title=s.name}
   if(!h)return '';
@@ -1473,7 +1551,7 @@ function openPanel(t,i,dir){
 }
 function closePanel(){
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
-  if(/^#(qa-\d+|home|castle)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  if(/^#(qa-\d+|home|castle|search)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
@@ -1488,9 +1566,10 @@ pNext.addEventListener('click',function(){
   if(V.t==='isle')openSi(curSi()+1);else if(V.t==='hut'){if(V.i<SCN.huts.length-1)openPanel('hut',V.i+1);else closePanel()}
   else if(V.t==='home')openPanel('isle',0);
   else if(V.t==='castle')openPanel('home');
-  else if(V.t==='search')randomQ();
+  else if(V.t==='search')randomArt();
   if(V.t==='castle'||V.t==='home')placeBoat(spotIdx(V.t));
 });
+
 function flip(card){
   if(!card||card.classList.contains('open'))return;
   var r=+card.dataset.r,n=ISLE_OF[r];
@@ -1627,7 +1706,7 @@ var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
 var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
 if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
 else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
-else if(HASH==='home'||HASH==='castle')HASH_SP=spotIdx(HASH);
+else if(HASH==='home'||HASH==='castle'||HASH==='search')HASH_SP=spotIdx(HASH);
 if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
 else{document.documentElement.classList.add('lock');setTimeout(function(){$('introGo').focus({preventScroll:true})},120)}
