@@ -658,6 +658,10 @@ body{overflow:hidden;background:#1581bd}
 .s-h small{font-size:14px;color:var(--muted);font-weight:700;margin-left:6px}
 .s-art mark,.s-art b mark{background:#ffd166;color:#3a2410;border-radius:4px;padding:0 2px}
 .s-art .tm{color:var(--muted)}
+.sync{margin-top:22px;padding:14px 16px;border-radius:16px;border:1.5px dashed rgba(125,211,252,.5);background:rgba(255,255,255,.04)}
+.sync .s-h{margin-top:0}
+.sync-box{display:block;width:100%;min-height:74px;margin-top:10px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(0,0,0,.25);color:#e8f6ff;font:13px/1.5 ui-monospace,Consolas,monospace;word-break:break-all;resize:vertical}
+.sync-box[hidden]{display:none}
 /* 六座主島：放大、金色名牌、立體圖示 */
 .spot.major{z-index:3}
 .spot.major .isle .ico{bottom:40%;font-size:0}
@@ -702,6 +706,7 @@ body{overflow:hidden;background:#1581bd}
   <button class="qbtn" type="button" id="searchBtn2"><i>🔮</i>搜尋</button>
   <button class="qbtn" type="button" data-open="castle"><i>🏰</i>城堡</button>
   <button class="qbtn" type="button" id="favBtn"><i>⭐</i>收藏</button>
+  <button class="qbtn" type="button" id="histBtn"><i>🕘</i>紀錄</button>
   <button class="qbtn" type="button" id="logBtn"><i>📜</i>清單</button>
 </nav>
 </main>
@@ -1436,6 +1441,7 @@ function toggleFav(s){
 $('sceneShare').addEventListener('click',function(){if(SCN)shareHash(spotHash(SCN),SCN.name)});
 $('sceneFav').addEventListener('click',function(){if(SCN)toggleFav(SCN)});
 $('favBtn').addEventListener('click',function(){openPanel('fav')});
+$('histBtn').addEventListener('click',function(){openPanel('hist')});
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-share],[data-fav],[data-go]');if(!t)return;
   if(t.dataset.share!=null)shareHash(t.dataset.share,t.dataset.title);
@@ -1447,6 +1453,7 @@ land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)op
 /* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
 var reader=$('reader'),readerF=$('readerF'),readerT=$('readerT');
 function openReader(href,title){
+  addHist(href,title);
   readerT.textContent=title;reader.hidden=false;
   readerF.contentWindow.location.replace(href);
   history.pushState({reader:1},'');
@@ -1621,6 +1628,71 @@ function renderFav(){
   $('pStep').textContent='⭐ 我的收藏';
   pFoot.hidden=true;
 }
+/* ---------- 瀏覽紀錄（只存在這台裝置，可用同步碼帶到別台） ---------- */
+var HKEY='aikb-hist',HIST=[];
+try{HIST=(JSON.parse(localStorage.getItem(HKEY))||[]).filter(function(x){return x&&typeof x.h==='string'})}catch(e){HIST=[]}
+function saveHist(){try{localStorage.setItem(HKEY,JSON.stringify(HIST))}catch(e){}}
+function addHist(href,title){
+  if(!/^[\w-]+\/t\d+\/index\.html$/.test(href||''))return;
+  HIST=HIST.filter(function(x){return x.h!==href});HIST.unshift({h:href,t:String(title||'').slice(0,120),at:Date.now()});
+  if(HIST.length>200)HIST.length=200;saveHist();
+}
+function ago(t){
+  var d=(Date.now()-t)/60000;if(d<1)return '剛剛';if(d<60)return Math.floor(d)+' 分鐘前';if(d<1440)return Math.floor(d/60)+' 小時前';if(d<2880)return '昨天';
+  var x=new Date(t);return (x.getMonth()+1)+'/'+x.getDate();
+}
+function histCard(x,v){
+  var s=FORUM_BY[x.h.split('/')[0]]||{c:'#5eead4',name:'',e:'📘'};
+  return '<a class="t-card s-art" style="--c:'+s.c+'" href="'+esc(x.h)+'"><span class="te">'+s.e+'</span><span class="tb"><b>'+(v?mark(x.t,v):esc(x.t))+'</b><span class="tm">📍 '+esc(s.name)+'・🕘 '+ago(x.at)+'</span></span></a>';
+}
+function renderHist(){
+  pBody.innerHTML='<div class="ph" style="--c:#7dd3fc"><span class="ph-e">🕘</span><div><div class="p-kicker">HISTORY・瀏覽紀錄</div><h3 id="pTitle">看過的文章</h3><p>最近打開過的文章都在這裡，可以用關鍵字找</p></div></div>'+
+    (HIST.length?'<div class="sbox"><input id="hIn" type="search" placeholder="找看過的文章…" autocomplete="off" aria-label="搜尋瀏覽紀錄"></div><p class="s-count" id="hCount"></p><div class="t-list" id="hRes"></div>'
+      :'<div class="t-empty"><span>🕘</span><b>還沒有瀏覽紀錄</b><small>打開任何一篇文章，就會記在這裡。</small></div>')+
+    '<div class="sync"><h4 class="s-h">🔄 換手機或電腦也要用？</h4><p class="fav-note" style="text-align:left;margin-top:0">產生「同步碼」複製到另一台裝置貼上，收藏、瀏覽紀錄和金幣就會一起帶過去（兩邊的資料會合併）。</p>'+
+      '<div class="row2"><button class="btn btn-primary btn-sm" type="button" id="syncMake">📤 產生同步碼</button>'+(HIST.length?'<button class="btn btn-ghost btn-sm" type="button" id="histClear">🗑️ 清除紀錄</button>':'')+'</div>'+
+      '<textarea class="sync-box" id="syncOut" readonly hidden aria-label="這台裝置的同步碼"></textarea>'+
+      '<textarea class="sync-box" id="syncIn" placeholder="在這裡貼上另一台裝置的同步碼" aria-label="貼上同步碼"></textarea>'+
+      '<div class="row2"><button class="btn btn-primary btn-sm" type="button" id="syncApply">📥 套用同步碼</button></div></div>'+
+    '<p class="fav-note">紀錄只存在這台裝置的瀏覽器裡，最多保留 200 篇。</p>';
+  $('pStep').textContent='🕘 瀏覽紀錄';pFoot.hidden=true;
+  var inp=$('hIn');
+  function list(){var v=inp?inp.value.trim().toLowerCase():'',r=HIST.filter(function(x){return !v||x.t.toLowerCase().indexOf(v)>=0||((FORUM_BY[x.h.split('/')[0]]||{}).name||'').toLowerCase().indexOf(v)>=0});
+    $('hCount').textContent=v?'找到 '+r.length+' 篇':'共 '+HIST.length+' 篇';$('hRes').innerHTML=r.map(function(x){return histCard(x,v)}).join('')}
+  if(inp){inp.addEventListener('input',list);list()}
+  $('syncMake').addEventListener('click',function(){var o=$('syncOut');o.value=makeSync();o.hidden=false;o.select();copyText(o.value,'📤 已複製同步碼，到另一台裝置貼上')});
+  var hc=$('histClear');if(hc)hc.addEventListener('click',function(){if(!confirm('要清除這台裝置的瀏覽紀錄嗎？'))return;HIST=[];saveHist();render();toast('已清除瀏覽紀錄')});
+  $('syncApply').addEventListener('click',function(){applySync($('syncIn').value)});
+}
+/* 同步碼：AIKB1.<base64 資料>.<檢查碼>；匯入時驗證檢查碼，只接受網站上存在的島、文章、問答 */
+function fnv(s){var h=0x811c9dc5;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return ('0000000'+h.toString(16)).slice(-8)}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)))}
+function b64d(s){return decodeURIComponent(escape(atob(s)))}
+function makeSync(){
+  var d=JSON.stringify({v:1,fav:Object.keys(FAV),hist:HIST.map(function(x){return [x.h,x.t,x.at]}),f:Object.keys(ST.f),c:Object.keys(ST.c),chest:ST.chest?1:0}),b=b64e(d);
+  return 'AIKB1.'+b+'.'+fnv(b);
+}
+function applySync(code){
+  var m=String(code||'').replace(/\s+/g,'').match(/^AIKB1\.([A-Za-z0-9+/=]+)\.([0-9a-f]{8})$/),d=null;
+  if(m&&fnv(m[1])===m[2]){try{d=JSON.parse(b64d(m[1]))}catch(e){d=null}}
+  if(!d||d.v!==1){toast('⚠️ 同步碼無效，請整段重新複製');return}
+  loadArt().then(function(art){
+    var okH={},okF={},n=0;art.forEach(function(a){okH[a[0]]=a[1]});SP.forEach(function(s){okF[spotHash(s)]=1});
+    (Array.isArray(d.fav)?d.fav:[]).slice(0,100).forEach(function(k){if(okF[k]&&!FAV[k]){FAV[k]=1;n++}});
+    (Array.isArray(d.hist)?d.hist:[]).slice(0,200).forEach(function(x){
+      if(!Array.isArray(x)||!okH[x[0]])return;var at=+x[2];if(!(at>0&&at<=Date.now()+864e5))at=0;
+      var cur=HIST.filter(function(y){return y.h===x[0]})[0];
+      if(!cur){HIST.push({h:x[0],t:okH[x[0]],at:at});n++}else if(at>cur.at)cur.at=at;
+    });
+    HIST.sort(function(a,b){return b.at-a.at});if(HIST.length>200)HIST.length=200;
+    (Array.isArray(d.f)?d.f:[]).forEach(function(r){if(QA[r]&&!ST.f[r]){ST.f[r]=1;n++}});
+    (Array.isArray(d.c)?d.c:[]).forEach(function(i){i=+i;if(i>=0&&i<ISLES.length&&ISLES[i]&&!ST.c[i]){ST.c[i]=1;n++}});
+    if(d.chest&&candyCount()>=5)ST.chest=1;
+    try{localStorage.setItem('aikb-fav',JSON.stringify(Object.keys(FAV)))}catch(e){}
+    saveHist();save();favPaint();refresh();if(V.t==='hist')render();
+    toast(n?'📥 同步完成，合併了 '+n+' 筆資料':'📥 同步碼有效，資料都已經在這台裝置上了');
+  });
+}
 function actsHTML(){
   var s=null,h='',title='';
   if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search')s=SP[spotIdx(V.t)];
@@ -1631,7 +1703,7 @@ function actsHTML(){
 }
 function render(dir){
   if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();
-  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();
+  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
