@@ -509,6 +509,7 @@ body{overflow:hidden;background:#1581bd}
 .map-size{position:relative;flex:none;margin:auto;overflow:hidden}
 .map{transform-origin:0 0}
 .map.pinching{will-change:transform}
+.map.pinching .rs,.map.pinching .mdeco,.map.pinching .boat{animation-play-state:paused}
 .map::before{animation:none;opacity:.32}
 .map::after{display:none}
 .islets{position:absolute;left:0;top:0;pointer-events:none}
@@ -1045,6 +1046,7 @@ function touchMid(t){return {x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1
 world.addEventListener('touchstart',function(e){
   if(e.touches.length!==2)return;
   e.preventDefault();
+  world.style.touchAction='none';
   var m=touchMid(e.touches);pinch={gap:touchGap(e.touches),z:Z,pt:mapPoint(m.x,m.y)};
   map.classList.add('pinching');
 },{passive:false});
@@ -1055,12 +1057,11 @@ world.addEventListener('touchmove',function(e){
   cancelAnimationFrame(zRaf);
   zRaf=requestAnimationFrame(function(){zoomTo(p.z*gap/p.gap,p.pt,m.x,m.y)});
 },{passive:false});
-function endPinch(e){if(pinch&&e.touches.length<2){pinch=null;map.classList.remove('pinching')}}
+function endPinch(e){if(pinch&&e.touches.length<2){pinch=null;map.classList.remove('pinching');world.style.touchAction=''}}
 world.addEventListener('touchend',endPinch);
 world.addEventListener('touchcancel',endPinch);
 world.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});
 world.addEventListener('wheel',function(e){
-  if(!e.ctrlKey)return;
   e.preventDefault();
   zoomTo(Z*Math.exp(-e.deltaY*.01),mapPoint(e.clientX,e.clientY),e.clientX,e.clientY);
 },{passive:false});

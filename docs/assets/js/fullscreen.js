@@ -38,14 +38,11 @@
     btn.setAttribute("aria-label", on ? "離開全螢幕" : "全螢幕");
   }
 
-  // Browsers only allow fullscreen from a user gesture, so phones enter it on the first tap.
-  var phone = window.matchMedia("(pointer: coarse)").matches && Math.min(screen.width, screen.height) <= 820;
-  if (phone) {
-    document.addEventListener("click", function (e) {
-      if (active() || optedOut() || (btn && btn.contains(e.target))) return;
-      go();
-    }, true);
-  }
+  // Browsers only allow fullscreen from a user gesture, so every device enters it on the first click/tap.
+  document.addEventListener("click", function (e) {
+    if (active() || optedOut() || (btn && btn.contains(e.target))) return;
+    go();
+  }, true);
 
   if (btn) {
     btn.addEventListener("click", function () {
