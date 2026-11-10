@@ -1189,7 +1189,7 @@ function drawIslets(W,H,f,edge){
 var G={};
 function layout(){
   document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?240:400,ch=port?262:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -1197,7 +1197,7 @@ function layout(){
   var d=crPath(SP);$('r1').setAttribute('d',d);$('r2').setAttribute('d',d);
   drawIslets(W,H,f,pad);
   placeBoat(boatAt,true);
-  baseFont=port?20:22;Zmax=port?1.2:1.6;fitZoom();applyZoom();
+  baseFont=port?20:22;Zmax=port?1.2:1.6;TKN=port?7.4:10.2;fitZoom();applyZoom();
 }
 function placeBoat(i,instant){
   var s=SP[i];if(!s||s.x==null)return;
@@ -1217,14 +1217,14 @@ function visit(i,after){
 }
 function openSpot(i){var s=SP[i];if(s.k==='forum'){location.hash='isle-'+encodeURIComponent(s.id);return}if(s.k==='isle')openPanel('isle',s.n);else openPanel(s.k,0)}
 /* 縮放：手勢進行中只做 GPU 變形，放開後才一次更新版面；最小可看整張地圖 */
-var Z=1,Zmin=.3,Zmax=1.6,baseFont=20,zRaf=0,pinch=null,zg=null,wheelT=0;
+var TKN=10.2,Z=1,Zmin=.3,Zmax=1.6,baseFont=20,zRaf=0,pinch=null,zg=null,wheelT=0;
 function fitZoom(){Zmin=Math.min(world.clientWidth/G.w,world.clientHeight/G.h)}
 function clampZ(v){return Math.max(Zmin,Math.min(Zmax,v))}
 function applyZoom(){
   Z=clampZ(Z);
   map.style.transform='scale('+Z.toFixed(4)+')';
   mapSize.style.width=Math.round(G.w*Z)+'px';mapSize.style.height=Math.round(G.h*Z)+'px';
-  map.style.setProperty('--tk',Math.max(1,10.2/(baseFont*Z)).toFixed(3));
+  map.style.setProperty('--tk',Math.max(1,TKN/(baseFont*Z)).toFixed(3));
   map.classList.toggle('far',Z<.62);
 }
 function mapPoint(cx,cy){var r=world.getBoundingClientRect(),px=cx-r.left,py=cy-r.top;return {x:(world.scrollLeft+px-mapSize.offsetLeft)/Z,y:(world.scrollTop+py-mapSize.offsetTop)/Z}}
