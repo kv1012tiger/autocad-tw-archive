@@ -124,3 +124,4 @@ footer.site-footer a{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
   .rs,.rs i,.rs b{animation:none!important}
 }
+footer.site-footer .license{margin-top:6px;font-size:13.5px}

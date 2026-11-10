@@ -6,6 +6,15 @@
 
 - 網站：https://kv1012tiger.github.io/autocad-tw-archive/
 
+## 授權說明
+
+本站與本 repo 的文章、圖片、影片連結及網站內容，著作權屬蘋果爸／AutoCAD顧問論壇所有，採用 [創用 CC 姓名標示-非商業性-禁止改作 4.0 國際（CC BY-NC-ND 4.0）](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant) 授權，條款全文見 [LICENSE](LICENSE)。
+
+- ✅ 歡迎閱讀、參考學習、分享連結與轉載，轉載時請標明出處「蘋果爸／AutoCAD顧問論壇」並附上原文連結。
+- ❌ 禁止商業用途，例如用於開課、販售教材或放入付費內容。
+- ❌ 禁止改作後再散布，例如改寫、重新剪輯後以自己的名義發布。
+- 商業合作或其他授權需求，請透過 [AutoCAD顧問論壇](https://www.autocad-tw.com/) 或官方 LINE@ 聯絡蘋果爸。
+
 ## 結構
 
 ```
