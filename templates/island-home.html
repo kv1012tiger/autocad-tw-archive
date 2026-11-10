@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>論壇資源島｜蘋果爸的 AutoCAD 教學大島群</title>
-<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：13 座論壇教學島、9 座 AI 問答島，還有蘋果爸小屋與課程城堡，邊玩邊學。">
+<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：13 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與課程城堡，邊玩邊學。">
 <meta property="og:title" content="論壇資源島｜蘋果爸的 AutoCAD 教學大島群">
 <meta property="og:description" content="點一座島開始探險，翻開問答卡拿金幣，拿到 5 枚送你提示詞禮物包。">
 <meta property="og:type" content="website">
@@ -265,7 +265,7 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .vid span{display:block;padding:8px 12px;font-size:14px;font-weight:700}
 .row2{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
 .forum{display:inline-block;margin-top:14px;font-size:13.5px;color:var(--cyan)}
-/* 蘋果爸小屋 */
+/* 蘋果爸小島 */
 .home-top{display:flex;flex-direction:column;align-items:center;margin:4px 0 6px}
 .big-orbit{position:relative;width:min(300px,78vw);aspect-ratio:1}
 .big-orbit .tav{position:absolute;left:27%;top:27%;width:46%;height:46%;border:4px solid var(--gold);box-shadow:0 0 30px rgba(255,209,102,.5)}
@@ -522,6 +522,26 @@ body{overflow:hidden;background:#1581bd}
 .act.on{background:linear-gradient(135deg,#ffd166,#ff9f1c);border-color:#ffe6a3;color:#3a1a08}
 .scene-t{flex:1 1 auto}
 .scene-t b,.scene-t small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 島上：場景列併進頂部同一列 */
+.hud .scene-bar{display:none;position:static;flex:1 1 auto;min-width:0;padding:0;background:none;border:0;gap:12px}
+.in-scene .hud .scene-bar{display:flex}
+.in-scene .hud .logo{display:none}
+.in-scene .hud{border-bottom:2px solid var(--sc,#ffd166)}
+.in-scene .hud .candy{margin-left:0}
+.hud .scene-bar .acts{margin-left:auto}
+@media (max-width:480px){
+  .in-scene .hud{gap:5px;padding-left:8px;padding-right:8px}
+  .in-scene .hud .hud-r{gap:5px}
+  .in-scene .hud .hb{width:34px;height:34px;font-size:15px}
+  .in-scene .hud .candy{padding:4px 7px;gap:4px;font-size:15px}
+  .hud .scene-bar{gap:5px}
+  .hud .scene-bar #sceneBack{padding:6px 9px;font-size:17px}
+  .hud .scene-bar #sceneBack .tx{display:none}
+  .hud .scene-bar .acts{gap:4px}
+  .hud .scene-bar .act{padding:4px 7px;font-size:16px}
+  .hud .scene-t small{display:none}
+  .hud .scene-t b{font-size:17px}
+}
 .fav-list{display:grid;gap:12px}
 .fav-note{margin-top:14px;font-size:14px;color:var(--muted);text-align:center}
 .quest .qbtn.on i{filter:drop-shadow(0 0 6px rgba(255,209,102,.9))}
@@ -647,6 +667,7 @@ body{overflow:hidden;background:#1581bd}
 
 <header class="hud">
   <a class="logo" href="#"><span>🏝️</span>論壇資源島</a>
+  <div class="scene-bar" id="sceneBar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button" aria-label="回大海">⛵<span class="tx"> 回大海</span></button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
   <div class="hud-r">
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋文章與問答">🔍</button>
@@ -709,7 +730,6 @@ body{overflow:hidden;background:#1581bd}
 </div>
 
 <div class="scene" id="scene" hidden>
-  <div class="scene-bar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button">⛵ 回大海</button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <div class="land" id="land"></div>
 </div>
 
@@ -886,7 +906,7 @@ var LOOK=[
 ];
 ISLES.forEach(function(s,i){s.k='isle';s.n=i;s.route=i*2+1;s.g=LOOK[i].g;s.res=LOOK[i].res});
 FORUM.forEach(function(s,i){s.k='forum';s.n=i});
-var SP=[{k:'home',e:'🏡',name:'蘋果爸小屋',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']},
+var SP=[{k:'home',e:'🏡',name:'蘋果爸小島',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']},
   {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
@@ -1298,10 +1318,16 @@ function showScene(s){
   closeLog();if(panel.classList.contains('open'))closePanel();
   SCN=s;s.huts=s.huts||hutsOf(s);
   $('sceneName').textContent=s.name;$('sceneSub').textContent=(s.subs.length+1)+' 間小屋・'+s.total+' 篇文章';
-  scene.style.setProperty('--c',s.c);scene.hidden=false;drawScene();scene.scrollTop=0;placeBoat(s.si,true);
-  favBtn($('sceneFav'),s);
+  scene.style.setProperty('--c',s.c);document.documentElement.style.setProperty('--sc',s.c);
+  favBtn($('sceneFav'),s);sceneHud(true);
+  scene.hidden=false;drawScene();scene.scrollTop=0;placeBoat(s.si,true);
 }
-function hideScene(){if(!SCN)return;SCN=null;scene.hidden=true;land.innerHTML=''}
+function hideScene(){if(!SCN)return;SCN=null;scene.hidden=true;land.innerHTML='';sceneHud(false)}
+/* 島上時：回大海、島名、分享、收藏併進最上面那一列 */
+function sceneHud(on){
+  document.documentElement.classList.toggle('in-scene',on);
+  document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
+}
 /* 網址：#isle-島代號、#isle-島代號/小屋序號、#qa-問答島序號、#home、#castle */
 function route(){
   var h=location.hash.replace(/^#/,''),m=h.match(/^isle-([^/]+)(?:\/(\d+))?$/),t=null;
@@ -1460,7 +1486,7 @@ function renderHome(){
       '<a class="lk" href="'+LINE+'" target="_blank" rel="noopener"><i>🎁</i><span><b>LINE 一對一問蘋果爸</b><small>有問題直接問・@sni5329r</small></span></a>'+
     '</div></div>'+
     '<p class="fav-note">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></p>';
-  $('pStep').textContent='🏡 蘋果爸小屋';
+  $('pStep').textContent='🏡 蘋果爸小島';
   footSimple('← 回地圖','🪄 第一座島 →');
 }
 function renderCastle(){
@@ -1476,7 +1502,7 @@ function renderCastle(){
       '<a class="vid" href="https://www.youtube.com/watch?v=bj2FKTcKO8s" target="_blank" rel="noopener"><i style="background-image:url(https://i.ytimg.com/vi/bj2FKTcKO8s/hqdefault.jpg)"></i><span>課程初步講解 ↗</span></a>'+
     '</div></div>';
   $('pStep').textContent='🏰 課程城堡';
-  footSimple('← 回地圖','🏡 蘋果爸小屋 →');
+  footSimple('← 回地圖','🏡 蘋果爸小島 →');
 }
 var SEARCH_KW=['圖塊','LISP','出圖','標註','圖層','3D','外掛','配置','文字','數量','手稿','線上課程'];
 /* 全文搜尋：文章索引 assets/search.json 第一次打開搜尋才載入 */
