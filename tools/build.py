@@ -4,6 +4,7 @@ import html
 import json
 import re
 import shutil
+import urllib.parse
 from pathlib import Path
 from string import Template
 
@@ -194,6 +195,25 @@ def write_topics(board, topics, site_name):
                 shutil.rmtree(dst_images)
             shutil.copytree(src_images, dst_images)
 
+        # Attachments: data/topics/<id>/files/* are published next to the page with a download list.
+        content = meta["_content"]
+        src_files = meta["_dir"] / "files"
+        files = sorted(p for p in src_files.iterdir() if p.is_file()) if src_files.exists() else []
+        if files:
+            dst_files = topic_dir / "files"
+            if dst_files.exists():
+                shutil.rmtree(dst_files)
+            shutil.copytree(src_files, dst_files)
+            items = []
+            for p in files:
+                size = p.stat().st_size
+                label = f"{size / 1048576:.1f} MB" if size >= 1048576 else f"{max(1, round(size / 1024))} KB"
+                icon = "📕" if p.suffix.lower() == ".pdf" else "🗜️"
+                href = "files/" + urllib.parse.quote(p.name)
+                items.append(f'<a class="dl-item" href="{href}" download="{html.escape(p.name, quote=True)}"><span class="dl-ic">{icon}</span>'
+                             f'<span class="dl-n">{html.escape(p.name)}</span><span class="dl-s">{label}</span><span class="dl-go">⬇️ 下載</span></a>')
+            content += ('\n<div class="dl-box"><div class="section-title">📎 附件下載</div>' + "".join(items) + "</div>\n")
+
         back = f'回{board["name"]}'
         if idx > 0:
             prev_meta = topics[idx - 1]
@@ -214,7 +234,7 @@ def write_topics(board, topics, site_name):
             author=html.escape(meta["author"]),
             posted_at=html.escape(meta["posted_at"]),
             tag_chips="\n".join(f'      <span class="tag-chip">{html.escape(t)}</span>' for t in meta.get("tags", [])),
-            content=meta["_content"],
+            content=content,
             nav_prev=nav_prev,
             nav_next=nav_next,
             source_url=html.escape(meta["source_url"], quote=True),

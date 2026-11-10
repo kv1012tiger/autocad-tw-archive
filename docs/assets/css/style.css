@@ -125,3 +125,12 @@ footer.site-footer a{color:var(--muted)}
   .rs,.rs i,.rs b{animation:none!important}
 }
 footer.site-footer .license{margin-top:6px;font-size:13.5px}
+.dl-box{margin-top:26px;padding:16px;border-radius:16px;border:1.5px dashed rgba(255,209,102,.55);background:rgba(255,209,102,.06)}
+.dl-box .section-title{margin-top:0}
+.dl-item{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);text-decoration:none;color:inherit}
+.dl-item:hover{background:rgba(255,209,102,.15);border-color:rgba(255,209,102,.6)}
+.dl-ic{font-size:24px;flex:none}
+.dl-n{flex:1 1 auto;min-width:0;font-weight:800;word-break:break-all}
+.dl-s{flex:none;font-size:14px;color:var(--muted)}
+.dl-go{flex:none;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,#ffd166,#ff9f1c);color:#3a1a08;font-weight:900;font-size:14px}
+@media (max-width:480px){.dl-item{flex-wrap:wrap}.dl-n{flex-basis:calc(100% - 40px)}.dl-s{margin-left:34px}.dl-go{margin-left:auto}}
