@@ -1,0 +1,22 @@
+<p>大家好：</p>
+<p>有空來完成這個「巨集指令」挑戰，晉升高階繪圖工程師喔～</p>
+<p>工具選項板建立巨集指令方式，請參考&gt;&gt;<a href="https://www.autocad-tw.com/t33-topic" target="_blank" rel="noopener">「教學」工具選項板_巨集篇</a></p>
+<p><b>▼測驗習題1</b>：新建建立「工具指令按鈕」，透過「巨集指令」語法繪製以下圖形。</p>
+<p><b>▼測驗習題2</b>：新建建立「腳本檔」，透過「腳本檔」語法繪製以下圖形。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>※範例中有提供解答，有操作疑慮歡迎提出討論※</p>
+<div class="section-title">影片操作示範：</div>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/177DaEJZHmE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="section-title">巨集指令▼</div>
+<p>代碼:</p>
+<p>繪製圓</p>
+<p>^C^CCIRCLE;0,0;0.9;CIRCLE;@;1.3;CIRCLE;@;1.8;CIRCLE;@;5;</p>
+<p>繪製線</p>
+<p>^C^CLINE;-7.5,0.5;@15,0;;LINE;-7.5,-0.5;@15,0;;</p>
+<p>修剪線</p>
+<p>^C^CTRIM;0,5;;-7.5,0.5;-7.5,-0.5;7.5,0.5;7.5,-0.5;;</p>
+<p>修剪圓及線</p>
+<p>^C^CTRIM;0,1.8;-3,0.5;-3,-0.5;;-1.8,0;1.8,0;0,0.5;0,-0.5;;</p>
+<p>轉換成精靈球圖塊</p>
+<p>^C^C-BLOCK;精靈球;0,0;5,5;-5,-5;;-INSERT;精靈球;0,0;;;;</p>
+<div class="section-title">腳本檔下載▼</div>

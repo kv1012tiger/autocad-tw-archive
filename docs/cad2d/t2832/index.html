@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AUTOCAD要如何反白列印?? | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w p b0" data-p="eng" style="--t:9s;--d:-0.0s"><i><b></b></i></span><span class="rs w p b1" data-p="draft" style="--t:12s;--d:-2.3s"><i><b></b></i></span><span class="rs w p kid b2" data-p="girl" style="--t:15s;--d:-4.6s"><i><b></b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・已解決主題精華區</span>
+    <h1 class="topic-title">📄 AUTOCAD要如何反白列印??</h1>
+    <p class="topic-tagline">請問有任何大大知道AUTOCAD要怎麼反白列印嗎?</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-05-08</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>請問有任何大大知道AUTOCAD要怎麼反白列印嗎?</p>
+<p>希望印出來的線是白的,背景是黑的~</p>
+<p>一般 AutoCAD 在「選項」對話方塊 →「顯示」標籤 → 顯示「顏色選項」對話方塊。</p>
+<p>說明:使用此對話方塊指定主要應用程式視窗中的元素顏色。也就是說 背景顏色 再出圖的時候是沒有任何作用的。</p>
+<p>而 AutoCAD 沒有反白列印的選項，如果需要在 PDF 檔有反白的效果，你必須把你的出圖版面先上色，使用 HATCH 指令來填實版面區域，再來寫文字(255色)或劃線(255色)，出圖成 PDF 檔即有反白的效果。</p>
+<p>以下方法為 一般方式 提供給你參考，有問題請再提~</p>
+<p>當然，也可使用 進階技巧方式 更方便，不果有點小複雜有興趣再提!</p>
+<p>※※※ AutoCAD 2000 以上版本 ※※※</p>
+<p>1.「選項」對話方塊 →「顯示」標籤 → 顏色 ....選擇白色。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>2.新增圖層1 → 顏色為 255 色。</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>3.繪製A4版面 → 使用 HATCH 指令 → 填實版面區域→ 使用圖層1寫文字或劃線。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>4.PLOT 指令 → 出圖型式表編輯</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>5.將 出圖型式 顏色255 → 明亮度 由 100 改為 1 → 儲存並關閉</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>6.完成出圖步驟 → 輸出成 PDF 格式 即可</p>
+<img src="images/07.jpg" alt="" loading="lazy">
+<p>「教學」AutoCAD 反白列印效果</p>
+<p><a href="https://www.autocad-tw.com/t101-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t101-topic</a></p>
+<p>爬完文章的朋友，不論你覺得是否有幫助，也請您要記得評價喔~</p>
+<p>無論是正面或負面的評價，我都樂意接受因為你的支持與批評是我最大的動力~</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t118/index.html">← AutoCAD可以設定出現單位底格嗎!</a>
+    <a class="btn-ghost" href="../t4448/index.html">AutoCAD能不能像SolidWorks 有智慧型尺寸標註 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t2832-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/people.js"></script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

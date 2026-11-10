@@ -1,0 +1,43 @@
+<p>事半功倍的工具選項板_巨集篇</p>
+<p>有時候在使用CAD本身的指令功能時，常常會花很多步驟而且也無法連續使用，這時候透過 工具選項板 及可結省很多繪圖步驟喔。</p>
+<p>以下提供了5個範本供家族朋友參考:</p>
+<p>1. AutoCAD 2006 以上版本:</p>
+<p>請先將 工具選項板 → 指令工具 → VisualLisp 表示式.....複製後再貼上到選項板上，再改名稱、指令字串及指定影像。</p>
+<p>滑鼠右鍵複製</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>貼上到選項板上</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>滑鼠右鍵性質，再改名稱、指令字串及指定影像</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>2. AutoCAD 2004 及 AutoCAD 2005 請使用以下方法新增:</p>
+<p>下拉式功能表「檢視」→「工具列」→ 「指令」標籤 → 「使用者定義」.....將 使用者定義按鈕 按住左鍵拖放到 選項板 即可。</p>
+<p>Q:三切圓:這是功能表透過巨集的功能，但是無法連續使用!</p>
+<p>A:可透過 工具選項板 自行開發一個 連續三切圓 的工具。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>指令字串 *^C^C_circle _3p _tan \_tan \_tan \</p>
+<p>PS:結束指令請按 [Esc]鍵。</p>
+<p>Q:切斷於點:這是工具列按鈕透過巨集的功能，但是無法連續使用!</p>
+<p>A:可透過 工具選項板 自行開發一個 連續切斷於點 的工具。</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>指令字串 *^C^C_break \_f \@;</p>
+<p>PS:結束指令請按 [Esc]鍵。</p>
+<p>Q:修定雲形:必須先有矩形(聚合線)，才能使用物件來轉換成修定雲形，繪圖步驟繁瑣!</p>
+<p>A:可透過 工具選項板 自行開發一個 連續修定雲形(矩形) 的工具。</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>指令字串 *^C^CRECTANG;\\REVCLOUD;;L;;</p>
+<p>PS:結束指令請按 [Esc]鍵。</p>
+<p>Q:聚合線多重接合:在作接何時要輸入許多選項，繪圖步驟繁瑣!</p>
+<p>A:可透過 工具選項板 自行開發一個 聚合線多重接合 的工具。</p>
+<img src="images/07.jpg" alt="" loading="lazy">
+<p>指令字串 ^C^CPEDITACCEPT;1;SELECT;\PEDIT;M;P;;J;1;;PEDITACCEPT;0;</p>
+<p>PS:指令操作只需直接框選物件即可完成。</p>
+<p>Q: 反刪除:CAD的本身只有刪除指令，當需要反刪除(選取物件變成保留物件)，操作步驟就很麻煩。</p>
+<p>A:可透過 工具選項板 自行開發一個 反刪除 的工具。</p>
+<img src="images/08.jpg" alt="" loading="lazy">
+<p>指令字串 ^C^CSELECT;\ERASE;ALL;R;P;;</p>
+<p>PS:指令操作跟刪除一樣，只是選取物件變成保留物件，其餘物件全部刪除。</p>
+<div class="section-title">完成後的工具選項版</div>
+<img src="images/09.jpg" alt="" loading="lazy">
+<div class="section-title">巨集語法文字檔下載：</div>
+<p>下載載點： <a href="https://pse.is/GYYVG" target="_blank" rel="noopener">https://pse.is/GYYVG</a></p>
+<p>備用載點： <a href="https://app.box.com/s/uqrvu7vlmgsu09wo3mh7" target="_blank" rel="noopener">https://app.box.com/s/uqrvu7vlmgsu09wo3mh7</a></p>

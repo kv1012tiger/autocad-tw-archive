@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Auto Cad 轉檔 2D上色”筆寬”問題 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w p b0" data-p="eng" style="--t:9s;--d:-0.0s"><i><b></b></i></span><span class="rs w p b1" data-p="draft" style="--t:12s;--d:-2.3s"><i><b></b></i></span><span class="rs w p kid b2" data-p="girl" style="--t:15s;--d:-4.6s"><i><b></b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・已解決主題精華區</span>
+    <h1 class="topic-title">📘 Auto Cad 轉檔 2D上色”筆寬”問題</h1>
+    <p class="topic-tagline">我試過用CorelDRAW的方法</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2010-04-16</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>我試過用CorelDRAW的方法</p>
+<p>但是失敗了</p>
+<p>就是我出圖後 筆寬都一樣粗</p>
+<p>請問各位大大是以上方法錯了</p>
+<p>還是有其他問題 ?</p>
+<p>或者誰能提供我一套較&quot;詳細&quot;的方法 (麻煩了)</p>
+<p>將CAD轉檔出去 然後筆的粗細不會跑掉</p>
+<p>接著可以讓我用電腦上色 謝謝</p>
+<p>依據個人經驗使用 出圖成EPS格式 (可以保持比例及筆寬)，再到 Photoshop製作 是最佳選擇!!</p>
+<p>因為以前在事務所時競圖的時候，一定要使用這種方式，AutoCAD的線稿才不會因轉換而模糊失真~</p>
+<p>你所提供的教學網頁其實講解的非常詳細，可以是早期R14版本的教學，以下提供你試用版本為2000以上的教學供你參考，有問題請隨時提出來討論喔~</p>
+<p>此方式一樣要透過出圖的方式才能控制筆寬，但需建立虛擬印表機，再出成EPS格式即可在 CorelDRAW 或其他美工軟體(Photoshop)上色，而透過AutoCAD的顏色相關出圖形式表(CTB)，使用顏色來定義出圖後筆寬。</p>
+<p><b>一、新增繪圖機(虛擬印表機) PC3：</b></p>
+<img src="images/01.gif" alt="" loading="lazy">
+<p><b>二、新增顏色相關出圖形式表 CTB：</b></p>
+<img src="images/02.gif" alt="" loading="lazy">
+<p><b>三、出圖：</b></p>
+<p>1.請選擇新建的繪圖機(PostScript Level 1.pc3)及出圖形式表(TEST.ctb)。</p>
+<p>2.新增地出圖形式表內定為全彩，請使用編輯改為黑色。</p>
+<p>PS:圖層的線寬請使用預設，而筆寬是按照你的圖面顏色來控制的，也可以在新增圖層顏色在使用CTB來修改喔。</p>
+<p>柱子:紅色-筆寬=0.5</p>
+<p>牆壁:黃色-筆寬=0.35</p>
+<p>門窗:綠色-筆寬=0.18</p>
+<img src="images/03.gif" alt="" loading="lazy">
+<p>四、在CorelDRAW開啟舊檔，選擇剛剛出圖的Drawing2-Model.EPS</p>
+<img src="images/04.gif" alt="" loading="lazy">
+<p>延伸閱讀文章：「教學」匯出eps檔案</p>
+<p><a href="http://autocad.bestoforum.net/forum-f7/topic-t121.htm" target="_blank" rel="noopener">http://autocad.bestoforum.net/forum-f7/topic-t121.htm</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t5969/index.html">← AutoCAD 圖紙空間比例設定</a>
+    <a class="btn-ghost" href="../t1901/index.html">UCS 座標圖示怎麼控制 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t6259-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/people.js"></script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

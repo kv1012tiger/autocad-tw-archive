@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>圖層狀態管理員 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w p b0" data-p="eng" style="--t:9s;--d:-0.0s"><i><b></b></i></span><span class="rs w p b1" data-p="draft" style="--t:12s;--d:-2.3s"><i><b></b></i></span><span class="rs w p kid b2" data-p="girl" style="--t:15s;--d:-4.6s"><i><b></b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・功能分享區</span>
+    <h1 class="topic-title">📚 圖層狀態管理員</h1>
+    <p class="topic-tagline">關於 AutoCAD 2008 圖層狀態管理員 LAYERSTATE 指令，…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>關於 AutoCAD 2008 圖層狀態管理員 LAYERSTATE 指令，可以將圖層設定儲存為具名圖層狀態，從其他圖面和檔案中還原、編輯、匯入圖層設定，以及匯出圖層設定以在其他圖面中使用。</p>
+<p>簡單的說 圖面上的資訊 有時候只需要開啟 完整版面、局部版面(無傢俱)或局部版面(無尺寸)等等，此時可以建立這三種圖層狀態(記憶圖層開關)，就不需要反覆的開關圖層了。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/0wkF7aIcWYY" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=0wkF7aIcWYY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0wkF7aIcWYY</a></p>
+<p>PS:若你只是想要新增的圖層來控制線的顏色形式，請使用LAYER指令即可。</p>
+<p>------------------------------------------</p>
+<p>補充：儲存、還原與編輯圖層狀態</p>
+<p>您可以將目前的圖層設定儲存至圖層狀態，對圖層狀態進行變更，並在以後將其還原至圖面。</p>
+<p>您可以將圖面中的目前圖層設定儲存為具名圖層狀態，並在以後還原。若要在完成圖面或出圖的不同階段中返回所有圖層的特定設定，儲存圖層設定會很方便。</p>
+<div class="section-title">儲存、還原與編輯圖層狀態</div>
+<p>您可以將目前的圖層設定儲存至圖層狀態，對圖層狀態進行變更，並在以後將其還原至圖面。</p>
+<div class="section-title">儲存圖層設定</div>
+<p>圖層設定包括圖層狀態 (例如打開或鎖護) 和圖層性質 (例如顏色或線型)。在具名圖層狀態中，您可以選擇在以後要還原的圖層狀態和圖層性質。例如，您可以選擇僅還原圖面中圖層的「凍結/解凍」設定，而忽略所有其它設定。還原此具名圖層狀態時，除了有關每個圖層是凍結還是解凍的設定以外，所有的設定將維持它們的目前設定。</p>
+<div class="section-title">還原圖層設定</div>
+<p>還原圖層狀態時，將還原儲存圖層狀態時所指定的圖層設定 (圖層狀態和圖層性質)。您可以指定要在「圖層狀態管理員」中還原的特定設定。未選取的圖層性質設定在圖面中保持不變。</p>
+<p>如果圖面包含自儲存圖層狀態後已加入的圖層，則您可以加入那些圖層。透過編輯圖層狀態與使用「選取要加入至圖層狀態的圖層」對話方塊，您可以選取想要加入至圖層狀態的圖層。</p>
+<div class="section-title">匯入與匯出圖層狀態</div>
+<p>您可以從其他圖檔匯入圖層設定並匯出圖層狀態。</p>
+<p>資料來源:AutoCAD 2008使用者說明</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t95/index.html">← 影像 IMAGE 功能介紹</a>
+    <a class="btn-ghost" href="../t120/index.html">選取物件 - 按住 SHIFT 鍵 移除模式 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t113-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/people.js"></script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

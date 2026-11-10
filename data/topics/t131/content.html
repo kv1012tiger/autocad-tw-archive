@@ -1,0 +1,41 @@
+<p>關於 圖面內容限制修改 的問題，如何 保護智慧財產，方法有很多種可分為 一般使用者方法、進階使用者方法及新版本的方法 三個部份來說明:</p>
+<p><b>一、一般使用者方法:</b></p>
+<p>A.將全部圖面使用 分解(EXPLODE)指令，所有圖塊、標註都分解，如有安裝 Express 還可使用 TXTEXP指令...將文字分解為2D聚合線，再將全部圖面使用 複製(COPY)指令，將圖面連續重疊在一起。</p>
+<p>B.使用 圖塊(BLOCK) 指令後再使用 矩形陣列插入(MINSERT) 指令即可，因為使用 MINSERT 插入的圖塊無法分解。一旦圖塊無法分解也就無法針對圖面進行編輯，如果說業主只會開圖比較不懂CAD的原理，此方法可能奏效。</p>
+<p>以下為操作步驟:</p>
+<p>代碼:</p>
+<p>指令: -BLOCK</p>
+<p>輸入圖塊名稱或 [列示(?)]: TEST</p>
+<p>指定插入基準點: 0,0</p>
+<p>選取物件: ALL</p>
+<p>找到 2 個</p>
+<p>選取物件:...{Enter}</p>
+<p>指令: MINSERT</p>
+<p>輸入圖塊名稱或 [列示(?)]: TEST</p>
+<p>指定插入點或 [基準點(B)/比例(S)/X/Y/Z/旋轉(R)]: 0,0</p>
+<p>輸入 X 比例係數，指定對角點，或 [角點(C)/XYZ] &lt;1&gt;: 1</p>
+<p>輸入 Y 比例係數 &lt;使用 X 比例係數&gt;: 1</p>
+<p>指定旋轉角度 &lt;0&gt;: 0</p>
+<p>輸入列數 (---) &lt;1&gt;: 2 .....(至少兩列，圖塊才會無法分解)</p>
+<p>輸入行數 (|||) &lt;1&gt;: 2 .....(至少兩行，圖塊才會無法分解)</p>
+<p>輸入列的間距或指定儲存格單元 (---): 0 .....(間距為0，重疊)</p>
+<p>指定行間距 (|||): 0.....(間距為0，重疊)</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/ALT8IEkSuH8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>PS:至於解決處理方法:</p>
+<p>1.但是碰到進階使用者就無效了，因為一旦知道了此圖塊名稱，還是能使用 圖塊編輯器(BEDIT)指令...2006以上版本功能 進行圖塊編輯，或是用 設計中心(ADCENTER)指令...2000以上版本功能 插入內部圖塊。</p>
+<p>2.像把圖重複複製的方法 AutoCAD Express Tools 的 OVERKILL指令 可以處理。功能表EXPRESS → Modify(修改) → Delete d&amp;uplicate objects(消除重疊物件).....清除重疊在一起的物件成為單一物件。</p>
+<p><b>二、進階使用者方法:</b></p>
+<p>使用 LISP 程式或 VBA 專案 針對圖面圖層進行鎖護，並限制 開啟圖層性質管理員(LAYER)，圖面圖層被鎖護就無法編輯，還可將圖層指定為不出圖。</p>
+<p>PS:至於方法可行性:</p>
+<p>LISP檔並無法存在於圖面之中，也就是說必須把圖和LISP檔一起給他，而若沒有將LISP檔載入也就無效了。自動載入 VBA 專案還必須把程式碼加入您的 acaddoc.lsp 檔案中，開啟既有圖面時才能每次執行VBA 專案。若我一個專案圖面有100張圖面，光是每張圖面的炸開處理和自動載入 VBA 專案就很頭疼，或許可以開發LISP檔或編寫SCR腳本檔來自動化執行，但是不管方法為何都要花相當的時間。</p>
+<p><b>三、新版本的方法:</b></p>
+<p>提供以下方法大家參考試試，不過可能要回歸到所謂 &quot;新版本的優勢&quot;。所以2006以下版本不適用，所以開啟後無法顯示 DWF 參考底圖。</p>
+<p>***已下方法適用版本為 AutoCAD 2007 以上版本***</p>
+<p>˙外部參考: DWF 參考底圖</p>
+<p>1.使用出圖的方式出圖成 DWF 檔，2007版本出圖時，繪圖機設備請選擇 DWF6 ePlot.pc3，此程式建立設計網頁格式 (DWF) 檔。</p>
+<p>2.再將 DWF 參考底圖貼附至目前圖面 (DWG) 檔，路徑類型請選擇無路徑。</p>
+<p>3.之後給業主圖面時，只要將目前圖面 (DWG) 檔及參考底圖 (DWF) 檔一併交付即可。</p>
+<p>PS:如此一來可以滿足業主需求檔案格式為 (DWG) 檔，但由於是外部參考 DWF 檔也就不用擔心圖面遭到盜用了。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/PtdHfnHq1ow" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>*********************************************************************</p>
+<p>所以總結或許是新版的 DWF 參考底圖 比較理想，但此方法也制適用於2007以上版本。像現在市面上軟體盜版猖獗，再新的軟體還是能被破解重製，唉.....所以為了保護智慧財產權，我們也只能做到防君子而已!</p>

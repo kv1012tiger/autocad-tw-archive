@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>創意大學堂 - CorelCAD 跨檔案使用效率百分百！ | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w p b0" data-p="eng" style="--t:9s;--d:-0.0s"><i><b></b></i></span><span class="rs w p b1" data-p="draft" style="--t:12s;--d:-2.3s"><i><b></b></i></span><span class="rs w p kid b2" data-p="girl" style="--t:15s;--d:-4.6s"><i><b></b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島・Autodesk 討論區</span>
+    <h1 class="topic-title">📘 創意大學堂 - CorelCAD 跨檔案使用效率百分百！</h1>
+    <p class="topic-tagline">上次為大家介紹使用 CorelCAD 中的「替代大字型」，透過程式指定替代字…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2011-11-14</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>上次為大家介紹使用 CorelCAD 中的「替代大字型」，透過程式指定替代字型，有效排除找不到文字產生問號的狀況。本篇為大家說明「圖塊」 MAKEBLOCK 指令 及「外部參考」 REFERENCES 指令 的操作技巧，說明經由二個功能的搭配運用，可有效提升工作效率。當您在同一個檔案中若要使用相同的物件，可透過「圖塊」的方式共用，若是需要跨檔案共用 DWG 圖面，則請您使用「外部參考」的方式，可以讓各位減少重複性的繪圖步驟。</p>
+<p><b>一、</b>圖塊運用：以下範例圖檔「單元平面底圖 .dwg 」，相同使用的部分為椅子物件。</p>
+<p>接下來我們透過「圖塊」 MAKEBLOCK 指令 將椅子定義名稱為「方椅」的圖塊物件</p>
+<p>請建立為圖塊再複製使用，好處在於將來圖面需要設計變更，關於椅子的型式需要變換，這時就可以不用一個一個修改，只要修改其中一個「方椅」圖塊，即可同步修正所有椅子物件。</p>
+<p>請打開「零組件」工具列，使用 EDITCOMPONENT 指令 可直接在目前的工程圖中編輯「圖塊」</p>
+<p>選擇「方椅」圖塊後，螢幕會出現「編輯零組件」視窗，請按「確定」</p>
+<p>此時，圖面中只會剩下一個「方椅」圖塊，其他非圖塊的物件會淡化處理（方便辨識圖塊）</p>
+<p>當修改完椅子後（變更為圓椅）</p>
+<p>請點選「儲存並關閉」 SAVECOMPONENT 指令</p>
+<p>畫面中會立即同步修正目前的工程圖中所有椅子物件</p>
+<p><b>二、</b>外部參考運用：需要將此「單元平面底圖 .dwg 」跨 DWG 檔案使用，通常我們會分專案資料夾，建議把「單元平面底圖 .dwg 」放置在名稱為「 XREFS 」資料夾中，日後可以方便管理目前的工程圖及外部參考檔案。</p>
+<p>請在「配置平面 .dwg 」中，點擊「工具」功能表 →「參考管理員」</p>
+<p>螢幕會出現外部參考「引用」視窗，請按「附加工程圖」</p>
+<p>請選擇「 XREFS 」資料夾中的「單元平面底圖 .dwg 」，然後按「開啟舊檔」</p>
+<p>螢幕中接著會出現「附加參考：工程圖」視窗，請按「確定」即可</p>
+<p>接下來就可以使用 COPY 指令「複製」，將圖面完成以下排版配置</p>
+<p>外部參考的優點跟圖塊有點類似，他還可以跨檔案將「單元平面底圖 .dwg 」應用在不同工作需求的 DWG 圖檔中，也可以在同一個檔案複製使用。假設將來圖面需要設計變更，關於開門的位置需要變換，這時就可以直接開啟「單元平面底圖 .dwg 」修改，即可同步更新目前的配置平面圖。</p>
+<p>請選取其中一個外部參考，然後按滑鼠右鍵，選擇「開啟參考」</p>
+<p>會直接開啟「單元平面底圖 .dwg 」，請修改需變更的部分後，請儲存檔案並關閉</p>
+<p>開啟外部參考「引用」視窗，選擇「單元平面底圖」按滑鼠右鍵，選擇「重新載入」</p>
+<p>此時圖面中所有的外部參考檔會同步立即更新</p>
+<p>關於「圖塊」及「外部參考」的使用技巧，其實還有許多延伸的操作方式，來滿足不同或特殊的工作需求，現在大家可以先從這篇教學開始正確認識「圖塊」及「外部參考」，有興趣的朋友趕緊來試試吧。</p>
+<p>原始文章：創意大學堂 - CorelCAD 跨檔案使用效率百分百！</p>
+<p><a href="http://www.corel.com/tw/content/html/event/creative_classroom/graphic_38.htm" target="_blank" rel="noopener">http://www.corel.com/tw/content/html/event/creative_classroom/graphic_38.htm</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t11631/index.html">← 免費看電影、贏相機！立即參加聯強國際Autodesk設計列車創意合影！</a>
+    <a class="btn-ghost" href="../t12214/index.html">Autodesk - 欧特克SketchBook速写簿邀您“画龙点睛” →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t11658-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/people.js"></script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

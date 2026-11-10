@@ -687,8 +687,21 @@ body{overflow:hidden;background:#1581bd}
 @media (max-width:720px){
   .spot.major .tag{font-size:24px;padding:5px 14px}
 }
-/* 小動物停住不動：省手機效能，位置分散在島上 */
-.rs,.rs i,.rs b{animation:none!important}
+/* 大海地圖上的小動物停住不動（省手機效能）；進到島上畫面時照常走動 */
+.spot .rs,.spot .rs *{animation:none!important}
+.res-row span svg{width:34px;height:54px;margin-right:4px}
+.land .rs.p{font-size:50px;margin-left:-24px}
+/* 蘋果爸小島：毛孩散步草地 */
+.pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
+.pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
+.pet-walk::before{top:92px}.pet-walk::after{top:196px}
+.pw{position:absolute;z-index:1;width:78px;height:62px;padding:0;margin:0;background:none;border:0;cursor:pointer;animation:pwMv var(--t) linear var(--d) infinite;-webkit-tap-highlight-color:transparent}
+.pwf{display:block;width:100%;height:100%;animation:ppFlip var(--t) steps(1) var(--d) infinite}
+.pw svg{display:block;width:100%;height:100%}
+.pw em{position:absolute;left:50%;top:-15px;transform:translateX(-50%);font-style:normal;font-size:12px;font-weight:700;white-space:nowrap;color:#1f3d12;background:rgba(255,255,255,.8);padding:0 6px;border-radius:8px}
+@keyframes pwMv{0%,100%{left:2%}50%{left:calc(98% - 78px)}}
+.pc svg{width:88px;height:70px;padding:3px 4px;border-radius:14px;background:radial-gradient(ellipse at 50% 60%,#c9ecaa,#8fcf6c)}
+@media (prefers-reduced-motion:reduce){.pw,.pwf{animation:none}}
 .spot .rs.w.b0{left:30%}.spot .rs.w.b1{left:70%}.spot .rs.w.b2{left:52%}
 .spot .rs.f{left:80%}.spot .rs.f.b0{left:24%}
 .spot .rs.s{opacity:1}
@@ -864,6 +877,7 @@ body{overflow:hidden;background:#1581bd}
 <div id="fx" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="assets/js/people.js"></script>
 <script>
 (function(){
 'use strict';
@@ -937,23 +951,23 @@ var ISLES=[
 var FORUM=/*__FORUM__*/[];
 /* 問答島的鮮明地貌與居民：w 走動、f 飛行、s 跳水 */
 var LOOK=[
- {g:['#c39bff','#5b21b6'],res:[['🐊','w'],['🐈','w'],['🦜','f']]},
- {g:['#7beeff','#0e8fb0'],res:[['🐕','w'],['🦚','w'],['🐦','f']]},
- {g:['#ffe07a','#c98a10'],res:[['🐜','w'],['🐿️','w'],['🐝','f']]},
- {g:['#d7dcff','#6a5ae0'],res:[['🐧','w'],['🦭','s'],['🦅','f']]},
- {g:['#ff9fd0','#c02a80'],res:[['🦩','w'],['🐈','w'],['🦋','f']]},
- {g:['#6ff0b8','#0f8f5e'],res:[['🐁','w'],['🦔','w'],['🐝','f']]},
- {g:['#ff8a7a','#b02a1e'],res:[['🦀','w'],['🐢','w'],['🐦','f']]},
- {g:['#86c0ff','#1f5fc0'],res:[['🤖','w'],['🐕','w'],['🦜','f']]},
- {g:['#c9f06a','#5a9a1a'],res:[['🐥','w'],['🐇','w'],['🦜','f']]}
+ {g:['#c39bff','#5b21b6'],res:[['pirate','w'],['robot','w'],['girl','w']]},
+ {g:['#7beeff','#0e8fb0'],res:[['sailor','w'],['captain','w'],['kid','w']]},
+ {g:['#ffe07a','#c98a10'],res:[['farmer','w'],['chef','w'],['granny','w']]},
+ {g:['#d7dcff','#6a5ae0'],res:[['explorer','w'],['sailor','w'],['robot','w']]},
+ {g:['#ff9fd0','#c02a80'],res:[['artist','w'],['girl','w'],['pirate','w']]},
+ {g:['#6ff0b8','#0f8f5e'],res:[['scientist','w'],['robot','w'],['student','w']]},
+ {g:['#ff8a7a','#b02a1e'],res:[['chef','w'],['pirate','w'],['grandpa','w']]},
+ {g:['#86c0ff','#1f5fc0'],res:[['robot','w'],['eng','w'],['captain','w']]},
+ {g:['#c9f06a','#5a9a1a'],res:[['farmer','w'],['kid','w'],['explorer','w']]}
 ];
 ISLES.forEach(function(s,i){s.k='isle';s.n=i;s.route=i*2+1;s.g=LOOK[i].g;s.res=LOOK[i].res});
 FORUM.forEach(function(s,i){s.k='forum';s.n=i});
 var SP=[{k:'home',e:'🏡',name:'蘋果爸小島',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']},
-  {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
+  {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['wizard','w'],['seer','w'],['kid','w']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
-SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
+SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['king','w'],['queen','w'],['guard','w']]});
 SP.forEach(function(s,i){s.si=i});
 function pad(n){return (n<10?'0':'')+n}
 var ISLE_OF={};ISLES.forEach(function(s,i){s.rows.forEach(function(r){ISLE_OF[r]=i})});
@@ -980,44 +994,15 @@ function candyCount(){return ISLES.filter(function(s,i){return ST.c[i]}).length}
 
 /* ---------- 毛孩（三貓三狗） ---------- */
 var PETS=[
- {n:'三花貓',k:'貓',kind:'cat',base:'#fbf6ee',p:[['#f0a04b',30,44,17],['#2b2b2b',70,40,14]],say:'喵～我是三花貓，先點一座島看看吧！'},
- {n:'乳牛貓',k:'貓',kind:'cat',base:'#fbfbfb',p:[['#1f1f1f',68,42,19],['#1f1f1f',24,74,10],['#1f1f1f',34,30,8]],say:'黑白分明的我，最喜歡整整齊齊的圖層。'},
- {n:'橘貓',k:'貓',kind:'cat',base:'#f3a24a',stripe:'#c96f1e',say:'橘貓報到！拿到金幣，記得分我一枚。'},
+ {n:'三花貓',k:'貓',kind:'cat',base:'#fbf6ee',bp:[['#f0a04b',30,22,9],['#2b2b2b',44,26,7]],hp:'#f0a04b',tail:'#2b2b2b',p:[['#f0a04b',30,44,17],['#2b2b2b',70,40,14]],say:'喵～我是三花貓，先點一座島看看吧！'},
+ {n:'乳牛貓',k:'貓',kind:'cat',base:'#fbfbfb',bp:[['#1f1f1f',34,24,8],['#1f1f1f',48,31,5]],hp:'#1f1f1f',tail:'#1f1f1f',p:[['#1f1f1f',68,42,19],['#1f1f1f',24,74,10],['#1f1f1f',34,30,8]],say:'黑白分明的我，最喜歡整整齊齊的圖層。'},
+ {n:'橘貓',k:'貓',kind:'cat',base:'#f3a24a',tail:'#c96f1e',stripe:'#c96f1e',say:'橘貓報到！拿到金幣，記得分我一枚。'},
  {n:'小黑',k:'米克斯狗',kind:'dog',base:'#2a2a2a',ear:'#151515',snout:'#4a4a4a',say:'汪！我是小黑，帶你到處逛逛。'},
  {n:'小白',k:'米克斯狗',kind:'dog',base:'#f6f2ea',ear:'#e0d2bc',snout:'#ffffff',say:'汪汪～我是小白，有問題都可以問蘋果爸喔！'},
  {n:'黑寶',k:'10 歲狗狗',kind:'dog',base:'#1f1f1f',ear:'#101010',snout:'#9a9a9a',old:1,say:'我是黑寶，今年 10 歲！慢慢逛，不用急。'}
 ];
 var petUid=0;
-function petSVG(p){
-  var id='pc'+(++petUid),s='<svg viewBox="0 0 100 100" aria-hidden="true">';
-  if(p.kind==='cat'){
-    var ear=p.p&&p.p[1]?p.p[1][0]:p.base;
-    s+='<polygon points="16,46 24,8 48,30" fill="'+(p.stripe||p.base)+'" stroke="#3a2a2a" stroke-width="2.5" stroke-linejoin="round"/>'+
-       '<polygon points="84,46 76,8 52,30" fill="'+(p.p?ear:p.stripe)+'" stroke="#3a2a2a" stroke-width="2.5" stroke-linejoin="round"/>'+
-       '<polygon points="22,38 26,18 38,30" fill="#f6a5b5"/><polygon points="78,38 74,18 62,30" fill="#f6a5b5"/>'+
-       '<clipPath id="'+id+'"><ellipse cx="50" cy="58" rx="36" ry="31"/></clipPath>'+
-       '<ellipse cx="50" cy="58" rx="36" ry="31" fill="'+p.base+'"/>'+
-       '<g clip-path="url(#'+id+')">'+(p.p||[]).map(function(q){return '<circle cx="'+q[1]+'" cy="'+q[2]+'" r="'+q[3]+'" fill="'+q[0]+'"/>'}).join('')+
-       (p.stripe?'<path d="M40 30 L43 42 M50 28 L50 41 M60 30 L57 42" stroke="'+p.stripe+'" stroke-width="5" stroke-linecap="round"/><path d="M15 58 L27 60 M15 66 L27 65 M85 58 L73 60 M85 66 L73 65" stroke="'+p.stripe+'" stroke-width="4" stroke-linecap="round"/>':'')+
-       '</g><ellipse cx="50" cy="58" rx="36" ry="31" fill="none" stroke="#3a2a2a" stroke-width="2.5"/>'+
-       '<ellipse cx="37" cy="56" rx="5" ry="6.5" fill="#2a3a1a"/><ellipse cx="63" cy="56" rx="5" ry="6.5" fill="#2a3a1a"/>'+
-       '<circle cx="38.5" cy="54" r="1.8" fill="#fff"/><circle cx="64.5" cy="54" r="1.8" fill="#fff"/>'+
-       '<path d="M46 66 L54 66 L50 70 Z" fill="#f08aa0"/><path d="M50 70 Q46 76 42 73 M50 70 Q54 76 58 73" fill="none" stroke="#3a2a2a" stroke-width="2" stroke-linecap="round"/>'+
-       '<path d="M8 62 L28 66 M8 72 L28 70 M92 62 L72 66 M92 72 L72 70" stroke="#3a2a2a" stroke-width="1.5" opacity=".6"/>';
-  }else{
-    var dark=p.base<'#8';
-    s+='<ellipse cx="17" cy="50" rx="12" ry="24" transform="rotate(18 17 50)" fill="'+p.ear+'" stroke="#2a1a10" stroke-width="2.5"/>'+
-       '<ellipse cx="83" cy="50" rx="12" ry="24" transform="rotate(-18 83 50)" fill="'+p.ear+'" stroke="#2a1a10" stroke-width="2.5"/>'+
-       '<ellipse cx="50" cy="54" rx="32" ry="31" fill="'+p.base+'" stroke="#2a1a10" stroke-width="2.5"/>'+
-       '<ellipse cx="50" cy="70" rx="17" ry="13" fill="'+p.snout+'"/>'+
-       '<circle cx="37" cy="50" r="5" fill="'+(dark?'#000':'#2a1a10')+'" stroke="'+(dark?'#777':'none')+'" stroke-width="1.5"/><circle cx="63" cy="50" r="5" fill="'+(dark?'#000':'#2a1a10')+'" stroke="'+(dark?'#777':'none')+'" stroke-width="1.5"/>'+
-       '<circle cx="38.5" cy="48.5" r="1.8" fill="#fff"/><circle cx="64.5" cy="48.5" r="1.8" fill="#fff"/>'+
-       '<ellipse cx="50" cy="64" rx="7" ry="5" fill="#111"/><path d="M50 69 L50 74 M43 74 Q50 80 57 74" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>'+
-       '<path d="M47 77 Q50 85 53 77 Z" fill="#f07a8a"/>'+
-       (p.old?'<path d="M24 84 Q50 98 76 84 L72 92 Q50 104 28 92 Z" fill="#e2453c"/><circle cx="82" cy="20" r="13" fill="#ffd166" stroke="#7a4a00" stroke-width="2"/><text x="82" y="25" text-anchor="middle" font-size="14" font-weight="900" fill="#7a3a00" font-family="sans-serif">10</text>':'');
-  }
-  return s+'</svg>';
-}
+function petSVG(p){return PPL.pet(p,true)}
 function ringHTML(btn){
   return '<div class="ring">'+PETS.map(function(p,k){var a=k/PETS.length*Math.PI*2-Math.PI/2,x=50+Math.cos(a)*41,y=50+Math.sin(a)*41;
     return btn?'<button class="pet" type="button" data-pet="'+k+'" aria-label="'+p.n+'" style="left:'+x.toFixed(1)+'%;top:'+y.toFixed(1)+'%">'+petSVG(p)+'</button>'
@@ -1132,7 +1117,7 @@ function isleSVG(s){
 function resHTML(s){
   return (s.res||[]).map(function(r,i){
     var t=[8,10,7,11][i%4]+s.si%3,d=-(s.si*1.3+i*2.1);
-    return '<span class="rs '+r[1]+' b'+i+'" style="--t:'+t+'s;--d:'+d.toFixed(1)+'s"><i><b>'+r[0]+'</b></i></span>';
+    return '<span class="rs w p'+(PPL.isKid(r[0])?' kid':'')+' b'+i+'" style="--t:'+t+'s;--d:'+d.toFixed(1)+'s"><i><b>'+PPL.person(r[0])+'</b></i></span>';
   }).join('');
 }
 function islandHTML(s){
@@ -1394,9 +1379,8 @@ function drawScene(){
   for(y=h-166;y<h-34;y+=16)o+='<path d="M'+(dx-20)+' '+y+'h40" stroke="#6b4220" stroke-width="2"/>';
   o+='</svg>';
   var list=s.res.concat(s.res),rs=list.map(function(r,k){
-    var yy=Math.round(top*.6+(k+.5)*(h-top-240)/list.length),kind=r[1]==='f'?'f':'w';
-    if(r[1]==='s')yy=h-52;
-    return '<span class="rs '+kind+'" style="top:'+yy+'px;left:'+(14+(k*37)%72)+'%;--w:'+Math.round(w*1.05)+'px"><i><b>'+r[0]+'</b></i></span>';
+    var yy=Math.round(top*.6+(k+.5)*(h-top-240)/list.length);
+    return '<span class="rs w p'+(PPL.isKid(r[0])?' kid':'')+'" style="top:'+yy+'px;--w:'+Math.round(w*1.05)+'px;--t:'+(15+k*3)+'s;--d:-'+(k*2.7).toFixed(1)+'s"><i><b>'+PPL.person(r[0])+'</b></i></span>';
   }).join('');
   var huts=H.map(function(u,k){
     var c=u.topics.length?u.topics.length+' 篇文章':'🚧 整理中';
@@ -1569,7 +1553,7 @@ function pagedList(boxId,key,items,card){
 function renderHut(k){
   var s=SCN,h=s.huts[k],t=h.topics,n=s.huts.length;
   pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+h.e+'</span><div><div class="p-kicker">'+esc(s.name)+'・小屋 '+(k+1)+' / '+n+'</div><h3 id="pTitle">'+esc(h.name)+'</h3><p>'+esc(h.sub)+'</p></div></div>'+
-    (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span>'+s.res.map(function(r){return r[0]}).join(' ')+'</span></div>':'')+
+    (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span class="still">'+s.res.map(function(r){return PPL.person(r[0])}).join('')+'</span></div>':'')+
     (t.length?'<div class="sbox hut-s"><input id="hutIn" type="search" placeholder="🔍 搜尋這裡的文章…" autocomplete="off" aria-label="搜尋這裡的文章"></div>'+
       (n>1?'<div class="scope" role="radiogroup" aria-label="搜尋範圍"><label><input type="radio" name="hsc" value="hut" checked> 只找這間小屋</label><label><input type="radio" name="hsc" value="isle"> 找整座島</label></div>':'')+
       '<p class="s-count" id="hutCount"></p><div id="hutBox"></div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+
@@ -1604,7 +1588,7 @@ function renderHome(){
     '<div class="ph" style="--c:#ffd166"><div><div class="p-kicker">CAPTAIN・講師介紹</div><h3 id="pTitle">我是<span class="grad-fire">蘋果爸</span></h3></div></div>'+
     '<p class="bio">AutoCAD 實務 30 年以上，長期經營 AutoCAD 顧問論壇。把繪圖經驗與 AI 協作流程，帶到實體課一起練習。</p>'+
     '<p class="bio">我喜歡知識分享、騎腳踏車、球類活動(籃球/撞球)、健行及爬山，家裡有三喵咪&amp;三狗勾(六畜興旺)😁</p>'+
-    '<div class="p-sec" style="--pc:#ffd166"><h4>家裡的三貓三狗</h4><div class="pets">'+PETS.map(function(p,k){return '<button class="pc" type="button" data-pet="'+k+'">'+petSVG(p)+'<b>'+p.n+'</b><small>'+p.k+'</small></button>'}).join('')+'</div></div>'+
+    '<div class="p-sec" style="--pc:#ffd166"><h4>家裡的三貓三狗</h4><div class="pet-walk">'+PETS.map(function(p,k){var tp=[22,126,60,164,94,186][k],t=[13,10,16,11,14,19][k];return '<button class="pw" type="button" data-pet="'+k+'" aria-label="'+p.n+'" style="top:'+tp+'px;--t:'+t+'s;--d:-'+(k*3.3).toFixed(1)+'s"><span class="pwf">'+PPL.pet(p)+'</span><em>'+p.n+'</em></button>'}).join('')+'</div><div class="pets">'+PETS.map(function(p,k){return '<button class="pc" type="button" data-pet="'+k+'">'+petSVG(p)+'<b>'+p.n+'</b><small>'+p.k+'</small></button>'}).join('')+'</div></div>'+
     '<div class="p-sec"><h4>找到蘋果爸</h4><div class="links">'+
       '<a class="lk" href="https://www.youtube.com/user/kv1012tiger" target="_blank" rel="noopener"><i>🍄</i><span><b>蘋果爸愛分享頻道</b><small>免費教學影片看到飽</small></span></a>'+
       '<a class="lk" href="http://www.autocad-tw.com/" target="_blank" rel="noopener"><i>🚀</i><span><b>AutoCAD 顧問基地</b><small>問題、範例、程式都在這</small></span></a>'+

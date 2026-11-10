@@ -71,6 +71,7 @@ $nav_next
   });
 })();
 </script>
+<script src="../../assets/js/people.js"></script>
 <script src="../../assets/js/fullscreen.js"></script>
 </body>
 </html>
@@ -82,11 +83,12 @@ def load_json(p: Path):
 
 
 def residents_html(res) -> str:
+    # Hand-drawn walking people; assets/js/people.js fills each data-p span with its SVG.
     spans = []
-    for i, (emoji, kind) in enumerate(res):
-        kind = "f" if kind == "f" else "w"
+    for i, (role, _kind) in enumerate(res):
+        kid = " kid" if role in ("kid", "girl") else ""
         spans.append(
-            f'<span class="rs {kind} b{i}" style="--t:{9 + i * 3}s;--d:-{i * 2.3:.1f}s"><i><b>{emoji}</b></i></span>'
+            f'<span class="rs w p{kid} b{i}" data-p="{html.escape(role, quote=True)}" style="--t:{9 + i * 3}s;--d:-{i * 2.3:.1f}s"><i><b></b></i></span>'
         )
     return "".join(spans)
 
