@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>論壇資源島｜蘋果爸的 AutoCAD 教學大島群</title>
-<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：13 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與課程城堡，邊玩邊學。">
+<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：13 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與AI課程城堡，邊玩邊學。">
 <meta property="og:title" content="論壇資源島｜蘋果爸的 AutoCAD 教學大島群">
 <meta property="og:description" content="點一座島開始探險，翻開問答卡拿金幣，拿到 5 枚送你提示詞禮物包。">
 <meta property="og:type" content="website">
@@ -612,6 +612,16 @@ body{overflow:hidden;background:#1581bd}
 .hut-n{position:relative;margin-top:-8px;padding:4px 12px;border-radius:12px;background:linear-gradient(180deg,#a56b34,#6b4220);border:2.5px solid #ffd166;font-size:19px;font-weight:900;line-height:1.3;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.6);box-shadow:0 5px 12px rgba(0,30,20,.45)}
 .hut-c{margin-top:3px;font-size:16px;font-weight:700;text-shadow:0 1px 3px rgba(0,30,20,.95)}
 .hut.empty .hut-art{filter:saturate(.45) brightness(.92)}
+/* 小屋招牌：掛在屋簷下的木牌 */
+.hut .hut-ic{top:63%;padding:2px 6px;border-radius:9px;background:linear-gradient(180deg,#d79a55,#9a6330);border:2px solid #5a2d0c;font-size:calc(var(--hw,160px) * .12);box-shadow:0 3px 6px rgba(40,20,0,.4);filter:none}
+.hut .hut-ic::before,.hut .hut-ic::after{content:"";position:absolute;top:-7px;width:1.5px;height:7px;background:#5a2d0c}
+.hut .hut-ic::before{left:24%}.hut .hut-ic::after{right:24%}
+.hut .smk circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:smk 4.2s ease-out infinite}
+.hut .smk circle:nth-child(2){animation-delay:-1.4s}.hut .smk circle:nth-child(3){animation-delay:-2.8s}
+@keyframes smk{0%{opacity:0;transform:translate(0,8px) scale(.5)}30%{opacity:.85}100%{opacity:0;transform:translate(7px,-12px) scale(1.5)}}
+.hut .lamp{animation:lamp 2.6s ease-in-out infinite}
+@keyframes lamp{50%{opacity:.75}}
+@media (prefers-reduced-motion:reduce){.hut .smk circle{animation:none;opacity:.55}.hut .lamp{animation:none}}
 .hut.main .hut-n{background:linear-gradient(135deg,#ffd166,#f4a259);border-color:#fff4d6;color:#3a2410;text-shadow:none}
 .scene-ship{position:absolute;z-index:2;width:96px;animation:float 3.2s ease-in-out infinite}
 .scene-ship svg{display:block;width:100%;height:auto}
@@ -703,7 +713,7 @@ body{overflow:hidden;background:#1581bd}
     <span class="eyebrow">Forum Resource Islands</span>
     <h1><span class="grad-fire">論壇</span> <span class="grad">資源島</span></h1>
     <p class="lead">蘋果爸的 AutoCAD 教學大島群。開船到論壇島，走進島上的主題小屋讀文章；到問答島翻開 3 張問答卡就拿到 1 枚金幣，拿到 5 枚就送你「🎁 提示詞禮物包」！</p>
-    <p class="howto"><b>🪙 怎麼拿金幣？</b> ① 點一座問答島　② 翻開 3 張問答卡　③ 拿到 1 枚金幣。<br>拿滿 <b>5 枚</b>，送你 <b>🎁 提示詞禮物包</b>：教你做出自己的知識島，主題與風格自己設定。</p>
+    <p class="howto"><b>🪙 怎麼拿金幣？</b> ① 點一座問答島　② 翻開 3 張問答卡　③ 拿到 1 枚金幣。<br>拿滿 <b>5 枚</b>，送你 <b>🎁 提示詞禮物包</b>：教你做出自己的資源島，主題與風格自己設定。</p>
     <div class="quest-log"><button class="qbtn hot" type="button" id="giftBtn" hidden>🎁 提示詞禮物包</button></div>
     <div class="stats"><span><b id="stF">12</b>座論壇島</span><span><b id="stI">9</b>座問答島</span><span><b id="stQ">0</b>則學員提問</span><span><b>6</b>隻毛孩陪你逛</span></div>
   </div>
@@ -755,46 +765,56 @@ body{overflow:hidden;background:#1581bd}
     <div class="chest-ico">🎁</div>
     <h3 id="chestT">海盜寶箱打開了！</h3>
     <p>5 枚金幣到手，你是 <b>資源島探險家</b> 🎉</p>
-    <p>裡面有一份 <b>提示詞禮物包</b> 🎁　讓你也能做出自己的知識島</p>
-    <ol class="gift-steps"><li>按「複製提示詞」</li><li>貼到 ChatGPT、Gemini 或 Claude</li><li>回答它的 6 個問題，自己設定島主題與風格</li></ol>
-    <pre class="gift-pre" id="giftPre" tabindex="0" aria-label="提示詞內容">【AI 知識島 建置提示詞（通用版）】
+    <p>裡面有一份 <b>提示詞禮物包</b> 🎁　讓你也能做出自己的資源島</p>
+    <ol class="gift-steps"><li>按「複製提示詞」</li><li>貼到 ChatGPT、Gemini 或 Claude</li><li>回答它的 7 個問題，自己設定島主題與風格</li></ol>
+    <pre class="gift-pre" id="giftPre" tabindex="0" aria-label="提示詞內容">【論壇資源島 建置提示詞（通用版）】
 
-你是一位資深的互動網頁設計師，也是很有耐心的教學夥伴。請幫我做一個「知識島」互動網頁：把我的一堆問答與知識，變成一張可以探險的島嶼地圖，讓看的人一座島一座島逛、集金幣，玩著玩著就把內容讀完。
+你是一位資深的互動網頁設計師，也是很有耐心的教學夥伴。請幫我做一個「資源島」互動網頁：把我的一堆文章、教學或問答，變成一張可以開船探險的海盜島群地圖。每個分類是一座島，島上的小屋放文章，看的人一座島一座島逛、集金幣，玩著玩著就把內容讀完。
 
 ■ 第一步：先問我，不要急著寫程式
-請一次問我一題，問完下面 6 件事（我答不出來的，請你給 3 個選項讓我挑）：
-1. 島的主題：這座知識島要講什麼？【例：咖啡、露營、投資入門、我的專業領域】
-2. 對象：誰會來逛？他們現在最想問什麼？
-3. 風格：整體氣氛與配色【例：海盜藏寶金＋深海藍、海洋清爽藍、日系手帳、復古像素】
+請一次問我一題，問完下面 7 件事（我答不出來的，請你給 3 個選項讓我挑）：
+1. 主題：這片島群要放什麼內容？【例：我的部落格教學、社團文章、公司知識庫、課程講義】
+2. 對象：誰會來逛？他們最常想找什麼？
+3. 風格：整體氣氛與配色【例：海盜藏寶金＋深海藍、熱帶清爽藍綠、日系手帳、復古像素】
 4. 島主：由誰來帶路？名字與說話口吻【例：蘋果爸，親切、白話】
-5. 九大島：把內容分成 9 個主題島，每座島有 emoji、名稱、一句副標、一個代表色（我沒想法就幫我分）
-6. 問答資料：我會貼上我的問題與答案（不夠的話你幫我補，但要標明哪些是你補的，讓我確認）
+5. 島嶼分類：
+   - 教學島：每個分類一座島，島上每個子分類是一間小屋（emoji、名稱、一句副標、代表色）
+   - 主島：挑出最重要的 3～6 座，畫得比較大，加金色名牌
+   - 問答島：要不要放「翻卡拿金幣」的問答島？要的話幾座？
+6. 文章資料：我會貼上文章清單（標題、一句摘要、連結或內文），以及問答（問題＋答案）。不夠的話你可以幫我補，但要標明哪些是你補的，讓我確認。
+7. 特別島：要不要加一座「占卜島」，用關鍵字搜尋全部文章？
 
 ■ 第二步：先給我「規劃表」，我確認再做
-規劃表包含：9 座島的清單（emoji、名稱、副標、代表色）、每座島放哪些問答、整體配色與字體、島主開場白。我說「OK」才開始產生網頁。
+規劃表包含：每座島的清單（emoji、名稱、副標、代表色、是不是主島）、每間小屋放哪些文章、問答島放哪些問答、整體配色與字體、島主開場白。我說「OK」才開始產生網頁。
 
 ■ 第三步：網頁規格（單一 HTML 檔，CSS 與 JS 都寫在同一個檔案裡，不依賴外部資源，存成 .html 雙擊就能開）
-1. 首頁：大標題、島主開場白，以及「開始探險」「隨機抽一題」「搜尋」三個按鈕。
-2. 島嶼地圖：9 座島散布在海上（用 SVG 或 CSS 繪製），點島嶼時小船划過去，再展開該島的問答卡片。
-3. 問答卡片：每座島至少 5 張，每張有「問題」「答案」「小提醒」，點開才翻出答案。
-4. 金幣收集：每座島翻開 3 張卡片就得 1 枚金幣（有小動畫），上方顯示進度 0/9。
-5. 集滿 9 枚：跳出寶箱，顯示恭喜與島主的一句話。
-6. 搜尋：輸入關鍵字，列出符合的問答。
-7. 進度保存：用 localStorage 記住已翻的卡片與金幣，並包在 try/catch 內，被瀏覽器擋住也不會壞。
-8. 手機優先：直式螢幕好點好讀、按鈕夠大；電腦版自動變成寬版。
-9. 友善設定：尊重「減少動態效果」；提示音要使用者點了才播放，並提供靜音鈕；文字對比要足夠。
-10. 風格完全依照第一步我選的主題與配色，不要有千篇一律的樣板感。
+1. 開場：大標題、島主開場白、「登上資源島」按鈕。
+2. 大海地圖：所有島散布在海上（用 SVG 繪製，有沙灘、樹、居民小動物），島與島之間用虛線航線連起來；可以拖曳移動，手機雙指、電腦滑鼠滾輪都能拉近拉遠，而且要順暢。
+3. 島的樣式：
+   - 教學島是米黃色名牌，前面加 📖
+   - 問答島是青藍色名牌，前面加 💬，島上插問號牌
+   - 主島放大 1.4 倍，有金色光環、燈塔、大旗和 👑 名牌
+   - 一眼就分得出不同種類的島
+4. 上島：點教學島時小船划過去，進入島上畫面，每個子分類是一間溫馨小木屋，點小屋列出文章卡片（標題、摘要），點文章在同一頁打開閱讀。
+5. 問答卡片：問答島每座至少 5 張，點開才翻出答案；翻開 3 張得 1 枚金幣（有小動畫），上方顯示金幣數，集滿 5 枚跳出寶箱。
+6. 占卜島：輸入關鍵字，同時搜尋文章（標題與內文）和問答，關鍵字標成黃色，並提供「占卜一篇」隨機抽一篇。
+7. 收藏與分享：每座島可以收藏（地圖上發光）與分享（複製連結或手機分享選單）；網址帶 #島代號 就能直接開到那座島。
+8. 清單頁：不想開船的人可以從清單直接點島，最上面是「我的收藏」。
+9. 進度保存：用 localStorage 記住已翻的卡片、金幣與收藏，並包在 try/catch 內，被瀏覽器擋住也不會壞。
+10. 手機優先：直式螢幕好點好讀、按鈕夠大；電腦版自動變成寬版。
+11. 友善設定：尊重「減少動態效果」；提示音要使用者點了才播放，並提供靜音鈕；文字對比要足夠。
+12. 風格完全依照第一步我選的主題與配色，不要有千篇一律的樣板感。
 
 ■ 第四步：輸出方式
 - 先輸出完整可執行的 HTML 程式碼，放在同一個程式碼區塊裡。
 - 程式碼太長被截斷時，我會說「請繼續」，請接續輸出，不要省略任何部分。
-- 輸出後，用 5 行以內告訴我：怎麼存檔、怎麼開啟、哪裡改文字、哪裡改顏色。
+- 輸出後，用 5 行以內告訴我：怎麼存檔、怎麼開啟、哪裡改文字、哪裡改顏色、怎麼加新文章。
 
 ■ 第五步：驗收與修改
-我開啟後若有問題，會用白話描述（例如「第 3 座島點了沒反應」），請只修改那一部分，並重新給我完整檔案。
+我開啟後若有問題，會用白話描述（例如「2D 島點了沒反應」），請只修改那一部分，並重新給我完整檔案。
 
-（以下是備註，不需要處理）這份提示詞出自蘋果爸「AI 幫你做什麼」。</pre>
-    <div class="row2"><button class="btn btn-primary" type="button" id="giftCopy">📋 複製提示詞</button></div>
+（以下是備註，不需要處理）這份提示詞出自蘋果爸「論壇資源島」https://kv1012tiger.github.io/autocad-tw-archive/</pre>
+    <div class="row2"><button class="btn btn-primary" type="button" id="giftCopy">📋 複製提示詞</button><button class="btn btn-primary" type="button" id="giftDl">⬇️ 下載提示詞</button></div>
     <div class="row2"><button class="btn btn-ghost" type="button" id="chestClose">繼續逛逛</button></div>
   </div>
 </div>
@@ -803,7 +823,7 @@ body{overflow:hidden;background:#1581bd}
   <div class="card chest-box mission-box">
     <div class="chest-ico">🎯</div>
     <h3 id="missionT">探險任務</h3>
-    <ol class="gift-steps"><li>點一座島（或從下方島嶼列表點）</li><li>翻開 3 張問答卡，拿 1 枚 🪙 金幣</li><li>拿滿 5 枚，送你 🎁 <b>提示詞禮物包</b>（教你做出自己的知識島，主題與風格自己設定）</li></ol>
+    <ol class="gift-steps"><li>點一座島（或從下方島嶼列表點）</li><li>翻開 3 張問答卡，拿 1 枚 🪙 金幣</li><li>拿滿 5 枚，送你 🎁 <b>提示詞禮物包</b>（教你做出自己的資源島，主題與風格自己設定）</li></ol>
     <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
     <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
   </div>
@@ -910,7 +930,7 @@ var SP=[{k:'home',e:'🏡',name:'蘋果爸小島',sub:'講師介紹・三貓三�
   {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
-SP.push({k:'castle',e:'🏰',name:'課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
+SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
 SP.forEach(function(s,i){s.si=i});
 function pad(n){return (n<10?'0':'')+n}
 var ISLE_OF={};ISLES.forEach(function(s,i){s.rows.forEach(function(r){ISLE_OF[r]=i})});
@@ -1277,7 +1297,57 @@ gb.addEventListener('click',function(){gb.hidden=true});
 
 /* ---------- 島上場景：每間小屋是一個子版區 ---------- */
 var scene=$('scene'),land=$('land'),SCN=null;
-var HUT_SVG='<svg viewBox="0 0 150 138" aria-hidden="true"><path d="M75 69 146 103 75 137 4 103z" fill="#c9a86e"/><path d="M75 62 146 96 75 130 4 96z" fill="#f7e8bd" stroke="#d6bb7e" stroke-width="2.5"/><path d="M75 117 123 93 146 97 98 124z" fill="#5a4a20" opacity=".26"/><path d="M27 93 75 117V79L27 55z" fill="#dcb27a" stroke="#4a2f14" stroke-width="2.5" stroke-linejoin="round"/><path d="M75 117 123 93V55L75 79z" fill="#b48650" stroke="#4a2f14" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 68 75 92M27 81 75 105" stroke="#b98d5a" stroke-width="2"/><path d="M75 92 123 68M75 105 123 81" stroke="#8f6a3d" stroke-width="2"/><path d="M42 100 60 109V84L42 75z" fill="#6b4220" stroke="#3a2410" stroke-width="2"/><path d="M92 92 108 84V68L92 76z" fill="#bfe9ff" stroke="#4a2f14" stroke-width="2"/><path d="M17 56 75 86V16z" style="fill:var(--c)" stroke="#3a2410" stroke-width="3.5" stroke-linejoin="round"/><path d="M75 86 133 56 75 16z" style="fill:var(--c)" stroke="#3a2410" stroke-width="3.5" stroke-linejoin="round"/><path d="M75 86 133 56 75 16z" fill="#000" opacity=".24"/><path d="M75 16V3" stroke="#3a2410" stroke-width="3"/><path d="M75 4l18 5-18 5z" fill="#e11d2e"/></svg>';
+/* 溫馨小木屋：瓦片屋頂、煙囪、暖光窗、花台、燈籠、石板路、柵欄；主屋是兩層樓 */
+var ROOFS=['#e76f51','#2a9d8f','#d17a9c','#6d9dc5','#f4a261','#8ab17d','#b56576'],FLOWERS=[['#ff6b9a','#ffd166','#ffffff'],['#c084fc','#ff8fa3','#ffe066'],['#ff7b54','#ffd166','#ffffff']];
+function cottage(k,main){
+  var hh=main?60:38,top=main?-26:0,roof=main?'var(--c)':ROOFS[k%ROOFS.length],fl=FLOWERS[k%3];
+  var L=function(u,v){return [27+48*u,93+24*u-v*hh]},R=function(u,v){return [75+48*u,117-24*u-v*hh]};
+  var pt=function(a){return a[0].toFixed(1)+' '+a[1].toFixed(1)},poly=function(a){return 'M'+a.map(pt).join('L')+'Z'},lerp=function(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]};
+  var ln=' stroke="#7a4a22" stroke-width="2.2" stroke-linejoin="round"',fy=117-hh+7,Lp=[17,94-hh],F=[75,fy],Rp=[133,94-hh],A=[75,fy-70],i,t;
+  var s='<svg viewBox="0 '+top+' 150 '+(138-top)+'" aria-hidden="true">'+
+    '<path d="M75 71 146 104 75 137 4 104z" fill="#5f9e45"/><path d="M75 64 146 98 75 131 4 98z" fill="#a5de80" stroke="#7cc160" stroke-width="2"/>'+
+    '<path d="M75 119 125 95 146 99 98 124z" fill="#2f5a1f" opacity=".2"/>';
+  [[47,114],[39,119],[31,123.5]].forEach(function(p){s+='<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="4.6" ry="2.4" fill="#efe4cc" stroke="#b9a98a" stroke-width="1"/>'});
+  /* 牆：左面亮、右面暗，石頭牆腳、木頭樑柱 */
+  s+='<path d="'+poly([L(0,0),L(1,0),L(1,1),L(0,1)])+'" fill="#fff3dc"'+ln+'/><path d="'+poly([R(0,0),R(1,0),R(1,1),R(0,1)])+'" fill="#f1d9ae"'+ln+'/>'+
+    '<path d="'+poly([L(0,0),L(1,0),L(1,.13),L(0,.13)])+'" fill="#cdb894"/><path d="'+poly([R(0,0),R(1,0),R(1,.13),R(0,.13)])+'" fill="#b9a27c"/>'+
+    '<path d="M'+pt(L(1,0))+'L'+pt(L(1,1))+'" stroke="#7a4a22" stroke-width="3.6"/>';
+  if(main)s+='<path d="M'+pt(L(0,.5))+'L'+pt(L(1,.5))+'L'+pt(R(1,.5))+'" fill="none" stroke="#7a4a22" stroke-width="2.6"/>';
+  /* 圓拱門、門把、燈籠 */
+  var dv=main?.3:.5;
+  s+='<path d="M'+pt(L(.3,.03))+'L'+pt(L(.3,dv))+'Q'+pt(L(.475,dv+(main?.17:.28)))+' '+pt(L(.65,dv))+'L'+pt(L(.65,.03))+'Z" fill="#a0522d" stroke="#5a2d0c" stroke-width="2"/>'+
+    '<path d="M'+pt(L(.42,.03))+'L'+pt(L(.42,dv+.05))+'M'+pt(L(.53,.03))+'L'+pt(L(.53,dv+.06))+'" stroke="#7a3b16" stroke-width="1.1"/>'+
+    '<circle cx="'+L(.6,dv*.45)[0].toFixed(1)+'" cy="'+L(.6,dv*.45)[1].toFixed(1)+'" r="1.6" fill="#ffd166"/>';
+  var lp=L(.82,dv+.06);
+  s+='<circle class="lamp" cx="'+lp[0].toFixed(1)+'" cy="'+lp[1].toFixed(1)+'" r="6.5" fill="#ffe58a" opacity=".45"/><rect x="'+(lp[0]-1.8).toFixed(1)+'" y="'+(lp[1]-3).toFixed(1)+'" width="3.6" height="5.4" rx="1" fill="#ffd166" stroke="#5a2d0c" stroke-width="1"/>';
+  /* 暖光窗＋窗簾＋花台 */
+  function win(F2,u0,u1,v0,v1,box){
+    var o='<path d="'+poly([F2(u0-.05,v0-.06),F2(u1+.05,v0-.06),F2(u1+.05,v1+.06),F2(u0-.05,v1+.06)])+'" fill="#fff3b0" opacity=".5"/>'+
+      '<path d="'+poly([F2(u0,v0),F2(u1,v0),F2(u1,v1),F2(u0,v1)])+'" fill="#ffd56b" stroke="#7a4a22" stroke-width="2"/>'+
+      '<path d="M'+pt(F2((u0+u1)/2,v0))+'L'+pt(F2((u0+u1)/2,v1))+'M'+pt(F2(u0,(v0+v1)/2))+'L'+pt(F2(u1,(v0+v1)/2))+'" stroke="#7a4a22" stroke-width="1.5"/>'+
+      '<path d="'+poly([F2(u0,v1),F2(u0+.13,v1),F2(u0,v1-(v1-v0)*.55)])+'" fill="#ff8fa3"/><path d="'+poly([F2(u1,v1),F2(u1-.13,v1),F2(u1,v1-(v1-v0)*.55)])+'" fill="#ff8fa3"/>';
+    if(box){o+='<path d="'+poly([F2(u0-.05,v0),F2(u1+.05,v0),F2(u1+.05,v0-.1),F2(u0-.05,v0-.1)])+'" fill="#8a5a2b" stroke="#5a2d0c" stroke-width="1"/>';
+      for(var j=0;j<5;j++){var q=F2(u0+(u1-u0)*(j+.5)/5,v0+.02);o+='<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="2.3" fill="'+fl[j%3]+'" stroke="#2f6a2a" stroke-width=".6"/>'}}
+    return o;
+  }
+  if(main){s+=win(R,.3,.72,.1,.38,true)+win(R,.3,.72,.6,.86,true)+win(L,.3,.65,.62,.86,false)}else s+=win(R,.3,.72,.32,.74,true);
+  /* 屋頂：瓦片紋、白色屋簷、紅磚煙囪 */
+  s+='<path d="'+poly([Lp,F,A])+'" style="fill:'+roof+'" stroke="#4a2414" stroke-width="3" stroke-linejoin="round"/><path d="'+poly([F,Rp,A])+'" style="fill:'+roof+'" stroke="#4a2414" stroke-width="3" stroke-linejoin="round"/><path d="'+poly([F,Rp,A])+'" fill="#000" opacity=".2"/>';
+  for(i=1;i<5;i++){t=i*.18;s+='<path d="M'+pt(lerp(Lp,A,t))+'L'+pt(lerp(F,A,t))+'L'+pt(lerp(Rp,A,t))+'" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.6"/>'}
+  s+='<path d="M'+pt(lerp(Lp,F,.02))+'L'+pt(F)+'L'+pt(lerp(Rp,F,.02))+'" fill="none" stroke="#fff8e7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+  var c=lerp(lerp(F,Rp,.55),A,.42);
+  s+='<path d="M'+(c[0]-5).toFixed(1)+' '+(c[1]+3).toFixed(1)+'V'+(c[1]-17).toFixed(1)+'H'+(c[0]+1).toFixed(1)+'V'+(c[1]+1).toFixed(1)+'Z" fill="#c2553a" stroke="#5a2d0c" stroke-width="1.2"/><path d="M'+(c[0]+1).toFixed(1)+' '+(c[1]+1).toFixed(1)+'V'+(c[1]-17).toFixed(1)+'H'+(c[0]+5).toFixed(1)+'V'+(c[1]-1).toFixed(1)+'Z" fill="#8f3a26" stroke="#5a2d0c" stroke-width="1.2"/>'+
+    '<rect x="'+(c[0]-6.5).toFixed(1)+'" y="'+(c[1]-20).toFixed(1)+'" width="13" height="3.4" rx="1" fill="#5a2d0c"/>'+
+    '<g class="smk" fill="#fff"><circle cx="'+(c[0]+1).toFixed(1)+'" cy="'+(c[1]-25).toFixed(1)+'" r="3.6"/><circle cx="'+(c[0]+3).toFixed(1)+'" cy="'+(c[1]-29).toFixed(1)+'" r="4.4"/><circle cx="'+(c[0]+5).toFixed(1)+'" cy="'+(c[1]-33).toFixed(1)+'" r="5"/></g>';
+  if(main)s+='<path d="M75 '+(A[1]+1)+'V'+(A[1]-15)+'" stroke="#3a2410" stroke-width="2.4"/><path d="M75 '+(A[1]-15)+'l15 4-15 4z" fill="#e11d2e"/>';
+  /* 花叢與白柵欄 */
+  [[15,101],[134,99]].forEach(function(b,j){s+='<circle cx="'+b[0]+'" cy="'+b[1]+'" r="6.5" fill="#3f8f3a"/><circle cx="'+(b[0]+6)+'" cy="'+(b[1]+3)+'" r="5" fill="#4fa046"/><circle cx="'+(b[0]-4)+'" cy="'+(b[1]-3)+'" r="3.6" fill="#66b84f"/>'+
+    '<circle cx="'+(b[0]-2)+'" cy="'+(b[1]-1)+'" r="1.8" fill="'+fl[j]+'"/><circle cx="'+(b[0]+4)+'" cy="'+(b[1]+1)+'" r="1.8" fill="'+fl[(j+1)%3]+'"/><circle cx="'+(b[0]+7)+'" cy="'+(b[1]+5)+'" r="1.6" fill="'+fl[(j+2)%3]+'"/>'});
+  var f0=[88,126],f1=[124,108];
+  s+='<path d="M'+pt([f0[0],f0[1]-6])+'L'+pt([f1[0],f1[1]-6])+'M'+pt([f0[0],f0[1]-2.5])+'L'+pt([f1[0],f1[1]-2.5])+'" stroke="#fffaf0" stroke-width="1.6"/>';
+  for(i=0;i<=5;i++){var fp=lerp(f0,f1,i/5);s+='<path d="M'+(fp[0]-1.2).toFixed(1)+' '+fp[1].toFixed(1)+'v-8l1.2-1.6 1.2 1.6v8z" fill="#fffaf0" stroke="#c9b48a" stroke-width=".6"/>'}
+  return s+'</svg>';
+}
 function hutsOf(s){return [{name:s.forum+' 主屋',sub:s.sub,e:s.e,url:s.url,topics:s.topics,main:true}].concat(s.subs)}
 function rectBlob(x0,y0,x1,y1,seed,step){
   var P=[],k=0,x,y;function j(){return (rnd(seed,k++)-.5)*26}
@@ -1309,7 +1379,7 @@ function drawScene(){
   }).join('');
   var huts=H.map(function(u,k){
     var c=u.topics.length?u.topics.length+' 篇文章':'🚧 整理中';
-    return '<button class="hut'+(u.main?' main':'')+(u.topics.length?'':' empty')+'" type="button" data-k="'+k+'" style="left:'+P[k].x+'px;top:'+P[k].y+'px;--hw:'+hw+'px"><span class="hut-art">'+HUT_SVG+'<span class="hut-ic">'+u.e+'</span></span><span class="hut-n">'+esc(u.name)+'</span><span class="hut-c">'+c+'</span></button>';
+    return '<button class="hut'+(u.main?' main':'')+(u.topics.length?'':' empty')+'" type="button" data-k="'+k+'" style="left:'+P[k].x+'px;top:'+P[k].y+'px;--hw:'+hw+'px"><span class="hut-art">'+cottage(k,u.main)+'<span class="hut-ic" style="top:'+(u.main?'56%':'63%')+'">'+u.e+'</span></span><span class="hut-n">'+esc(u.name)+'</span><span class="hut-c">'+c+'</span></button>';
   }).join('');
   land.style.height=h+'px';
   land.innerHTML=o+rs+huts+'<div class="scene-ship" style="left:'+(dx+30)+'px;top:'+(h-150)+'px">'+boat.querySelector('svg').outerHTML+'</div>';
@@ -1448,7 +1518,7 @@ function renderIsle(n){
     '<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div>'+
     progHTML(n)+
     '<div class="qa-list">'+s.rows.map(function(r){return qaHTML(r)}).join('')+'</div>'+
-    '<div class="rel"><b>🏰 想學這個？課程城堡裡的相關單元</b><div class="chips">'+s.units.map(function(id){var u=UNITS[UIDX[id]];return '<button class="chip" type="button" data-unit="'+id+'">'+u.e+' '+(u.moon?'附錄 ':'')+esc(u.id)+' '+esc(u.short)+'</button>'}).join('')+'</div></div>';
+    '<div class="rel"><b>🏰 想學這個？AI課程城堡裡的相關單元</b><div class="chips">'+s.units.map(function(id){var u=UNITS[UIDX[id]];return '<button class="chip" type="button" data-unit="'+id+'">'+u.e+' '+(u.moon?'附錄 ':'')+esc(u.id)+' '+esc(u.short)+'</button>'}).join('')+'</div></div>';
   $('pStep').textContent='🏝️ 問答島';
   pFoot.hidden=false;pDots.hidden=false;
   pPrev.textContent='← '+SP[s.si-1].name;
@@ -1490,7 +1560,7 @@ function renderHome(){
   footSimple('← 回地圖','🪄 第一座島 →');
 }
 function renderCastle(){
-  pBody.innerHTML='<div class="ph" style="--c:#7bdff2"><span class="ph-e">🏰</span><div><div class="p-kicker">COURSE CASTLE・課程內容</div><h3 id="pTitle">課程城堡</h3><p>AI 幫你做什麼｜AutoCAD × AI 課程單元</p></div></div>'+
+  pBody.innerHTML='<div class="ph" style="--c:#7bdff2"><span class="ph-e">🏰</span><div><div class="p-kicker">COURSE CASTLE・課程內容</div><h3 id="pTitle">AI課程城堡</h3><p>AI 幫你做什麼｜AutoCAD × AI 課程單元</p></div></div>'+
     '<div class="p-sec"><h4>上課怎麼走</h4><div class="steps"><span>你的圖片與需求</span><span>AI 協作與檢查</span><span>DWG 圖面整理</span><span>互動 3D 展示</span></div></div>'+
     '<div class="p-sec" style="--pc:#ffd166"><h4>9 個單元（6 個範例＋3 個加碼附錄）</h4>'+UNITS.map(function(u){
       return '<details class="unit" data-u="'+u.id+'" style="--c1:'+u.c1+';--c2:'+u.c2+'"><summary><span class="ue">'+u.e+'</span><span><b>'+(u.moon?'附錄 ':'')+esc(u.id)+' '+esc(u.name)+(u.moon?'<span class="gift-tag">兩種方案皆送</span>':'')+'</b><small>'+esc(u.tagline)+'</small></span></summary>'+
@@ -1501,7 +1571,7 @@ function renderCastle(){
       '<a class="vid" href="https://www.youtube.com/watch?v=bd1DHrGW9Qs" target="_blank" rel="noopener"><i style="background-image:url(https://i.ytimg.com/vi/bd1DHrGW9Qs/hqdefault.jpg)"></i><span>課程成果展示 ↗</span></a>'+
       '<a class="vid" href="https://www.youtube.com/watch?v=bj2FKTcKO8s" target="_blank" rel="noopener"><i style="background-image:url(https://i.ytimg.com/vi/bj2FKTcKO8s/hqdefault.jpg)"></i><span>課程初步講解 ↗</span></a>'+
     '</div></div>';
-  $('pStep').textContent='🏰 課程城堡';
+  $('pStep').textContent='🏰 AI課程城堡';
   footSimple('← 回地圖','🏡 蘋果爸小島 →');
 }
 var SEARCH_KW=['圖塊','LISP','出圖','標註','圖層','3D','外掛','配置','文字','數量','手稿','線上課程'];
@@ -1646,6 +1716,7 @@ function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scroll
 $('chestClose').addEventListener('click',function(){$('chest').hidden=true});
 $('giftBtn').addEventListener('click',openChest);
 $('giftCopy').addEventListener('click',function(){copyText($('giftPre').textContent,'已複製提示詞，去貼給 AI 吧！')});
+$('giftDl').addEventListener('click',function(){try{var b=new Blob(['\ufeff'+$('giftPre').textContent],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='論壇資源島提示詞.txt';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);toast('⬇️ 已下載提示詞')}catch(e){copyText($('giftPre').textContent,'無法下載，已改成複製提示詞')}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('mission').hidden)closeMission();else if(!$('chest').hidden)$('chest').hidden=true;else if(panel.classList.contains('open'))closePanel()}});
 
 /* ---------- 特效 ---------- */
