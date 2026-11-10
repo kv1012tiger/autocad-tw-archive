@@ -52,6 +52,7 @@
   {
     "id": "cad2d",
     "route": 4,
+    "major": true,
     "name": "2D 討論島",
     "icon": "📐",
     "forum": "2D討論",
@@ -201,6 +202,7 @@
   {
     "id": "cad3d",
     "route": 8,
+    "major": true,
     "name": "3D 討論島",
     "icon": "🏢",
     "forum": "3D討論",
@@ -293,6 +295,7 @@
   {
     "id": "f44",
     "route": 10,
+    "major": true,
     "name": "專案報告島",
     "icon": "📊",
     "forum": "專案報告",
@@ -371,6 +374,7 @@
   {
     "id": "advanced",
     "route": 14,
+    "major": true,
     "name": "進階討論島",
     "icon": "💻",
     "forum": "進階討論",
@@ -428,6 +432,7 @@
   {
     "id": "courses",
     "route": 16,
+    "major": true,
     "name": "光碟課程島",
     "icon": "💿",
     "forum": "光碟/線上課程",
@@ -471,6 +476,7 @@
   {
     "id": "realtime",
     "route": 18,
+    "major": true,
     "name": "即時動態島",
     "icon": "📰",
     "forum": "即時動態",

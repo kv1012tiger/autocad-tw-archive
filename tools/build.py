@@ -140,6 +140,7 @@ def write_home(boards, by_board):
         forum.append({
             "id": b["id"],
             "route": b["route"],
+            "major": b.get("major", False),
             "name": b["name"],
             "e": b["icon"],
             "sub": b["tagline"],
