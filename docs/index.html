@@ -197,7 +197,7 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .p-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(2,30,44,.6)}
 .p-foot .btn{padding:11px 18px;font-size:14.5px}
 .p-dots{display:flex;gap:6px;align-items:center}
-.p-dots[hidden]{display:none}
+.p-dots[hidden],.p-foot[hidden]{display:none}
 .p-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s}
 .p-dots i.v{background:var(--gold)}
 .p-dots i.on{width:20px;border-radius:6px;background:var(--cyan)}
@@ -508,7 +508,30 @@ body{overflow:hidden;background:#1581bd}
 .map{margin:0;max-width:none;border:0;border-radius:0;box-shadow:none;background:radial-gradient(38% 30% at 30% 30%,rgba(86,205,235,.55),transparent 70%),radial-gradient(42% 34% at 72% 62%,rgba(86,205,235,.5),transparent 70%),radial-gradient(34% 26% at 62% 18%,rgba(40,130,205,.6),transparent 70%),linear-gradient(160deg,#1b8fd0,#0f6fb4 55%,#1b86c6)}
 .map-size{position:relative;flex:none;margin:auto;overflow:hidden;transform-origin:0 0;will-change:transform}
 .map{transform-origin:0 0}
-.world.zooming .rs,.world.zooming .rs *,.world.zooming .mdeco{animation-play-state:paused}
+.world.zooming .rs,.world.zooming .rs *,.world.zooming .mdeco,.world.zooming .spot.fav::before{animation-play-state:paused}
+/* 收藏島：地圖上一圈慢慢閃的金色光環 */
+.spot.fav::before{content:"";position:absolute;left:50%;top:40%;width:116%;height:84%;border-radius:50%;transform:translate(-50%,-50%);border:calc(5px * var(--tk,1)) solid #ffd166;box-shadow:0 0 calc(24px * var(--tk,1)) rgba(255,209,102,.9),inset 0 0 calc(18px * var(--tk,1)) rgba(255,209,102,.55);pointer-events:none;z-index:1;animation:favPulse 1.6s ease-in-out infinite}
+@keyframes favPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.spot.fav .tag::after{content:" ⭐"}
+.acts{display:flex;gap:6px;flex:none;margin-left:auto}
+#pActs{margin-right:10px}
+.act{padding:7px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.75);background:rgba(255,255,255,.08);color:#fff;font:inherit;font-weight:900;font-size:15px;letter-spacing:0;cursor:pointer;white-space:nowrap}
+.act:hover{background:rgba(255,209,102,.2)}
+.act.on{background:linear-gradient(135deg,#ffd166,#ff9f1c);border-color:#ffe6a3;color:#3a1a08}
+.scene-t{flex:1 1 auto}
+.scene-t b,.scene-t small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav-list{display:grid;gap:12px}
+.fav-note{margin-top:14px;font-size:14px;color:var(--muted);text-align:center}
+.quest .qbtn.on i{filter:drop-shadow(0 0 6px rgba(255,209,102,.9))}
+@media (max-width:480px){
+  .act{padding:6px 9px;font-size:14px}
+  .scene-bar{gap:8px;padding:8px 10px}
+  .scene-bar #sceneBack{padding:8px 12px}
+  .scene-bar .act{padding:6px 10px;font-size:19px;line-height:1.1}
+  .scene-bar .act .tx{display:none}
+  .scene-t b{font-size:18px}
+  .scene-t small{font-size:13px}
+}
 .map::before{animation:none;opacity:.32}
 .map::after{display:none}
 .islets{position:absolute;left:0;top:0;pointer-events:none}
@@ -536,6 +559,11 @@ body{overflow:hidden;background:#1581bd}
 .quest{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;display:flex;flex-wrap:nowrap;gap:5px;margin:0;padding:6px;border-radius:20px;background:rgba(3,42,60,.92);border:2px solid #ffd166;box-shadow:0 8px 24px rgba(0,30,50,.5)}
 .quest .qbtn{display:flex;flex-direction:column;align-items:center;min-width:62px;padding:5px 7px;border-radius:14px;font-size:16px;line-height:1.3;white-space:nowrap}
 .quest .qbtn i{font-style:normal;font-size:24px;line-height:1.2}
+@media (max-width:480px){
+  .quest{width:calc(100vw - 14px);gap:3px}
+  .quest .qbtn{flex:1 1 0;min-width:0;padding:5px 2px;font-size:14px}
+  .quest .qbtn i{font-size:21px}
+}
 .quest-log{display:flex;justify-content:center;margin-top:14px}
 .guide-float{position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:59;margin:0 auto;max-width:520px;background:none;border:0;padding:0;cursor:pointer;text-align:left}
 .guide[hidden],.log[hidden],.scene[hidden]{display:none}
@@ -611,6 +639,7 @@ body{overflow:hidden;background:#1581bd}
   <button class="qbtn" type="button" id="randBtn"><i>🎲</i>隨機</button>
   <button class="qbtn" type="button" id="searchBtn2"><i>🔍</i>找題</button>
   <button class="qbtn" type="button" data-open="castle"><i>🏰</i>城堡</button>
+  <button class="qbtn" type="button" id="favBtn"><i>⭐</i>收藏</button>
   <button class="qbtn" type="button" id="logBtn"><i>📜</i>清單</button>
 </nav>
 </main>
@@ -646,7 +675,7 @@ body{overflow:hidden;background:#1581bd}
 </div>
 
 <div class="scene" id="scene" hidden>
-  <div class="scene-bar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button">⛵ 回大海</button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div></div>
+  <div class="scene-bar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button">⛵ 回大海</button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <div class="land" id="land"></div>
 </div>
 
@@ -658,7 +687,7 @@ body{overflow:hidden;background:#1581bd}
 
 <div class="backdrop" id="backdrop"></div>
 <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" aria-hidden="true">
-  <div class="p-top"><span id="pStep"></span><button class="p-close" id="pClose" type="button" aria-label="關閉">×</button></div>
+  <div class="p-top"><span id="pStep"></span><span class="acts" id="pActs"></span><button class="p-close" id="pClose" type="button" aria-label="關閉">×</button></div>
   <div class="p-body" id="pBody"></div>
   <div class="p-foot" id="pFoot">
     <button class="btn btn-ghost" id="pPrev" type="button"></button>
@@ -1167,15 +1196,52 @@ function showScene(s){
   SCN=s;s.huts=s.huts||hutsOf(s);
   $('sceneName').textContent=s.name;$('sceneSub').textContent=(s.subs.length+1)+' 間小屋・'+s.total+' 篇文章';
   scene.style.setProperty('--c',s.c);scene.hidden=false;drawScene();scene.scrollTop=0;placeBoat(s.si,true);
+  favBtn($('sceneFav'),s);
 }
 function hideScene(){if(!SCN)return;SCN=null;scene.hidden=true;land.innerHTML=''}
+/* 網址：#isle-島代號、#isle-島代號/小屋序號、#qa-問答島序號、#home、#castle */
 function route(){
-  var m=location.hash.match(/^#isle-(.+)$/),id=m&&decodeURIComponent(m[1]),t=null;
-  FORUM.forEach(function(f){if(f.id===id)t=f});
-  if(t)showScene(t);else hideScene();
+  var h=location.hash.replace(/^#/,''),m=h.match(/^isle-([^/]+)(?:\/(\d+))?$/),t=null;
+  if(m){var id=decodeURIComponent(m[1]);FORUM.forEach(function(f){if(f.id===id)t=f})}
+  if(t){if(SCN!==t)showScene(t);if(m[2]!=null&&+m[2]<SCN.huts.length)openPanel('hut',+m[2]);return}
+  hideScene();
+  if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
+  else if(h==='home'||h==='castle'){openPanel(h);placeBoat(spotIdx(h),true)}
 }
 window.addEventListener('hashchange',route);
 $('sceneBack').addEventListener('click',function(){location.hash=''});
+
+/* ---------- 分享連結與收藏島 ---------- */
+function spotHash(s){return s.k==='forum'?'isle-'+s.id:s.k==='isle'?'qa-'+s.n:s.k}
+function shareHash(hash,title){
+  var url=location.href.split('#')[0]+'#'+hash;
+  if(navigator.share&&matchMedia('(pointer: coarse)').matches){navigator.share({title:title+'｜論壇資源島',url:url}).catch(function(){});return}
+  copyText(url,'🔗 已複製「'+title+'」的連結');
+}
+var FAV={};try{(JSON.parse(localStorage.getItem('aikb-fav'))||[]).forEach(function(k){FAV[k]=1})}catch(e){}
+function isFav(s){return !!FAV[spotHash(s)]}
+function favBtn(b,s){var on=isFav(s);b.classList.toggle('on',on);b.innerHTML=(on?'⭐':'☆')+'<span class="tx">'+(on?' 已收藏':' 收藏')+'</span>'}
+function favPaint(){
+  SP.forEach(function(s){s.el.classList.toggle('fav',isFav(s))});
+  if(SCN)favBtn($('sceneFav'),SCN);
+  var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
+  $('favBtn').classList.toggle('on',Object.keys(FAV).length>0);
+}
+function toggleFav(s){
+  var k=spotHash(s);if(FAV[k])delete FAV[k];else FAV[k]=1;
+  try{localStorage.setItem('aikb-fav',JSON.stringify(Object.keys(FAV)))}catch(e){}
+  favPaint();toast(FAV[k]?'⭐ 已收藏「'+s.name+'」，地圖上會發光':'已取消收藏「'+s.name+'」');
+  if(V.t==='fav'&&panel.classList.contains('open'))render();
+}
+$('sceneShare').addEventListener('click',function(){if(SCN)shareHash(spotHash(SCN),SCN.name)});
+$('sceneFav').addEventListener('click',function(){if(SCN)toggleFav(SCN)});
+$('favBtn').addEventListener('click',function(){openPanel('fav')});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-share],[data-fav],[data-go]');if(!t)return;
+  if(t.dataset.share!=null)shareHash(t.dataset.share,t.dataset.title);
+  else if(t.dataset.fav!=null)toggleFav(SP[+t.dataset.fav]);
+  else{closePanel();visit(+t.dataset.go)}
+});
 land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)openPanel('hut',+b.dataset.k)});
 
 /* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
@@ -1313,9 +1379,27 @@ function doSearch(v){
   res.innerHTML=hit.map(function(r){return qaHTML(r,true)}).join('');
 }
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
+function renderFav(){
+  var list=SP.filter(isFav);
+  pBody.innerHTML='<div class="ph" style="--c:#ffd166"><span class="ph-e">⭐</span><div><div class="p-kicker">FAVORITES・我的收藏</div><h3 id="pTitle">收藏的島</h3><p>點一下，船就開過去</p></div></div>'+
+    (list.length?'<div class="fav-list">'+list.map(function(s){return '<button class="card il" type="button" data-go="'+s.si+'" style="--c:'+s.c+'"><span class="e">'+s.e+'</span><span><b>'+(s.k==='isle'||s.k==='forum'?pad(s.no)+' ':'')+esc(s.name)+'</b><small>'+esc(s.sub)+'</small></span><span class="st">⛵ 前往</span></button>'}).join('')+'</div>'
+      :'<div class="t-empty"><span>☆</span><b>還沒有收藏的島</b><small>進到島上或打開島的介紹，點「☆ 收藏」，那座島就會在地圖上發光，也會出現在這裡。</small></div>')+
+    '<p class="fav-note">收藏只存在這台裝置的瀏覽器裡。</p>';
+  $('pStep').textContent='⭐ 我的收藏';
+  pFoot.hidden=true;
+}
+function actsHTML(){
+  var s=null,h='',title='';
+  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle')s=SP[spotIdx(V.t)];
+  if(V.t==='hut'&&SCN){h=spotHash(SCN)+'/'+V.i;title=SCN.name+'・'+SCN.huts[V.i].name}
+  else if(s){h=spotHash(s);title=s.name}
+  if(!h)return '';
+  return '<button class="act" type="button" data-share="'+esc(h)+'" data-title="'+esc(title)+'">🔗<span class="tx"> 分享</span></button>'+(s?'<button class="act" type="button" id="pFavBtn" data-fav="'+s.si+'"></button>':'');
+}
 function render(dir){
   if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();
-  else if(V.t==='search')renderSearch();
+  else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();
+  $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
 }
@@ -1329,6 +1413,9 @@ function openPanel(t,i,dir){
   playSfx('tap');
 }
 function closePanel(){
+  var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
+  if(/^#(qa-\d+|home|castle)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
 }
@@ -1478,8 +1565,11 @@ document.addEventListener('visibilitychange',function(){if(!AC)return;if(documen
 
 /* ---------- 開場畫面：同一次瀏覽只出現一次 ---------- */
 var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
-var HASH=location.hash.match(/^#isle-(.+)$/),HASH_SP=-1;
-if(HASH){SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(HASH[1]))HASH_SP=s.si});if(HASH_SP>=0)seen=true}
+var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
+if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
+else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
+else if(HASH==='home'||HASH==='castle')HASH_SP=spotIdx(HASH);
+if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
 else{document.documentElement.classList.add('lock');setTimeout(function(){$('introGo').focus({preventScroll:true})},120)}
 var mission=$('mission'),msSeen=false;try{msSeen=sessionStorage.getItem('aikb-mission')==='1'}catch(e){}
@@ -1501,7 +1591,7 @@ $('introGo').addEventListener('click',function(){closeIntro(SFX_ON)});
 
 var rzT;
 window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){layout();drawScene()},120)});
-layout();refresh();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
+layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
 </script>
 <script>
