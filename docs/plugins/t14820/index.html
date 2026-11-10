@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ACADAdviser外掛程式 - 圖塊應用工具說明 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-plugins">← 回外掛工具島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#9ad7ff;--g1:#a6dcff;--g2:#2a78b8">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🦫</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦔</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦉</b></i></span></div>
+    <span class="topic-badge">🧰 外掛工具島</span>
+    <h1 class="topic-title">💻 ACADAdviser外掛程式 - 圖塊應用工具說明</h1>
+    <p class="topic-tagline">※圖塊應用工具列：</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2013-01-08</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p><b>※圖塊應用工具列：</b></p>
+<div class="section-title">工具按鈕說明</div>
+<p>[製作TP1圖塊&lt;0,0&gt;]完成選取物件後，以0,0原點為插入基準點，自動製作圖塊名稱:TP1。</p>
+<p>[插入TP1圖塊&lt;0,0&gt;]以0,0原點為插入基準點，插入圖塊名稱:TP1(分解狀態)。</p>
+<p>[製作TP2圖塊]選取物件及指定插入基準點後，自動製作圖塊名稱:TP2。</p>
+<p>[插入TP2圖塊]以使用者指定插入基準點，插入圖塊名稱:TP2(分解狀態)。</p>
+<p>[記憶圖塊...]使用功能視窗，可以記憶二十組圖塊，使用者需完成選取物件，及指定插入基準點。</p>
+<p>[呼叫記憶圖塊...]使用功能視窗，呼叫插入使用者完成之記憶圖塊組。</p>
+<p>[開啟TP1圖塊]開啟TP1.dwg(TP1圖塊)。</p>
+<p>[開啟TP2圖塊]開啟TP2.dwg(TP2圖塊)。</p>
+<p>[開啟記憶圖塊...]開啟使用者完成之記憶圖塊組。</p>
+<p><b>※圖塊應用II工具列：</b></p>
+<div class="section-title">工具按鈕說明</div>
+<p>[製作基準點圖塊]BaseBlock指令：指令式方式製作圖塊。</p>
+<p>[轉換成為圖塊]選取物件及指定插入基準點後，自動轉換為匿名圖塊。</p>
+<p>[轉換成為圖塊&lt;251號色&gt;]選取物件及指定插入基準點後，自動轉換為匿名圖塊(圖塊顏色:251號色)。</p>
+<p>[轉換成為圖塊&lt;自訂顏色&gt;]選取物件及指定插入基準點後，自動轉換為匿名圖塊(自訂圖塊顏色)。</p>
+<p>[變更圖塊顏色]ChBlockColor指令：變更自訂圖塊物件的顏色。</p>
+<p>[移動至同基準點]MoveBlkBase指令：移動圖塊物件至指定同一基準點。</p>
+<p>[變更目前插入點]ChangeBlkIns指令：保持圖塊物件位置，變更圖塊物件之目前插入點。</p>
+<p>[變更原始插入點]ChangeBlkInsR指令：變更圖塊物件原始插入點，調整圖塊物件之位置。</p>
+<p>[圖塊名稱替換]ChangeBlkName指令：輸入既有的圖塊名稱，替換選取之圖塊物件。</p>
+<p>[複製更名圖塊]CopyBlock指令：定義一組新圖塊名稱，建立相同圖塊複本。</p>
+<p>[圖塊更名]RenBlock指令：更改選取圖塊物件名稱。</p>
+<p>[圖塊置換]MATBlock指令：將所選來源圖塊物件，置換套用至其他目標圖塊物件。</p>
+<p>[圖塊刪除]DeteleBlock指令：刪除所選之圖塊物件。</p>
+<p>[計算圖塊數量]BlockCount指令：計算所選之圖塊物件數量。</p>
+<div class="section-title">使用教學：</div>
+<p>AutoCAD顧問外掛程式 - 圖塊應用工具 (上) （點我）</p>
+<p>AutoCAD顧問外掛程式 - 圖塊應用工具 (下) （點我）</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t14819/index.html">← ACADAdviser外掛程式 - 快速設定工具說明</a>
+    <a class="btn-ghost" href="../t14821/index.html">ACADAdviser外掛程式 - 文字應用工具說明 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t14820-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

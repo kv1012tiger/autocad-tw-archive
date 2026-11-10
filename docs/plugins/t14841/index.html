@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD顧問外掛程式 - 圖塊應用工具操作 (上) | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-plugins">← 回外掛工具島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#9ad7ff;--g1:#a6dcff;--g2:#2a78b8">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🦫</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦔</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦉</b></i></span></div>
+    <span class="topic-badge">🧰 外掛工具島</span>
+    <h1 class="topic-title">💻 AutoCAD顧問外掛程式 - 圖塊應用工具操作 (上)</h1>
+    <p class="topic-tagline">相信各位朋友平時在繪圖時，一定會使用到「圖塊」BLOCK，這跟使用「圖層」L…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2013-01-10</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>相信各位朋友平時在繪圖時，一定會使用到「圖塊」BLOCK，這跟使用「圖層」LAYER來畫圖一樣很重要，因為可以節省重複的工作步驟。</p>
+<p>這裡簡單說明使用「圖塊」的時機，當圖面中存在2種以上重複的物件，這時候「圖塊」即可派上用場，而什麼是重複使用的物件呢？以教室平面圖來舉例，最典型的重複物件就是「桌椅」。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>想想看，使用者若沒有先將「桌椅」製作成「圖塊」，而只是單純的使用複製指令，接下來若要修改圖面中的「桌椅」，就必須一個一個刪除後，然後再把新的「桌椅」複製後配置分佈在圖面中原來的位置。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD 圖塊討論1</p>
+<p><a href="https://youtu.be/BjrF8G3cVxk" target="_blank" rel="noopener">https://youtu.be/BjrF8G3cVxk</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/BjrF8G3cVxk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>如果一開始就把「桌椅」製作成「圖塊」，那日後改圖即可一勞永逸，因為之需變更修改原來的圖塊，然後即可重新定義同步修改所有圖塊。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD 圖塊討論2</p>
+<p><a href="https://youtu.be/8Rm-wgh8B3U" target="_blank" rel="noopener">https://youtu.be/8Rm-wgh8B3U</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/8Rm-wgh8B3U" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>■在大家了解使用「圖塊」時機，接著可以搭配「圖塊外掛工具」，讓你的工作效率獲得進一步的提升。</p>
+<p>這裡先介紹範例使用「圖塊應用」工具列：</p>
+<div class="section-title">圖塊應用工具說明：</div>
+<p><a href="https://www.autocad-tw.com/t14820-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t14820-topic</a></p>
+<p><b>※使用說明※</b></p>
+<p>1.快速建立圖名為「TP1」及「TP2」分解圖塊物件，圖面0,0原點一致時可以使用「TP1」，圖面0,0原點不一致時則可改用「TP2」。</p>
+<p><b>註</b>：特性為當初入到目標圖面時，仍然保有原來之圖塊名稱。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD顧問外掛程式 圖塊應用工具1</p>
+<p><a href="https://youtu.be/OhrT1jweLag" target="_blank" rel="noopener">https://youtu.be/OhrT1jweLag</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/OhrT1jweLag" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>2.而此工作階段常用的圖塊，也可透過記憶圖塊方式，總共可以記憶二十組，隨時可以插入圖面使用。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD顧問外掛程式 圖塊應用工具2</p>
+<p><a href="https://youtu.be/cIH-2xGLz0Y" target="_blank" rel="noopener">https://youtu.be/cIH-2xGLz0Y</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/cIH-2xGLz0Y" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>註</b>：「圖塊應用」工具列，還提供使用者快速開啟DWG檔編輯使用，編輯完畢時在目標圖中可以刪除舊有圖塊（記得PURGE清除），然後再插入編輯後之記憶圖塊組。</p>
+<div class="section-title">延伸主題：</div>
+<p><a href="https://www.autocad-tw.com/t14872-topic" target="_blank" rel="noopener">AutoCAD顧問外掛程式 - 圖塊應用工具 (下)</a></p>
+<p>範例文章： <a href="https://www.autocad-tw.com/t16700-topic#112163" target="_blank" rel="noopener">https://www.autocad-tw.com/t16700-topic#112163</a></p>
+<p>看完之後別忘投下您寶貴的一票，完成投票可以下載範例影片喔！</p>
+<p><a href="https://www.autocad-tw.com/t14746-topic" target="_blank" rel="noopener">「投票」AutoCAD顧問 - ACADAdviser外掛程式（點我）</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t14824/index.html">← ACADAdviser外掛程式 - 自動腳本工具說明</a>
+    <a class="btn-ghost" href="../t14872/index.html">AutoCAD顧問外掛程式 - 圖塊應用工具操作 (下) →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t14841-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

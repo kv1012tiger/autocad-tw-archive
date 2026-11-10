@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ACADAdviser外掛程式 - 文字應用工具說明 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-plugins">← 回外掛工具島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#9ad7ff;--g1:#a6dcff;--g2:#2a78b8">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🦫</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦔</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦉</b></i></span></div>
+    <span class="topic-badge">🧰 外掛工具島</span>
+    <h1 class="topic-title">💻 ACADAdviser外掛程式 - 文字應用工具說明</h1>
+    <p class="topic-tagline">※文字應用工具列：</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2013-01-08</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p><b>※文字應用工具列：</b></p>
+<div class="section-title">工具按鈕說明</div>
+<p>[文字項目修改]EditText指令：修改文字(內容/高度/寬度/角度/傾斜角度)項目。</p>
+<p>[修改文字高度]CHTXTH指令：修改所選之文字物件高度。</p>
+<p>[修改文字寬度]CHTXTW指令：修改所選之文字物件寬度。</p>
+<p>[修改文字內容]CHTXTC指令：修改所選之文字物件內容。</p>
+<p>[修改文字詞庫...]使用預設選單詞庫，修改所選之文字物件內容。</p>
+<p>[附加文字詞庫...]使用預設選單詞庫，附加所選之文字物件內容(後方)。</p>
+<p>[複製文字內容]MATText指令：將所選來源文字物件內容，置換套用至其他目標文字內容。</p>
+<p>[文字間距排版]AlignText指令：將所選的文字物件，進行文字間距排版。</p>
+<p>[附加文字內容]AddText指令：附加所選之文字物件內容(前方/後方)。</p>
+<p>[文字合併]MergeText指令：將所選的文字物件，進行文字內容合併。</p>
+<p>[文字對齊線]ChTxtAng指令：將所選的線(LINE)角度，完成文字角度對齊。</p>
+<p>[尋找取代文字]FindText指令：指定要尋找的文字內容，並輸入取代的文字內容。</p>
+<p>[刪除空字串文字]VacancyTxt指令：自動刪除存在圖面中的空字串文字。</p>
+<p>[全部文字轉換chineset.shx]chinesetshx指令：將圖面中繁體中文型式，全部轉換為chineset.shx。</p>
+<p>[全部文字轉換lsp.shx]lspshx指令：將圖面中繁體中文型式，全部轉換為lsp.shx。</p>
+<p>[匯出文字檔...]TextEx指令：將所選文字物件內容，匯出記事本文字檔(TXT)。</p>
+<p>[匯入文字檔...]TextIm指令：將所選記事本文字檔(TXT)，匯入至圖面中建立文字。</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t14820/index.html">← ACADAdviser外掛程式 - 圖塊應用工具說明</a>
+    <a class="btn-ghost" href="../t14822/index.html">ACADAdviser外掛程式 - 標註應用工具說明 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t14821-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

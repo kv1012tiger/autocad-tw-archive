@@ -630,5 +630,40 @@
         "url": "https://www.autocad-tw.com/f5-forum/"
       }
     ]
+  },
+  {
+    "id": "plugins",
+    "route": 22,
+    "name": "外掛工具島",
+    "icon": "🧰",
+    "forum": "外掛討論區",
+    "url": "https://www.autocad-tw.com/f66-forum/",
+    "tagline": "ACADAdviser 外掛 / ATStruCAD 結構外掛安裝及討論",
+    "guide": "蘋果爸自己寫的外掛工具：ACADAdviser、ATStruCAD 的安裝步驟與功能說明都在這。",
+    "c": "#9ad7ff",
+    "g": [
+      "#a6dcff",
+      "#2a78b8"
+    ],
+    "dc": [
+      "🔧",
+      "🛠",
+      "🔩"
+    ],
+    "res": [
+      [
+        "🦫",
+        "w"
+      ],
+      [
+        "🦔",
+        "w"
+      ],
+      [
+        "🦉",
+        "f"
+      ]
+    ],
+    "subs": []
   }
 ]

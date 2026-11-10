@@ -1,0 +1,55 @@
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/F4C97MbHq5A" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>⏹️PSLTSCALE (系統變數)</b></p>
+<p>控制圖紙空間視埠中顯示的物件之線型比例。</p>
+<p>0 依照模型空間調整線型</p>
+<p>1 依照空間配置調整線型</p>
+<p><b>⏹️LTSCALE (系統變數)</b></p>
+<p>設定整體的線型比例係數。</p>
+<p><b>⏹️INSUNITS (系統變數)</b></p>
+<p>指定將圖塊、影像或外部參考插入或貼附至圖面時，自動比例調整的圖面單位值。</p>
+<p>5 插入單位:公分</p>
+<p>0 插入單位:無單位</p>
+<p><b>👇腳本語法:</b></p>
+<p>註1：請將語法中的 ;符號改為&quot;空隔&quot;，腳本檔步驟不支援;符號，腳本檔中&quot;空隔&quot;代表【Enter鍵】。</p>
+<p>PSLTSCALE;0;LTSCALE;30;INSUNITS;5;</p>
+<p>PSLTSCALE;1;LTSCALE;50;INSUNITS;0;</p>
+<p>多年的繪圖工作，常常要大量批次處理圖面，早期都是自行編寫腳本檔來完成，但是總覺得不是那麼便利，於是「自動腳本」工具就誕生囉～</p>
+<div class="section-title">什麼是「自動腳本」工具呢？</div>
+<p>簡單說使用者只要指定「DWG圖檔」資料夾位置後，程式即可自動幫您完成腳本檔並且執行批次作業。</p>
+<p>■「自動腳本」工具分為「偵測圖檔」及「批次作業」二大類。</p>
+<p>偵測圖檔功能：「DWG檔案清單偵測」、「開啟自動化腳本檔」及「開啟檔案清單」。</p>
+<p>批次作業功能：「清除圖層過濾器」、「清除圖檔」、「清除註解比例」、「圖檔修復」及「外部參考併入」。</p>
+<p>另外，還提供「使用者自訂」巨集功能，可以編寫符合業界工作需求的腳本語法。例如：批次完成圖檔「雲狀泡泡圖」圖層關閉等需求。</p>
+<div class="section-title">自動腳本工具說明：</div>
+<p><a href="https://www.autocad-tw.com/t14824-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t14824-topic</a></p>
+<p><b>※使用說明※</b></p>
+<p><b>步驟一：指定「DWG圖檔」資料夾位置</b></p>
+<p>1.使用「開啟」OPEN指令 → 瀏覽選取目標資料夾中任一個DWG圖檔 → 指定「開啟 ▼」選項 → 選擇「開啟為唯讀」。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>2.點選「DWG檔案清單偵測」工具按鈕。</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>3.畫面顯示「自動化腳本檔案清單偵測成功」訊息 → 點選「確定」。</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p><b>步驟二：檢視「DWG檔案清單」</b></p>
+<p>1.點選「開啟檔案清單」工具按鈕</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>2.畫面顯示「DWG檔案清單」記事本檔案。</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>註：使用者可以編輯記事本檔案，刪掉不需批次作業的DWG檔案清單。</p>
+<p><b>步驟三：指定「批次作業」</b></p>
+<p>選擇目前檔案需要「批次作業」的功能按鈕，程式將自動執行腳本檔完成工作任務。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD顧問外掛程式 - 自動腳本工具1</p>
+<p><a href="https://youtu.be/uxQ8KjbtNY8" target="_blank" rel="noopener">https://youtu.be/uxQ8KjbtNY8</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/uxQ8KjbtNY8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>步驟四：「使用者自訂」巨集</b></p>
+<p>工作任務 &gt;&gt; 批次完成圖檔「雲狀泡泡圖」圖層關閉，並將視窗畫面設定為「實際範圍」。</p>
+<p>巨集語法：LAYER;M;0;F;修訂雲形;;ZOOM;E;</p>
+<p><b>註1</b>.請將語法中的 ;符號改為&quot;空隔&quot;，腳本檔步驟不支援;符號，腳本檔中&quot;空隔&quot;代表【Enter鍵】。</p>
+<p><b>註2</b>.語法輸入完畢後請按【Enter鍵】完成自訂腳本檔。</p>
+<div class="section-title">影片展示▼</div>
+<p>AutoCAD顧問外掛程式 - 自動腳本工具2</p>
+<p><a href="https://youtu.be/sog-3Ss_5uk" target="_blank" rel="noopener">https://youtu.be/sog-3Ss_5uk</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/sog-3Ss_5uk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>看完之後別忘投下您寶貴的一票，完成投票可以下載範例影片喔！</p>
+<p><a href="https://www.autocad-tw.com/t14746-topic" target="_blank" rel="noopener">[軟體]AutoCAD顧問 - ACADAdviser外掛程式（點我）</a></p>

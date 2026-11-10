@@ -1,0 +1,55 @@
+<p>以下是【論壇外掛程式】自訂指令清單整理版</p>
+<p>已依功能分類，方便你查閱與記憶</p>
+<p>（指令就是在 AutoCAD 直接輸入的那個名稱）：</p>
+<p>一、前次選集（P）快速操作</p>
+<p>指令 功能說明</p>
+<p>MM 移動「前次選取」的物件</p>
+<p>MII 鏡射「前次選取」的物件</p>
+<p>EEE 刪除「前次選取」的物件</p>
+<p>CC 複製「前次選取」的物件</p>
+<p>SS 比例縮放「前次選取」的物件</p>
+<p>二、繪圖 / 建構輔助</p>
+<p>指令 功能說明</p>
+<p>LK 線追蹤（LINE + TK）</p>
+<p>L0 從座標 0,0 畫線</p>
+<p>XD 偏移建構線（XLINE Offset）</p>
+<p>三、圓角（FILLET）快速指令</p>
+<p>指令 功能說明</p>
+<p>F0 多重圓角，半徑設為 0</p>
+<p>FM 多重圓角（沿用目前半徑）</p>
+<p>四、空間切換 / 視圖</p>
+<p>指令 功能說明</p>
+<p>0 模型 / 配置空間快速切換</p>
+<p>1 切換到模型空間（Tilemode = 1）</p>
+<p>2 切換到配置空間（Tilemode = 0）</p>
+<p>五、出圖 / 系統功能</p>
+<p>指令 功能說明</p>
+<p>4 出圖預覽（Preview）</p>
+<p>5 發佈（Publish）</p>
+<p>7 頁面設定（Page Setup）</p>
+<p>9 選項（Options）</p>
+<p>QN 關閉圖檔（自動回答 Yes）</p>
+<p>六、縮放（ZOOM）系列</p>
+<p>指令 功能說明</p>
+<p>ZA 縮放全部（Zoom All）</p>
+<p>ZD 動態縮放（Zoom Dynamic）</p>
+<p>ZE 縮放到實際畫面（Zoom Extents + 微縮）</p>
+<p>ZS 視窗拉近（1.1 倍）</p>
+<p>ZX 視窗拉遠（0.9 倍）</p>
+<p>ZW 縮放至指定物件</p>
+<p>ZZ 回到前一次視窗</p>
+<p>👇自訂指令程式檔位置:</p>
+<p>C:\AutoCAD Adviser\acaddoc.lsp</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>如果要更改可以自行將 C:XXX 改成你要的指令名稱</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>例如: CC指令</p>
+<p>(DEFUN C:CC ()</p>
+<p>改為 ccc指令</p>
+<p>(DEFUN C:CCC ()</p>
+<p>如果要取消此指令可以加入在前面 ;</p>
+<p>例如:</p>
+<p>(DEFUN C:CC () (SETVAR &quot;CMDECHO&quot; 0) (PROMPT &quot;複製前次選集物件&quot;) (COMMAND &quot;COPY&quot; &quot;P&quot;) (PRIN1))</p>
+<p>改為</p>
+<p>;(DEFUN C:CC () (SETVAR &quot;CMDECHO&quot; 0) (PROMPT &quot;複製前次選集物件&quot;) (COMMAND &quot;COPY&quot; &quot;P&quot;) (PRIN1))</p>
+<p>註：請留意其他程式碼不得任意更改，這樣會造成論壇外掛無法正常使用。</p>
