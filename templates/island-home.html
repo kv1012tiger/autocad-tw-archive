@@ -687,6 +687,11 @@ body{overflow:hidden;background:#1581bd}
 @media (max-width:720px){
   .spot.major .tag{font-size:24px;padding:5px 14px}
 }
+/* 小動物停住不動：省手機效能，位置分散在島上 */
+.rs,.rs i,.rs b{animation:none!important}
+.spot .rs.w.b0{left:30%}.spot .rs.w.b1{left:70%}.spot .rs.w.b2{left:52%}
+.spot .rs.f{left:80%}.spot .rs.f.b0{left:24%}
+.spot .rs.s{opacity:1}
 </style>
 </head>
 <body>
@@ -1391,7 +1396,7 @@ function drawScene(){
   var list=s.res.concat(s.res),rs=list.map(function(r,k){
     var yy=Math.round(top*.6+(k+.5)*(h-top-240)/list.length),kind=r[1]==='f'?'f':'w';
     if(r[1]==='s')yy=h-52;
-    return '<span class="rs '+kind+'" style="top:'+yy+'px;--w:'+Math.round(w*1.05)+'px;--t:'+(15+k*3)+'s;--d:-'+(k*2.7).toFixed(1)+'s"><i><b>'+r[0]+'</b></i></span>';
+    return '<span class="rs '+kind+'" style="top:'+yy+'px;left:'+(14+(k*37)%72)+'%;--w:'+Math.round(w*1.05)+'px"><i><b>'+r[0]+'</b></i></span>';
   }).join('');
   var huts=H.map(function(u,k){
     var c=u.topics.length?u.topics.length+' 篇文章':'🚧 整理中';
