@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>論壇資源島｜蘋果爸的 AutoCAD 教學大島群</title>
-<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：13 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與AI課程城堡，邊玩邊學。">
+<meta name="description" content="蘋果爸的 AutoCAD 教學大島群：12 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與AI課程城堡，邊玩邊學。">
 <meta property="og:title" content="論壇資源島｜蘋果爸的 AutoCAD 教學大島群">
 <meta property="og:description" content="點一座島開始探險，翻開問答卡拿金幣，拿到 5 枚送你提示詞禮物包。">
 <meta property="og:type" content="website">
@@ -689,8 +689,6 @@ body{overflow:hidden;background:#1581bd}
 }
 /* 大海地圖上的小動物停住不動（省手機效能）；進到島上畫面時照常走動 */
 .spot .rs,.spot .rs *{animation:none!important}
-.res-row span svg{width:34px;height:54px;margin-right:4px}
-.land .rs.p{font-size:50px;margin-left:-24px}
 /* 蘋果爸小島：毛孩散步草地 */
 .pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
 .pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
@@ -877,7 +875,7 @@ body{overflow:hidden;background:#1581bd}
 <div id="fx" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/js/people.js"></script>
+<script src="assets/js/pets.js"></script>
 <script>
 (function(){
 'use strict';
@@ -951,23 +949,23 @@ var ISLES=[
 var FORUM=/*__FORUM__*/[];
 /* 問答島的鮮明地貌與居民：w 走動、f 飛行、s 跳水 */
 var LOOK=[
- {g:['#c39bff','#5b21b6'],res:[['pirate','w'],['robot','w'],['girl','w']]},
- {g:['#7beeff','#0e8fb0'],res:[['sailor','w'],['captain','w'],['kid','w']]},
- {g:['#ffe07a','#c98a10'],res:[['farmer','w'],['chef','w'],['granny','w']]},
- {g:['#d7dcff','#6a5ae0'],res:[['explorer','w'],['sailor','w'],['robot','w']]},
- {g:['#ff9fd0','#c02a80'],res:[['artist','w'],['girl','w'],['pirate','w']]},
- {g:['#6ff0b8','#0f8f5e'],res:[['scientist','w'],['robot','w'],['student','w']]},
- {g:['#ff8a7a','#b02a1e'],res:[['chef','w'],['pirate','w'],['grandpa','w']]},
- {g:['#86c0ff','#1f5fc0'],res:[['robot','w'],['eng','w'],['captain','w']]},
- {g:['#c9f06a','#5a9a1a'],res:[['farmer','w'],['kid','w'],['explorer','w']]}
+ {g:['#c39bff','#5b21b6'],res:[['🐊','w'],['🐈','w'],['🦜','f']]},
+ {g:['#7beeff','#0e8fb0'],res:[['🐕','w'],['🦚','w'],['🐦','f']]},
+ {g:['#ffe07a','#c98a10'],res:[['🐜','w'],['🐿️','w'],['🐝','f']]},
+ {g:['#d7dcff','#6a5ae0'],res:[['🐧','w'],['🦭','s'],['🦅','f']]},
+ {g:['#ff9fd0','#c02a80'],res:[['🦩','w'],['🐈','w'],['🦋','f']]},
+ {g:['#6ff0b8','#0f8f5e'],res:[['🐁','w'],['🦔','w'],['🐝','f']]},
+ {g:['#ff8a7a','#b02a1e'],res:[['🦀','w'],['🐢','w'],['🐦','f']]},
+ {g:['#86c0ff','#1f5fc0'],res:[['🤖','w'],['🐕','w'],['🦜','f']]},
+ {g:['#c9f06a','#5a9a1a'],res:[['🐥','w'],['🐇','w'],['🦜','f']]}
 ];
 ISLES.forEach(function(s,i){s.k='isle';s.n=i;s.route=i*2+1;s.g=LOOK[i].g;s.res=LOOK[i].res});
 FORUM.forEach(function(s,i){s.k='forum';s.n=i});
 var SP=[{k:'home',e:'🏡',name:'蘋果爸小島',sub:'講師介紹・三貓三狗',c:'#ffd166',g:['#a8d65a','#4f8a2a'],dc:['💰','🌴','🧭']},
-  {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['wizard','w'],['seer','w'],['kid','w']]}];
+  {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
-SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['king','w'],['queen','w'],['guard','w']]});
+SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
 SP.forEach(function(s,i){s.si=i});
 function pad(n){return (n<10?'0':'')+n}
 var ISLE_OF={};ISLES.forEach(function(s,i){s.rows.forEach(function(r){ISLE_OF[r]=i})});
@@ -1117,7 +1115,7 @@ function isleSVG(s){
 function resHTML(s){
   return (s.res||[]).map(function(r,i){
     var t=[8,10,7,11][i%4]+s.si%3,d=-(s.si*1.3+i*2.1);
-    return '<span class="rs w p'+(PPL.isKid(r[0])?' kid':'')+' b'+i+'" style="--t:'+t+'s;--d:'+d.toFixed(1)+'s"><i><b>'+PPL.person(r[0])+'</b></i></span>';
+    return '<span class="rs '+r[1]+' b'+i+'" style="--t:'+t+'s;--d:'+d.toFixed(1)+'s"><i><b>'+r[0]+'</b></i></span>';
   }).join('');
 }
 function islandHTML(s){
@@ -1379,8 +1377,9 @@ function drawScene(){
   for(y=h-166;y<h-34;y+=16)o+='<path d="M'+(dx-20)+' '+y+'h40" stroke="#6b4220" stroke-width="2"/>';
   o+='</svg>';
   var list=s.res.concat(s.res),rs=list.map(function(r,k){
-    var yy=Math.round(top*.6+(k+.5)*(h-top-240)/list.length);
-    return '<span class="rs w p'+(PPL.isKid(r[0])?' kid':'')+'" style="top:'+yy+'px;--w:'+Math.round(w*1.05)+'px;--t:'+(15+k*3)+'s;--d:-'+(k*2.7).toFixed(1)+'s"><i><b>'+PPL.person(r[0])+'</b></i></span>';
+    var yy=Math.round(top*.6+(k+.5)*(h-top-240)/list.length),kind=r[1]==='f'?'f':'w';
+    if(r[1]==='s')yy=h-52;
+    return '<span class="rs '+kind+'" style="top:'+yy+'px;--w:'+Math.round(w*1.05)+'px;--t:'+(15+k*3)+'s;--d:-'+(k*2.7).toFixed(1)+'s"><i><b>'+r[0]+'</b></i></span>';
   }).join('');
   var huts=H.map(function(u,k){
     var c=u.topics.length?u.topics.length+' 篇文章':'🚧 整理中';
@@ -1553,7 +1552,7 @@ function pagedList(boxId,key,items,card){
 function renderHut(k){
   var s=SCN,h=s.huts[k],t=h.topics,n=s.huts.length;
   pBody.innerHTML='<div class="ph" style="--c:'+s.c+'"><span class="ph-e">'+h.e+'</span><div><div class="p-kicker">'+esc(s.name)+'・小屋 '+(k+1)+' / '+n+'</div><h3 id="pTitle">'+esc(h.name)+'</h3><p>'+esc(h.sub)+'</p></div></div>'+
-    (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span class="still">'+s.res.map(function(r){return PPL.person(r[0])}).join('')+'</span></div>':'')+
+    (h.main?'<div class="gd"><span class="ge">🧭</span><div><b>島嶼導覽</b><p>'+esc(s.guide)+'</p></div></div><div class="res-row"><b>島上居民</b><span>'+s.res.map(function(r){return r[0]}).join(' ')+'</span></div>':'')+
     (t.length?'<div class="sbox hut-s"><input id="hutIn" type="search" placeholder="🔍 搜尋這裡的文章…" autocomplete="off" aria-label="搜尋這裡的文章"></div>'+
       (n>1?'<div class="scope" role="radiogroup" aria-label="搜尋範圍"><label><input type="radio" name="hsc" value="hut" checked> 只找這間小屋</label><label><input type="radio" name="hsc" value="isle"> 找整座島</label></div>':'')+
       '<p class="s-count" id="hutCount"></p><div id="hutBox"></div>':'<div class="t-empty"><span>🚧</span><b>這間小屋還在整理中</b><small>整理好就會出現在這裡</small></div>')+

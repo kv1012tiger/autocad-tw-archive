@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD CUI自訂-快速鍵、按兩下動作 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">📘 AutoCAD CUI自訂-快速鍵、按兩下動作</h1>
+    <p class="topic-tagline">大家使用AutoCAD那麼久了，不知道您是否有常常在想，有沒有辦法節省繪圖指…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2011-03-24</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>大家使用AutoCAD那麼久了，不知道您是否有常常在想，有沒有辦法節省繪圖指令步驟!</p>
+<p>相信各位朋友都是心有餘而力不足...因為不是每一個人都會寫 巨集、程式。</p>
+<p>從AutoCAD 2006版本開始，將mns功能表檔案改為CUI自訂檔，這樣修改自訂部份對於新手很方便，不需要有程式語法基礎，現在只要你有心人人都可以當食神~</p>
+<p>這裡和各位分享一個簡單的方式 CUI自訂，可以嘗試自訂快速鍵及按兩下動作~</p>
+<p><b>注意</b>：</p>
+<p><b>「按兩下編輯」DBLCLKEDIT</b> 系統變數 必須設定1(開啟)。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p><b>「先選取後執行」PICKFIRST</b> 系統變數 必須設定1(開啟)。</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p><b>註：</b>初學者測試時要仔細按照步驟，建議不熟的話先不要操作，有問題可以直接提出來討論。</p>
+<p><b>一、什麼是快速鍵</b></p>
+<p>簡單說我們知道 性質選項板(properties指令) 常常需要點選功能區(或工具列)來開啟，而系統預設的快速鍵為 CTRL+1 。您可以透過按住 CTRL鍵 + 再按數字鍵1 即可開關 性質選項板。</p>
+<p>快速鍵通常也用在以下地方:</p>
+<p>Ctrl+3 &gt;&gt; 切換「工具選項板」視窗</p>
+<p>Ctrl+4 &gt;&gt; 切換「圖紙集管理員」</p>
+<p>Ctrl+S &gt;&gt; 儲存目前圖面</p>
+<p>Ctrl+C &gt;&gt; 將物件複製到 Windows 剪貼簿</p>
+<p><b>快速鍵概述:</b>快速鍵是啟動指令的按鍵組合。例如，您可以按 Ctrl+O 開啟檔案，按 Ctrl+S 儲存檔案，它們與在快速存取工具列或「檔案」功能表上按一下「開啟」和「儲存」相同。</p>
+<p>建立快速鍵官網說明與操作步驟(點我)</p>
+<p><b>二、什麼是按兩下動作</b></p>
+<p>這裡先請問大家如何編輯文字，您是按工具列、還是打DDEDIT指令，相信一定有人是使用快按滑鼠左鍵二次，這所謂的按兩下動作，程式會幫您判斷物件性質，然後執行相關的編輯指令。</p>
+<p>按兩下動作通常也用在以下地方:</p>
+<p>屬性文字 &gt;&gt; 增強型屬性編輯器(eattedit指令)</p>
+<p>圖塊 &gt;&gt; 編輯圖塊定義(bedit指令)</p>
+<p>外部參考 &gt;&gt; 參考編輯(refedit指令)</p>
+<p><b>按兩下動作概述:</b>按兩下動作所執行的指令可顯示「性質」選項板或特定的編輯器，它們功能更加強大、使用更加方便且更常用於要在圖面中按兩下的物件類型。下表展示了 CUI 編輯器中「屬性圖塊」按兩下動作的定義。</p>
+<p>建立按兩下動作官網說明與操作步驟 (點我)</p>
+<p><b>現在我們來試試使用以下二個任務</b></p>
+<p>1.建立快速鍵：CTRL+5 &gt;&gt; 開啟AutoCAD顧問首頁</p>
+<p>名稱：AutoCAD顧問</p>
+<p>巨集：^C^C_.browser https://www.autocad-tw.com</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/76wRb3vnQRc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>影片網址： <a href="https://youtu.be/76wRb3vnQRc" target="_blank" rel="noopener">https://youtu.be/76wRb3vnQRc</a></p>
+<p>註:需使用2006以上版本才可自訂。</p>
+<p>2.建立按兩下動作：標註 &gt;&gt; 標註文字編輯</p>
+<p>名稱：標註</p>
+<p>物件名稱：DIMENSION</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/tpP_RzntEM4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>影片網址： <a href="https://youtu.be/tpP_RzntEM4" target="_blank" rel="noopener">https://youtu.be/tpP_RzntEM4</a></p>
+<p>註:需使用2007以上版本才可自訂。</p>
+<p>PS:在這不建議更改預設值喔!</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t8757/index.html">← AutoCAD 清除長度為零的幾何圖形和空文字物件</a>
+    <a class="btn-ghost" href="../t9738/index.html">AutoCAD 2012 SURFSCULPT 曲面雕刻 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t9361-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

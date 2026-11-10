@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>💢圖面被業主念 尺寸與圖面繪製的梁寬不符合...還有漏編號😭 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-realtime">← 回即時動態島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ff9a76;--g1:#ff9470;--g2:#b3261e">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐇</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🐕</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐦</b></i></span></div>
+    <span class="topic-badge">📰 即時動態島</span>
+    <h1 class="topic-title">📏 💢圖面被業主念 尺寸與圖面繪製的梁寬不符合...還有漏編號😭</h1>
+    <p class="topic-tagline">除了手動作業一個一個檢查</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2026-04-03</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<img src="images/01.png" alt="" loading="lazy">
+<img src="images/02.png" alt="" loading="lazy">
+<img src="images/03.png" alt="" loading="lazy">
+<p>除了手動作業一個一個檢查</p>
+<p>現在有其他選擇可以快速搞定</p>
+<p>快來瞧瞧😙</p>
+<img src="images/04.png" alt="" loading="lazy">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/G33H17i4Ppc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>#autolisp #自動化工作 #autocad #gemini</p>
+<p>RC 結構圖畫完，最怕樑編號跟現場寬度對不起來？😨</p>
+<p>人工對圖對到眼花，還可能看錯行？</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/evI5yfI9tIA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>這招一定要學起來！使用 MTM 指令：</b></p>
+<p>✅ 一鍵匯入 CSV：自動關聯梁編號與標準尺寸。</p>
+<p>✅ 智慧對齊：文字自動偏移定位，圖面超整潔。</p>
+<p>✅ 顏色亮顯：寬度不符、查無編號？程式直接「變色」警告。</p>
+<p>✅ 單線變雙線：抓完尺寸直接生成 S-DOUBLE-BEAM 圖層！</p>
+<p>別再用肉眼校對了，讓 AI 與自動化 LISP 幫你省下 90% 的對圖時間！</p>
+<p>還在手動 Offset 鋼梁雙線嗎？改個尺寸又要重畫？😨</p>
+<p>這套 MTM 智慧指令 讓鋼構平面圖作業進入自動化時代！</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/icS_cS5y5Sc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>內建「射線碰撞邏輯」：</b></p>
+<p>✅ 自動查表：匯入 CSV，程式自動根據梁編號（如 G1, B2）抓取寬度。</p>
+<p>✅ 柱邊貼齊：智慧偵測柱邊界，自動計算縮排，梁線不重疊、不穿幫。</p>
+<p>✅ 單線擴展：一鍵選取單線，立刻生成標準 S-DOUBLE-BEAM 或複線。</p>
+<p>✅ 異常檢核：尺寸對不上的編號自動變色，一眼抓出設計圖漏洞。</p>
+<p>從單線草圖到正式施工圖，就是這麼快！🚀</p>
+<p>代碼:</p>
+<p>============================================================</p>
+<div class="section-title">MTM 智慧文字移動與尺寸檢核 - 說明文件</div>
+<p>開發者：AutoCAD顧問 (www.autocad-tw.com)</p>
+<p>============================================================</p>
+<p>1. 指令說明：</p>
+<p>------------------------------------------------------------</p>
+<p>MTM : 開啟主設定面板 (DCL)，可調整單位、搜尋範圍、更名圖層及模式切換。</p>
+<p>2. 核心功能亮點：</p>
+<p>------------------------------------------------------------</p>
+<p>[CSV 自動化] : 匯入 CSV 對照表，程式自動關聯「梁編號」與「標準寬度」。</p>
+<p>[智慧對齊] : 標註文字自動移動至梁中心上方，並自動旋轉至平行角度。</p>
+<p>[異常亮顯] : 實測寬度與標註/CSV不符時，物件自動變為「亮紫色 (240色)」。</p>
+<p>[射線檢測] : 單線生成雙線時，自動偵測柱位邊界，梁端點精準貼齊不穿幫。</p>
+<p>[圖層管理] : 自動將生成的雙線派發至大梁、小梁或斜撐對應圖層。</p>
+<p>3. 操作流程 (單線模式/鋼構模式)：</p>
+<p>------------------------------------------------------------</p>
+<p>步驟 A：輸入 MTM，設定「圖面單位」(mm/cm)。</p>
+<p>步驟 B：點擊「載入 CSV」，選取您的尺寸對照表。</p>
+<p>步驟 C：若要生成雙線，勾選「單線模式自動生成擴展線」。</p>
+<p>步驟 D：點擊「單線(L)」或「複線(M)」執行：</p>
+<p>1. 根據提示先選取「柱子」物件 (支援圖塊、聚合線)。</p>
+<p>2. 再選取「梁中心線」(LINE)。</p>
+<p>步驟 E：完成！檢視圖面是否有 240 色的異常物件。</p>
+<p>4. CSV 格式規範 (範例)：</p>
+<p>------------------------------------------------------------</p>
+<p>請將 Excel 另存為 CSV (逗號分隔)，格式如下：</p>
+<p>----------------------</p>
+<p>編號 , 尺寸</p>
+<p>G1 , 40X80</p>
+<p>G2~G5 , 50X90</p>
+<p>B1(S1) , 30X60</p>
+<p>----------------------</p>
+<p>* 支援 ~ 範圍連號、支援括號內編號解析。</p>
+<p>5. 系統變數連動：</p>
+<p>------------------------------------------------------------</p>
+<p>搜尋範圍 : 控制文字離梁多遠會被抓取 (mm/cm 隨單位連動)。</p>
+<p>偏移距離 : 文字生成後離梁邊緣的間距。</p>
+<p>圖層過濾 : 可限定程式只處理特定圖層的物件，避免誤抓。</p>
+<p>============================================================</p>
+<p>AutoCAD顧問 專業結構自動化解決方案</p>
+<p>更多資訊：<a href="https://www.autocad-tw.com" target="_blank" rel="noopener">https://www.autocad-tw.com</a></p>
+<p>============================================================</p>
+<p>👉 加入贊助A即可取得：</p>
+<p><a href="https://www.autocad-tw.com/t2715-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t2715-topic</a></p>
+<p>👇[贊助A分享]MTM 智慧文字移動及尺寸編號檢核_程式下載</p>
+<p><a href="https://www.autocad-tw.com/t30569-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t30569-topic</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t30529/index.html">← 😱 ADR 手畫 RC 太慢 快用這個結構平面就不用畫了</a>
+    <a class="btn-ghost" href="../t30542/index.html">😡 100張CAD檔 工程師最崩潰的工作 被我用這招解決 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t30536-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
