@@ -134,6 +134,8 @@ def write_home(boards, by_board):
             }
             for s in b.get("subs", [])
         ]
+        # Huts with none of the admin's own articles are hidden rather than shown as "整理中".
+        subs = [s for s in subs if s["topics"]]
         forum.append({
             "id": b["id"],
             "route": b["route"],
