@@ -315,6 +315,8 @@ h1,h2,h3,h4{margin:0;line-height:1.25}
 .mission-box h3{font-size:24px;margin:8px 0 4px}
 .mission-box .gift-steps{font-size:15.5px;line-height:1.8;margin-top:12px}
 .mission-box .gift-steps li{margin-bottom:6px}
+.ms-off{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:16px;color:var(--muted);cursor:pointer;user-select:none}
+.ms-off input{width:20px;height:20px;accent-color:#ffd166;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:96px;z-index:150;transform:translate(-50%,20px);padding:10px 20px;border-radius:999px;background:rgba(4,46,64,.96);border:1px solid rgba(255,209,102,.6);font-size:14.5px;font-weight:700;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 #fx{position:fixed;inset:0;z-index:160;pointer-events:none;overflow:hidden}
@@ -764,6 +766,7 @@ body{overflow:hidden;background:#1581bd}
     <h3 id="missionT">探險任務</h3>
     <ol class="gift-steps"><li>點一座島（或從下方島嶼列表點）</li><li>翻開 3 張問答卡，拿 1 枚 🪙 金幣</li><li>拿滿 5 枚，送你 🎁 <b>提示詞禮物包</b>（教你做出自己的知識島，主題與風格自己設定）</li></ol>
     <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
+    <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
   </div>
 </div>
 
@@ -1629,9 +1632,11 @@ if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
 else{document.documentElement.classList.add('lock');setTimeout(function(){$('introGo').focus({preventScroll:true})},120)}
 var mission=$('mission'),msSeen=false;try{msSeen=sessionStorage.getItem('aikb-mission')==='1'}catch(e){}
+function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+try{if(localStorage.getItem('aikb-mission-off')===today())msSeen=true}catch(e){}
 if(HASH_SP>=0)msSeen=true;
 function showMission(){if(msSeen)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;$('missionGo').focus({preventScroll:true})}
-function closeMission(){mission.hidden=true}
+function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',today())}catch(e){}}}
 $('missionGo').addEventListener('click',closeMission);
 mission.addEventListener('click',function(e){if(e.target===mission)closeMission()});
 if(seen)setTimeout(showMission,700);
