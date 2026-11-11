@@ -13,6 +13,7 @@
  * 工作表「留言板」：留言碼頭的留言與站長回覆；狀態欄填「隱藏」就不會出現在網站上。
  * 工作表「物資島」：四座物資島今天的總量、已採集數量、鑽石藏在第幾份（每天第一次有人來時自動重抽）。
  * 工作表「悄悄話」：好友之間的悄悄話與送禮紀錄。
+ * 工作表「公告」：站長發的公告（狀態欄填「刪除」就不會顯示）；兩個站長帳號都能在網站上發布、編輯。
  * 工作表「小島紀錄」：每位玩家在自己小島上蓋房子、種菜收成、領養寵物的紀錄。
  * 玩家表最後一欄「小島資料」是 JSON：房子等級、菜田、裝飾、寵物、蔬菜庫存（請不要手動改壞格式）。
  */
@@ -24,11 +25,11 @@ var RESERVED = /蘋果爸|管理員|站長|autocad\s*顧問|admin/i;
 var P_HEAD = ['登島碼', '暱稱', '目前金幣', '累計金幣', '連續登島天數', '最後登島日', '第一次登島', '最後上線',
   '下載次數', '最近下載', '管理員', '今日', '今日在線金幣', '今日爬文金幣', '今日問答金幣', '已拿金幣的問答島',
   '頭像', '旅人編號', '好友', '水果', '鐵礦', '木材', '石頭', '鑽石', '累計物資', '累計鑽石',
-  '今日採集', '最後採集', '今日兌換', '今日送禮', '今日留言', '最後留言', '今日悄悄話', '未讀悄悄話', '小島資料'];
+  '今日採集', '最後採集', '今日兌換', '今日送禮', '今日留言', '最後留言', '今日悄悄話', '未讀悄悄話', '小島資料', '開放參觀', '已讀公告', '公告權限'];
 var C = { code: 0, nick: 1, bal: 2, earned: 3, streak: 4, last: 5, first: 6, seen: 7, dls: 8, recent: 9, admin: 10,
   day: 11, onl: 12, rd: 13, qa: 14, qaDone: 15,
   av: 16, fid: 17, friends: 18, fruit: 19, iron: 20, wood: 21, stone: 22, dia: 23, tres: 24, tdia: 25,
-  gToday: 26, gLast: 27, trades: 28, gifts: 29, msgN: 30, msgLast: 31, noteN: 32, unread: 33, isle: 34 };
+  gToday: 26, gLast: 27, trades: 28, gifts: 29, msgN: 30, msgLast: 31, noteN: 32, unread: 33, isle: 34, open: 35, annSeen: 36, ann: 37 };
 var D_HEAD = ['時間', '暱稱', '登島碼', '文章', '文章網址', '檔案', '下載後剩餘金幣', '備註'];
 var V_HEAD = ['時間', '暱稱', '登島碼', '小島代號', '小島', '日期', '管理員'];
 var M_HEAD = ['編號', '時間', '暱稱', '登島碼', '頭像', '內容', '回覆', '回覆時間', '回覆修改時間', '狀態'];
@@ -58,6 +59,8 @@ var TRADE_RATE = 10;                 // 10 個同種物資換 1 枚金幣
 var DIA_RATE = 5;                    // 1 顆鑽石換 5 枚金幣
 var TRADE_MAX = 3;                   // 每天最多兌換 3 次
 var FRIEND_MAX = 50;
+var A_HEAD = ['編號', '時間', '標題', '內容', '發布者', '修改時間', '狀態'];
+var ANN_TITLE = 40, ANN_LEN = 500, ANN_KEEP = 20, VISIT_KEEP = 10, VISIT_GAP = 10 * 60 * 1000, VOY_KEEP = 60;
 /* ---------- 我的小島：蓋房子、種菜、養寵物 ---------- */
 var L_HEAD = ['時間', '暱稱', '登島碼', '動作', '內容'];
 var HOUR = 3600 * 1000, DAY_MS = 24 * HOUR;
@@ -166,7 +169,8 @@ function profile_(r) {
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
     trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
-    veg: isleOf_(r).veg, score: isleScore_(isleOf_(r)) };
+    veg: isleOf_(r).veg, score: isleScore_(isleOf_(r)),
+    open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是' };
 }
 function pub_(r) { return { nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || '') }; }
 function resetDay_(r) {
@@ -198,6 +202,8 @@ function handle_(q) {
   if (a === 'top') return top_(q);
   if (a === 'visitors') return { ok: true, v: visitors_(String(q.isle || '')) };
   if (a === 'msgs') return msgs_(q);
+  if (a === 'anns') return anns_();
+  if (a === 'voyage') return voyage_();
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
@@ -328,9 +334,22 @@ function handle_(q) {
       if (q.fid && String(q.fid).toUpperCase() !== String(r[C.fid])) {
         var jv = findFid_(rows, q.fid);
         if (jv < 0) return { ok: false, err: 'nofid', p: me };
-        if (list_(r[C.friends]).indexOf(String(rows[jv][C.fid])) < 0) return { ok: false, err: 'notfriend', p: me };
+        var vFriend = list_(r[C.friends]).indexOf(String(rows[jv][C.fid])) >= 0;
+        if (rows[jv][C.open] === '否' && !vFriend && !me.admin) return { ok: false, err: 'closed', p: me };
+        if (!me.admin) { // 留下訪客紀錄（同一人 10 分鐘內只記一次）
+          var ti = isleOf_(rows[jv]), nowV = Date.now(), prevV = null;
+          ti.vis.forEach(function (x) { if (x.f === me.fid) prevV = x; });
+          if (!prevV || nowV - prevV.t > VISIT_GAP) {
+            ti.vis = [{ f: me.fid, n: me.nick, a: me.av, t: nowV }].concat(ti.vis.filter(function (x) { return x.f !== me.fid; })).slice(0, VISIT_KEEP);
+            rows[jv][C.isle] = JSON.stringify(ti); touched[jv] = 1;
+          }
+        }
         res.island = islePub_(rows[jv], false, isleOf_(r));
+        res.island.friend = vFriend;
       } else res.island = islePub_(r, true);
+    } else if (a === 'setopen') {
+      r[C.open] = q.o ? '' : '否';
+      res.island = islePub_(r, true);
     } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'adopt' || a === 'feed' || a === 'pat') {
       var out = isleAct_(a, q, r, me);
       if (out.err) return { ok: false, err: out.err, p: me };
@@ -357,6 +376,26 @@ function handle_(q) {
       rows[jw][C.isle] = JSON.stringify(fi); touched[jw] = 1;
       res.got = { k: wk, n: 1 };
       res.island = islePub_(rows[jw], false, mi);
+
+    /* ----- 公告 ----- */
+    } else if (a === 'annread') {
+      var seq = Math.min(num_(q.seq), anns_().max);
+      if (seq > num_(r[C.annSeen])) r[C.annSeen] = seq;
+    } else if (a === 'annpost' || a === 'annedit' || a === 'anndel') {
+      if (!me.ann) return { ok: false, err: 'admin', p: me };
+      var ash = sheet_('公告', A_HEAD), atitle = text_(q.title, ANN_TITLE) || '公告', atext = body_(q.text, ANN_LEN);
+      if (a !== 'anndel' && plain_(atext).length < 2) return { ok: false, err: 'annshort', p: me };
+      if (a === 'annpost') {
+        var an = ash.getLastRow() - 1, aid = (an > 0 ? num_(ash.getRange(an + 1, 1).getValue()) : 0) + 1;
+        ash.appendRow([aid, new Date(), atitle, atext, r[C.nick], '', '']);
+        r[C.annSeen] = aid; // 自己發的就當作看過
+      } else {
+        var arow = msgRow_(ash, q.id);
+        if (!arow) return { ok: false, err: 'bad', p: me };
+        if (a === 'annedit') { ash.getRange(arow, 3, 1, 1).setValue(atitle); ash.getRange(arow, 4, 1, 1).setValue(atext); ash.getRange(arow, 6, 1, 1).setValue(new Date()); }
+        else ash.getRange(arow, 7, 1, 1).setValue('刪除');
+      }
+      CacheService.getScriptCache().remove('anns');
 
     /* ----- 好友 ----- */
     } else if (a === 'friends') {
@@ -473,11 +512,10 @@ function visitors_(isle) {
    三份名單一起算好，在 Google 快取放 60 秒，期間不用重讀整張玩家表。 */
 var TOP_TTL = 60;
 function topLists_() {
-  var cache = CacheService.getScriptCache(), hit = cache.get('top4');
+  var cache = CacheService.getScriptCache(), hit = cache.get('top5');
   if (hit) return JSON.parse(hit);
-  var rows = rows_(players_()), out = {};
-  var scoreOf = {};
-  rows.forEach(function (r, x) { scoreOf[x] = isleScore_(isleOf_(r)); });
+  var rows = rows_(players_()), out = {}, isl = rows.map(isleOf_), scoreOf = {};
+  rows.forEach(function (r, x) { scoreOf[x] = isleScore_(isl[x]); });
   [['coin', C.bal], ['res', C.tres], ['dia', C.tdia], ['isle', -1]].forEach(function (kc) {
     var k = kc[0], col = kc[1];
     var val = function (r) { return col < 0 ? scoreOf[rows.indexOf(r)] : num_(r[col]); };
@@ -486,12 +524,38 @@ function topLists_() {
       .sort(function (x, y) { return val(y) - val(x); })
       .slice(0, 20)
       .map(function (r) {
-        var o = { c: String(r[C.code]).toUpperCase(), nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: val(r), bal: num_(r[C.bal]) };
+        var o = { c: String(r[C.code]).toUpperCase(), nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: val(r), bal: num_(r[C.bal]), fid: String(r[C.fid] || '') };
         if (k === 'res') o.bag = bag_(r);
         return o;
       });
   });
-  try { cache.put('top4', JSON.stringify(out), TOP_TTL); } catch (e) {}
+  // 可以航向的小島：開放參觀、有蓋東西的玩家
+  var voy = [];
+  rows.forEach(function (r, x) {
+    if (!r[C.nick] || r[C.admin] === '是' || r[C.open] === '否' || !scoreOf[x]) return;
+    voy.push({ fid: String(r[C.fid] || ''), nick: plain_(r[C.nick]), av: plain_(r[C.av]), score: scoreOf[x], h: isl[x].h, pets: isl[x].pets.length, seen: r[C.seen] ? new Date(r[C.seen]).getTime() : 0 });
+  });
+  out.voy = voy.sort(function (p, q) { return q.score - p.score; }).slice(0, VOY_KEEP);
+  try { cache.put('top5', JSON.stringify(out), TOP_TTL); } catch (e) {}
+  return out;
+}
+function voyage_() { return { ok: true, list: topLists_().voy || [] }; }
+function anns_() {
+  var cache = CacheService.getScriptCache(), hit = cache.get('anns');
+  if (hit) return JSON.parse(hit);
+  var sh = sheet_('公告', A_HEAD), n = sh.getLastRow() - 1, list = [], max = 0;
+  if (n > 0) {
+    var v = sh.getRange(2, 1, n, A_HEAD.length).getValues();
+    for (var x = v.length - 1; x >= 0; x--) {
+      var r = v[x], id = num_(r[0]);
+      if (!id) continue;
+      if (id > max) max = id;
+      if (String(r[6]) === '刪除' || list.length >= ANN_KEEP) continue;
+      list.push({ id: id, t: fmt_(r[1]), title: plain_(r[2]), text: plain_(r[3]), by: plain_(r[4]), re: fmt_(r[5]) });
+    }
+  }
+  var out = { ok: true, list: list, max: max };
+  try { cache.put('anns', JSON.stringify(out), TOP_TTL); } catch (e) {}
   return out;
 }
 function top_(q) {
@@ -545,6 +609,7 @@ function isleOf_(r) {
   o.veg = o.veg || {};
   Object.keys(VEG).forEach(function (k) { o.veg[k] = num_(o.veg[k]); });
   o.wd = o.wd && o.wd.f ? o.wd : { d: 0, f: [] };
+  o.vis = Array.isArray(o.vis) ? o.vis : [];
   return o;
 }
 function isleScore_(o) {
@@ -570,7 +635,7 @@ function islePub_(r, mine, viewer) {
       return { id: p.id, k: p.k, n: p.n, full: Math.round(fullNow_(p, now)), aff: num_(p.aff), lv: petLv_(p), patted: num_(p.pd) === day_() };
     })
   };
-  if (mine) { out.veg = o.veg; out.rules = { house: HOUSE, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
   else out.watered = wd.indexOf(out.fid) >= 0;
   return out;
 }
@@ -711,11 +776,13 @@ function setupOwner() {
     for (var k = 0; k < rows.length; k++) if (nickKey_(rows[k][C.nick]) === nickKey_(o.nick)) i = k;
     if (i < 0) {
       var row = newRow_(newCode_(rows), o.nick, o.admin, 0, newFid_(rows));
+      row[C.ann] = '是';
       sh.appendRow(row);
       rows.push(row);
       Logger.log(o.nick + ' 的登島碼：' + row[C.code] + (o.admin ? '（管理員：不上排行榜、下載不扣金幣）' : ''));
     } else {
-      Logger.log(o.nick + ' 已經存在，登島碼：' + rows[i][C.code]);
+      if (rows[i][C.ann] !== '是') sh.getRange(i + 2, C.ann + 1).setValue('是'); // 兩個站長帳號都能發公告
+      Logger.log(o.nick + ' 已經存在，登島碼：' + rows[i][C.code] + '（已有發公告權限）');
     }
   });
 }
