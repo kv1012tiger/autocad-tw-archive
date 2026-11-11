@@ -65,12 +65,12 @@ var ANN_TITLE = 40, ANN_LEN = 500, ANN_KEEP = 20, VISIT_KEEP = 10, VISIT_GAP = 1
 /* ---------- 我的小島：蓋房子、種菜、養寵物 ---------- */
 var L_HEAD = ['時間', '暱稱', '登島碼', '動作', '內容'];
 var HOUR = 3600 * 1000, DAY_MS = 24 * HOUR;
-var HOUSE = [null, { wood: 10, stone: 5 }, { wood: 20, stone: 15, iron: 5 }, { wood: 40, stone: 30, iron: 15, dia: 1 }];
-var FIELD = [{ wood: 5, stone: 5 }, { wood: 10, stone: 10 }, { wood: 20, stone: 15, iron: 5 }];
+var HOUSE = [null, { wood: 5, stone: 3 }, { wood: 10, stone: 8, iron: 3 }, { wood: 20, stone: 15, iron: 8, dia: 1 }];
+var FIELD = [{ wood: 3, stone: 2 }, { wood: 6, stone: 5 }, { wood: 12, stone: 8, iron: 3 }];
 var DECO = {
-  tree: { name: '果樹', cost: { fruit: 10, wood: 5 }, pts: 5 },
-  fountain: { name: '噴水池', cost: { stone: 20, iron: 10 }, pts: 10 },
-  tower: { name: '瞭望塔', cost: { wood: 30, iron: 20, dia: 1 }, pts: 20 }
+  tree: { name: '果樹', cost: { fruit: 6, wood: 3 }, pts: 5 },
+  fountain: { name: '噴水池', cost: { stone: 10, iron: 5 }, pts: 10 },
+  tower: { name: '瞭望塔', cost: { wood: 15, iron: 10, dia: 1 }, pts: 20 }
 };
 var VEG = {
   carrot: { name: '胡蘿蔔', seed: 1, hours: 4, n: 2, food: 20 },
