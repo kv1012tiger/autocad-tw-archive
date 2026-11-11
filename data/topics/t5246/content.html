@@ -1,0 +1,50 @@
+<p>在一張圖形內有30個圓,尺寸均不相同,在不知情況下要如何去快速知道尺寸相同的各有多少,而不用一個個去標註,再來數數量,因為這樣很讓費時間</p>
+<p>依你的需求有很多方法可達成，可運用AutoCAD本身提供的指令，不過需要一點技巧運用，而使用AutoLISP程式是最快的方法。</p>
+<p><b>※※提供以下方法供你參考，適用於 AutoCAD 2000 以上版本，有問題請再提※※</b></p>
+<p><b>方法一: LIST指令</b></p>
+<p>利用 LIST指令 顯示選取物件的資料庫資訊，需要在加入下列語法。</p>
+<p>(SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;)))</p>
+<p>操作步驟如下:</p>
+<p>代碼:</p>
+<p>指令: LIST .....{Enter}</p>
+<p>選取物件: (SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;))) .....{Enter}</p>
+<p>&lt;Selection set: cd&gt;</p>
+<p>5 找到</p>
+<p>選取物件: .....{Enter}</p>
+<p>CIRCLE 圖層:「0」</p>
+<p>空間: 模型空間</p>
+<p>處理碼 = 7f5</p>
+<p>中心點 , X= 297.8348 Y= 64.4391 Z= 0.0000</p>
+<p>半徑 9.0000</p>
+<p>圓周 56.5487</p>
+<p>面積 254.4690</p>
+<p>CIRCLE 圖層:「0」</p>
+<p>空間: 模型空間</p>
+<p>處理碼 = 7f4</p>
+<p>中心點 , X= 280.2779 Y= 63.8542 Z= 0.0000</p>
+<p>半徑 8.0000</p>
+<p>圓周 50.2655</p>
+<p>面積 201.0619</p>
+<p><b>方法二: QSELECT 指令 QDIM 指令</b></p>
+<p>QSELECT 指令 根據過濾準則來建立選集 → 過濾圓選集</p>
+<p>QDIM 指令 快速建立標註 → 半徑(R)</p>
+<p>動態操作步驟如下:</p>
+<img src="images/01.gif" alt="" loading="lazy">
+<p>方法三: AutoLISP程式</p>
+<p>自定程式指令 AutoQDIM 自動化圓半徑標註</p>
+<p>動態操作步驟如下:</p>
+<img src="images/02.gif" alt="" loading="lazy">
+<p><b>下載 自動化圓半徑標註程式：</b></p>
+<p>;;;;;;;;;;;;;;;;;;;;;AutoCAD 指南;;;;;;;;;;;;;;;;;;;;;</p>
+<p>;;;;;http://tw.club.yahoo.com/clubs/AutoCADGUIDE/;;;;;</p>
+<p>;;;;;;;;;;;;2007/03/26/ ATSAI CAD 2007;;;;;;;;;;;;;;;;</p>
+<p>;;;;;;;;;;;;;;;;;;版權所有 翻印必究;;;;;;;;;;;;;;;;;;;</p>
+<p>(DEFUN C:AutoQDIM ()</p>
+<p>(SETVAR &quot;CMDECHO&quot; 0)</p>
+<p>(SETQ OLDLAYEAR (GETVAR &quot;CLAYER&quot;))</p>
+<p>(SETQ S1 (SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;))))</p>
+<p>(COMMAND &quot;LAYER&quot; &quot;M&quot; &quot;S-DIM&quot; &quot;&quot; &quot;Qdim&quot; S1 &quot;&quot; &quot;R&quot; 0)</p>
+<p>(SETVAR &quot;CLAYER&quot; OLDLAYEAR)</p>
+<p>(PROMPT &quot;\n***自動化圓標註完成***&quot;)</p>
+<p>(princ)</p>
+<p>)</p>

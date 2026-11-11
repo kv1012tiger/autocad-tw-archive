@@ -1,0 +1,30 @@
+<p><b>方式1.專案路徑方式 PROJECTNAME 系統變數：</b></p>
+<p>當在客戶之間交換圖面，或使用者將不同的磁碟對映至伺服器上的相同位置時，專案名稱能夠讓使用者更輕鬆地管理外部參考、影像和 DWF 參考底圖。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/C4HtpYZKVPc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>如果圖檔很多，可以使用「腳本檔」方式，幫您快速設定「目前的專案名稱」PROJECTNAME。</p>
+<div class="section-title">腳本檔語法：</div>
+<p>代碼:</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S201.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S202.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S203.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S204.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S205.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p>OPEN D:\Atsai\網聚\5.外部參考XREF\S206.DWG PROJECTNAME AT2008</p>
+<p>QSAVE CLOSE</p>
+<p><b>方式2.參考管理員方式：</b></p>
+<p>可讓使用者檢視和編輯與圖面關聯的外部參考檔的路徑。這樣以後不管是再那一台電腦或是任何資料夾下都可以找得到外部參考來源檔。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/CWy81tkbeN8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>說明：</b></p>
+<p>外部參考路徑解決方法，依照需求的不同分3種方式(適用於AutoCAD 2004以上):</p>
+<p>1.快速的方式:</p>
+<p>三四個外部參考的DWG檔案(底圖)和三四百張(子圖)，放置再同一資料夾即可。</p>
+<p>2.專案路徑方式:</p>
+<p>使用 PROJECTNAME 系統變數，針對每張圖做關聯的專案路徑，但是圖量太多需搭配腳本檔較快速。</p>
+<p>3.參考管理員方式(一勞永逸):</p>
+<p>參考管理員是一個獨立的應用程式，您可以在「開始」功能表 (Windows) 的「程式集」下的 Autodesk 程式群組中存取。</p>
+<p>請在「開始」→「所有程式」→「Autodesk」→「AutoCAD 版本」→ 參考管理員</p>

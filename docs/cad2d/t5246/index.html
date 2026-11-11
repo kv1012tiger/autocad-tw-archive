@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD篩選功能及自動標註! | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📏 AutoCAD篩選功能及自動標註!</h1>
+    <p class="topic-tagline">在一張圖形內有30個圓,尺寸均不相同,在不知情況下要如何去快速知道尺寸相同的…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2010-01-14</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>在一張圖形內有30個圓,尺寸均不相同,在不知情況下要如何去快速知道尺寸相同的各有多少,而不用一個個去標註,再來數數量,因為這樣很讓費時間</p>
+<p>依你的需求有很多方法可達成，可運用AutoCAD本身提供的指令，不過需要一點技巧運用，而使用AutoLISP程式是最快的方法。</p>
+<p><b>※※提供以下方法供你參考，適用於 AutoCAD 2000 以上版本，有問題請再提※※</b></p>
+<p><b>方法一: LIST指令</b></p>
+<p>利用 LIST指令 顯示選取物件的資料庫資訊，需要在加入下列語法。</p>
+<p>(SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;)))</p>
+<p>操作步驟如下:</p>
+<p>代碼:</p>
+<p>指令: LIST .....{Enter}</p>
+<p>選取物件: (SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;))) .....{Enter}</p>
+<p>&lt;Selection set: cd&gt;</p>
+<p>5 找到</p>
+<p>選取物件: .....{Enter}</p>
+<p>CIRCLE 圖層:「0」</p>
+<p>空間: 模型空間</p>
+<p>處理碼 = 7f5</p>
+<p>中心點 , X= 297.8348 Y= 64.4391 Z= 0.0000</p>
+<p>半徑 9.0000</p>
+<p>圓周 56.5487</p>
+<p>面積 254.4690</p>
+<p>CIRCLE 圖層:「0」</p>
+<p>空間: 模型空間</p>
+<p>處理碼 = 7f4</p>
+<p>中心點 , X= 280.2779 Y= 63.8542 Z= 0.0000</p>
+<p>半徑 8.0000</p>
+<p>圓周 50.2655</p>
+<p>面積 201.0619</p>
+<p><b>方法二: QSELECT 指令 QDIM 指令</b></p>
+<p>QSELECT 指令 根據過濾準則來建立選集 → 過濾圓選集</p>
+<p>QDIM 指令 快速建立標註 → 半徑(R)</p>
+<p>動態操作步驟如下:</p>
+<img src="images/01.gif" alt="" loading="lazy">
+<p>方法三: AutoLISP程式</p>
+<p>自定程式指令 AutoQDIM 自動化圓半徑標註</p>
+<p>動態操作步驟如下:</p>
+<img src="images/02.gif" alt="" loading="lazy">
+<p><b>下載 自動化圓半徑標註程式：</b></p>
+<p>;;;;;;;;;;;;;;;;;;;;;AutoCAD 指南;;;;;;;;;;;;;;;;;;;;;</p>
+<p>;;;;;http://tw.club.yahoo.com/clubs/AutoCADGUIDE/;;;;;</p>
+<p>;;;;;;;;;;;;2007/03/26/ ATSAI CAD 2007;;;;;;;;;;;;;;;;</p>
+<p>;;;;;;;;;;;;;;;;;;版權所有 翻印必究;;;;;;;;;;;;;;;;;;;</p>
+<p>(DEFUN C:AutoQDIM ()</p>
+<p>(SETVAR &quot;CMDECHO&quot; 0)</p>
+<p>(SETQ OLDLAYEAR (GETVAR &quot;CLAYER&quot;))</p>
+<p>(SETQ S1 (SSGET &quot;X&quot; &#x27;((0 . &quot;CIRCLE&quot;))))</p>
+<p>(COMMAND &quot;LAYER&quot; &quot;M&quot; &quot;S-DIM&quot; &quot;&quot; &quot;Qdim&quot; S1 &quot;&quot; &quot;R&quot; 0)</p>
+<p>(SETVAR &quot;CLAYER&quot; OLDLAYEAR)</p>
+<p>(PROMPT &quot;\n***自動化圓標註完成***&quot;)</p>
+<p>(princ)</p>
+<p>)</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t39/index.html">← AUTOCAD轉換至OFFICE運用</a>
+    <a class="btn-ghost" href="../t706/index.html">外部參考XREF(路徑問題解決) →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t5246-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

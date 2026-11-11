@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>算面積的方式 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📘 算面積的方式</h1>
+    <p class="topic-tagline">一般在算面積的時候，大家都知道可以使用AREA指令，但若是有很多區塊或是還要…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-08-28</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>一般在算面積的時候，大家都知道可以使用AREA指令，但若是有很多區塊或是還要加減常常會不得要領，提供五種方式透過以下動態影片的介紹，教導各位如何快速求得面積，有興趣的朋友請加入討論，或是也請分享你算面積的小技巧喔~</p>
+<div class="section-title">範例下載(DWG)</div>
+<p>載點： <a href="https://app.box.com/s/xg1njdqsn2shpala4pkg" target="_blank" rel="noopener">https://app.box.com/s/xg1njdqsn2shpala4pkg</a></p>
+<p>備用： <a href="https://drive.google.com/file/d/0B41hPtWnOM8Qem0xNHU4ZXFKalE/view?usp=sharing&amp;resourcekey=0-dxt13pMITt5V8Q_xmgOuMw" target="_blank" rel="noopener">https://drive.google.com/file/d/0B41hPtWnOM8Qem0xNHU4ZXFKalE/view?usp=sharing&amp;resourcekey=0-dxt13pMITt5V8Q_xmgOuMw</a></p>
+<p>◆方式一：使用「面積」AREA指令。因為物件須為封閉的聚合線，此方式可以搭配使用「邊界建立」BOUNDARY指令 及「聚合線編輯」PEDIT指令。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/gM3ltsxy-2M" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=gM3ltsxy-2M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=gM3ltsxy-2M</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/pFlcLKzwsb0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=pFlcLKzwsb0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=pFlcLKzwsb0</a></p>
+<p>PS:在使用 物件(O) 點選時，請注意不要重覆點選以免算錯，建議可以再算一次(驗算)。</p>
+<p>◆方式二：使用「剖面線」HATCH指令 或是「漸層」GRADIENT指令。如果物件範圍是分開的，那麼在建立剖面線(漸層)時請將 □建立獨立剖面線 打勾取消，透過這個動作可以方便算面積，並且可以使用「面積」AREA指令、「列示」LIST指令及「性質選項版」Ctrl+1 等三個方法得到面積資訊。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/-MfqN7T2ip8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=-MfqN7T2ip8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=-MfqN7T2ip8</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/QMUwq3STOEM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=QMUwq3STOEM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=QMUwq3STOEM</a></p>
+<p>◆方式三：使用「布林運算」。請先使用「面域」REGION指令 將物件轉換為面域，再透過布林運算的「聯集」UNION指令，加入結合所選面域成為一個物件，即可使用「面積」AREA指令、「列示」LIST指令及「性質選項版」Ctrl+1 等三個方法得到面積資訊。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/6uBeh4k_-pk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=6uBeh4k_-pk" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6uBeh4k_-pk</a></p>
+<p>※總結以上五種方式，我個人最喜歡的方式是透過「漸層」GRADIENT指令及「性質選項版」Ctrl+1，簡單方便又快速喔~</p>
+<p><b>2012-10-16 補充相關文章</b>：</p>
+<div class="section-title">發帖精華計算多個不同形體的面積</div>
+<p><a href="https://www.autocad-tw.com/t13238-topic" target="_blank" rel="noopener">[分享]LISP計算多個不同形體的面積</a></p>
+<p><a href="https://www.autocad-tw.com/t18427-topic" target="_blank" rel="noopener">[分享]LISP計算及合計面積</a></p>
+<p><a href="https://www.autocad-tw.com/t4262-topic" target="_blank" rel="noopener">[影片]功能變數 長度及面積</a></p>
+<p><a href="https://www.autocad-tw.com/t11857-topic#105708" target="_blank" rel="noopener">[討論]多邊形自動分割</a></p>
+<p><a href="https://www.autocad-tw.com/t4477-topic" target="_blank" rel="noopener">[分享]一個能顯示面積及長度的LISP程式</a></p>
+<p><a href="https://www.autocad-tw.com/t16898-topic" target="_blank" rel="noopener">[分享]周長與面積計算.LSP (適合建築、營造與室內裝修業使用)</a></p>
+<p><a href="https://www.autocad-tw.com/t19662-topic" target="_blank" rel="noopener">[討論]分享手動分割列表統計面積計算 v1.0_Y572.LSP</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t378/index.html">← 小技巧_「圖層漫遊」laywalk指令</a>
+    <a class="btn-ghost" href="../t39/index.html">AUTOCAD轉換至OFFICE運用 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t379-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

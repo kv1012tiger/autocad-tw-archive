@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>十字游標角度運用 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📘 十字游標角度運用</h1>
+    <p class="topic-tagline">假設圖面都是需以 30 角度繪製正交的線時，所以希望就由調整 十字游標 的角…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>假設圖面都是需以 30 角度繪製正交的線時，所以希望就由調整 十字游標 的角度來滿足繪圖需求，這時可以將 SNAPANG 系統變數 設定為 30 ，此時 十字游標 即會變更為 30度 的方向，再開啟正交模式即可。</p>
+<p>而在舊版而言還沒有極座標時，此 SNAPANG 系統變數是非常有幫助的，對於新版本也有某種程度的幫助。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>所以使用者通常認為 此 SNAPANG 系統變數 就是調整 十字游標的角度，但事實上並不是這樣子解釋的...</p>
+<p>正確的解釋應為 <b>&quot;指定的角度旋轉鎖點格點&quot;</b> ，可以透過以下方式來設定：</p>
+<p>「工具」功能表：→ 「繪圖設定值」→ 「鎖點與格點」標籤 → 鎖點 → 角度 (AutoCAD 2008已將此選項取消，但SNAPANG系統變數仍然保留)</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>依指定的角度旋轉鎖點格點(系統變數 SNAPANG)；指定相對於目前的 UCS 角度，預設值為 0 (也就是0度)，請使用 [F7] 將 &lt;格點 打開&gt; ，並設定新角度為 30 。</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>--------------------------------------------------------------------------------------------------</p>
+<p>※若要提高圖面的生成速度與效率，您可以顯示並鎖點至格點的矩形樣式。 還可以控制其間距、角度與對齊。</p>
+<p>格點即矩形樣式的點，它將延伸至您指定為格點限制的區域。 使用格點類似在圖紙下面墊一張方格紙。 格點幫助您對齊物件，以及目測物件之間的距離。 格點不出圖。 如您縮放圖面時，您可能需要調整格點間距，以使之適合新縮放比例。</p>
+<p>鎖點模式會限制十字游標依據您定義的間隔距離來移動。 當您打開「鎖點」模式時，游標會好似黏上或「鎖點」至不可見的矩形格點。 「鎖點」在您利用方向鍵或指向設備來指定精確點時很有用。</p>
+<div class="section-title">變更格點與鎖點間距</div>
+<p>在工作時，您可以開啟與關閉「格點與鎖點」模式，也可以變更格點與鎖點間距。 使用取代鍵，您可以暫時打開與關閉「鎖點」模式。</p>
+<p>鎖點間距不必符合格點間距。 例如：您可以設定一個寬的格點間距作為參考，但是維持一個較小的鎖點間距精確度來指定點。</p>
+<div class="section-title">變更鎖點角度與基準點</div>
+<p>如果需要沿著特定的對齊或角度繪圖，您可以變更鎖點角度。 該旋轉會將螢幕上的十字游標重新對齊以與新角度相符。 在下列範例中，鎖點角度調整為符合定位架的角度。</p>
+<p>參考資料來源：AutoCAD 2006 使用者說明</p>
+<p>--------------------------------------------------------------------------------------------------</p>
+<div class="section-title">圖面範圍(格點範圍)設定</div>
+<p>依照 AutoCAD 標準預設 公制樣板檔(acadiso.dwt)，預設 格點顯示範圍 是A3版面(420X297)，左下角 &lt;0.00,0.00&gt;、 右上角 &lt;420.00,297.00&gt; 。</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>設定和控制目前「模型」的格點顯示範圍，可以在「格式」功能表：「圖面範圍」LIMITS 指令 來重新指定 左下角及右上角 後即時更新圖面格點範圍。</p>
+<p>-----------------------------------------------</p>
+<p>指令: LIMITS</p>
+<p>重設模型空間圖面範圍:</p>
+<p>指定左下角或 [打開(ON)/關閉(OFF)] &lt;0.00,0.00&gt;:</p>
+<p>指定右上角 &lt;420.00,297.00&gt;: 841,594</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>-----------------------------------------------</p>
+<p>※早期的圖面(R12)在「圖面範圍」LIMITS 指令 的副選項 是 [打開(ON)] 的狀態，所以當你在作圖過程超出了此範圍，會出現 **超出圖面範圍** 訊息，當範圍檢查開啟時，您無法在格點限制外輸入點，所以可以使用 LIMITS指令 將圖面範圍限制關閉。</p>
+<p>從2000版本之後「圖面範圍」LIMITS 指令 預設值 以變更為 [關閉(OFF)] 的狀態，此設定值並不是整體個案設定，而是存在於目前的圖面，所以當開啟了 早期的圖面(R12) 就必須自行設定為 [關閉(OFF)]。</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t1078/index.html">← Express工具『分解文字』TXTEXP 指令介紹</a>
+    <a class="btn-ghost" href="../t125/index.html">2D等角圖&amp;實例繪製 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t115-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
