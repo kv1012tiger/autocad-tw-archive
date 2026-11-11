@@ -67,6 +67,10 @@
     if (!j) return ERR.bad;
     if (j.err === 'cool') return '休息一下，' + j.wait + ' 秒後再採集';
     if (j.err === 'msgcool') return '留言太快了，' + j.wait + ' 秒後再試';
+    if (j.err === 'few' && j.miss && Object.keys(j.miss).length) {
+      var N = { fruit: '🍎 水果', iron: '🔩 鐵礦', wood: '🪵 木材', stone: '🪨 石頭', dia: '💎 鑽石' };
+      return '材料不夠，還缺 ' + Object.keys(j.miss).map(function (k) { return (N[k] || k) + ' ×' + j.miss[k]; }).join('、');
+    }
     return ERR[j.err] || ERR.bad;
   }
   var AVATARS = ['🐱', '🐶', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐧', '🦉', '🐢'];
@@ -564,8 +568,8 @@
   }
   function paintVis(el, v) {
     if (!el || !el.isConnected) return;
-    if (!v || !v.total) { el.innerHTML = '👣 還沒有人留下足跡，' + (P.code ? '你是第一位登島的旅人！' : '取個暱稱，當第一位登島的旅人！'); return; }
-    el.innerHTML = '👣 <b>' + v.total + '</b> 位旅人造訪過・最近登島：<br>' +
+    if (!v || !v.total) { el.innerHTML = '👣 還沒有人留下足跡，' + (P.code ? '你是第一位登島的船長！' : '取個暱稱，當第一位登島的船長！'); return; }
+    el.innerHTML = '👣 <b>' + v.total + '</b> 位船長造訪過・最近登島：<br>' +
       v.list.map(function (x) { return '<i>' + esc(x.nick) + '<small>' + esc(x.d) + '</small></i>'; }).join('');
   }
   function visitedToday(isle) {

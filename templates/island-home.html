@@ -1036,6 +1036,10 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-be{flex:none;font-size:34px;line-height:1.1}
 .mi-bd b{display:block}.mi-bd small{display:block;color:var(--muted);font-size:12.5px}
 .mi-cost{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.mi-miss{margin:0 0 8px;font-size:13.5px;font-weight:800;color:#fca5a5}
+.btn.need{opacity:.6;filter:saturate(.55)}
+.btn.shake{animation:shk .35s linear}
+@keyframes shk{20%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
 .mi-c{padding:1px 8px;border-radius:999px;font-size:12.5px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.5)}
 .mi-c.short{background:rgba(248,113,113,.15);border-color:rgba(248,113,113,.6);color:#fecaca}
 @keyframes rsBob{50%{transform:translateY(-6px)}}
@@ -1274,14 +1278,14 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
       </ul></section>
       <section class="hp" data-p="1" hidden><ul>
         <li>🍎 果園島、⛏️ 礦山島、🌲 森林島、🪨 採石島：<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
-        <li>每座島每天的總量隨機 30～80 份，大家一起採，採光了要等明天重新長出來。</li>
-        <li>每人每座島每天最多採 <b>5 次</b>，每次 1～3 個；兩次採集要隔 30 秒。</li>
+        <li>每座島每天的總量隨機 60～160 份，大家一起採，採光了要等明天重新長出來。</li>
+        <li>每人每座島每天最多採 <b>5 次</b>，每次 2～6 個；兩次採集要隔 5 秒。</li>
         <li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
         <li>🏪 兌換所：10 個同種物資換 1 枚 🪙；1 顆 💎 換 5 枚；5 顆 🎃 換 1 枚；每天最多換 3 次。</li>
         <li>🔊 打開上方喇叭，點擊會有音效和特效。</li>
       </ul></section>
       <section class="hp" data-p="2" hidden><ul>
-        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵10 🪨5；Lv2 🪵20 🪨15 🔩5；Lv3 🪵40 🪨30 🔩15 💎1。小屋等級就是可以養的寵物數。</li>
+        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵5 🪨3；Lv2 🪵10 🪨8 🔩3；Lv3 🪵20 🪨15 🔩8 💎1。小屋等級就是可以養的寵物數。</li>
         <li>🟫 菜田最多 3 塊（🪵5 🪨5／🪵10 🪨10／🪵20 🪨15 🔩5）。裝飾：🌳 果樹、⛲ 噴水池、🗼 瞭望塔各一座，島主分 +5／+10／+20。</li>
         <li>🌱 <b>種菜</b>：用 🍎 水果換種子，照真實時間長大——🥕 4 小時、🥬 8 小時、🎃 24 小時；熟了要自己收成，放著不會壞。</li>
         <li>🏆 島主分＝小屋等級×10＋裝飾分＋寵物親密度，會上「島主」排行榜。</li>
@@ -2246,7 +2250,7 @@ function msgRender(j,box){
   if(MB.admin)markPending(j.pending||0);
   var h=(MB.admin?'<p class="mb-admin">🛠️ 管理員模式・還有 <b>'+(j.pending||0)+'</b> 則留言還沒回覆</p>':'')+
     '<p class="s-count">共 '+(j.total||0)+' 則留言</p>';
-  if(!MB.list.length)h+='<div class="t-empty"><span>📮</span><b>還沒有人留言</b><small>當第一個在碼頭留言的旅人吧！</small></div>';
+  if(!MB.list.length)h+='<div class="t-empty"><span>📮</span><b>還沒有人留言</b><small>當第一個在碼頭留言的船長吧！</small></div>';
   h+=MB.list.map(msgHTML).join('');
   if(j.pages>1)h+='<nav class="pager">'+(MB.page>1?'<button class="pg" type="button" data-mpg="'+(MB.page-1)+'">‹ 較新的留言</button>':'')+'<span class="pg-gap">'+MB.page+' / '+j.pages+'</span>'+(MB.page<j.pages?'<button class="pg" type="button" data-mpg="'+(MB.page+1)+'">較舊的留言 ›</button>':'')+'</nav>';
   box.innerHTML=h;
@@ -2327,7 +2331,7 @@ function renderRes(n){
     '</div>'+
     '<div class="p-sec"><h4>我的背包</h4><div class="rs-bag" id="rsBag"></div><div class="row2"><button class="btn btn-ghost btn-sm" type="button" data-rbag>🎒 背包・兌換所・好友</button><button class="btn btn-ghost btn-sm" type="button" data-rrank>🏆 物資排行榜</button></div></div>'+
     '<div class="p-sec"><h4>其他物資島</h4><div class="chips">'+RESI.filter(function(x){return x!==R}).map(function(x){return '<button class="chip" type="button" data-rgo="'+x.n+'" style="border-color:'+x.c+'">'+x.e+' '+esc(x.name)+'</button>'}).join('')+'</div></div>'+
-    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li><li>每座物資島每天的總量隨機（30～80 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次，每次 1～3 個；兩次採集要隔 30 秒。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 5 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
+    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li><li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次，每次 2～6 個；兩次採集要隔 5 秒。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 5 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
   $('pStep').textContent=R.e+' 物資島';
   footSimple('← 回地圖',RESI[(n+1)%RESI.length].e+' '+RESI[(n+1)%RESI.length].name+' →');
   resBag();resStock();
@@ -2429,7 +2433,7 @@ function rsDone(){
     if(V.t!=='res'||RESI[V.i]!==R){return}
     rsReset();
     if(!j.ok){if(j.err==='cool')RS.until=Date.now()+j.wait*1000;toast('⚠️ '+COINS.errText(j));resStock();return}
-    RS.until=Date.now()+30000;
+    RS.until=Date.now()+5000;
     var g=j.got,rc=obj.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
     for(var i=0;i<10;i++){var a=Math.random()*Math.PI*2,d=60+Math.random()*90;rsPart(cx,cy,R.fin[i%R.fin.length],Math.cos(a)*d,Math.sin(a)*d-40,22)}
     rsSound(g.dia?'dia':'win');
@@ -2501,24 +2505,39 @@ var MI={data:null,fid:null,at:0,seq:0,timer:0,adopt:null};
 function petTitle(lv){return PET_TITLE[Math.min(PET_TITLE.length,lv)-1]}
 function leftText(ms){var m=Math.ceil(ms/60000),h=Math.floor(m/60);m%=60;return h?h+' 小時'+(m?' '+m+' 分':''):m+' 分鐘'}
 function costHTML(cost){var w=COINS.get(),b=w.bag||{};return Object.keys(cost).map(function(k){var have=k==='dia'?(w.dia||0):(b[k]||0);return '<span class="mi-c'+(have<cost[k]?' short':'')+'">'+COSTI[k]+' '+cost[k]+'</span>'}).join('')}
+var COSTN={fruit:'水果',iron:'鐵礦',wood:'木材',stone:'石頭',dia:'鑽石'};
+function missOf(cost){var w=COINS.get(),b=w.bag||{},m={};Object.keys(cost).forEach(function(k){var have=k==='dia'?(w.dia||0):(b[k]||0);if(have<cost[k])m[k]=cost[k]-have});return m}
+function missText(m){return Object.keys(m).map(function(k){return COSTI[k]+' '+COSTN[k]+' ×'+m[k]}).join('、')}
+function buildCost(k){var d=MI.data,R=d&&d.rules;if(!R)return null;if(k==='house')return R.house[d.h+1];if(k==='field')return R.field[d.fields];return R.deco[k]?R.deco[k].cost:null}
 function costOK(cost){var w=COINS.get(),b=w.bag||{};for(var k in cost){var have=k==='dia'?(w.dia||0):(b[k]||0);if(have<cost[k])return false}return true}
 function renderMine(fid){
   MI.fid=fid||null;MI.data=null;clearInterval(MI.timer);
   var w=COINS.get();
-  pBody.innerHTML='<div class="ph" style="--c:#fde047"><span class="ph-e">🏝️</span><div><div class="p-kicker">'+(fid?'VISIT・參觀小島':'MY ISLAND・我的小島')+'</div><h3 id="pTitle">'+(fid?'旅人的小島':(w.nick?esc(w.nick)+' 的小島':'我的小島'))+'</h3><p id="miSub">'+(fid?'看看他蓋了什麼，好友還能幫忙澆水':'用採集到的物資蓋房子、種菜、養寵物')+'</p></div></div><div id="miBox"><p class="s-count">登上小島中…</p></div>';
+  pBody.innerHTML='<div class="ph" style="--c:#fde047"><span class="ph-e">🏝️</span><div><div class="p-kicker">'+(fid?'VISIT・參觀小島':'MY ISLAND・我的小島')+'</div><h3 id="pTitle">'+(fid?'船長的小島':(w.nick?esc(w.nick)+' 的小島':'我的小島'))+'</h3><p id="miSub">'+(fid?'看看他蓋了什麼，好友還能幫忙澆水':'用採集到的物資蓋房子、種菜、養寵物')+'</p></div></div><div id="miBox"><p class="s-count">登上小島中…</p></div>';
   $('pStep').textContent=fid?'🏝️ 參觀小島':'🏝️ 我的小島';
   footSimple(fid?'← 航行清單':'← 回地圖',fid?'🏝️ 回我的小島':'🐾 寵物島 →');
   if(!w.code){$('miBox').innerHTML='<div class="mb-login"><p>取個暱稱，就能擁有自己的小島。</p><button class="btn btn-primary btn-sm" type="button" data-mjoin2>🏝️ 取暱稱・登島</button></div>';return}
-  loadMine();
+  var mc=!fid&&miCacheGet();
+  if(mc){MI.data=mc.d;MI.at=mc.t;paintMine()}
+  loadMine(!!mc);
   MI.timer=setInterval(function(){if(V.t!=='mine'){clearInterval(MI.timer);return}paintMine()},30000);
 }
-function loadMine(){
+/* 我的小島快取：存在這台裝置，打開時先顯示上次的，背景再更新（登入小島不用空等） */
+var MIC_KEY='aikb-isle';
+function miCacheGet(){var w=COINS.get();if(!w.code)return null;try{var o=JSON.parse(localStorage.getItem(MIC_KEY)||'null');return o&&o.c===w.code&&o.d&&o.d.mine?o:null}catch(e){return null}}
+function miCachePut(d){var w=COINS.get();if(!w.code||!d||!d.mine)return;try{localStorage.setItem(MIC_KEY,JSON.stringify({c:w.code,t:Date.now(),d:d}))}catch(e){}}
+function minePrefetch(){
+  var w=COINS.get();if(!w.code||MI.busy)return;
+  var c=miCacheGet();if(c&&Date.now()-c.t<120000)return;
+  COINS.api({a:'island'}).then(function(j){if(j&&j.ok&&j.island)miCachePut(j.island)}).catch(function(){});
+}
+function loadMine(quiet){
   var my=++MI.seq;
   COINS.api(MI.fid?{a:'island',fid:MI.fid}:{a:'island'}).then(function(j){
     if(my!==MI.seq||V.t!=='mine')return;
-    if(!j.ok){$('miBox').innerHTML='<p class="s-count">⚠️ '+esc(COINS.errText(j))+'</p>';return}
-    MI.data=j.island;MI.at=Date.now();paintMine();
-  }).catch(function(e){if(window.console)console.error(e);if(my===MI.seq&&$('miBox'))$('miBox').innerHTML='<p class="s-count">⚠️ 暫時連不上小島，請稍後再試</p>'});
+    if(!j.ok){if(!quiet)$('miBox').innerHTML='<p class="s-count">⚠️ '+esc(COINS.errText(j))+'</p>';return}
+    MI.data=j.island;MI.at=Date.now();if(!MI.fid)miCachePut(j.island);paintMine();
+  }).catch(function(e){if(window.console)console.error(e);if(!quiet&&my===MI.seq&&$('miBox'))$('miBox').innerHTML='<p class="s-count">⚠️ 暫時連不上小島，請稍後再試</p>'});
 }
 function cropView(c){
   var left=Math.max(0,c.left-(Date.now()-MI.at)),p=1-left/c.total,v=VEGI[c.v];
@@ -2578,7 +2597,7 @@ function paintMine(){
   B.push(d.fields<R.field.length?{k:'field',e:'🟫',n:'菜田 第 '+(d.fields+1)+' 塊',t:'可以多種一種菜',cost:R.field[d.fields]}:{e:'🟫',n:'菜田 3 塊',t:'菜田已經蓋滿了',done:1});
   ['tree','fountain','tower'].forEach(function(k){var x=R.deco[k];B.push(d.deco.indexOf(k)>=0?{e:DECOI[k][0],n:x.name,t:'已經蓋好・島主分 +'+x.pts,done:1}:{k:k,e:DECOI[k][0],n:x.name,t:'裝飾・島主分 +'+x.pts,cost:x.cost})});
   o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
-    return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div><button class="btn btn-primary btn-sm" type="button" data-build="'+b.k+'"'+(costOK(b.cost)?'':' disabled')+'>🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
+    return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div>'+(costOK(b.cost)?'':'<div class="mi-miss">還缺：'+missText(missOf(b.cost))+'</div>')+'<button class="btn btn-primary btn-sm'+(costOK(b.cost)?'':' need')+'" type="button" data-build="'+b.k+'">🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
   o+='<div class="p-sec"><h4>👣 最近訪客</h4>'+(d.vis&&d.vis.length?'<div class="mi-vis">'+d.vis.map(function(v){return '<span class="mi-v"><i>'+esc(v.a||'🙂')+'</i>'+esc(v.n)+'<small>'+ago(v.t)+'</small></span>'}).join('')+'</div>':'<p class="mi-note">還沒有人來拜訪。開放參觀後，別人就能航向你的島。</p>')+'</div>';
   box.innerHTML=o;
 }
@@ -2591,7 +2610,7 @@ function mineAct(q,btn,okFn){
   COINS.api(q).then(function(j){
     end();
     if(!j.ok){toast('⚠️ '+COINS.errText(j));if(btn)btn.disabled=false;if(V.t==='mine'&&!MI.fid)loadMine();return}
-    if(j.island){var fr=MI.data&&MI.data.friend;MI.data=j.island;if(MI.data.friend==null&&fr!=null)MI.data.friend=fr;MI.at=Date.now()}
+    if(j.island){var fr=MI.data&&MI.data.friend;MI.data=j.island;if(MI.data.friend==null&&fr!=null)MI.data.friend=fr;MI.at=Date.now();if(!MI.fid)miCachePut(j.island)}
     if(okFn)okFn(j);
     if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
   }).catch(function(){end();toast('⚠️ 暫時連不上小島，請稍後再試');if(btn)btn.disabled=false});
@@ -2605,7 +2624,8 @@ pBody.addEventListener('click',function(e){
   if(d.voyage!=null){openPanel('voyage');return}
   if(d.setopen!=null){mineAct({a:'setopen',o:+d.setopen},t,function(){toast(+d.setopen?'🔓 已開放別人參觀你的小島':'🔒 現在只有好友能參觀你的小島')});return}
   if(d.maddfriend!=null){t.disabled=true;COINS.api({a:'fadd',fid:MI.fid}).then(function(j){if(!j.ok){toast('⚠️ '+COINS.errText(j));t.disabled=false;return}toast('👥 和 '+j.added.nick+' 成為好友了！');if(MI.data)MI.data.friend=true;if(V.t==='mine')paintMine()}).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});return}
-  if(d.build){mineAct({a:'build',k:d.build},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 蓋好了！')});return}
+  if(d.build){var bc=buildCost(d.build);if(bc&&!costOK(bc)){toast('⚠️ 材料不夠，還缺 '+missText(missOf(bc)));t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');return}
+    mineAct({a:'build',k:d.build},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 蓋好了！')});return}
   if(d.plant){mineAct({a:'plant',i:+d.i,v:d.plant},t,function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[d.plant][1]+'，'+VEGI[d.plant][3]+'後收成')});return}
   if(d.harvest!=null){mineAct({a:'harvest',i:+d.harvest},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
   if(d.feed){mineAct({a:'feed',id:d.id,food:d.feed},t,function(){fxAt(t,['😋','💕',d.feed==='fruit'?'🍎':VEGI[d.feed][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
@@ -2913,7 +2933,7 @@ $('spots').addEventListener('click',function(e){
   var b=e.target.closest('.dbadge');if(!b)return;
   e.stopPropagation();e.preventDefault();claimDrop(b.dataset.dk,b);
 },true);
-/* 資源島：現在可以採集（今天還有存量、我今天沒採滿、距離上次採集過了 30 秒）就浮出資源符號 */
+/* 資源島：現在可以採集（今天還有存量、我今天沒採滿、距離上次採集過了 5 秒）就浮出資源符號 */
 var RSV={t:0,left:null,timer:0,tm:0};
 function resLoad(){
   clearTimeout(RSV.timer);
@@ -2924,7 +2944,7 @@ function resLoad(){
 function resReady(rk){
   var w=COINS.get(),left=RSV.left&&RSV.left[rk];
   if(left!=null&&left<=0)return false;
-  if(w.code){if(((w.today||{})[rk]||0)>=5)return false;if(w.gLast&&Date.now()<w.gLast+30000)return false}
+  if(w.code){if(((w.today||{})[rk]||0)>=5)return false;if(w.gLast&&Date.now()<w.gLast+5000)return false}
   return true;
 }
 function resPaint(){
@@ -2936,7 +2956,7 @@ function resPaint(){
     b.hidden=!resReady(s.rk);
   });
   clearTimeout(RSV.tm);
-  var w=COINS.get();if(w.code&&w.gLast&&Date.now()<w.gLast+30000)RSV.tm=setTimeout(resPaint,w.gLast+30000-Date.now()+250);
+  var w=COINS.get();if(w.code&&w.gLast&&Date.now()<w.gLast+5000)RSV.tm=setTimeout(resPaint,w.gLast+5000-Date.now()+250);
 }
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
 function renderFav(){
@@ -3351,6 +3371,8 @@ if(window.IntersectionObserver&&MSG_SPOT&&MSG_SPOT.el)new IntersectionObserver(f
 window.ISLAND_KEYS=SP.map(spotHash); /* 每座島的代號（後台寶物用） */
 setInterval(tdPaint,60000);
 setTimeout(function(){drLoad();resLoad()},1500);
+setTimeout(minePrefetch,4000);
+if(window.IntersectionObserver&&MINE_SPOT&&MINE_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))minePrefetch()},{rootMargin:'300px'}).observe(MINE_SPOT.el);
 setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
