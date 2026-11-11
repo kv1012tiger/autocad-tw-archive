@@ -30,10 +30,16 @@
   }
 
   /* ---------- 呼叫試算表（長文字用 POST） ---------- */
-  function call(o, post) {
+  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, friends: 1 };
+  function call(o, post, retried) {
     var req = post ? fetch(API, { method: 'POST', body: JSON.stringify(o), cache: 'no-store' })
       : fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' });
-    return req.then(function (r) { if (!r.ok) throw new Error('http'); return r.json(); });
+    return req.then(function (r) { if (!r.ok) throw new Error('http'); return r.json(); })
+      .catch(function (e) {
+        // 只讀的查詢偶爾遇到 Google 忙線，等一下自動再試一次
+        if (retried || !READ_ONLY[o.a]) throw e;
+        return new Promise(function (ok) { setTimeout(ok, 900); }).then(function () { return call(o, post, true); });
+      });
   }
   /* 帶登島碼呼叫，自動更新錢包；登島碼失效就登出 */
   function api(o, post) {
