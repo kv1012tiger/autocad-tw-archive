@@ -1946,7 +1946,7 @@ function flip(card){
   if(!ST.c[n]&&flippedIn(n)>=need(n)){
     ST.c[n]=1;save();
     var rc=card.getBoundingClientRect();burst(rc.left+rc.width/2,rc.top+rc.height/2,['🪙','💎','💰','✨']);
-    playSfx('candy');COINS.earn('qa','拿到「'+ISLES[n].name+'」的金幣');
+    playSfx('candy');COINS.earn('qa','拿到「'+ISLES[n].name+'」的金幣','q'+n);
     var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');
   }
   if(V.t==='isle'){var pg=$('prog');if(pg)pg.outerHTML=progHTML(V.i);pDots.innerHTML=ISLES.map(function(x,k){return '<i class="'+(k===V.i?'on':'')+(ST.c[k]?' v':'')+'"></i>'}).join('')}
@@ -1987,7 +1987,7 @@ $('searchBtn2').addEventListener('click',openSearch);
 $('candyBtn').addEventListener('click',function(){if(COINS.get().earned>=5){openChest();return}openLog()});
 $('boardBtn').addEventListener('click',function(){COINS.board()});
 $('missionBtn').addEventListener('click',function(){showMission(true)});
-COINS.on(function(ev,w){refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
+COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
 function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scrollTop=0;playSfx('chest');burst(innerWidth/2,innerHeight/2,['🪙','💰','💎','⭐','🎉','🐚']);$('giftCopy').focus({preventScroll:true})}
 $('chestClose').addEventListener('click',function(){$('chest').hidden=true});

@@ -24,7 +24,7 @@
   function emit(ev) { listeners.forEach(function (f) { try { f(ev, P); } catch (e) {} }); }
   function apply(p) {
     if (!p) return;
-    P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin;
+    P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
     save(); emit({ t: 'sync' });
   }
 
@@ -40,9 +40,9 @@
   function netFail() { toast('⚠️ 暫時連不上金幣小島，請稍後再試'); }
 
   /* ---------- 送金幣 ---------- */
-  function earn(kind, msg) {
+  function earn(kind, msg, key) {
     if (!P.code) return Promise.resolve(0);
-    return call({ a: 'earn', k: kind, code: P.code }).then(function (j) {
+    return call({ a: 'earn', k: kind, code: P.code, key: key }).then(function (j) {
       if (!j.ok) { if (j.err === 'nocode') logout(); return 0; }
       apply(j.p);
       if (j.add) { emit({ t: 'add', n: j.add }); toast('🪙 +' + j.add + '　' + msg); }
