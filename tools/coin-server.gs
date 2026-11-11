@@ -21,6 +21,12 @@ var SITE = 'https://kv1012tiger.github.io/autocad-tw-island/';
 var TZ = 'Asia/Taipei';
 var OWNER = [{ nick: 'Tiger&蘋果爸', admin: true }, { nick: '蘋果爸', admin: false }];
 var RESERVED = /蘋果爸|管理員|站長|autocad\s*顧問|admin/i;
+/* 封測：建立新帳號（登島）要有邀請碼，每組預設限 2 位。邀請碼放在「邀請碼」分頁（第 1 欄碼、第 2 欄名額、第 3 欄已用），
+   可以自己在表裡新增一列：碼填英數字，名額填 2。要結束封測就把 INVITE_ON 改成 false。已經有登島碼的人不受影響。 */
+var INVITE_ON = true;
+var INV_HEAD = ['邀請碼', '名額', '已用', '使用者', '建立時間'];
+var INV_CAP = 2;
+function invKey_(v) { return String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
 
 var P_HEAD = ['登島碼', '暱稱', '目前金幣', '累計金幣', '連續登島天數', '最後登島日', '第一次登島', '最後上線',
   '下載次數', '最近下載', '管理員', '今日', '今日在線金幣', '今日爬文金幣', '今日問答金幣', '已拿金幣的問答島',
@@ -167,7 +173,7 @@ function sheet_(name, head) {
   var sh = ss.getSheetByName(name);
   if (!sh) {
     sh = ss.insertSheet(name);
-    if (name === '玩家') sh.getRange('A:A').setNumberFormat('@'); // 登島碼一律當文字
+    if (name === '玩家' || name === '邀請碼') sh.getRange('A:A').setNumberFormat('@'); // 登島碼、邀請碼一律當文字
   }
   var cur = sh.getRange(1, 1, 1, head.length).getValues()[0];
   if (cur.join('|') !== head.join('|')) {
@@ -310,9 +316,24 @@ function handle_(q) {
       var nick = cleanNick_(q.nick);
       if (nick.length < 2) return { ok: false, err: 'short' };
       if (RESERVED.test(nick)) return { ok: false, err: 'reserved' };
+      var invRow = -1, invSh = null, invUsed = 0, invWho = '';
+      if (INVITE_ON) {
+        var ik = invKey_(q.inv);
+        if (!ik) return { ok: false, err: 'noinv' };
+        invSh = sheet_('邀請碼', INV_HEAD);
+        var iv = invSh.getLastRow() > 1 ? invSh.getRange(2, 1, invSh.getLastRow() - 1, INV_HEAD.length).getValues() : [];
+        for (var iq = 0; iq < iv.length; iq++) if (invKey_(iv[iq][0]) === ik) { invRow = iq + 2; break; }
+        if (invRow < 0) return { ok: false, err: 'badinv' };
+        var ir = iv[invRow - 2], icap = num_(ir[1]) || INV_CAP;
+        invUsed = num_(ir[2]); invWho = String(ir[3] || '');
+        if (invUsed >= icap) return { ok: false, err: 'invfull' };
+      }
       if (nickTaken_(rows, nick, -1)) return { ok: false, err: 'taken' };
       var row = newRow_(newCode_(rows), nick, false, Math.min(CAP.qa, num_(q.init)), newFid_(rows));
       sh.appendRow(row);
+      if (invRow > 0) {
+        invSh.getRange(invRow, 3, 1, 2).setValues([[invUsed + 1, (invWho ? invWho + '、' : '') + nick + '（' + row[C.fid] + '）']]);
+      }
       return { ok: true, p: profile_(row) };
     }
     if (a === 'isles' && !q.code) return { ok: true, isles: islesPub_(isles_(), null) };

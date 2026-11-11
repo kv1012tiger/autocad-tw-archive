@@ -53,7 +53,8 @@
   }
   var ERR = {
     short: '暱稱至少要 2 個字', taken: '這個暱稱已經有人用了，換一個吧', reserved: '這個暱稱保留給站長，換一個吧',
-    nocode: '找不到這組登島碼，請再確認一次', bad: '資料有誤，請重新整理後再試',
+    nocode: '找不到這組登島碼，請再確認一次',
+    noinv: '封測期間要有邀請碼才能登島，請向蘋果爸索取一組', badinv: '邀請碼不正確，請再確認一次（英文字母和數字）', invfull: '這組邀請碼名額已滿（每組限 2 位），請向蘋果爸索取新的一組', bad: '資料有誤，請重新整理後再試',
     nofid: '找不到這個海島編號，請再確認一次', self: '這是你自己的海島編號喔', fmax: '好友最多 50 位',
     notfriend: '要先互加好友才行', gifted: '今天已經送過這位好友了，明天再送', few: '數量不夠喔',
     trademax: '今天的兌換次數用完了，明天再來', notemax: '今天的悄悄話已經用完了，明天再聊',
@@ -200,6 +201,9 @@
   }
   var HELP = '<small>忘記登島碼？把你的暱稱傳到 <a href="' + LINE + '" target="_blank" rel="noopener">蘋果爸 LINE 官方帳號</a>，幫你查。</small>';
 
+  /* ---------- 封測邀請碼：網址帶 ?inv=XXXX-XXXX 會自動記起來、自動填入 ---------- */
+  try { var uq = new URLSearchParams(location.search).get('inv'); if (uq) localStorage.setItem('aikb-inv', uq.slice(0, 20)); } catch (e) {}
+  function savedInv() { try { return localStorage.getItem('aikb-inv') || ''; } catch (e) { return ''; } }
   /* ---------- 登島：取暱稱 / 輸入登島碼 ---------- */
   function welcome(done, mode) {
     var initQa = 0;
@@ -207,7 +211,8 @@
     function regHTML() {
       return '<div class="cw-ic">🏝️</div><h3>歡迎登島！取個暱稱</h3>' +
         '<p>有暱稱才能收集金幣、上排行榜、下載資源。</p>' +
-        '<input class="cw-in" maxlength="12" placeholder="例如：圖塊小達人"><div class="cw-err"></div>' +
+        '<input class="cw-in" maxlength="12" placeholder="例如：圖塊小達人">' +
+        '<input class="cw-in inv" style="margin-top:8px" maxlength="20" placeholder="🎟 邀請碼（封測期間需要）" autocapitalize="characters" autocomplete="off" value="' + esc(savedInv()) + '"><div class="cw-err"></div>' +
         '<div class="cw-row"><button class="cw-b p" type="button" data-ok>確定</button></div>' +
         '<p style="margin-top:10px">已經有登島碼？<button class="cw-link" type="button" data-sw>輸入登島碼</button></p>' +
         '<p><button class="cw-link" type="button" data-x>先逛逛，之後再取</button></p>' +
@@ -224,16 +229,24 @@
     modal(mode === 'login' ? loginHTML() : regHTML(), function (ov, close) {
       var inp = ov.querySelector('.cw-in'), err = ov.querySelector('.cw-err'), ok = ov.querySelector('[data-ok]');
       inp.addEventListener('input', function () { err.textContent = ''; });
+      var invIn = ov.querySelector('.cw-in.inv');
+      if (invIn) {
+        invIn.addEventListener('input', function () { err.textContent = ''; });
+        invIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+      }
       ov.querySelector('[data-sw]').addEventListener('click', function () { close(); welcome(done, mode === 'login' ? 'reg' : 'login'); });
       ov.querySelector('[data-x]').addEventListener('click', function () { close(); if (done) done(false); });
       function submit() {
         var v = inp.value.replace(/\s+/g, mode === 'login' ? '' : ' ').trim();
         if (mode === 'login') { v = v.toUpperCase(); if (v.length !== 6) { err.textContent = '登島碼是 6 個字'; return; } }
         else if (v.length < 2) { err.textContent = ERR.short; return; }
+        var inv = invIn ? invIn.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase() : '';
+        if (mode !== 'login' && !inv) { err.textContent = ERR.noinv; return; }
         ok.disabled = true; ok.textContent = '連線中…';
-        call(mode === 'login' ? { a: 'login', code: v } : { a: 'reg', nick: v, init: initQa }).then(function (j) {
+        call(mode === 'login' ? { a: 'login', code: v } : { a: 'reg', nick: v, init: initQa, inv: inv }).then(function (j) {
           ok.disabled = false; ok.textContent = mode === 'login' ? '登島' : '確定';
           if (!j.ok) { err.textContent = ERR[j.err] || ERR.bad; return; }
+          try { localStorage.removeItem('aikb-inv'); } catch (e) {}
           P = blank(); apply(j.p); close();
           if (mode === 'login') { toast('👋 歡迎回來，' + P.nick + '！'); if (done) done(true); }
           else showCode(true, function () { pickAvatar(function () { if (done) done(true); }, true); });
