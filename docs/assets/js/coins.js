@@ -151,7 +151,7 @@
     '.cw-trade button[disabled]{opacity:.45;cursor:default}' +
     '.cw-fid{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.cw-fid b{font:900 20px Consolas,monospace;letter-spacing:.12em;color:#ffd166}' +
     '.cw-mini{padding:5px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.6);background:transparent;color:#fff8e7;font:700 13.5px "Noto Sans TC",sans-serif;cursor:pointer}' +
-    '.cw-mini.p{background:#ffd166;color:#3a1a08;border-color:#ffd166}' +
+    '.cw-mini.p{background:#ffd166;color:#3a1a08;border-color:#ffd166}.cw-mini[disabled]{opacity:.4;cursor:default}' +
     '.cw-add{display:flex;gap:6px;margin-top:8px}.cw-add input{flex:1;min-width:0;margin:0;padding:8px 10px;font-size:16px;letter-spacing:.12em;text-transform:uppercase}' +
     '.cw-fr{display:flex;flex-direction:column;gap:6px;margin-top:8px}' +
     '.cw-fr>div{padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.2)}' +
