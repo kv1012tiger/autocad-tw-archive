@@ -30,7 +30,7 @@
   }
 
   /* ---------- 呼叫試算表（長文字用 POST） ---------- */
-  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, friends: 1, anns: 1, voyage: 1 };
+  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, visall: 1, friends: 1, anns: 1, voyage: 1 };
   function call(o, post, retried) {
     var req = post ? fetch(API, { method: 'POST', body: JSON.stringify(o), cache: 'no-store' })
       : fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' });
@@ -527,18 +527,54 @@
     }).replace(/\n/g, '<br>');
   }
 
-  /* ---------- 小島造訪紀錄 ---------- */
+  /* ---------- 小島造訪紀錄：先秀上次看到的、背景更新；「我來過」改成背景記錄，不讓畫面等 ---------- */
+  var VKEY = 'cw-vis', VIS = { t: 0, vs: null }, visReq = null;
+  try { var vc = JSON.parse(localStorage.getItem(VKEY) || 'null'); if (vc && vc.vs) VIS = { t: 0, vs: vc.vs }; } catch (e) {}
+  function loadVisAll() {
+    if (visReq) return visReq;
+    visReq = call({ a: 'visall' }).then(function (j) {
+      visReq = null;
+      if (!j || !j.ok || !j.vs) throw new Error('visall');
+      VIS = { t: Date.now(), vs: j.vs };
+      try { localStorage.setItem(VKEY, JSON.stringify({ vs: j.vs })); } catch (e) {}
+      return VIS.vs;
+    }, function (e) { visReq = null; throw e; });
+    return visReq;
+  }
+  function paintVis(el, v) {
+    if (!el || !el.isConnected) return;
+    if (!v || !v.total) { el.innerHTML = '👣 還沒有人留下足跡，' + (P.code ? '你是第一位登島的旅人！' : '取個暱稱，當第一位登島的旅人！'); return; }
+    el.innerHTML = '👣 <b>' + v.total + '</b> 位旅人造訪過・最近登島：<br>' +
+      v.list.map(function (x) { return '<i>' + esc(x.nick) + '<small>' + esc(x.d) + '</small></i>'; }).join('');
+  }
+  function visitedToday(isle) {
+    try { var o = JSON.parse(localStorage.getItem('cw-visd') || 'null'); return !!(o && o.d === today() && o.c === P.code && o.i.indexOf(isle) >= 0); } catch (e) { return false; }
+  }
+  function markVisited(isle) {
+    try {
+      var o = JSON.parse(localStorage.getItem('cw-visd') || 'null');
+      if (!o || o.d !== today() || o.c !== P.code) o = { d: today(), c: P.code, i: [] };
+      if (o.i.indexOf(isle) < 0) o.i.push(isle);
+      localStorage.setItem('cw-visd', JSON.stringify(o));
+    } catch (e) {}
+  }
   function visit(isle, name, el) {
     if (!el) return;
-    el.className = 'cw-vis'; el.innerHTML = '👣 載入造訪紀錄…';
-    var req = P.code ? { a: 'visit', code: P.code, isle: isle, name: name } : { a: 'visitors', isle: isle };
-    call(req).then(function (j) {
-      if (j.p) apply(j.p);
-      var v = (j && j.v) || { list: [], total: 0 };
-      if (!v.total) { el.innerHTML = '👣 還沒有人留下足跡，' + (P.code ? '你是第一位登島的旅人！' : '取個暱稱，當第一位登島的旅人！'); return; }
-      el.innerHTML = '👣 <b>' + v.total + '</b> 位旅人造訪過・最近登島：<br>' +
-        v.list.map(function (x) { return '<i>' + esc(x.nick) + '<small>' + esc(x.d) + '</small></i>'; }).join('');
-    }).catch(function () { el.innerHTML = '👣 造訪紀錄暫時連不上'; });
+    el.className = 'cw-vis';
+    if (VIS.vs) paintVis(el, VIS.vs[isle]); else el.innerHTML = '👣 載入造訪紀錄…';
+    if (!(VIS.vs && VIS.t && Date.now() - VIS.t < 90000)) {
+      loadVisAll().then(function (vs) { paintVis(el, vs[isle]); }).catch(function () {
+        // 舊版後台沒有 visall：退回單座島查詢
+        call({ a: 'visitors', isle: isle }).then(function (j) { paintVis(el, j && j.v); })
+          .catch(function () { if (!VIS.vs && el.isConnected) el.innerHTML = '👣 造訪紀錄暫時連不上'; });
+      });
+    }
+    if (P.code && !visitedToday(isle)) {
+      call({ a: 'visit', code: P.code, isle: isle, name: name }).then(function (j) {
+        if (j && j.p) apply(j.p);
+        if (j && j.ok !== false) { markVisited(isle); if (j.v) { if (VIS.vs) VIS.vs[isle] = j.v; paintVis(el, j.v); } }
+      }).catch(function () {});
+    }
   }
 
   /* ---------- 公告：站長發布，大家登島時收到通知 ---------- */
@@ -664,6 +700,7 @@
         var d = daily(); online();
         // 首頁：先在背景把排行榜抓好，按 🏆 時就不用等
         if (opt.ask !== false) setTimeout(function () { fetchTop().catch(function () {}); }, 2500);
+        if (opt.ask !== false) setTimeout(function () { loadVisAll().catch(function () {}); }, 1800);
         if (opt.ask !== false && d) d.then(annCheck).catch(function () {});
         // 老玩家還沒選頭像：這次瀏覽提醒一次
         if (opt.ask !== false && d) d.then(function () {

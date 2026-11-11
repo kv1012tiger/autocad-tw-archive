@@ -19,6 +19,8 @@
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -2126,19 +2128,34 @@ function msgForm(){
     '<p class="mb-hint">留言會公開顯示，請不要留電話、Email 等個人資料。每天最多 10 則，每則間隔 1 分鐘。</p>';
   var ta=$('mbText');ta.addEventListener('input',function(){$('mbCnt').textContent=ta.value.length+' / 300'});
 }
-function loadMsgs(page){
+/* 留言快取：第 1 頁存在這台裝置，打開碼頭先秀上次看到的，再背景更新；靠近留言碼頭時就先預抓 */
+var MSGC=null;try{MSGC=JSON.parse(localStorage.getItem('aikb-msgs')||'null')}catch(e){}
+function msgCache(j,code){MSGC={c:code||'',t:Date.now(),j:j};try{localStorage.setItem('aikb-msgs',JSON.stringify(MSGC))}catch(e){}}
+function msgPrefetch(){
+  var w=COINS.get(),code=w.code||'';
+  if(MSGC&&MSGC.c===code&&Date.now()-MSGC.t<60000)return;
+  COINS.call({a:'msgs',code:code,page:1}).then(function(j){if(j&&j.ok!==false&&j.list)msgCache(j,code)}).catch(function(){});
+}
+function msgRender(j,box){
+  MB.list=j.list||[];MB.page=j.page||1;MB.admin=!!j.admin;
+  if(MB.admin)markPending(j.pending||0);
+  var h=(MB.admin?'<p class="mb-admin">🛠️ 管理員模式・還有 <b>'+(j.pending||0)+'</b> 則留言還沒回覆</p>':'')+
+    '<p class="s-count">共 '+(j.total||0)+' 則留言</p>';
+  if(!MB.list.length)h+='<div class="t-empty"><span>📮</span><b>還沒有人留言</b><small>當第一個在碼頭留言的旅人吧！</small></div>';
+  h+=MB.list.map(msgHTML).join('');
+  if(j.pages>1)h+='<nav class="pager">'+(MB.page>1?'<button class="pg" type="button" data-mpg="'+(MB.page-1)+'">‹ 較新的留言</button>':'')+'<span class="pg-gap">'+MB.page+' / '+j.pages+'</span>'+(MB.page<j.pages?'<button class="pg" type="button" data-mpg="'+(MB.page+1)+'">較舊的留言 ›</button>':'')+'</nav>';
+  box.innerHTML=h;
+}
+function loadMsgs(page,fresh){
   var my=++MB.seq,box=$('mbList');if(!box)return;
-  COINS.call({a:'msgs',code:COINS.get().code,page:page}).then(function(j){
+  var code=COINS.get().code||'',shown=false;
+  if(page===1&&!fresh&&MSGC&&MSGC.c===code&&MSGC.j&&!MB.edit){msgRender(MSGC.j,box);shown=true}
+  COINS.call({a:'msgs',code:code,page:page}).then(function(j){
+    if(page===1)msgCache(j,code);
     if(my!==MB.seq||!$('mbList'))return;
-    MB.list=j.list||[];MB.page=j.page||1;MB.admin=!!j.admin;
-    if(MB.admin)markPending(j.pending||0);
-    var h=(MB.admin?'<p class="mb-admin">🛠️ 管理員模式・還有 <b>'+(j.pending||0)+'</b> 則留言還沒回覆</p>':'')+
-      '<p class="s-count">共 '+(j.total||0)+' 則留言</p>';
-    if(!MB.list.length)h+='<div class="t-empty"><span>📮</span><b>還沒有人留言</b><small>當第一個在碼頭留言的旅人吧！</small></div>';
-    h+=MB.list.map(msgHTML).join('');
-    if(j.pages>1)h+='<nav class="pager">'+(MB.page>1?'<button class="pg" type="button" data-mpg="'+(MB.page-1)+'">‹ 較新的留言</button>':'')+'<span class="pg-gap">'+MB.page+' / '+j.pages+'</span>'+(MB.page<j.pages?'<button class="pg" type="button" data-mpg="'+(MB.page+1)+'">較舊的留言 ›</button>':'')+'</nav>';
-    box.innerHTML=h;
-  }).catch(function(){if(my===MB.seq&&$('mbList'))$('mbList').innerHTML='<p class="s-count">⚠️ 暫時連不上留言碼頭，請稍後再試。</p>'});
+    if(MB.edit&&shown)return; /* 正在編輯回覆時不要把畫面換掉 */
+    msgRender(j,$('mbList'));
+  }).catch(function(){if(my===MB.seq&&$('mbList')&&!shown)$('mbList').innerHTML='<p class="s-count">⚠️ 暫時連不上留言碼頭，請稍後再試。</p>'});
 }
 function msgHTML(m){
   var ed=MB.edit===m.id;
@@ -2158,14 +2175,14 @@ function markPending(n){
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button');if(!t||V.t!=='msg')return;
   var d=t.dataset;
-  if(d.mjoin!=null){COINS.need(function(){msgForm();loadMsgs(MB.page)});return}
+  if(d.mjoin!=null){COINS.need(function(){msgForm();loadMsgs(MB.page,1)});return}
   if(t.id==='mbSend'){
     var ta=$('mbText'),v=ta.value.trim();if(v.length<2){toast('留言至少要 2 個字');ta.focus();return}
     t.disabled=true;t.textContent='送出中…';
     COINS.api({a:'msg',text:v},true).then(function(j){
       t.disabled=false;t.textContent='📮 送出留言';
       if(!j.ok){toast('⚠️ '+COINS.errText(j));return}
-      ta.value='';$('mbCnt').textContent='0 / 300';toast('📮 留言送出了，蘋果爸看到會回覆你！');playSfx('candy');loadMsgs(MB.page=1);
+      ta.value='';$('mbCnt').textContent='0 / 300';toast('📮 留言送出了，蘋果爸看到會回覆你！');playSfx('candy');loadMsgs(MB.page=1,1);
     }).catch(function(){t.disabled=false;t.textContent='📮 送出留言';toast('⚠️ 暫時連不上，請稍後再試')});
     return;
   }
@@ -2180,7 +2197,7 @@ pBody.addEventListener('click',function(e){
   t.disabled=true;
   COINS.api(q,act==='reply').then(function(j){
     if(!j.ok){t.disabled=false;toast('⚠️ '+COINS.errText(j));return}
-    MB.edit=null;toast(act==='reply'?'💬 回覆已儲存':act==='hide'?(q.h?'🙈 已隱藏這則留言':'👁️ 已取消隱藏'):'🗑️ 已刪除留言');loadMsgs(MB.page);
+    MB.edit=null;toast(act==='reply'?'💬 回覆已儲存':act==='hide'?(q.h?'🙈 已隱藏這則留言':'👁️ 已取消隱藏'):'🗑️ 已刪除留言');loadMsgs(MB.page,1);
   }).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});
 });
 function redrawMsg(id){var m=MB.list.filter(function(x){return x.id===id})[0],el=pBody.querySelector('.mb[data-mid="'+id+'"]');if(m&&el)el.outerHTML=msgHTML(m)}
@@ -3012,6 +3029,7 @@ window.addEventListener('beforeunload',function(e){
   if(leaving||location.hostname!=='kv1012tiger.github.io')return;
   e.preventDefault();e.returnValue='';
 });
+if(window.IntersectionObserver&&MSG_SPOT&&MSG_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))msgPrefetch()},{rootMargin:'300px'}).observe(MSG_SPOT.el);
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
 </script>
