@@ -39,8 +39,10 @@
   }
 
   // Browsers only allow fullscreen from a user gesture, so every device enters it on the first click/tap.
+  // A page can set window.FS_BTN_ONLY_TOUCH so touch devices only enter fullscreen from the button.
+  var btnOnly = !!window.FS_BTN_ONLY_TOUCH && !!window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
   document.addEventListener("click", function (e) {
-    if (active() || optedOut() || (btn && btn.contains(e.target))) return;
+    if (btnOnly || active() || optedOut() || (btn && btn.contains(e.target))) return;
     go();
   }, true);
 

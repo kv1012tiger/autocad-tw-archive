@@ -769,6 +769,9 @@ body{overflow:hidden;background:#1581bd}
 @media (max-width:440px){#searchBtn{display:none}}
 #bagBtn{position:relative}.hb-dot{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 11px/17px sans-serif;text-align:center;box-shadow:0 0 0 2px #063a50}.hb-dot[hidden]{display:none}
 @media (max-width:440px){.hud .logo{font-size:0;gap:0}.hud .logo span{font-size:24px}.hud .hud-r{gap:6px}}
+/* 手機窄螢幕：讓 📖📢🏆🎒🔊⛶ 六顆按鈕都排得進上方一排 */
+@media (max-width:440px){.hud{gap:5px;padding-left:8px;padding-right:8px}.hud .hud-r{gap:3px}.hud .hb{width:34px;height:34px;font-size:16px}.hud .candy{padding:4px 8px;gap:5px}.hud .logo span{font-size:20px}}
+@media (max-width:370px){.hud .logo{display:none}}
 /* 留言碼頭 */
 .mb-new{margin:14px 0 18px;padding:14px;border-radius:18px;background:rgba(249,168,212,.1);border:1.5px solid rgba(249,168,212,.45)}
 .mb-login{text-align:center}.mb-login p{margin:0 0 10px}
@@ -2869,13 +2872,13 @@ if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
 else{document.documentElement.classList.add('lock');setTimeout(function(){$('introGo').focus({preventScroll:true})},120)}
 var mission=$('mission'),msSeen=false;try{msSeen=sessionStorage.getItem('aikb-mission')==='1'}catch(e){}
-function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
-try{if(localStorage.getItem('aikb-mission-off')===today())msSeen=true}catch(e){}
+function dayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+try{if(localStorage.getItem('aikb-mission-off')===dayKey())msSeen=true}catch(e){}
 if(HASH_SP>=0)msSeen=true;
 function helpTab(i){[].forEach.call(document.querySelectorAll('#helpTabs [data-hp]'),function(b){b.classList.toggle('on',+b.dataset.hp===i)});[].forEach.call(document.querySelectorAll('#helpBody .hp'),function(x){x.hidden=+x.dataset.p!==i});$('helpBody').scrollTop=0}
 $('helpTabs').addEventListener('click',function(e){var b=e.target.closest('[data-hp]');if(b)helpTab(+b.dataset.hp)});
 function showMission(force){if(msSeen&&!force)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;helpTab(0);$('missionGo').focus({preventScroll:true})}
-function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',today())}catch(e){}}
+function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',dayKey())}catch(e){}}
   var first=true;try{first=localStorage.getItem('aikb-help-seen')!=='1';localStorage.setItem('aikb-help-seen','1')}catch(e){}
   if(first)setTimeout(function(){toast('📖 想再看使用說明和遊戲規則，按上方的 📖 就能打開')},500)}
 $('missionGo').addEventListener('click',closeMission);
@@ -2897,6 +2900,25 @@ window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(fun
 /* ---------- 返回鍵與關閉：先關掉開著的畫面，到最外層才問要不要離開 ---------- */
 var leaving=false;
 function guardArm(){try{history.pushState({top:1},'',location.href)}catch(e){}}
+/* 按「確定」離開：一路退回本站的所有紀錄，有上一頁就回上一頁；
+   這一頁是分頁的第一頁（從連結、書籤、捷徑進來）就關分頁，關不掉就回論壇首頁 */
+var leaveTimer=0;
+function exitFallback(){clearTimeout(leaveTimer);try{window.close()}catch(e){}setTimeout(function(){location.replace('https://www.autocad-tw.com/')},250)}
+/* 這個分頁在本站之前還有沒有別的頁面？（Navigation API 只看得到同網域的紀錄，所以再和 history.length 比對） */
+function noPrevPage(){
+  var n=window.navigation;
+  try{if(n&&n.currentEntry&&n.entries)return n.currentEntry.index===0&&history.length<=n.entries().length}catch(e){}
+  return history.length<=2;
+}
+function stepBack(){
+  clearTimeout(leaveTimer);
+  if(noPrevPage()){exitFallback();return}
+  history.back();
+  leaveTimer=setTimeout(exitFallback,2000); /* 退了還在原地（其實沒有上一頁），就走備案 */
+}
+function leaveSite(){leaving=true;stepBack()}
+window.addEventListener('pagehide',function(){clearTimeout(leaveTimer)});
+window.addEventListener('pageshow',function(e){if(e.persisted){leaving=false;clearTimeout(leaveTimer)}});
 function closeTopLayer(){
   var ovs=document.querySelectorAll('.cw-ov');
   if(ovs.length){var ov=ovs[ovs.length-1],x=ov.querySelector('[data-x]');if(x)x.click();else ov.remove();return true}
@@ -2908,11 +2930,13 @@ function closeTopLayer(){
   if(SCN){try{history.replaceState({root:1},'',location.pathname+location.search)}catch(e){}hideScene();return true}
   return false;
 }
-try{history.replaceState({root:1},'',location.href);guardArm()}catch(e){}
+/* 重新整理時，這一筆紀錄本來就是「top」（前面已有 root），不要再多疊一層，否則要按好幾次返回 */
+try{if(!(history.state&&history.state.top)){history.replaceState({root:1},'',location.href);guardArm()}}catch(e){}
 window.addEventListener('popstate',function(e){
+  if(leaving){stepBack();return}
   if(!(e.state&&e.state.root))return;
   if(closeTopLayer()){guardArm();return}
-  if(confirm('要離開論壇資源島嗎？')){leaving=true;history.back()}else guardArm();
+  if(confirm('要離開論壇資源島嗎？'))leaveSite();else guardArm();
 });
 window.addEventListener('beforeunload',function(e){
   if(leaving||location.hostname!=='kv1012tiger.github.io')return;
@@ -2936,6 +2960,7 @@ layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showG
   });
 })();
 </script>
+<script>window.FS_BTN_ONLY_TOUCH=true</script><!-- 手機只有按 ⛶ 才進全螢幕（避免每次開啟都跳出 Chrome 的退出全螢幕提示） -->
 <script src="assets/js/fullscreen.js"></script>
 </body>
 </html>
