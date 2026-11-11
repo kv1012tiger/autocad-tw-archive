@@ -25,18 +25,45 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     save(); emit({ t: 'sync' });
   }
 
-  /* ---------- 呼叫試算表 ---------- */
-  function call(o) {
-    return fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error('http'); return r.json(); });
+  /* ---------- 呼叫試算表（長文字用 POST） ---------- */
+  function call(o, post) {
+    var req = post ? fetch(API, { method: 'POST', body: JSON.stringify(o), cache: 'no-store' })
+      : fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' });
+    return req.then(function (r) { if (!r.ok) throw new Error('http'); return r.json(); });
+  }
+  /* 帶登島碼呼叫，自動更新錢包；登島碼失效就登出 */
+  function api(o, post) {
+    o.code = P.code;
+    return call(o, post).then(function (j) {
+      if (j && j.p) apply(j.p);
+      if (j && !j.ok && j.err === 'nocode') { logout(); toast('請重新登島'); }
+      if (j && j.add) emit({ t: 'add', n: j.add });
+      return j;
+    });
   }
   var ERR = {
     short: '暱稱至少要 2 個字', taken: '這個暱稱已經有人用了，換一個吧', reserved: '這個暱稱保留給站長，換一個吧',
-    nocode: '找不到這組登島碼，請再確認一次', bad: '資料有誤，請重新整理後再試'
+    nocode: '找不到這組登島碼，請再確認一次', bad: '資料有誤，請重新整理後再試',
+    nofid: '找不到這個旅人編號，請再確認一次', self: '這是你自己的旅人編號喔', fmax: '好友最多 50 位',
+    notfriend: '要先互加好友才行', gifted: '今天已經送過這位好友了，明天再送', few: '數量不夠喔',
+    trademax: '今天的兌換次數用完了，明天再來', notemax: '今天的悄悄話已經用完了，明天再聊',
+    msgshort: '留言至少要 2 個字', msgmax: '今天的留言次數用完了，明天再來', admin: '只有站長可以這樣做',
+    tired: '今天在這座島採夠了，明天再來', empty: '這座島今天的物資被採光了，明天會再長出來'
   };
+  function errText(j) {
+    if (!j) return ERR.bad;
+    if (j.err === 'cool') return '休息一下，' + j.wait + ' 秒後再採集';
+    if (j.err === 'msgcool') return '留言太快了，' + j.wait + ' 秒後再試';
+    return ERR[j.err] || ERR.bad;
+  }
+  var AVATARS = ['🐱', '🐶', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐧', '🦉', '🐢'];
+  var RES = { fruit: ['🍎', '水果', '果園島'], iron: ['🔩', '鐵礦', '礦山島'], wood: ['🪵', '木材', '森林島'], stone: ['🪨', '石頭', '採石島'] };
+  var RES_KEYS = ['fruit', 'iron', 'wood', 'stone'];
+  function av(x) { return esc(x && x.av ? x.av : '🙂'); }
   function netFail() { toast('⚠️ 暫時連不上金幣小島，請稍後再試'); }
 
   /* ---------- 送金幣 ---------- */
@@ -106,7 +133,33 @@
     '.cw-me{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.15);font-size:15px;color:#ffe2a8}' +
     '.cw-vis{margin:8px 0 12px;padding:9px 12px;border-radius:14px;background:rgba(3,42,60,.55);border:1px solid rgba(255,209,102,.35);color:#fff8e7;font:15px/1.6 "Noto Sans TC",sans-serif}' +
     '.cw-vis b{color:#ffd166}.cw-vis i{display:inline-block;font-style:normal;margin:3px 4px 0 0;padding:1px 9px;border-radius:999px;background:rgba(255,255,255,.1);font-size:14px}.cw-vis i small{opacity:.7;margin-left:4px;font-size:12px}' +
-    '.cw-link{background:none;border:0;color:#7fd8ff;text-decoration:underline;cursor:pointer;font:inherit;padding:0 4px}';
+    '.cw-link{background:none;border:0;color:#7fd8ff;text-decoration:underline;cursor:pointer;font:inherit;padding:0 4px}' +
+    '.cw-box.wide{max-width:480px}' +
+    '.cw-avs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 4px}' +
+    '.cw-avs button{font-size:34px;line-height:1;padding:10px 0;border-radius:16px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer}' +
+    '.cw-avs button.on{border-color:#ffd166;background:rgba(255,209,102,.22)}' +
+    '.cw-tabs{display:flex;gap:6px;justify-content:center;margin:6px 0 2px;flex-wrap:wrap}' +
+    '.cw-tabs button{padding:7px 14px;border-radius:999px;border:1.5px solid rgba(255,209,102,.5);background:transparent;color:#fff8e7;font:800 14.5px "Noto Sans TC",sans-serif;cursor:pointer}' +
+    '.cw-tabs button.on{background:#ffd166;color:#3a1a08;border-color:#ffd166}' +
+    '.cw-lb .a{flex:none;font-size:22px;width:28px;text-align:center}.cw-lb .s{display:block;font-size:12px;color:#b9d8e4;font-weight:400}' +
+    '.cw-sec{margin-top:14px;padding:12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,209,102,.25);text-align:left}' +
+    '.cw-sec h4{margin:0 0 8px;font-size:16px;color:#ffd166}' +
+    '.cw-bag{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center}' +
+    '.cw-bag div{padding:8px 2px;border-radius:12px;background:rgba(0,0,0,.2)}.cw-bag i{display:block;font-style:normal;font-size:24px}.cw-bag b{display:block;font-size:17px;color:#ffd166}.cw-bag small{margin:0;font-size:11.5px;color:#b9d8e4}' +
+    '.cw-trade{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}' +
+    '.cw-trade button{padding:8px 6px;border-radius:12px;border:1.5px solid rgba(255,209,102,.45);background:rgba(255,209,102,.08);color:#fff8e7;font:700 13.5px "Noto Sans TC",sans-serif;cursor:pointer}' +
+    '.cw-trade button[disabled]{opacity:.45;cursor:default}' +
+    '.cw-fid{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.cw-fid b{font:900 20px Consolas,monospace;letter-spacing:.12em;color:#ffd166}' +
+    '.cw-mini{padding:5px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.6);background:transparent;color:#fff8e7;font:700 13.5px "Noto Sans TC",sans-serif;cursor:pointer}' +
+    '.cw-mini.p{background:#ffd166;color:#3a1a08;border-color:#ffd166}' +
+    '.cw-add{display:flex;gap:6px;margin-top:8px}.cw-add input{flex:1;min-width:0;margin:0;padding:8px 10px;font-size:16px;letter-spacing:.12em;text-transform:uppercase}' +
+    '.cw-fr{display:flex;flex-direction:column;gap:6px;margin-top:8px}' +
+    '.cw-fr>div{padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.2)}' +
+    '.cw-fr .h{display:flex;align-items:center;gap:8px}.cw-fr .h i{font-style:normal;font-size:24px}.cw-fr .h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+    '.cw-fr .d{font-size:13px;color:#b9d8e4;margin:3px 0 6px}.cw-fr .k{display:flex;gap:6px;flex-wrap:wrap}' +
+    '.cw-note{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.07);font-size:14px;line-height:1.5}.cw-note small{display:inline;margin:0;font-size:12px}' +
+    '.cw-dot{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 12px/18px sans-serif;text-align:center}' +
+    '.cw-ta{width:100%;box-sizing:border-box;min-height:70px;margin:6px 0 2px;padding:8px 10px;border-radius:12px;border:1.5px solid #ffd166;background:#06344a;color:#fff;font:15px/1.5 "Noto Sans TC",sans-serif;resize:vertical}';
   function injectCSS() { var st = document.createElement('style'); st.textContent = CSS; (document.head || document.documentElement).appendChild(st); }
   var toastEl, toastT;
   function toast(msg) {
@@ -115,9 +168,9 @@
     toastEl.textContent = msg; toastEl.classList.add('on');
     clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 3400);
   }
-  function modal(html, onReady, lock) {
+  function modal(html, onReady, lock, cls) {
     var ov = document.createElement('div'); ov.className = 'cw-ov';
-    ov.innerHTML = '<div class="cw-box" role="dialog" aria-modal="true">' + html + '</div>';
+    ov.innerHTML = '<div class="cw-box' + (cls ? ' ' + cls : '') + '" role="dialog" aria-modal="true">' + html + '</div>';
     document.body.appendChild(ov);
     function close() { if (ov.parentNode) ov.parentNode.removeChild(ov); }
     ov.addEventListener('click', function (e) { if (e.target === ov && !lock) close(); });
@@ -162,7 +215,7 @@
           if (!j.ok) { err.textContent = ERR[j.err] || ERR.bad; return; }
           P = blank(); apply(j.p); close();
           if (mode === 'login') { toast('👋 歡迎回來，' + P.nick + '！'); if (done) done(true); }
-          else showCode(true, function () { if (done) done(true); });
+          else showCode(true, function () { pickAvatar(function () { if (done) done(true); }, true); });
         }).catch(function () { ok.disabled = false; ok.textContent = '再試一次'; err.textContent = '連不上金幣小島，請稍後再試'; });
       }
       ok.addEventListener('click', submit);
@@ -255,26 +308,174 @@
   }, true);
 
   /* ---------- 排行榜 ---------- */
-  function board() {
-    if (!P.code) { welcome(function (ok) { if (ok) board(); }); return; }
-    modal('<div class="cw-ic">🏆</div><h3>金幣排行榜</h3><div class="cw-body"><p>載入中…</p></div>' +
-      '<div class="cw-me">你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '，目前 🪙 <b>' + P.bal + '</b> 枚・連續登島 ' + (P.streak || 0) + ' 天<br>' +
-      '<button class="cw-link" type="button" data-code>看我的登島碼</button>・<button class="cw-link" type="button" data-nick>改暱稱</button>・<button class="cw-link" type="button" data-sw>換帳號</button></div>' +
+  var TABS = [['coin', '🪙 金幣'], ['res', '🧺 物資'], ['dia', '💎 鑽石']];
+  var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依累計撿到的鑽石排名' };
+  function bagLine(b) { return RES_KEYS.map(function (k) { return RES[k][0] + ' ' + ((b && b[k]) || 0); }).join('　'); }
+  function board(tab) {
+    if (!P.code) { welcome(function (ok) { if (ok) board(tab); }); return; }
+    tab = tab || 'coin';
+    modal('<div class="cw-ic">🏆</div><h3>排行榜</h3>' +
+      '<div class="cw-tabs">' + TABS.map(function (t) { return '<button type="button" data-tab="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div>' +
+      '<small class="cw-tn" style="margin-top:4px"></small><div class="cw-body"><p>載入中…</p></div>' +
+      '<div class="cw-me">' + av(P) + ' 你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '<br>🪙 <b>' + P.bal + '</b>・🧺 ' + (P.tres || 0) + '・💎 ' + (P.tdia || 0) + '・連續登島 ' + (P.streak || 0) + ' 天<br>' +
+      '<button class="cw-link" type="button" data-bag>🎒 背包與好友</button>・<button class="cw-link" type="button" data-av>換頭像</button>・<button class="cw-link" type="button" data-code>看登島碼</button>・<button class="cw-link" type="button" data-nick>改暱稱</button>・<button class="cw-link" type="button" data-sw>換帳號</button></div>' +
       '<div class="cw-row"><button class="cw-b p" type="button" data-x>關閉</button></div>',
       function (ov, close) {
         ov.querySelector('[data-x]').addEventListener('click', close);
+        ov.querySelector('[data-bag]').addEventListener('click', function () { close(); bag(); });
+        ov.querySelector('[data-av]').addEventListener('click', function () { close(); pickAvatar(); });
         ov.querySelector('[data-code]').addEventListener('click', function () { close(); showCode(false); });
         ov.querySelector('[data-nick]').addEventListener('click', function () { close(); rename(); });
         ov.querySelector('[data-sw]').addEventListener('click', function () { close(); welcome(function (ok) { if (ok) daily(); }, 'login'); });
-        var body = ov.querySelector('.cw-body');
-        call({ a: 'top', code: P.code }).then(function (j) {
-          var rows = (j && j.top) || [];
-          if (!rows.length) { body.innerHTML = '<p>還沒有人上榜，你來當第一名！</p>'; return; }
-          body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
-            return '<li class="' + (r.me ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="n">' + esc(r.nick) + '</span><span class="c">🪙 ' + (+r.bal || 0) + '</span></li>';
-          }).join('') + '</ol>';
-        }).catch(function () { body.innerHTML = '<p>排行榜暫時連不上，稍後再試。</p>'; });
+        var body = ov.querySelector('.cw-body'), seq = 0;
+        function show(k) {
+          var my = ++seq;
+          [].forEach.call(ov.querySelectorAll('[data-tab]'), function (b) { b.classList.toggle('on', b.dataset.tab === k); });
+          ov.querySelector('.cw-tn').textContent = TAB_NOTE[k];
+          body.innerHTML = '<p>載入中…</p>';
+          call({ a: 'top', code: P.code, k: k }).then(function (j) {
+            if (my !== seq) return;
+            var rows = (j && j.top) || [];
+            if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
+            body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
+              var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : '🪙 ' + r.v;
+              return '<li class="' + (r.me ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="a">' + av(r) + '</span><span class="n">' + esc(r.nick) +
+                (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span></li>';
+            }).join('') + '</ol>';
+          }).catch(function () { if (my === seq) body.innerHTML = '<p>排行榜暫時連不上，稍後再試。</p>'; });
+        }
+        ov.addEventListener('click', function (e) { var b = e.target.closest('[data-tab]'); if (b) show(b.dataset.tab); });
+        show(tab);
       });
+  }
+
+  /* ---------- 動物頭像 ---------- */
+  function pickAvatar(done, isNew) {
+    if (!P.code) { welcome(function (ok) { if (ok) pickAvatar(done); }); return; }
+    modal('<div class="cw-ic">' + av(P) + '</div><h3>' + (isNew ? '選一個動物頭像' : '換頭像') + '</h3><p>頭像會出現在排行榜、留言碼頭和好友名單。</p>' +
+      '<div class="cw-avs">' + AVATARS.map(function (a) { return '<button type="button" data-a="' + a + '" class="' + (a === P.av ? 'on' : '') + '" aria-label="頭像 ' + a + '">' + a + '</button>'; }).join('') + '</div><div class="cw-err"></div>' +
+      '<div class="cw-row"><button class="cw-b" type="button" data-x>' + (isNew ? '之後再選' : '取消') + '</button></div>',
+      function (ov, close) {
+        var err = ov.querySelector('.cw-err'), busy = false;
+        ov.querySelector('[data-x]').addEventListener('click', function () { close(); if (done) done(); });
+        ov.querySelector('.cw-avs').addEventListener('click', function (e) {
+          var b = e.target.closest('[data-a]'); if (!b || busy) return;
+          busy = true; err.textContent = '儲存中…';
+          api({ a: 'avatar', av: b.dataset.a }).then(function (j) {
+            busy = false;
+            if (!j.ok) { err.textContent = errText(j); return; }
+            close(); toast(P.av + ' 頭像換好了！'); if (done) done();
+          }).catch(function () { busy = false; err.textContent = '連不上金幣小島，請稍後再試'; });
+        });
+      }, !!isNew);
+  }
+
+  /* ---------- 背包：物資、兌換所、旅人編號、好友、悄悄話 ---------- */
+  function copy(s, msg) {
+    function fb() { var ta = document.createElement('textarea'); ta.value = s; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); toast(msg); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(s).then(function () { toast(msg); }, fb); else fb();
+  }
+  function bag(focus) {
+    if (!P.code) { welcome(function (ok) { if (ok) bag(focus); }); return; }
+    modal('<div class="cw-ic">🎒</div><h3>' + av(P) + ' ' + esc(P.nick) + ' 的背包</h3><div data-box></div>' +
+      '<div class="cw-row"><button class="cw-b p" type="button" data-x>關閉</button></div>',
+      function (ov, close) {
+        var box = ov.querySelector('[data-box]'), FR = null, INBOX = null, open = {};
+        ov.querySelector('[data-x]').addEventListener('click', close);
+        function paint() {
+          var b = P.bag || {}, left = Math.max(0, (P.tradeMax || 3) - (P.trades || 0));
+          var h = '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
+            RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
+            '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
+            '<small>累計採集 ' + (P.tres || 0) + ' 個物資、撿到 ' + (P.tdia || 0) + ' 顆鑽石（排行榜用累計數字）。去地圖上的果園島、礦山島、森林島、採石島採集。</small></div>';
+          h += '<div class="cw-sec"><h4>🏪 兌換所<small style="display:inline;margin-left:6px">今天還能換 ' + left + ' 次</small></h4><div class="cw-trade">' +
+            RES_KEYS.map(function (k) { return '<button type="button" data-trade="' + k + '"' + (left && (b[k] || 0) >= 10 ? '' : ' disabled') + '>10 ' + RES[k][0] + ' → 1 🪙</button>'; }).join('') +
+            '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + ' style="grid-column:1/-1">1 💎 → 5 🪙</button></div></div>';
+          h += '<div class="cw-sec"><h4>🪪 我的旅人編號</h4><div class="cw-fid"><b>#' + esc(P.fid || '……') + '</b>' + (P.fid ? '<button class="cw-mini" type="button" data-copyfid>複製</button>' : '') + '</div>' +
+            '<small>把旅人編號給朋友，對方在這裡輸入就能互加好友。登島碼是你的鑰匙，不要給別人。</small>' +
+            '<div class="cw-add"><input class="cw-in" maxlength="6" placeholder="輸入好友的旅人編號" autocapitalize="characters" data-fidin><button class="cw-mini p" type="button" data-fadd>加好友</button></div><div class="cw-err" data-ferr></div></div>';
+          h += '<div class="cw-sec"><h4>👥 好友' + (FR ? '（' + FR.length + '）' : '') + '</h4>' + friendsHTML() + '</div>';
+          h += '<div class="cw-sec"><h4>✉️ 悄悄話' + (P.unread ? '<span class="cw-dot">' + P.unread + '</span>' : '') + '</h4>' + inboxHTML() + '</div>';
+          var keep = ov.querySelector('[data-fidin]'), kv = keep ? keep.value : '';
+          box.innerHTML = h;
+          if (kv) ov.querySelector('[data-fidin]').value = kv;
+        }
+        function friendsHTML() {
+          if (!FR) return '<small>載入中…</small>';
+          if (!FR.length) return '<small>還沒有好友。把你的旅人編號分享給朋友，或輸入朋友的旅人編號。</small>';
+          return '<div class="cw-fr">' + FR.map(function (f) {
+            var o = open[f.fid] || '';
+            return '<div><div class="h"><i>' + av(f) + '</i><b>' + esc(f.nick) + '</b><small style="margin:0">#' + esc(f.fid) + '</small></div>' +
+              '<div class="d">🪙 ' + f.bal + '　' + bagLine(f.bag) + '　💎 ' + f.dia + (f.seen ? '・最近上島 ' + esc(f.seen) : '') + '</div>' +
+              '<div class="k">' + (f.gifted ? '<span class="cw-mini" style="opacity:.6;cursor:default">🎁 今天送過了</span>' : '<button class="cw-mini" type="button" data-op="gift" data-f="' + esc(f.fid) + '">🎁 送禮</button>') +
+              '<button class="cw-mini" type="button" data-op="note" data-f="' + esc(f.fid) + '">✉️ 悄悄話</button><button class="cw-mini" type="button" data-fdel="' + esc(f.fid) + '" data-n="' + esc(f.nick) + '">移除</button></div>' +
+              (o === 'gift' ? '<div class="k" style="margin-top:6px">' + RES_KEYS.map(function (k) { return '<button class="cw-mini p" type="button" data-gift="' + k + '" data-f="' + esc(f.fid) + '"' + ((P.bag || {})[k] ? '' : ' disabled') + '>' + RES[k][0] + ' 送 1 個</button>'; }).join('') + '</div><small>每天可以送每位好友 1 個物資（從你的背包扣）。</small>' : '') +
+              (o === 'note' ? '<textarea class="cw-ta" maxlength="100" placeholder="寫給 ' + esc(f.nick) + ' 的悄悄話（100 字內）" data-nt="' + esc(f.fid) + '"></textarea><button class="cw-mini p" type="button" data-send="' + esc(f.fid) + '">送出</button>' : '') +
+              '</div>';
+          }).join('') + '</div>';
+        }
+        function inboxHTML() {
+          if (!INBOX) return '<button class="cw-mini" type="button" data-inbox>打開收件匣</button>';
+          if (!INBOX.length) return '<small>還沒有人傳悄悄話給你。</small>';
+          return INBOX.map(function (n) { return '<div class="cw-note">' + av(n) + ' <b>' + esc(n.nick) + '</b> <small>' + esc(n.t) + '</small><br>' + linkify(n.text) + '</div>'; }).join('');
+        }
+        function busy(btn) { if (btn) { btn.disabled = true; btn.textContent = '…'; } }
+        function fail(j) { toast('⚠️ ' + errText(j)); paint(); }
+        function loadInbox() { api({ a: 'inbox' }).then(function (j) { INBOX = (j && j.inbox) || []; paint(); }).catch(function () { netFail(); }); }
+        ov.addEventListener('click', function (e) {
+          var t = e.target.closest('button'); if (!t || !box.contains(t)) return;
+          var d = t.dataset;
+          if (d.trade) {
+            busy(t);
+            api({ a: 'trade', k: d.trade }).then(function (j) {
+              if (!j.ok) return fail(j);
+              toast('🏪 換到 ' + j.add + ' 枚金幣！'); paint();
+            }).catch(function () { netFail(); paint(); });
+          } else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製旅人編號 #' + P.fid);
+          else if (d.fadd != null) {
+            var inp = ov.querySelector('[data-fidin]'), v = inp.value.replace(/[^0-9a-z]/gi, '').toUpperCase(), fe = ov.querySelector('[data-ferr]');
+            if (v.length !== 5) { fe.textContent = '旅人編號是 5 個字'; return; }
+            busy(t);
+            api({ a: 'fadd', fid: v }).then(function (j) {
+              if (!j.ok) { paint(); ov.querySelector('[data-ferr]').textContent = errText(j); return; }
+              FR = j.friends || FR; ov.querySelector('[data-fidin]').value = ''; paint();
+              toast('👥 和 ' + j.added.nick + ' 成為好友了！');
+            }).catch(function () { netFail(); paint(); });
+          } else if (d.fdel) {
+            if (!confirm('要把「' + d.n + '」從好友移除嗎？')) return;
+            busy(t);
+            api({ a: 'fdel', fid: d.fdel }).then(function (j) { if (j.ok) FR = j.friends; paint(); }).catch(function () { netFail(); paint(); });
+          } else if (d.op) { open[d.f] = open[d.f] === d.op ? '' : d.op; paint(); var ta = ov.querySelector('[data-nt="' + d.f + '"]'); if (ta) ta.focus(); }
+          else if (d.gift) {
+            busy(t);
+            api({ a: 'gift', fid: d.f, k: d.gift }).then(function (j) {
+              if (!j.ok) return fail(j);
+              FR = j.friends; open[d.f] = ''; paint(); toast('🎁 送出 1 個' + RES[d.gift][1] + '！');
+            }).catch(function () { netFail(); paint(); });
+          } else if (d.send) {
+            var tx = ov.querySelector('[data-nt="' + d.send + '"]'), msg = tx ? tx.value.trim() : '';
+            if (!msg) { if (tx) tx.focus(); return; }
+            busy(t);
+            api({ a: 'note', fid: d.send, text: msg }, true).then(function (j) {
+              if (!j.ok) return fail(j);
+              open[d.send] = ''; paint(); toast('✉️ 悄悄話送出了');
+            }).catch(function () { netFail(); paint(); });
+          } else if (d.inbox != null) { busy(t); loadInbox(); }
+        });
+        paint();
+        api({ a: 'friends' }).then(function (j) { FR = (j && j.friends) || []; paint(); if (focus === 'friends') { var s = ov.querySelectorAll('.cw-sec')[3]; if (s) s.scrollIntoView(); } }).catch(function () { FR = []; paint(); });
+        if (P.unread) loadInbox();
+      }, false, 'wide');
+  }
+
+  /* 文字裡的網址變成可點的連結（先跳脫，再找網址） */
+  function linkify(s) {
+    return esc(s).replace(/(https?:\/\/|www\.)[^\s<>"'，。、！？；：）」』】]+/gi, function (u) {
+      var tail = '';
+      while (/[.,;:!?)\]]$/.test(u)) { tail = u.slice(-1) + tail; u = u.slice(0, -1); }
+      var href = /^www\./i.test(u) ? 'https://' + u : u;
+      return '<a href="' + href + '" target="_blank" rel="noopener nofollow ugc">' + u + '</a>' + tail;
+    }).replace(/\n/g, '<br>');
   }
 
   /* ---------- 小島造訪紀錄 ---------- */
@@ -305,14 +506,40 @@
     earn: earn,
     read: read,
     board: board,
+    bag: bag,
+    avatar: pickAvatar,
     visit: visit,
     toast: toast,
+    api: api,
+    call: call,
+    esc: esc,
+    av: av,
+    linkify: linkify,
+    errText: errText,
+    welcome: welcome,
+    RES: RES,
+    RES_KEYS: RES_KEYS,
+    // 已登島就直接做，還沒有暱稱就先請他取暱稱
+    need: function (f) { if (P.code) f(); else welcome(function (ok) { if (ok) { daily(); f(); } }); },
     // 首頁或直接開啟的文章頁才發登島、在線獎勵；閱讀器 iframe 內不重複計算
     start: function (opt) {
       opt = opt || {};
       if (!TOP || started) { if (opt.done) opt.done(); return; }
       started = true;
-      var begin = function () { daily(); online(); if (opt.done) opt.done(); };
+      var begin = function () {
+        var d = daily(); online();
+        // 老玩家還沒選頭像：這次瀏覽提醒一次
+        if (opt.ask !== false && d) d.then(function () {
+          var asked = false; try { asked = sessionStorage.getItem('cw-av') === '1'; sessionStorage.setItem('cw-av', '1'); } catch (e) {}
+          if (!P.code || P.av || asked) return;
+          var tries = 0;
+          (function wait() { // 等探險任務、開場畫面關掉再問
+            if (document.querySelector('#mission:not([hidden]),#intro:not([hidden]),.cw-ov') && tries++ < 120) { setTimeout(wait, 1000); return; }
+            if (!P.av) pickAvatar(null, true);
+          })();
+        });
+        if (opt.done) opt.done();
+      };
       var asked = false; try { asked = sessionStorage.getItem('cw-asked') === '1'; sessionStorage.setItem('cw-asked', '1'); } catch (e) {}
       if (!P.code && opt.ask !== false && !asked) welcome(begin); else begin();
     }

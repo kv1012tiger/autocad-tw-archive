@@ -764,8 +764,44 @@ body{overflow:hidden;background:#1581bd}
 .online .tag{display:inline-block;margin-left:6px;padding:1px 9px;border-radius:999px;background:#ff8a2a;color:#fff;font-size:12px;vertical-align:2px}
 @media (max-width:520px){.facts{grid-template-columns:1fr}.plans{grid-template-columns:1fr}}
 
-@media (max-width:480px){.in-scene .hud #missionBtn,.in-scene .hud #boardBtn{display:none}}
+@media (max-width:480px){.in-scene .hud #missionBtn,.in-scene .hud #boardBtn,.in-scene .hud #bagBtn{display:none}}
+#bagBtn{position:relative}.hb-dot{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 11px/17px sans-serif;text-align:center;box-shadow:0 0 0 2px #063a50}.hb-dot[hidden]{display:none}
 @media (max-width:440px){.hud .logo{font-size:0;gap:0}.hud .logo span{font-size:24px}.hud .hud-r{gap:6px}}
+/* 留言碼頭 */
+.mb-new{margin:14px 0 18px;padding:14px;border-radius:18px;background:rgba(249,168,212,.1);border:1.5px solid rgba(249,168,212,.45)}
+.mb-login{text-align:center}.mb-login p{margin:0 0 10px}
+.mb-me,.mb-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mb-me small,.mb-h small{color:var(--muted);font-size:13px}
+.mb-av{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;font-size:22px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,209,102,.5)}
+.mb-ta{display:block;width:100%;box-sizing:border-box;min-height:96px;margin:10px 0 6px;padding:10px 12px;border-radius:14px;border:1.5px solid rgba(255,209,102,.6);background:rgba(3,30,44,.7);color:var(--ink);font:16px/1.6 var(--font,inherit);resize:vertical}
+.mb-ta:focus{outline:2px solid var(--gold);outline-offset:1px}
+.mb-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.mb-row small{color:var(--muted)}
+.mb-hint{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
+.mb-admin{margin:0 0 6px;padding:8px 12px;border-radius:12px;background:rgba(255,209,102,.14);border:1px dashed rgba(255,209,102,.6);font-size:14px}
+.mb{margin-top:12px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)}
+.mb.hid{opacity:.6;border-style:dashed}
+.mb-h b{font-size:16px}.mb-h em{font-style:normal;font-size:12px;padding:1px 8px;border-radius:999px;background:#ff5e62;color:#fff}
+.mb-t{margin-top:8px;font-size:16px;line-height:1.7;white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+.mb-t a,.mb-r a{color:var(--cyan);text-decoration:underline;word-break:break-all}
+.mb-r{margin-top:10px}.mb-r p{margin:2px 0 0;word-break:break-word;overflow-wrap:anywhere}
+.mb-k{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mb-b{padding:5px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.55);background:transparent;color:var(--ink);font-size:13.5px;font-weight:700;cursor:pointer}
+.mb-b:hover{background:rgba(255,209,102,.15)}
+/* 物資島 */
+.rs-stage{margin:14px 0 6px;padding:16px 14px 14px;border-radius:20px;text-align:center;background:radial-gradient(ellipse at 50% 35%,color-mix(in srgb,var(--c) 30%,transparent),rgba(255,255,255,.03));border:1.5px solid color-mix(in srgb,var(--c) 60%,transparent)}
+.rs-obj{display:grid;place-items:center;width:132px;height:132px;margin:0 auto 10px;border-radius:50%;border:3px dashed color-mix(in srgb,var(--c) 70%,transparent);background:rgba(255,255,255,.06);cursor:pointer;font-size:74px;line-height:1;padding:0;-webkit-tap-highlight-color:transparent}
+.rs-obj span{display:block;animation:rsBob 2.6s ease-in-out infinite}
+.rs-obj.hit span{animation:rsHit .45s ease-in-out}
+@keyframes rsBob{50%{transform:translateY(-6px) rotate(-3deg)}}
+@keyframes rsHit{20%{transform:rotate(-14deg) scale(1.08)}45%{transform:rotate(12deg) scale(.94)}70%{transform:rotate(-6deg)}}
+.rs-stock{font-size:16px}.rs-stock b{color:var(--gold);font-size:20px}
+.rs-stock small{display:block;margin-top:4px;color:var(--muted);font-size:13.5px}
+.rs-stock .bar{height:10px;margin:8px auto 0;max-width:320px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+.rs-stock .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#ffd166,var(--c))}
+.rs-go{margin-top:12px;min-width:200px;justify-content:center}.rs-go[disabled]{opacity:.55;cursor:default;transform:none}
+.rs-tip{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+.rs-bag{display:flex;flex-wrap:wrap;gap:8px}.rs-bag span{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);font-size:15px}.rs-bag b{color:var(--gold)}
+@media (prefers-reduced-motion:reduce){.rs-obj span,.rs-obj.hit span{animation:none}}
 /* 蘋果爸小島：毛孩散步草地 */
 .pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
 .pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
@@ -791,7 +827,8 @@ body{overflow:hidden;background:#1581bd}
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
   <div class="hud-r">
     <button class="hb" id="missionBtn" type="button" aria-label="探險任務說明">🎯</button>
-    <button class="hb" id="boardBtn" type="button" aria-label="金幣排行榜">🏆</button>
+    <button class="hb" id="boardBtn" type="button" aria-label="排行榜">🏆</button>
+    <button class="hb" id="bagBtn" type="button" aria-label="背包與好友">🎒<span class="hb-dot" id="bagDot" hidden></span></button>
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋文章與問答">🔍</button>
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
     <button class="hb" id="fsBtn" type="button" aria-label="全螢幕"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -936,7 +973,7 @@ body{overflow:hidden;background:#1581bd}
   <div class="card chest-box mission-box">
     <div class="chest-ico">🎯</div>
     <h3 id="missionT">探險任務</h3>
-    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島第 2 天 4 枚，第 3 天起每天 5 枚</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣排行榜</li></ol>
+    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島第 2 天 4 枚，第 3 天起每天 5 枚</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🧺 到 🍎果園島、⛏️礦山島、🌲森林島、🪨採石島採集物資，運氣好還能撿到 💎 鑽石；物資可以到 🎒 背包的兌換所換金幣</li><li>📮 到留言碼頭留言給蘋果爸；在 🎒 背包用旅人編號加好友、送禮、傳悄悄話</li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣、物資、鑽石排行榜</li></ol>
     <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
     <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
   </div>
@@ -1045,6 +1082,16 @@ var SP=[{k:'home',e:'🏡',name:'蘋果爸小島',sub:'講師介紹・三貓三�
   {k:'search',e:'🔮',name:'占卜島',sub:'輸入關鍵字，找文章與問答',c:'#c084fc',g:['#c4b5fd','#5b3fb0'],dc:['✨','🌙','⭐'],res:[['🦉','f'],['🐸','w'],['🦋','f']]}];
 ISLES.concat(FORUM).sort(function(a,b){return a.route-b.route}).forEach(function(s,i){s.no=i+1;SP.push(s)});
 var ALL_ISLES=SP.length-1;
+/* 留言碼頭與四座物資島：插在島群中間，散佈在地圖各處 */
+var MSG_SPOT={k:'msg',e:'📮',name:'留言碼頭',sub:'留言給蘋果爸・可貼網址',c:'#f9a8d4',g:['#ffc4e1','#a8457a'],dc:['💌','🕊️','⚓'],res:[['🐧','w'],['🦭','w'],['🕊️','f']]};
+var RESI=[
+ {k:'res',n:0,rk:'fruit',e:'🍎',it:'🍎',item:'水果',name:'果園島',sub:'採水果・撿鑽石',c:'#ff8f8f',g:['#9be36b','#3f8f2a'],dc:['🍊','🍇','🐝'],res:[['🐿️','w'],['🐇','w'],['🐝','f']],act:'摘水果',hit:['🍎','🍊','🍐','🍇']},
+ {k:'res',n:1,rk:'iron',e:'⛏️',it:'🔩',item:'鐵礦',name:'礦山島',sub:'挖鐵礦・撿鑽石',c:'#a5b4c8',g:['#b9bcc4','#56596a'],dc:['🔦','🪨','⚙️'],res:[['🦡','w'],['🐐','w'],['🦇','f']],act:'挖鐵礦',hit:['🔩','⚙️','✨']},
+ {k:'res',n:2,rk:'wood',e:'🌲',it:'🪵',item:'木材',name:'森林島',sub:'砍木材・撿鑽石',c:'#4ade80',g:['#5fbf4a','#1f6a2a'],dc:['🪓','🍄','🌰'],res:[['🦌','w'],['🦫','w'],['🦉','f']],act:'砍木材',hit:['🪵','🍃','🌰']},
+ {k:'res',n:3,rk:'stone',e:'🪨',it:'🪨',item:'石頭',name:'採石島',sub:'敲石頭・撿鑽石',c:'#e2cfa6',g:['#dccb9e','#8a7a5a'],dc:['🔨','🗿','🦎'],res:[['🦎','w'],['🐢','w'],['🦅','f']],act:'敲石頭',hit:['🪨','💥','✨']}
+];
+SP.splice(2,0,MSG_SPOT);
+[6,11,17,22].forEach(function(at,k){SP.splice(Math.min(at,SP.length),0,RESI[k])});
 SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
 SP.push({k:'dock',e:'⛵',name:'報名碼頭',sub:'場次・費用・報名方式',c:'#ff8a2a',g:['#ffc27a','#b8611f'],dc:['⚓','🏮','🧭'],res:[['🦀','w'],['🐢','w'],['🐦','f']]});
 SP.forEach(function(s,i){s.si=i});
@@ -1144,11 +1191,11 @@ function candyCount(){return ISLES.filter(function(s,i){return ST.c[i]}).length}
 
 /* ---------- 毛孩（三貓三狗） ---------- */
 var PETS=[
- {n:'三花貓',k:'貓',kind:'cat',base:'#fbf6ee',bp:[['#f0a04b',30,22,9],['#2b2b2b',44,26,7]],hp:'#f0a04b',tail:'#2b2b2b',p:[['#f0a04b',30,44,17],['#2b2b2b',70,40,14]],say:'喵～我是三花貓，先點一座島看看吧！'},
- {n:'乳牛貓',k:'貓',kind:'cat',base:'#fbfbfb',bp:[['#1f1f1f',34,24,8],['#1f1f1f',48,31,5]],hp:'#1f1f1f',tail:'#1f1f1f',p:[['#1f1f1f',68,42,19],['#1f1f1f',24,74,10],['#1f1f1f',34,30,8]],say:'黑白分明的我，最喜歡整整齊齊的圖層。'},
- {n:'橘貓',k:'貓',kind:'cat',base:'#f3a24a',tail:'#c96f1e',stripe:'#c96f1e',say:'橘貓報到！拿到金幣，記得分我一枚。'},
- {n:'小黑',k:'米克斯狗',kind:'dog',base:'#2a2a2a',ear:'#151515',snout:'#4a4a4a',say:'汪！我是小黑，帶你到處逛逛。'},
- {n:'小白',k:'米克斯狗',kind:'dog',base:'#f6f2ea',ear:'#e0d2bc',snout:'#ffffff',say:'汪汪～我是小白，有問題都可以問蘋果爸喔！'},
+ {n:'莉莉',k:'14 歲三花貓',kind:'cat',base:'#fbf6ee',bp:[['#f0a04b',30,22,9],['#2b2b2b',44,26,7]],hp:'#f0a04b',tail:'#2b2b2b',p:[['#f0a04b',30,44,17],['#2b2b2b',70,40,14]],say:'喵～我是莉莉，今年 14 歲，先點一座島看看吧！'},
+ {n:'卡比',k:'8 歲乳牛貓',kind:'cat',base:'#fbfbfb',bp:[['#1f1f1f',34,24,8],['#1f1f1f',48,31,5]],hp:'#1f1f1f',tail:'#1f1f1f',p:[['#1f1f1f',68,42,19],['#1f1f1f',24,74,10],['#1f1f1f',34,30,8]],say:'我是卡比，黑白分明的我，最喜歡整整齊齊的圖層。'},
+ {n:'橘子',k:'4 歲橘貓',kind:'cat',base:'#f3a24a',tail:'#c96f1e',stripe:'#c96f1e',say:'橘子報到！拿到金幣，記得分我一枚。'},
+ {n:'小黑',k:'4 歲狗狗',kind:'dog',base:'#2a2a2a',ear:'#151515',snout:'#4a4a4a',say:'汪！我是小黑，帶你到處逛逛。'},
+ {n:'小白',k:'4 歲狗狗',kind:'dog',base:'#f6f2ea',ear:'#e0d2bc',snout:'#ffffff',say:'汪汪～我是小白，有問題都可以問蘋果爸喔！'},
  {n:'黑寶',k:'10 歲狗狗',kind:'dog',base:'#1f1f1f',ear:'#101010',snout:'#9a9a9a',old:1,say:'我是黑寶，今年 10 歲！慢慢逛，不用急。'}
 ];
 var petUid=0;
@@ -1244,6 +1291,24 @@ function oracleIcon(){
     '<path d="M27 30 Q36 20 48 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".85"/>'+
     '<path d="M50 44 l2.6 5.6 5.6 2.6-5.6 2.6-2.6 5.6-2.6-5.6-5.6-2.6 5.6-2.6z" fill="#fff"/><path d="M33 50 l1.4 3 3 1.4-3 1.4-1.4 3-1.4-3-3-1.4 3-1.4z" fill="#fff8e1"/></svg>';
 }
+/* 物資島的地貌：果樹、礦坑、木頭堆、大石頭；留言碼頭的郵筒 */
+function rock(x,y,r,c,d){return '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="'+(r*1.1)+'" ry="'+(r*.35)+'" fill="#0a3a1e" opacity=".28"/><path d="M'+(x-r)+' '+y+'Q'+(x-r*.9)+' '+(y-r*1.1)+' '+(x-r*.1)+' '+(y-r*1.2)+'Q'+(x+r*.9)+' '+(y-r*1.1)+' '+(x+r)+' '+y+'Z" fill="'+c+'" stroke="'+d+'" stroke-width=".7"/><path d="M'+(x-r*.55)+' '+(y-r*.7)+'Q'+(x-r*.2)+' '+(y-r*1.05)+' '+(x+r*.2)+' '+(y-r*.95)+'" fill="none" stroke="#fff" stroke-width="1" opacity=".45"/>'}
+function resProps(rk,I){
+  var i,P;
+  if(rk==='fruit'){P=[[38,30],[102,30],[56,50],[90,52]];P.forEach(function(p,k){var h=treeSVG(p[0],p[1],5.4,'#2f8f34','#9be36b');for(i=0;i<4;i++)h+='<circle cx="'+(p[0]-3.5+rnd(k,i+3)*7).toFixed(1)+'" cy="'+(p[1]-8+rnd(k,i+9)*6).toFixed(1)+'" r="1.4" fill="'+['#ff3b3b','#ff9f1c','#ffd23f','#ff3b3b'][i]+'"/>';I.push({y:p[1],h:h})});
+    I.push({y:48,h:'<rect x="66" y="40" width="10" height="7" rx="1" fill="#b07a3c" stroke="#5a3a1a" stroke-width=".6"/><circle cx="69" cy="39.5" r="1.6" fill="#ff3b3b"/><circle cx="73" cy="39.5" r="1.6" fill="#ff9f1c"/>'})}
+  else if(rk==='iron'){I.push({y:40,h:rock(98,40,13,'#7d828f','#3a3d48')+'<path d="M92 40 Q98 28 104 40Z" fill="#1d1f26"/><path d="M91 40h14" stroke="#7a5230" stroke-width="1.6"/><path d="M93 40V33M103 40V33M92.5 33h11" stroke="#7a5230" stroke-width="1.4"/>'});
+    I.push({y:46,h:rock(44,46,9,'#8f94a0','#3a3d48')+'<circle cx="41" cy="42" r="1.3" fill="#c96f3a"/><circle cx="47" cy="43" r="1.1" fill="#c96f3a"/><circle cx="44" cy="39.5" r="1" fill="#e6e9ef"/>'});
+    I.push({y:52,h:'<path d="M62 52 L80 46" stroke="#7a5230" stroke-width="1.2"/><path d="M62 54 L80 48" stroke="#7a5230" stroke-width="1.2"/><rect x="70" y="44" width="8" height="5" rx="1" fill="#555b6a" stroke="#222" stroke-width=".6"/><circle cx="72" cy="44" r="1.2" fill="#c96f3a"/><circle cx="75.5" cy="43.6" r="1.2" fill="#9aa0ad"/>'})}
+  else if(rk==='wood'){var lg='';for(i=0;i<3;i++){var ly=48-i*3.2,lx=94+(i===2?3:0)+(i===1?-1:0);lg+='<rect x="'+(lx-9)+'" y="'+(ly-2.6)+'" width="18" height="5.2" rx="2.6" fill="#9a6a3a" stroke="#5a3a1a" stroke-width=".6"/><circle cx="'+(lx+9)+'" cy="'+ly+'" r="2.6" fill="#e2b77a" stroke="#5a3a1a" stroke-width=".6"/>'}I.push({y:48,h:lg});
+    I.push({y:44,h:'<rect x="40" y="38" width="9" height="5" rx="1" fill="#e2b77a" stroke="#5a3a1a" stroke-width=".6"/><path d="M44.5 38 L49 31" stroke="#5a3a1a" stroke-width="1.2"/><path d="M47.6 30.4 l3 1.4 -1.2 2.4 -3-1.2z" fill="#c9ced8" stroke="#333" stroke-width=".5"/>'})}
+  else if(rk==='stone'){[[100,42,11],[86,50,7],[40,44,9],[56,52,6],[112,52,5]].forEach(function(p,k){I.push({y:p[1],h:rock(p[0],p[1],p[2],['#cfc6b4','#b8ae9a','#d9d2c2','#a89f8c','#c4baa5'][k],'#6a6250')})})}
+}
+function mailbox(x,y){
+  return '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="5" ry="1.8" fill="#0a3a1e" opacity=".3"/><rect x="'+(x-1)+'" y="'+(y-14)+'" width="2" height="14" fill="#6b4220"/>'+
+    '<path d="M'+(x-7)+' '+(y-14)+'V'+(y-21)+'Q'+x+' '+(y-28)+' '+(x+7)+' '+(y-21)+'V'+(y-14)+'Z" fill="#e2453c" stroke="#7a1a14" stroke-width=".8"/><rect x="'+(x-4)+'" y="'+(y-20)+'" width="8" height="1.6" rx=".8" fill="#5a0e0a"/>'+
+    '<path d="M'+(x+7)+' '+(y-24)+'v-6l5 2-5 2" fill="#ffd166" stroke="#7a4a00" stroke-width=".5"/>';
+}
 function isleSVG(s){
   var sd=s.si+1,land=mix(s.g[0],'#56b43c',.5),deep=mix(s.g[1],'#2f8a2e',.55),tree=mix(s.g[1],'#1f7a2c',.72),leaf=mix(tree,'#a6e36f',.55),rx=62,ry=38,cy=46,i,I=[];
   if(s.k==='search'){land='#a78bfa';deep='#5b3fb0';tree='#4c2a8f';leaf='#d8b4fe'}
@@ -1261,6 +1326,8 @@ function isleSVG(s){
   if(s.major){I.push({y:44,h:lighthouse(124,44)});I.push({y:40,h:bigFlag(17,40,s.c)})}
   if(s.k==='isle')I.push({y:42,h:qSign(116,42,s.c)});
   if(s.k==='search'){I.push({y:40,h:tent(110,40)});I.push({y:38,h:tent(30,38)})}
+  if(s.k==='res')resProps(s.rk,I);
+  if(s.k==='msg'){I.push({y:44,h:mailbox(114,44)});I.push({y:40,h:mailbox(26,40)})}
   I.sort(function(p,q){return p.y-q.y}).forEach(function(x){o+=x.h});
   return o+'</svg>';
 }
@@ -1280,7 +1347,7 @@ SP.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';
   var isl=s.k==='isle',frm=s.k==='forum',num=isl||frm;
   var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 點我搜尋全部文章':s.sub;
-  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:235;
+  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:235;
   if(s.major)s.base=Math.round(s.base*1.4);
   b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(s.k==='search'?' oracle':'')+(isl?' qai':'')+(frm?' fi':'')+(s.major?' major':'');
   b.style.setProperty('--c',s.c);
@@ -1324,7 +1391,7 @@ function drawIslets(W,H,f,edge){
 var G={};
 function layout(){
   document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:7,rows=port?7:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:8,rows=port?8:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -1350,7 +1417,7 @@ function visit(i,after){
   busy=true;centerOn(i,true);placeBoat(i);playSfx('row');
   setTimeout(function(){busy=false;go()},900);
 }
-function openSpot(i){var s=SP[i];if(s.k==='forum'){location.hash='isle-'+encodeURIComponent(s.id);return}if(s.k==='isle')openPanel('isle',s.n);else openPanel(s.k,0)}
+function openSpot(i){var s=SP[i];if(s.k==='forum'){location.hash='isle-'+encodeURIComponent(s.id);return}if(s.k==='isle'||s.k==='res')openPanel(s.k,s.n);else openPanel(s.k,0)}
 /* 縮放：手勢進行中只做 GPU 變形，放開後才一次更新版面；最小可看整張地圖 */
 var TKN=10.2,Z=1,Zmin=.3,Zmax=1.6,baseFont=20,zRaf=0,pinch=null,zg=null,wheelT=0;
 function fitZoom(){Zmin=Math.min(world.clientWidth/G.w,world.clientHeight/G.h)}
@@ -1563,13 +1630,14 @@ function route(){
   if(t){if(SCN!==t)showScene(t);if(m[2]!=null&&+m[2]<SCN.huts.length)openPanel('hut',+m[2]);return}
   hideScene();
   if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
-  else if(h==='home'||h==='castle'||h==='search'||h==='dock'){openPanel(h);placeBoat(spotIdx(h),true)}
+  else if(h==='home'||h==='castle'||h==='search'||h==='dock'||h==='msg'){openPanel(h);placeBoat(spotIdx(h),true)}
+  else if((m=h.match(/^res-(\d)$/))&&RESI[+m[1]]){openPanel('res',+m[1]);placeBoat(RESI[+m[1]].si,true)}
 }
 window.addEventListener('hashchange',route);
 $('sceneBack').addEventListener('click',function(){location.hash=''});
 
 /* ---------- 分享連結與收藏島 ---------- */
-function spotHash(s){return s.k==='forum'?'isle-'+s.id:s.k==='isle'?'qa-'+s.n:s.k}
+function spotHash(s){return s.k==='forum'?'isle-'+s.id:s.k==='isle'?'qa-'+s.n:s.k==='res'?'res-'+s.n:s.k}
 function shareHash(hash,title){
   var url=location.href.split('#')[0]+'#'+hash;
   if(navigator.share&&matchMedia('(pointer: coarse)').matches){navigator.share({title:title+'｜論壇資源島',url:url}).catch(function(){});return}
@@ -1734,7 +1802,7 @@ function renderHut(k){
   pNext.textContent=k<n-1?s.huts[k+1].name+' →':'回島上 →';
 }
 function curSi(){return ISLES[V.i].si}
-function openSi(si,dir){var s=SP[si];if(s.k==='forum'){closePanel();placeBoat(si);location.hash='isle-'+encodeURIComponent(s.id);return}openPanel(s.k,s.k==='isle'?s.n:0,dir);placeBoat(si)}
+function openSi(si,dir){var s=SP[si];if(s.k==='forum'){closePanel();placeBoat(si);location.hash='isle-'+encodeURIComponent(s.id);return}openPanel(s.k,s.k==='isle'||s.k==='res'?s.n:0,dir);placeBoat(si)}
 function renderHome(){
   pBody.innerHTML='<div class="home-top"><div class="big-orbit"><div class="tav" role="img" aria-label="蘋果爸"></div>'+ringHTML(true)+'</div>'+
     '<div class="pet-say"><span class="bubble" id="petSay">點點看我身邊的毛孩 🐾</span></div></div>'+
@@ -1771,6 +1839,143 @@ function renderCastle(){
   $('pStep').textContent='🏰 AI課程城堡';
   footSimple('← 回地圖','⛵ 去報名碼頭 →');
 }
+/* ---------- 留言碼頭：大家留言，站長回覆（回覆後可再編輯）；網址自動變成連結 ---------- */
+var MB={page:1,list:[],edit:null,seq:0};
+function renderMsg(){
+  pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
+    '<div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
+  $('pStep').textContent='📮 留言碼頭';
+  footSimple('← 回地圖','🏡 蘋果爸小島 →');
+  msgForm();loadMsgs(MB.page=1);
+}
+function msgForm(){
+  var box=$('mbNew'),w=COINS.get();if(!box)return;
+  if(!w.code){box.innerHTML='<div class="mb-login"><p>取個暱稱，就能在碼頭留言給蘋果爸。</p><button class="btn btn-primary btn-sm" type="button" data-mjoin>🏝️ 取暱稱・登島</button></div>';return}
+  box.innerHTML='<div class="mb-me"><span class="mb-av">'+COINS.av(w)+'</span><b>'+esc(w.nick)+'</b><small>想說什麼？可以直接貼上網址</small></div>'+
+    '<textarea class="mb-ta" id="mbText" maxlength="300" placeholder="寫下你的留言…（300 字內，可以貼網址）"></textarea>'+
+    '<div class="mb-row"><small id="mbCnt">0 / 300</small><button class="btn btn-primary btn-sm" type="button" id="mbSend">📮 送出留言</button></div>'+
+    '<p class="mb-hint">留言會公開顯示，請不要留電話、Email 等個人資料。每天最多 10 則，每則間隔 1 分鐘。</p>';
+  var ta=$('mbText');ta.addEventListener('input',function(){$('mbCnt').textContent=ta.value.length+' / 300'});
+}
+function loadMsgs(page){
+  var my=++MB.seq,box=$('mbList');if(!box)return;
+  COINS.call({a:'msgs',code:COINS.get().code,page:page}).then(function(j){
+    if(my!==MB.seq||!$('mbList'))return;
+    MB.list=j.list||[];MB.page=j.page||1;MB.admin=!!j.admin;
+    if(MB.admin)markPending(j.pending||0);
+    var h=(MB.admin?'<p class="mb-admin">🛠️ 管理員模式・還有 <b>'+(j.pending||0)+'</b> 則留言還沒回覆</p>':'')+
+      '<p class="s-count">共 '+(j.total||0)+' 則留言</p>';
+    if(!MB.list.length)h+='<div class="t-empty"><span>📮</span><b>還沒有人留言</b><small>當第一個在碼頭留言的旅人吧！</small></div>';
+    h+=MB.list.map(msgHTML).join('');
+    if(j.pages>1)h+='<nav class="pager">'+(MB.page>1?'<button class="pg" type="button" data-mpg="'+(MB.page-1)+'">‹ 較新的留言</button>':'')+'<span class="pg-gap">'+MB.page+' / '+j.pages+'</span>'+(MB.page<j.pages?'<button class="pg" type="button" data-mpg="'+(MB.page+1)+'">較舊的留言 ›</button>':'')+'</nav>';
+    box.innerHTML=h;
+  }).catch(function(){if(my===MB.seq&&$('mbList'))$('mbList').innerHTML='<p class="s-count">⚠️ 暫時連不上留言碼頭，請稍後再試。</p>'});
+}
+function msgHTML(m){
+  var ed=MB.edit===m.id;
+  return '<article class="mb'+(m.hidden?' hid':'')+'" data-mid="'+esc(m.id)+'"><div class="mb-h"><span class="mb-av">'+COINS.av(m)+'</span><b>'+esc(m.nick)+'</b><small>'+esc(m.t)+'</small>'+(m.hidden?'<em>已隱藏</em>':'')+'</div>'+
+    '<div class="mb-t">'+COINS.linkify(m.text)+'</div>'+
+    (m.reply&&!ed?'<div class="qa-a mb-r"><span class="tav" aria-hidden="true"></span><div><small>🍎 蘋果爸回覆・'+esc(m.rt)+(m.re?'・已編輯 '+esc(m.re):'')+'</small><p>'+COINS.linkify(m.reply)+'</p></div></div>':'')+
+    (ed?'<textarea class="mb-ta" data-rta maxlength="300" placeholder="回覆內容（清空後儲存＝刪除回覆）">'+esc(m.reply||'')+'</textarea><div class="mb-k"><button class="btn btn-primary btn-sm" type="button" data-msave="'+esc(m.id)+'">💾 儲存回覆</button><button class="btn btn-ghost btn-sm" type="button" data-mcancel>取消</button></div>':
+     (MB.admin||m.mine?'<div class="mb-k">'+(MB.admin?'<button class="mb-b" type="button" data-mrep="'+esc(m.id)+'">'+(m.reply?'✏️ 編輯回覆':'💬 回覆')+'</button><button class="mb-b" type="button" data-mhide="'+esc(m.id)+'" data-h="'+(m.hidden?0:1)+'">'+(m.hidden?'👁️ 取消隱藏':'🙈 隱藏')+'</button>':'')+
+       (m.mine?'<button class="mb-b" type="button" data-mdel="'+esc(m.id)+'">🗑️ 刪除</button>':'')+'</div>':''))+
+    '</article>';
+}
+function markPending(n){
+  var s=MSG_SPOT;if(!s.el)return;
+  s.el.querySelector('.cnt').textContent=n?'📮 '+n+' 則留言待回覆':s.sub;
+  s.el.classList.toggle('next',n>0);
+}
+pBody.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t||V.t!=='msg')return;
+  var d=t.dataset;
+  if(d.mjoin!=null){COINS.need(function(){msgForm();loadMsgs(MB.page)});return}
+  if(t.id==='mbSend'){
+    var ta=$('mbText'),v=ta.value.trim();if(v.length<2){toast('留言至少要 2 個字');ta.focus();return}
+    t.disabled=true;t.textContent='送出中…';
+    COINS.api({a:'msg',text:v},true).then(function(j){
+      t.disabled=false;t.textContent='📮 送出留言';
+      if(!j.ok){toast('⚠️ '+COINS.errText(j));return}
+      ta.value='';$('mbCnt').textContent='0 / 300';toast('📮 留言送出了，蘋果爸看到會回覆你！');playSfx('candy');loadMsgs(MB.page=1);
+    }).catch(function(){t.disabled=false;t.textContent='📮 送出留言';toast('⚠️ 暫時連不上，請稍後再試')});
+    return;
+  }
+  if(d.mpg){loadMsgs(+d.mpg);var b=$('mbList');if(b)b.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});return}
+  if(d.mrep){MB.edit=d.mrep;redrawMsg(d.mrep);var r=pBody.querySelector('[data-rta]');if(r)r.focus();return}
+  if(d.mcancel!=null){var id=MB.edit;MB.edit=null;redrawMsg(id);return}
+  var act=d.msave?'reply':d.mhide?'hide':d.mdel?'mdel':'';if(!act)return;
+  var mid=d.msave||d.mhide||d.mdel,q={a:act,id:mid};
+  if(act==='reply'){q.text=(pBody.querySelector('[data-rta]')||{}).value||'';if(!q.text.trim()&&!confirm('回覆是空的，要刪除這則回覆嗎？'))return}
+  if(act==='hide')q.h=+d.h;
+  if(act==='mdel'&&!confirm('要刪除這則留言嗎？'))return;
+  t.disabled=true;
+  COINS.api(q,act==='reply').then(function(j){
+    if(!j.ok){t.disabled=false;toast('⚠️ '+COINS.errText(j));return}
+    MB.edit=null;toast(act==='reply'?'💬 回覆已儲存':act==='hide'?(q.h?'🙈 已隱藏這則留言':'👁️ 已取消隱藏'):'🗑️ 已刪除留言');loadMsgs(MB.page);
+  }).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});
+});
+function redrawMsg(id){var m=MB.list.filter(function(x){return x.id===id})[0],el=pBody.querySelector('.mb[data-mid="'+id+'"]');if(m&&el)el.outerHTML=msgHTML(m)}
+
+/* ---------- 物資島：每天隨機總量、大家一起採，偶爾撿到鑽石 ---------- */
+var RS={st:null,until:0,timer:0,seq:0};
+function renderRes(n){
+  var R=RESI[n];
+  pBody.innerHTML='<div class="ph" style="--c:'+R.c+'"><span class="ph-e">'+R.e+'</span><div><div class="p-kicker">RESOURCE ISLAND・物資島</div><h3 id="pTitle">'+esc(R.name)+'</h3><p>'+esc(R.act)+'、撿鑽石，物資可以換金幣、送好友、衝排行榜</p></div></div>'+
+    '<div class="rs-stage" style="--c:'+R.c+'"><button class="rs-obj" type="button" id="rsObj" aria-label="'+esc(R.act)+'"><span>'+R.e+'</span></button>'+
+      '<div class="rs-stock" id="rsStock">看看今天島上還有多少'+esc(R.item)+'…</div>'+
+      '<button class="btn btn-primary rs-go" type="button" id="rsGo">'+R.it+' '+esc(R.act)+'</button><p class="rs-tip" id="rsTip"></p></div>'+
+    '<div class="p-sec"><h4>我的背包</h4><div class="rs-bag" id="rsBag"></div><div class="row2"><button class="btn btn-ghost btn-sm" type="button" data-rbag>🎒 背包・兌換所・好友</button><button class="btn btn-ghost btn-sm" type="button" data-rrank>🏆 物資排行榜</button></div></div>'+
+    '<div class="p-sec"><h4>其他物資島</h4><div class="chips">'+RESI.filter(function(x){return x!==R}).map(function(x){return '<button class="chip" type="button" data-rgo="'+x.n+'">'+x.e+' '+esc(x.name)+'</button>'}).join('')+'</div></div>'+
+    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>每座物資島每天的總量隨機（30～80 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次，每次 1～3 個；兩次採集要隔 30 秒。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 5 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
+  $('pStep').textContent=R.e+' 物資島';
+  footSimple('← 回地圖',RESI[(n+1)%RESI.length].e+' '+RESI[(n+1)%RESI.length].name+' →');
+  resBag();resStock();
+  var my=++RS.seq,w=COINS.get();
+  (w.code?COINS.api({a:'isles'}):COINS.call({a:'isles'})).then(function(j){if(my===RS.seq&&j&&j.isles){RS.st=j.isles;resStock()}}).catch(function(){if(my===RS.seq&&$('rsStock'))$('rsStock').textContent='⚠️ 暫時連不上物資島，請稍後再試'});
+}
+function resBag(){
+  var el=$('rsBag'),w=COINS.get(),b=w.bag||{};if(!el)return;
+  el.innerHTML=w.code?RESI.map(function(x){return '<span>'+x.it+' <b>'+(b[x.rk]||0)+'</b> '+x.item+'</span>'}).join('')+'<span>💎 <b>'+(w.dia||0)+'</b> 鑽石</span>':'<span>取個暱稱就能開始採集，物資會存進你的背包。</span>';
+}
+function resStock(){
+  if(V.t!=='res')return;
+  var R=RESI[V.i],el=$('rsStock'),go=$('rsGo'),tip=$('rsTip');if(!el)return;
+  var x=RS.st&&RS.st[R.rk],cool=Math.max(0,Math.ceil((RS.until-Date.now())/1000));
+  if(x){var pct=x.total?x.left/x.total*100:0;
+    el.innerHTML='今天還剩 <b>'+x.left+'</b> / '+x.total+' 份'+esc(R.item)+'<div class="bar"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
+      '<small>你今天在這裡採了 '+x.mine+' / '+x.max+' 次'+(x.found?'・今天已有 '+x.found+' 顆 💎 被撿走':'・聽說島上藏著鑽石…')+'</small>'}
+  var done=x&&(x.left<=0||x.mine>=x.max);
+  go.disabled=!!(done||cool);
+  go.textContent=cool?'⏳ 休息 '+cool+' 秒':x&&x.left<=0?'今天被採光了，明天再來':x&&x.mine>=x.max?'今天採夠了，明天再來':R.it+' '+R.act;
+  tip.textContent=cool?'':done?'去別的物資島看看吧！':'點按鈕或點上面的'+R.name+'就能'+R.act;
+  clearTimeout(RS.timer);if(cool)RS.timer=setTimeout(resStock,1000);
+}
+function gather(){
+  var R=RESI[V.i],go=$('rsGo');if(!go||go.disabled)return;
+  COINS.need(function(){
+    if(V.t!=='res')return;
+    go.disabled=true;go.textContent='採集中…';
+    var obj=$('rsObj');if(obj){obj.classList.remove('hit');void obj.offsetWidth;obj.classList.add('hit')}
+    playSfx('flip');
+    COINS.api({a:'gather',isle:R.rk}).then(function(j){
+      if(j.isles)RS.st=j.isles;
+      if(!j.ok){if(j.err==='cool')RS.until=Date.now()+j.wait*1000;toast('⚠️ '+COINS.errText(j));resStock();return}
+      RS.until=Date.now()+30000;
+      var g=j.got,rc=(obj||go).getBoundingClientRect();
+      burst(rc.left+rc.width/2,rc.top+rc.height/2,g.dia?['💎','✨',R.it,'💎']:R.hit);
+      if(g.dia){playSfx('chest');toast('💎 哇！撿到 '+g.dia+' 顆鑽石，還有 '+R.it+' +'+g.n+' '+R.item)}
+      else{playSfx('candy');toast(R.it+' +'+g.n+' '+R.item+'！')}
+      resBag();resStock();
+    }).catch(function(){toast('⚠️ 暫時連不上物資島，請稍後再試');resStock()});
+  });
+}
+pBody.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t||V.t!=='res')return;
+  if(t.id==='rsGo'||t.id==='rsObj'){gather();return}
+  if(t.dataset.rbag!=null){COINS.bag();return}
+  if(t.dataset.rrank!=null){COINS.board('res');return}
+  if(t.dataset.rgo!=null){var k=+t.dataset.rgo;openPanel('res',k);placeBoat(RESI[k].si);return}
+});
 var SEARCH_KW=['圖塊','LISP','出圖','標註','圖層','3D','外掛','配置','文字','數量','手稿','線上課程'];
 /* 全文搜尋：文章索引 assets/search.json 第一次打開搜尋才載入 */
 var ART=null,artLoading=null,FORUM_BY={};FORUM.forEach(function(s){FORUM_BY[s.id]=s});
@@ -1889,14 +2094,14 @@ function applySync(code){
 }
 function actsHTML(){
   var s=null,h='',title='';
-  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock')s=SP[spotIdx(V.t)];else if(V.t==='session')s=SP[spotIdx('dock')];
+  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock'||V.t==='msg')s=SP[spotIdx(V.t)];else if(V.t==='res')s=RESI[V.i];else if(V.t==='session')s=SP[spotIdx('dock')];
   if(V.t==='hut'&&SCN){h=spotHash(SCN)+'/'+V.i;title=SCN.name+'・'+SCN.huts[V.i].name}
   else if(s){h=spotHash(s);title=s.name}
   if(!h)return '';
   return '<button class="act" type="button" data-share="'+esc(h)+'" data-title="'+esc(title)+'">🔗<span class="tx"> 分享</span></button>'+(s?'<button class="act" type="button" id="pFavBtn" data-fav="'+s.si+'"></button>':'');
 }
 function render(dir){
-  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);
+  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);
   else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
@@ -1904,7 +2109,7 @@ function render(dir){
 }
 function openPanel(t,i,dir){
   V={t:t,i:i||0};render(dir);
-  var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='dock'?['dock','報名碼頭']:t==='search'?['search','占卜島']:null;
+  var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='dock'?['dock','報名碼頭']:t==='msg'?['msg','留言碼頭']:t==='res'?['res-'+RESI[V.i].rk,RESI[V.i].name]:t==='search'?['search','占卜島']:null;
   if(vk){var ph=pBody.querySelector('.ph,.home-top');if(ph){var vd=document.createElement('div');ph.parentNode.insertBefore(vd,ph.nextSibling);COINS.visit(vk[0],vk[1],vd)}}
   if(!panel.classList.contains('open')){
     opener=document.activeElement;
@@ -1915,7 +2120,7 @@ function openPanel(t,i,dir){
 }
 function closePanel(){
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
-  if(/^#(qa-\d+|home|castle|search|dock)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  if(/^#(qa-\d+|res-\d|home|castle|search|dock|msg)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
@@ -1932,6 +2137,8 @@ pNext.addEventListener('click',function(){
   else if(V.t==='home')openPanel('isle',0);
   else if(V.t==='castle')openPanel('dock');
   else if(V.t==='dock')openPanel('castle');
+  else if(V.t==='res'){openPanel('res',(V.i+1)%RESI.length);placeBoat(RESI[V.i].si)}
+  else if(V.t==='msg')openPanel('home');
   else if(V.t==='session')closePanel();
   else if(V.t==='search')randomArt();
   if(V.t==='castle'||V.t==='home'||V.t==='dock')placeBoat(spotIdx(V.t));
@@ -1986,7 +2193,18 @@ $('searchBtn').addEventListener('click',openSearch);
 $('searchBtn2').addEventListener('click',openSearch);
 $('candyBtn').addEventListener('click',function(){if(COINS.get().earned>=5){openChest();return}openLog()});
 $('boardBtn').addEventListener('click',function(){COINS.board()});
+$('bagBtn').addEventListener('click',function(){COINS.bag()});
 $('missionBtn').addEventListener('click',function(){showMission(true)});
+/* 背包紅點（未讀悄悄話）、物資島背包、站長的待回覆留言 */
+var pendAsked=false;
+function socialPaint(w){
+  var d=$('bagDot');d.hidden=!(w.code&&w.unread);d.textContent=w.unread||'';
+  if(V.t==='res')resBag();
+  if(V.t==='msg'&&!$('mbText')&&w.code)msgForm();
+  if(w.admin&&!pendAsked){pendAsked=true;COINS.call({a:'msgs',code:w.code}).then(function(j){if(j&&j.pending){markPending(j.pending);toast('📮 有 '+j.pending+' 則留言還沒回覆')}}).catch(function(){})}
+}
+COINS.on(function(ev,w){socialPaint(w)});
+socialPaint(COINS.get());
 COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
 function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scrollTop=0;playSfx('chest');burst(innerWidth/2,innerHeight/2,['🪙','💰','💎','⭐','🎉','🐚']);$('giftCopy').focus({preventScroll:true})}
@@ -2080,7 +2298,8 @@ var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
 var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
 if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
 else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
-else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock')HASH_SP=spotIdx(HASH);
+else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg')HASH_SP=spotIdx(HASH);
+else if((hm=HASH.match(/^res-(\d)$/))&&RESI[+hm[1]])HASH_SP=RESI[+hm[1]].si;
 if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
 else{document.documentElement.classList.add('lock');setTimeout(function(){$('introGo').focus({preventScroll:true})},120)}
