@@ -680,6 +680,91 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .spot.oracle .cnt{font-weight:800;color:#f3e8ff}
 .spot.oracle .isle .ico{bottom:38%;font-size:0}
 .spot.oracle .isle .ico .mico{display:block;width:calc(var(--w) * .3);height:calc(var(--w) * .3);overflow:visible;filter:drop-shadow(0 0 calc(var(--w) * .03) rgba(233,213,255,.9))}
+/* ===== 占卜島：分頁與塔羅牌 ===== */
+.otabs{display:flex;gap:8px;margin:14px 0 6px;overflow-x:auto;scrollbar-width:none}
+.otabs::-webkit-scrollbar{display:none}
+.otab{flex:0 0 auto;padding:9px 15px;border-radius:999px;border:1.5px solid rgba(192,132,252,.55);background:rgba(76,42,143,.3);color:#f3e8ff;font:inherit;font-weight:800;font-size:15px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.otab.on{background:linear-gradient(135deg,#c084fc,#7c3aed);border-color:#f3e8ff;color:#fff}
+.tr-intro{margin:8px 0 14px;color:#e9d5ff;line-height:1.75}
+.tr-intro b{color:#fff}
+.tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tr-slot{display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 8px 12px;border-radius:20px;border:1.5px solid rgba(192,132,252,.4);background:linear-gradient(180deg,rgba(91,63,176,.35),rgba(30,17,70,.5));text-align:center}
+.tr-slot h4{margin:0;font-size:17px;color:#fff}
+.tr-slot small{color:#d8b4fe;line-height:1.5}
+.tr-slot small b{color:#fff}
+.tr-ball{width:112px;height:112px;margin:6px 0 2px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fff 0,#e9d5ff 12%,#a78bfa 45%,#4c1d95 100%);box-shadow:0 0 26px rgba(192,132,252,.8),inset 0 -10px 20px rgba(30,10,80,.5);display:grid;place-items:center;font-size:44px;animation:orb 3s ease-in-out infinite}
+.tr-ball:disabled{cursor:default}
+@keyframes orb{50%{transform:translateY(-4px);box-shadow:0 0 38px rgba(216,180,254,.95),inset 0 -10px 20px rgba(30,10,80,.5)}}
+.tr-slot.shuffling .tr-ball{animation:orbshake .35s linear infinite}
+@keyframes orbshake{25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}
+/* 牌面（原創配色與符號） */
+.tc{--c1:#fde68a;--c2:#6d28d9;width:132px;height:216px;perspective:900px;flex:none}
+.tc.m{width:108px;height:178px}
+.tc.s{width:72px;height:118px}
+.tc.l{width:148px;height:244px}
+.tc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.3,1.2,.4,1)}
+.tc.is-back .tc-in{transform:rotateY(180deg)}
+.tc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.45)}
+.tc-bk{transform:rotateY(180deg);background:repeating-linear-gradient(45deg,#4c1d95 0 6px,#5b21b6 6px 12px);border:3px solid #e9d5ff;display:grid;place-items:center;font-size:40px}
+.tc-front{background:linear-gradient(160deg,var(--c1),var(--c2));border:3px solid #fff8e7}
+.tc-ct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:7px 3px 7px;text-align:center}
+.tc.rev .tc-ct{transform:rotate(180deg)}
+.tc-no{font:900 12px/1 Georgia,serif;letter-spacing:.08em;background:rgba(255,255,255,.82);color:#1e1b4b;padding:3px 8px;border-radius:999px}
+.tc-sym{font-size:54px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.tc-suit{font-size:24px;line-height:1;margin-top:-6px}
+.tc-pips{display:grid;grid-template-columns:repeat(3,1fr);gap:1px 4px;width:74%;font-size:20px;line-height:1.05;place-items:center}
+.tc-pips i{font-style:normal;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.tc-pips.p2,.tc-pips.p3{grid-template-columns:1fr;font-size:22px}
+.tc-pips.p4{grid-template-columns:repeat(2,1fr)}
+.tc-pips.p5,.tc-pips.p6{grid-template-columns:repeat(2,1fr);font-size:19px}
+.tc-pips.p7,.tc-pips.p8,.tc-pips.p9,.tc-pips.p10{font-size:17px}
+.tc-tx{display:block;line-height:1.2}
+.tc-nm{display:block;font-size:17px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.tc-en{display:block;font-size:10px;color:#fff;opacity:.92;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.tc.m .tc-sym{font-size:46px}.tc.m .tc-nm{font-size:15px}
+.tc.s .tc-sym{font-size:32px}.tc.s .tc-nm{font-size:11px}.tc.s .tc-en{display:none}.tc.s .tc-no{font-size:9px;padding:2px 6px}.tc.s .tc-pips{font-size:11px;gap:0 2px}.tc.s .tc-pips.p10,.tc.s .tc-pips.p9,.tc.s .tc-pips.p8,.tc.s .tc-pips.p7{font-size:9px}.tc.s .tc-suit{font-size:15px}
+.tc.s .tc-face{border-width:2px;border-radius:9px}
+.tc.l .tc-sym{font-size:62px}.tc.l .tc-nm{font-size:19px}
+/* 抽牌結果 */
+.tr-res{margin-top:14px;padding:16px 16px 14px;border-radius:20px;border:2px solid rgba(255,255,255,.28);background:linear-gradient(160deg,color-mix(in srgb,var(--c1) 22%,#1b0f3d),color-mix(in srgb,var(--c2) 42%,#12082e))}
+.tr-res h4{margin:0 0 8px;font-size:17px;color:#fde68a}
+.tr-name{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.tr-name b{font-size:26px;color:#fff}
+.tr-name small{color:#d8b4fe;font-size:14px}
+.tr-name em{font-style:normal;font-weight:900;font-size:13px;padding:3px 10px;border-radius:999px}
+.tr-name em.up{background:#fde68a;color:#422006}
+.tr-name em.rv{background:#fda4af;color:#4c0519}
+.tr-kw{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.tr-kw span{padding:4px 11px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:14px;font-weight:700}
+.tr-text{margin:10px 0 6px;font-size:17px;line-height:1.9;color:#fff}
+.tr-sum{margin:6px 0 10px;font-size:14px;line-height:1.7;color:#e9d5ff}
+.tr-act{display:flex;flex-wrap:wrap;gap:8px}
+.tr-note{margin:14px 2px 6px;font-size:13px;line-height:1.7;color:#c4b5fd}
+.tr-how{margin:10px 0 14px}
+.tr-how details{margin:0 0 8px;border-radius:14px;border:1px solid rgba(192,132,252,.35);background:rgba(76,42,143,.22);padding:0 14px}
+.tr-how summary{padding:11px 0;font-weight:800;color:#f3e8ff;cursor:pointer;font-size:16px}
+.tr-how details p{margin:0 0 12px;line-height:1.85;color:#ede9fe;font-size:15.5px}
+.tr-fl{margin:6px 0 8px}
+.chip.on{background:linear-gradient(135deg,#c084fc,#7c3aed);border-color:#f3e8ff;color:#fff}
+.tg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:12px 8px;justify-items:center}
+.tg{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer;color:#fff;font:inherit;font-size:13px;font-weight:700}
+.tg:hover .tc{transform:translateY(-3px)}
+.tc{transition:transform .2s}
+.td-hero{display:flex;gap:16px;align-items:flex-start;margin:14px 0 6px}
+.td-hero h4{margin:0 0 2px;font-size:24px;color:#fff}
+.td-hero small{color:#d8b4fe}
+.td-hero p{margin:8px 0 0;line-height:1.8;color:#ede9fe;font-size:15px}
+.td-hero .td-suit{color:#c4b5fd;font-size:14px}
+.td-sec{margin:12px 0;padding:12px 14px;border-radius:16px;background:rgba(253,230,138,.08);border:1px solid rgba(253,230,138,.28)}
+.td-sec.rv{background:rgba(253,164,175,.08);border-color:rgba(253,164,175,.3)}
+.td-sec h5{margin:0 0 4px;font-size:16px;color:#fde68a}
+.td-sec.rv h5{color:#fda4af}
+.td-sec p{margin:8px 0 0;line-height:1.85;color:#fff;font-size:15.5px}
+/* 地圖上占卜島：今日運勢待抽 */
+.spot .tbadge{position:absolute;left:6%;top:2%;z-index:4;display:none;width:34px;height:34px;border-radius:50%;background:#c084fc;place-items:center;font-size:18px;box-shadow:0 0 0 3px rgba(46,16,101,.9),0 0 16px rgba(192,132,252,.9);animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.spot.tpend .tbadge{display:grid}
+@media (max-width:420px){.tr-ball{width:96px;height:96px;font-size:38px}.tc.m{width:100px;height:166px}.td-hero{flex-direction:column;align-items:center;text-align:center}}
+@media (prefers-reduced-motion:reduce){.tc-in{transition:none}.tr-ball{animation:none}}
 /* 清單收藏、搜尋結果 */
 .card.il.fav b::after{content:" ⭐"}
 .s-h{margin:18px 0 10px;font-size:19px}
@@ -1201,7 +1286,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
       </ul></section>
       <section class="hp" data-p="5" hidden><ul>
         <li>🎮 <b>遊戲島</b>有兩個 AutoCAD 指令遊戲：指令快打（60 秒）和指令跑酷（連擊），各自有全站排行榜。</li>
-        <li>🔮 占卜島可以搜尋全部文章與問答；🏰 城堡和 ⛵ 報名碼頭有課程介紹與報名方式。</li>
+        <li>🔮 占卜島可以搜尋全部文章與問答，還能每天抽一張愛情運勢、一張事業運勢的塔羅牌（附 78 張牌義說明）；🏰 城堡和 ⛵ 報名碼頭有課程介紹與報名方式。</li>
         <li>🎯 想再看這份說明，按上方的 📖 就能隨時打開。</li>
       </ul></section>
     </div>
@@ -1616,12 +1701,12 @@ function islandHTML(s){
 SP.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';
   var isl=s.k==='isle',frm=s.k==='forum',num=isl||frm;
-  var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 點我搜尋全部文章':s.sub;
+  var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 搜尋文章・🃏 抽塔羅牌':s.sub;
   s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:s.k==='game'?225:s.k==='mine'?230:s.k==='pets'?220:235;
   if(s.major)s.base=Math.round(s.base*1.4);
   b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(s.k==='search'?' oracle':'')+(isl?' qai':'')+(frm?' fi':'')+(s.major?' major':'');
   b.style.setProperty('--c',s.c);
-  b.innerHTML=islandHTML(s)+'<span class="badge">🪙</span>'+
+  b.innerHTML=islandHTML(s)+'<span class="badge">🪙</span>'+(s.k==='search'?'<span class="tbadge">🃏</span>':'')+
     '<span class="tag">'+esc(s.name)+'</span>'+
     '<span class="cnt">'+esc(cnt)+'</span>';
   b.setAttribute('aria-label',s.name+'：'+cnt);
@@ -1900,6 +1985,7 @@ function route(){
   if(t){if(SCN!==t)showScene(t);if(m[2]!=null&&+m[2]<SCN.huts.length)openPanel('hut',+m[2]);return}
   hideScene();
   if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
+  else if(h==='tarot'){openPanel('search',1);placeBoat(spotIdx('search'),true)}
   else if(h==='home'||h==='castle'||h==='search'||h==='dock'||h==='msg'||h==='game'||h==='mine'||h==='pets'){openPanel(h);placeBoat(spotIdx(h),true)}
   else if((m=h.match(/^res-(\d)$/))&&RESI[+m[1]]){openPanel('res',+m[1]);placeBoat(RESI[+m[1]].si,true)}
   else if(!h&&panel.classList.contains('open'))closePanel();
@@ -1992,6 +2078,7 @@ function refresh(){
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🪙 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
   $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇';
+  tdPaint();
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
 
@@ -2597,14 +2684,18 @@ function artCard(a,v){
   return '<a class="t-card s-art" style="--c:'+s.c+'" href="'+esc(a[0])+'"><span class="te">'+a[4]+'</span><span class="tb"><b>'+mark(a[1],v)+'</b><small>'+mark(snip(a[5],v),v)+'</small><span class="tm">📍 '+esc(s.name)+'・'+esc(a[3])+'</span></span></a>';
 }
 function renderSearch(){
-  pBody.innerHTML='<div class="ph" style="--c:#c084fc"><span class="ph-e">🔮</span><div><div class="p-kicker">占卜島・關鍵字搜尋</div><h3 id="pTitle">搜尋文章與問答</h3><p>對著水晶球說出關鍵字，幫你找出相關的教學文章和問答</p></div></div>'+
-    '<div class="sbox"><input id="qIn" type="search" placeholder="例如：圖塊、LISP、出圖、3D…" autocomplete="off" aria-label="搜尋文章與問答"></div>'+
-    '<div class="chips" id="kw">'+SEARCH_KW.map(function(k){return '<button class="chip" type="button" data-kw="'+k+'">'+k+'</button>'}).join('')+'</div>'+
-    '<p class="s-count" id="sCount"></p><div id="sArt"></div><div class="qa-list" id="sRes"></div>';
+  pBody.innerHTML='<div class="ph" style="--c:#c084fc"><span class="ph-e">🔮</span><div><div class="p-kicker">占卜島・水晶球與塔羅</div><h3 id="pTitle">占卜島</h3><p>搜尋全部文章，也能抽今天的愛情與事業塔羅</p></div></div>'+
+    '<div class="otabs" id="oTabs">'+['🔎 搜尋文章','🃏 塔羅占卜','📖 牌義說明'].map(function(t,i){return '<button class="otab" type="button" data-otab="'+i+'">'+t+'</button>'}).join('')+'</div><div id="oBody"></div>';
   $('pStep').textContent='🔮 占卜島';
   footSimple('← 回地圖','🔮 占卜一篇');
+  paintOTab();
+}
+function renderSearchBody(b){
+  b.innerHTML='<div class="sbox"><input id="qIn" type="search" placeholder="例如：圖塊、LISP、出圖、3D…" autocomplete="off" aria-label="搜尋文章與問答"></div>'+
+    '<div class="chips" id="kw">'+SEARCH_KW.map(function(k){return '<button class="chip" type="button" data-kw="'+k+'">'+k+'</button>'}).join('')+'</div>'+
+    '<p class="s-count" id="sCount"></p><div id="sArt"></div><div class="qa-list" id="sRes"></div>';
   var inp=$('qIn');inp.addEventListener('input',function(){doSearch(inp.value)});doSearch('');
-  loadArt().then(function(){if(V.t==='search')doSearch(inp.value)});
+  loadArt().then(function(){var q=$('qIn');if(V.t==='search'&&V.i===0&&q)doSearch(q.value)});
 }
 function doSearch(v){
   v=v.trim().toLowerCase();var res=$('sRes'),art=$('sArt'),cnt=$('sCount');if(!res)return;
@@ -2621,6 +2712,142 @@ function doSearch(v){
 function randomArt(){
   loadArt().then(function(d){if(!d.length)return;var a=d[Math.floor(Math.random()*d.length)];toast('🔮 水晶球幫你抽到：'+a[1]);openReader(a[0],a[1])});
 }
+/* ---------- 占卜島：塔羅占卜（每天愛情、事業各抽一張）與牌義說明 ---------- */
+var TD=null,tdP=null,TD_KEY='aikb-tarot',TR_SHOW='',TR_C=-1,TR_F='all';
+var TD_TOPIC={love:{ico:'💕',name:'愛情運勢',a:'lu',b:'lr'},career:{ico:'💼',name:'事業運勢',a:'cu',b:'cr'}};
+function tdLoad(){
+  if(TD)return Promise.resolve(TD);
+  if(tdP)return tdP;
+  tdP=new Promise(function(ok,no){
+    var s=document.createElement('script');s.src='assets/js/tarot-data.js?v=1';
+    s.onload=function(){TD=window.TAROT_DATA;if(TD)ok(TD);else{tdP=null;no(new Error('tarot'))}};
+    s.onerror=function(){tdP=null;no(new Error('tarot'))};
+    document.head.appendChild(s);
+  });
+  return tdP;
+}
+function tdDay(){function p(n){return (n<10?'0':'')+n}var d=new Date();return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
+function tdUser(){
+  var c=COINS.get().code;if(c)return 'c:'+c;
+  var id='';try{id=localStorage.getItem('aikb-tid')||'';if(!id){id=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('aikb-tid',id)}}catch(e){id='x'}
+  return 'd:'+id;
+}
+/* 今天抽過的牌：存在這台裝置；結果由「登島碼（或這台裝置）＋日期」算出，所以同一天不管怎麼重開都是同一張 */
+function tdState(){
+  var st=null;try{st=JSON.parse(localStorage.getItem(TD_KEY)||'null')}catch(e){}
+  if(!st||typeof st!=='object')st={};
+  var day=tdDay(),u=tdUser();
+  if(st.d!==day||st.u!==u)st={d:day,u:u,love:null,career:null,h:Array.isArray(st.h)?st.h:[]};
+  if(!Array.isArray(st.h))st.h=[];
+  return st;
+}
+function tdHash(str){var h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0;i<str.length;i++){var ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (h1^h2)>>>0}
+function tdRng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+function tdPick(topic){
+  var base=tdUser()+'|'+tdDay(),rl=tdRng(tdHash(base+'|love')),love={id:Math.floor(rl()*78),rev:rl()<.35};
+  if(topic==='love')return love;
+  var rc=tdRng(tdHash(base+'|career')),id=Math.floor(rc()*78),n=0;
+  while(id===love.id&&n++<8)id=Math.floor(rc()*78);
+  return {id:id,rev:rc()<.35};
+}
+/* 地圖上占卜島的 🃏：今天還沒抽完才亮 */
+function tdPaint(){
+  var s=SP[spotIdx('search')];if(!s||!s.el)return;
+  var st=tdState();s.el.classList.toggle('tpend',!(st.love&&st.career));
+}
+function tdCard(c,o){
+  o=o||{};
+  var sy=c.major?'<span class="tc-sym">'+c.sy+'</span>':c.pips>1?'<span class="tc-pips p'+c.pips+'">'+new Array(c.pips+1).join('<i>'+c.sy+'</i>')+'</span>':c.pips===1?'<span class="tc-sym">'+c.sy+'</span>':'<span class="tc-sym">'+c.role+'</span><span class="tc-suit">'+c.sy+'</span>';
+  return '<div class="tc'+(o.size?' '+o.size:'')+(o.rev?' rev':'')+(o.back?' is-back':'')+'" style="--c1:'+c.c1+';--c2:'+c.c2+'"><div class="tc-in"><div class="tc-face tc-bk"><span>🔮</span></div>'+
+    '<div class="tc-face tc-front"><div class="tc-ct"><span class="tc-no">'+esc(c.no)+'</span>'+sy+'<span class="tc-tx"><b class="tc-nm">'+esc(c.z)+'</b><small class="tc-en">'+esc(c.e)+'</small></span></div></div></div></div>';
+}
+function tdChips(s){return '<div class="tr-kw">'+s.split('・').map(function(k){return '<span>'+esc(k)+'</span>'}).join('')+'</div>'}
+function trSlot(topic){
+  var T=TD_TOPIC[topic],r=tdState()[topic];
+  if(r){var c=TD.cards[r.id];return '<div class="tr-slot done" data-trslot="'+topic+'"><h4>'+T.ico+' '+T.name+'</h4>'+tdCard(c,{rev:r.rev,size:'m'})+'<small><b>'+esc(c.z)+'</b>・'+(r.rev?'逆位':'正位')+'</small><button class="btn btn-ghost btn-sm" type="button" data-trshow="'+topic+'">看解釋</button></div>'}
+  return '<div class="tr-slot" data-trslot="'+topic+'"><h4>'+T.ico+' '+T.name+'</h4><button class="tr-ball" type="button" data-trdraw="'+topic+'" aria-label="抽今天的'+T.name+'"><span>🔮</span></button><small>點水晶球，抽今天的<br>'+T.name+'</small></div>';
+}
+function trResult(topic){
+  var r=tdState()[topic];if(!r)return '';
+  var T=TD_TOPIC[topic],c=TD.cards[r.id];
+  return '<div class="tr-res" style="--c1:'+c.c1+';--c2:'+c.c2+'"><h4>'+T.ico+' 今日'+T.name+'</h4><div class="tr-name"><b>'+esc(c.z)+'</b><small>'+esc(c.e)+'</small><em class="'+(r.rev?'rv':'up')+'">'+(r.rev?'逆位':'正位')+'</em></div>'+
+    tdChips(r.rev?c.kr:c.ku)+'<p class="tr-text">'+esc(r.rev?c[T.b]:c[T.a])+'</p><p class="tr-sum">🃏 這張牌的核心：'+esc(c.sum)+'</p>'+
+    '<div class="tr-act"><button class="btn btn-ghost btn-sm" type="button" data-trdict="'+c.id+'">📖 這張牌的完整說明</button><button class="btn btn-ghost btn-sm" type="button" data-trcopy="1">📋 複製今日塔羅</button></div></div>';
+}
+function renderTarot(flipTopic){
+  var b=$('oBody');if(!b||V.t!=='search'||V.i!==1||!TD)return;
+  var st=tdState(),both=st.love&&st.career;
+  if(!TR_SHOW||!st[TR_SHOW])TR_SHOW=st.love?'love':st.career?'career':'';
+  b.innerHTML='<p class="tr-intro">靜下心，想著你在意的事，再點水晶球。<b>每天可以抽一張愛情運勢、一張事業運勢</b>，抽到的牌今天不會改變。</p>'+
+    '<div class="tr-grid">'+trSlot('love')+trSlot('career')+'</div><div id="trRes">'+(TR_SHOW?trResult(TR_SHOW):'')+'</div>'+
+    '<p class="tr-note">'+(both?'今天的兩張都抽完囉，明天 0 點可以再抽。':'')+'塔羅僅供娛樂與自我反思，重要的決定請以事實與專業意見為準。</p>';
+  tdPaint();
+  if(flipTopic){
+    var el=b.querySelector('[data-trslot="'+flipTopic+'"] .tc');
+    if(el){el.classList.add('is-back');void el.offsetWidth;setTimeout(function(){el.classList.remove('is-back');playSfx('flip')},reduce?0:120)}
+    setTimeout(function(){var x=$('trRes');if(x)x.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'})},reduce?0:900);
+  }
+}
+function trDraw(topic,btn){
+  if(tdState()[topic]){TR_SHOW=topic;renderTarot();return}
+  var slot=btn.closest('.tr-slot');btn.disabled=true;if(slot)slot.classList.add('shuffling');playSfx('chest');
+  setTimeout(function(){
+    var st=tdState();if(st[topic]){renderTarot();return}
+    var r=tdPick(topic);st[topic]=r;st.h.push({d:st.d,t:topic,id:r.id,rv:r.rev?1:0});if(st.h.length>40)st.h=st.h.slice(-40);
+    try{localStorage.setItem(TD_KEY,JSON.stringify(st))}catch(e){}
+    TR_SHOW=topic;renderTarot(topic);
+  },reduce?80:1100);
+}
+function tdCopy(){
+  var st=tdState(),L=['🔮 今日塔羅（'+st.d.slice(5).replace('-','/')+'）'];
+  ['love','career'].forEach(function(k){var r=st[k];if(!r)return;var c=TD.cards[r.id],T=TD_TOPIC[k];L.push(T.ico+' '+T.name+'：'+c.z+'（'+(r.rev?'逆位':'正位')+'）— '+(r.rev?c.kr:c.ku))});
+  L.push('論壇資源島・占卜島 '+location.origin+location.pathname+'#tarot');
+  var txt=L.join('\n');
+  function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('📋 已複製今日塔羅')}catch(e){toast('複製失敗，請手動選取')}ta.remove()}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){toast('📋 已複製今日塔羅')},fb);else fb();
+}
+/* 牌義說明：怎麼看塔羅＋78 張牌的圖鑑 */
+function dictDetail(c){
+  var su=c.major?null:TD.suits[c.suit],rk=c.major?null:TD.ranks[c.rank];
+  return '<button class="btn btn-ghost btn-sm" type="button" data-tback="1">← 回牌義圖鑑</button>'+
+    '<div class="td-hero">'+tdCard(c,{size:'l'})+'<div><h4>'+esc(c.z)+'</h4><small>'+esc(c.e)+(c.major?'・大阿爾克那':'・小阿爾克那')+'</small><p>'+esc(c.sum)+'</p>'+
+    (su?'<p class="td-suit">'+su.s+' '+esc(su.d)+'</p>':'')+'</div></div>'+
+    '<div class="td-sec"><h5>⬆️ 正位</h5>'+tdChips(c.ku)+'<p><b>💕 愛情：</b>'+esc(c.lu)+'</p><p><b>💼 事業：</b>'+esc(c.cu)+'</p></div>'+
+    '<div class="td-sec rv"><h5>🔃 逆位</h5>'+tdChips(c.kr)+'<p><b>💕 愛情：</b>'+esc(c.lr)+'</p><p><b>💼 事業：</b>'+esc(c.cr)+'</p></div>'+
+    (rk?'<p class="tr-note">數字「'+esc(rk.z)+'」代表：'+esc(rk.t)+'。</p>':'');
+}
+function renderDict(){
+  var b=$('oBody');if(!b||V.t!=='search'||V.i!==2||!TD)return;
+  if(TR_C>=0){b.innerHTML=dictDetail(TD.cards[TR_C]);return}
+  var fl=[['all','全部 78'],['大牌','大牌 22']].concat(TD.suits.map(function(s){return [s.z,s.s+' '+s.z+' 14']}));
+  var list=TD.cards.filter(function(c){return TR_F==='all'||c.grp===TR_F});
+  b.innerHTML='<div class="tr-how">'+TD.how.map(function(x,i){return '<details'+(i===0?' open':'')+'><summary>'+esc(x[0])+'</summary><p>'+esc(x[1])+'</p></details>'}).join('')+'</div>'+
+    '<div class="chips tr-fl">'+fl.map(function(f){return '<button class="chip'+(TR_F===f[0]?' on':'')+'" type="button" data-tfilter="'+f[0]+'">'+esc(f[1])+'</button>'}).join('')+'</div>'+
+    '<p class="s-count">點一張牌，看正位、逆位和愛情、事業的解釋。</p>'+
+    '<div class="tg-grid">'+list.map(function(c){return '<button class="tg" type="button" data-tcard="'+c.id+'">'+tdCard(c,{size:'s'})+'<span>'+esc(c.z)+'</span></button>'}).join('')+'</div>';
+}
+function paintOTab(){
+  var tabs=document.querySelectorAll('#oTabs .otab');
+  [].forEach.call(tabs,function(t){t.classList.toggle('on',+t.dataset.otab===V.i)});
+  var b=$('oBody');if(!b)return;
+  if(V.i===0){renderSearchBody(b);return}
+  b.innerHTML='<p class="s-count">🔮 水晶球暖機中…</p>';
+  tdLoad().then(function(){if(V.i===1)renderTarot();else if(V.i===2)renderDict()}).catch(function(){var x=$('oBody');if(x)x.innerHTML='<p class="s-count">⚠️ 暫時載入不了塔羅牌，請稍後再試。</p>'});
+}
+function oTab(i){V.i=i;paintOTab();pBody.scrollTop=0}
+pBody.addEventListener('click',function(e){
+  if(V.t!=='search')return;
+  var t=e.target.closest('button');if(!t)return;var d=t.dataset;
+  if(d.otab!=null){oTab(+d.otab);return}
+  if(!TD)return;
+  if(d.trdraw){trDraw(d.trdraw,t);return}
+  if(d.trshow){TR_SHOW=d.trshow;renderTarot();var x=$('trRes');if(x)x.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});return}
+  if(d.trdict!=null){TR_C=+d.trdict;oTab(2);return}
+  if(d.trcopy!=null){tdCopy();return}
+  if(d.tcard!=null){TR_C=+d.tcard;renderDict();pBody.scrollTop=0;return}
+  if(d.tback!=null){TR_C=-1;renderDict();return}
+  if(d.tfilter){TR_F=d.tfilter;renderDict()}
+});
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
 function renderFav(){
   var list=SP.filter(isFav);
@@ -2726,7 +2953,7 @@ function openPanel(t,i,dir){
 }
 function closePanel(){
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
-  if(/^#(qa-\d+|res-\d|home|castle|search|dock|msg|game|mine|pets)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  if(/^#(qa-\d+|res-\d|home|castle|search|tarot|dock|msg|game|mine|pets)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
@@ -2912,6 +3139,7 @@ var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
 if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
 else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
 else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg'||HASH==='game'||HASH==='mine'||HASH==='pets')HASH_SP=spotIdx(HASH);
+else if(HASH==='tarot')HASH_SP=spotIdx('search');
 else if((hm=HASH.match(/^res-(\d)$/))&&RESI[+hm[1]])HASH_SP=RESI[+hm[1]].si;
 if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
@@ -3030,6 +3258,7 @@ window.addEventListener('beforeunload',function(e){
   e.preventDefault();e.returnValue='';
 });
 if(window.IntersectionObserver&&MSG_SPOT&&MSG_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))msgPrefetch()},{rootMargin:'300px'}).observe(MSG_SPOT.el);
+setInterval(tdPaint,60000);
 setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
