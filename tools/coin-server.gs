@@ -682,6 +682,8 @@ function topLists_() {
     voy.push({ fid: String(r[C.fid] || ''), nick: plain_(r[C.nick]), av: plain_(r[C.av]), score: scoreOf[x], h: isl[x].h, pets: isl[x].pets.length, seen: r[C.seen] ? new Date(r[C.seen]).getTime() : 0 });
   });
   out.voy = voy.sort(function (p, q) { return q.score - p.score; }).slice(0, VOY_KEEP);
+  // 登島船長總人數：所有有暱稱的一般玩家（不含站長帳號），不是只算排行榜前 20 名
+  out.n = rows.filter(function (r) { return r[C.nick] && r[C.admin] !== '是'; }).length;
   try { cache.put('top5', JSON.stringify(out), TOP_TTL); } catch (e) {}
   return out;
 }
@@ -707,9 +709,9 @@ function anns_() {
 function top_(q) {
   var lists = topLists_(), code = String(q.code || '').toUpperCase();
   function pub(list) { return list.map(function (o) { var x = {}; for (var k in o) if (k !== 'c') x[k] = o[k]; x.me = !!code && o.c === code; return x; }); }
-  if (q.k === 'all') return { ok: true, all: { coin: pub(lists.coin), res: pub(lists.res), dia: pub(lists.dia), isle: pub(lists.isle || []) } };
+  if (q.k === 'all') return { ok: true, n: lists.n, all: { coin: pub(lists.coin), res: pub(lists.res), dia: pub(lists.dia), isle: pub(lists.isle || []) } };
   var k = q.k === 'res' || q.k === 'dia' ? q.k : 'coin';
-  return { ok: true, k: k, top: pub(lists[k]) };
+  return { ok: true, k: k, n: lists.n, top: pub(lists[k]) };
 }
 
 /* ---------- 物資島：每天第一次有人來時重抽總量與鑽石位置 ---------- */
