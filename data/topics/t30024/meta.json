@@ -1,0 +1,12 @@
+{
+  "id": "t30024",
+  "board": "realtime",
+  "order": 94,
+  "icon": "📚",
+  "title": "AutoCAD 依照圖層名稱分類抓出聚合線面積",
+  "tagline": "只要聚合線的圖層名稱分類好，就可透過 C2LA(指令) 程式快速產生面積表格…",
+  "tags": [],
+  "author": "Tiger&蘋果爸",
+  "posted_at": "2025-04-05",
+  "source_url": "https://www.autocad-tw.com/t30024-topic"
+}
