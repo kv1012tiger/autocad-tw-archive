@@ -310,6 +310,20 @@
   /* ---------- 排行榜 ---------- */
   var TABS = [['coin', '🪙 金幣'], ['res', '🧺 物資'], ['dia', '💎 鑽石']];
   var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依累計撿到的鑽石排名' };
+  /* 排行榜快取：三頁一次拿回來，存在這台裝置；打開時先顯示，再背景更新 */
+  var TKEY = 'cw-top', TOPC = null, topReq = null;
+  try { TOPC = JSON.parse(localStorage.getItem(TKEY) || 'null'); } catch (e) { TOPC = null; }
+  function fetchTop() {
+    if (topReq) return topReq;
+    topReq = call({ a: 'top', k: 'all', code: P.code }).then(function (j) {
+      topReq = null;
+      if (!j || !j.all) throw new Error('top');
+      TOPC = { t: Date.now(), all: j.all };
+      try { localStorage.setItem(TKEY, JSON.stringify(TOPC)); } catch (e) {}
+      return TOPC;
+    }, function (e) { topReq = null; throw e; });
+    return topReq;
+  }
   function bagLine(b) { return RES_KEYS.map(function (k) { return RES[k][0] + ' ' + ((b && b[k]) || 0); }).join('　'); }
   function board(tab) {
     if (!P.code) { welcome(function (ok) { if (ok) board(tab); }); return; }
@@ -327,25 +341,28 @@
         ov.querySelector('[data-code]').addEventListener('click', function () { close(); showCode(false); });
         ov.querySelector('[data-nick]').addEventListener('click', function () { close(); rename(); });
         ov.querySelector('[data-sw]').addEventListener('click', function () { close(); welcome(function (ok) { if (ok) daily(); }, 'login'); });
-        var body = ov.querySelector('.cw-body'), seq = 0;
+        var body = ov.querySelector('.cw-body'), cur = tab;
+        function paint(k) {
+          var rows = TOPC && TOPC.all && TOPC.all[k];
+          if (!rows) { body.innerHTML = '<p>載入中…</p>'; return; }
+          if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
+          body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
+            var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : '🪙 ' + r.v;
+            return '<li class="' + (r.nick === P.nick ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="a">' + av(r) + '</span><span class="n">' + esc(r.nick) +
+              (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span></li>';
+          }).join('') + '</ol>';
+        }
         function show(k) {
-          var my = ++seq;
+          cur = k;
           [].forEach.call(ov.querySelectorAll('[data-tab]'), function (b) { b.classList.toggle('on', b.dataset.tab === k); });
           ov.querySelector('.cw-tn').textContent = TAB_NOTE[k];
-          body.innerHTML = '<p>載入中…</p>';
-          call({ a: 'top', code: P.code, k: k }).then(function (j) {
-            if (my !== seq) return;
-            var rows = (j && j.top) || [];
-            if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
-            body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
-              var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : '🪙 ' + r.v;
-              return '<li class="' + (r.me ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="a">' + av(r) + '</span><span class="n">' + esc(r.nick) +
-                (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span></li>';
-            }).join('') + '</ol>';
-          }).catch(function () { if (my === seq) body.innerHTML = '<p>排行榜暫時連不上，稍後再試。</p>'; });
+          paint(k);
         }
         ov.addEventListener('click', function (e) { var b = e.target.closest('[data-tab]'); if (b) show(b.dataset.tab); });
         show(tab);
+        // 先顯示上次存的名單，背景再更新成最新的
+        fetchTop().then(function () { if (ov.parentNode) paint(cur); })
+          .catch(function () { if (ov.parentNode && !(TOPC && TOPC.all)) body.innerHTML = '<p>排行榜暫時連不上，稍後再試。</p>'; });
       });
   }
 
@@ -528,6 +545,8 @@
       started = true;
       var begin = function () {
         var d = daily(); online();
+        // 首頁：先在背景把排行榜抓好，按 🏆 時就不用等
+        if (opt.ask !== false) setTimeout(function () { fetchTop().catch(function () {}); }, 2500);
         // 老玩家還沒選頭像：這次瀏覽提醒一次
         if (opt.ask !== false && d) d.then(function () {
           var asked = false; try { asked = sessionStorage.getItem('cw-av') === '1'; sessionStorage.setItem('cw-av', '1'); } catch (e) {}

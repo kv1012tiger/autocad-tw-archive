@@ -64,7 +64,10 @@ var NOTE_LEN = 100, NOTE_DAY = 20;
 function sheet_(name, head) {
   var ss = SpreadsheetApp.getActive();
   var sh = ss.getSheetByName(name);
-  if (!sh) sh = ss.insertSheet(name);
+  if (!sh) {
+    sh = ss.insertSheet(name);
+    if (name === '玩家') sh.getRange('A:A').setNumberFormat('@'); // 登島碼一律當文字
+  }
   var cur = sh.getRange(1, 1, 1, head.length).getValues()[0];
   if (cur.join('|') !== head.join('|')) {
     sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#ffe8a3');
@@ -72,11 +75,7 @@ function sheet_(name, head) {
   }
   return sh;
 }
-function players_() {
-  var sh = sheet_('玩家', P_HEAD);
-  sh.getRange('A:A').setNumberFormat('@');
-  return sh;
-}
+function players_() { return sheet_('玩家', P_HEAD); }
 function rows_(sh) {
   var n = sh.getLastRow() - 1;
   return n > 0 ? sh.getRange(2, 1, n, P_HEAD.length).getValues() : [];
@@ -406,22 +405,34 @@ function visitors_(isle) {
   return { list: list, total: total };
 }
 
-/* 排行榜：k = coin（目前金幣）、res（累計採集的物資）、dia（累計撿到的鑽石） */
+/* 排行榜：coin（目前金幣）、res（累計採集的物資）、dia（累計撿到的鑽石）。
+   三份名單一起算好，在 Google 快取放 60 秒，期間不用重讀整張玩家表。 */
+var TOP_TTL = 60;
+function topLists_() {
+  var cache = CacheService.getScriptCache(), hit = cache.get('top3');
+  if (hit) return JSON.parse(hit);
+  var rows = rows_(players_()), out = {};
+  [['coin', C.bal], ['res', C.tres], ['dia', C.tdia]].forEach(function (kc) {
+    var k = kc[0], col = kc[1];
+    out[k] = rows
+      .filter(function (r) { return r[C.nick] && r[C.admin] !== '是' && (k === 'coin' || num_(r[col]) > 0); })
+      .sort(function (x, y) { return num_(y[col]) - num_(x[col]); })
+      .slice(0, 20)
+      .map(function (r) {
+        var o = { c: String(r[C.code]).toUpperCase(), nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: num_(r[col]), bal: num_(r[C.bal]) };
+        if (k === 'res') o.bag = bag_(r);
+        return o;
+      });
+  });
+  try { cache.put('top3', JSON.stringify(out), TOP_TTL); } catch (e) {}
+  return out;
+}
 function top_(q) {
-  var rows = rows_(players_());
-  var code = String(q.code || '').toUpperCase();
+  var lists = topLists_(), code = String(q.code || '').toUpperCase();
+  function pub(list) { return list.map(function (o) { var x = {}; for (var k in o) if (k !== 'c') x[k] = o[k]; x.me = !!code && o.c === code; return x; }); }
+  if (q.k === 'all') return { ok: true, all: { coin: pub(lists.coin), res: pub(lists.res), dia: pub(lists.dia) } };
   var k = q.k === 'res' || q.k === 'dia' ? q.k : 'coin';
-  var col = k === 'res' ? C.tres : k === 'dia' ? C.tdia : C.bal;
-  var top = rows
-    .filter(function (r) { return r[C.nick] && r[C.admin] !== '是' && (k === 'coin' || num_(r[col]) > 0); })
-    .sort(function (x, y) { return num_(y[col]) - num_(x[col]); })
-    .slice(0, 20)
-    .map(function (r) {
-      var o = { nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: num_(r[col]), bal: num_(r[C.bal]), me: !!code && String(r[C.code]).toUpperCase() === code };
-      if (k === 'res') o.bag = bag_(r);
-      return o;
-    });
-  return { ok: true, k: k, top: top };
+  return { ok: true, k: k, top: pub(lists[k]) };
 }
 
 /* ---------- 物資島：每天第一次有人來時重抽總量與鑽石位置 ---------- */
