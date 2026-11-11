@@ -1,0 +1,18 @@
+<img src="images/01.jpg" alt="" loading="lazy">
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>一般在建立3D圓柱時，必須使用到UCS來輔助，這時需要有扎實的空間觀念才能幫你快速建模!</p>
+<p>範例中我們必須想辦法把Z軸貼齊路徑，所以你必須先了解 右手定則，這樣你才不會在3D空間中迷失~</p>
+<p>有興趣的朋友可以下載範例檔一起討論練習，做出來的朋友別忘PO上來分享一下!!</p>
+<div class="section-title">範例檔下載：</div>
+<p><a href="https://app.box.com/s/2fdv2qe32afketvmhr8t" target="_blank" rel="noopener">https://app.box.com/s/2fdv2qe32afketvmhr8t</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/zrRbEE20K3Q" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>另外我這裡有一個有趣的作法，建模過程使用上述的步驟有點繁瑣，</p>
+<p>所以這裡我把它巨集化，並建立成工具按鈕，這樣建模的步驟只剩下 指定Z軸 &gt;&gt; 選擠出路徑 &gt;&gt; 完成。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/-NKYf7lKpmE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>建立3D圓柱(固定半徑)巨集語法:</b></p>
+<p>*^C^CUCS;\\;UCS;Y;90;CIRCLE;@;136.5;EXTRUDE;L;;P;\</p>
+<p>我這裡的巨集中圓半徑是使用固定的(半徑=136.5)，可以稍作改良變成由使用者來輸入半徑!</p>
+<p><b>建立3D圓柱(輸入半徑)巨集語法:</b></p>
+<p>*^C^CUCS;\\;UCS;Y;90;CIRCLE;@;\EXTRUDE;L;;P;\</p>
+<p>*有興趣寫巨集的朋友，建議可以嘗試寫出建立3D圓管的巨集*</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/4-Ch7cDVXYQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>

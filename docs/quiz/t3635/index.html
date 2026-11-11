@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>建立3D圓柱 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-quiz">← 回測驗練習島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#dcf36a;--g1:#e4f77a;--g2:#8aa51a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐖</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🐑</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦉</b></i></span></div>
+    <span class="topic-badge">📝 測驗練習島</span>
+    <h1 class="topic-title">🧊 建立3D圓柱</h1>
+    <p class="topic-tagline">一般在建立3D圓柱時，必須使用到UCS來輔助，這時需要有扎實的空間觀念才能幫…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-07-29</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<img src="images/01.jpg" alt="" loading="lazy">
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>一般在建立3D圓柱時，必須使用到UCS來輔助，這時需要有扎實的空間觀念才能幫你快速建模!</p>
+<p>範例中我們必須想辦法把Z軸貼齊路徑，所以你必須先了解 右手定則，這樣你才不會在3D空間中迷失~</p>
+<p>有興趣的朋友可以下載範例檔一起討論練習，做出來的朋友別忘PO上來分享一下!!</p>
+<div class="section-title">範例檔下載：</div>
+<p><a href="https://app.box.com/s/2fdv2qe32afketvmhr8t" target="_blank" rel="noopener">https://app.box.com/s/2fdv2qe32afketvmhr8t</a></p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/zrRbEE20K3Q" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>另外我這裡有一個有趣的作法，建模過程使用上述的步驟有點繁瑣，</p>
+<p>所以這裡我把它巨集化，並建立成工具按鈕，這樣建模的步驟只剩下 指定Z軸 &gt;&gt; 選擠出路徑 &gt;&gt; 完成。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/-NKYf7lKpmE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>建立3D圓柱(固定半徑)巨集語法:</b></p>
+<p>*^C^CUCS;\\;UCS;Y;90;CIRCLE;@;136.5;EXTRUDE;L;;P;\</p>
+<p>我這裡的巨集中圓半徑是使用固定的(半徑=136.5)，可以稍作改良變成由使用者來輸入半徑!</p>
+<p><b>建立3D圓柱(輸入半徑)巨集語法:</b></p>
+<p>*^C^CUCS;\\;UCS;Y;90;CIRCLE;@;\EXTRUDE;L;;P;\</p>
+<p>*有興趣寫巨集的朋友，建議可以嘗試寫出建立3D圓管的巨集*</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/4-Ch7cDVXYQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t2968/index.html">← 骰子範例</a>
+    <a class="btn-ghost" href="../t4713/index.html">雨傘範例 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t3635-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
