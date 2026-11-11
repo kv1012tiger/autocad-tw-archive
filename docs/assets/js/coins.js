@@ -335,7 +335,7 @@
     topReq = call({ a: 'top', k: 'all', code: P.code }).then(function (j) {
       topReq = null;
       if (!j || !j.all) throw new Error('top');
-      TOPC = { t: Date.now(), all: j.all };
+      TOPC = { t: Date.now(), all: j.all, n: j.n != null ? j.n : (TOPC && TOPC.n) };
       try { localStorage.setItem(TKEY, JSON.stringify(TOPC)); } catch (e) {}
       return TOPC;
     }, function (e) { topReq = null; throw e; });
@@ -347,6 +347,7 @@
     if (!P.code) { welcome(function (ok) { if (ok) board(tab); }); return; }
     tab = tab || 'coin';
     modal('<div class="cw-ic">🏆</div><h3>排行榜</h3>' +
+      '<small class="cw-nn" style="display:block;margin:-6px 0 8px;color:#ffd166;font-weight:700"></small>' +
       '<div class="cw-tabs">' + TABS.map(function (t) { return '<button type="button" data-tab="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div>' +
       '<small class="cw-tn" style="margin-top:4px"></small><div class="cw-body"><p>載入中…</p></div>' +
       '<div class="cw-me">' + av(P) + ' 你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '<br>🪙 <b>' + P.bal + '</b>・🧺 ' + (P.tres || 0) + '・💎 ' + (P.tdia || 0) + '・連續登島 ' + (P.streak || 0) + ' 天<br>' +
@@ -369,6 +370,8 @@
         ov.querySelector('[data-sw]').addEventListener('click', function () { close(); welcome(function (ok) { if (ok) daily(); }, 'login'); });
         var body = ov.querySelector('.cw-body'), cur = tab;
         function paint(k) {
+          var nn = ov.querySelector('.cw-nn'); // 登島船長總人數（沒有數字就不顯示）
+          if (nn) nn.textContent = TOPC && TOPC.n != null ? '⚓ 目前共 ' + TOPC.n + ' 位船長' : '';
           var rows = TOPC && TOPC.all && TOPC.all[k];
           if (!rows) { body.innerHTML = '<p>載入中…</p>'; return; }
           if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : k === 'isle' ? '還沒有人蓋小島，去我的小島蓋一間小屋吧！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
