@@ -71,6 +71,8 @@ $nav_next
   });
 })();
 </script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({askNick:false});COINS.read(location.pathname)}</script>
 <script src="../../assets/js/fullscreen.js"></script>
 </body>
 </html>

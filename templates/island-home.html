@@ -689,6 +689,8 @@ body{overflow:hidden;background:#1581bd}
 }
 /* 大海地圖上的小動物停住不動（省手機效能）；進到島上畫面時照常走動 */
 .spot .rs,.spot .rs *{animation:none!important}
+@media (max-width:480px){.in-scene .hud #missionBtn,.in-scene .hud #boardBtn{display:none}}
+@media (max-width:440px){.hud .logo{font-size:0;gap:0}.hud .logo span{font-size:24px}.hud .hud-r{gap:6px}}
 /* 蘋果爸小島：毛孩散步草地 */
 .pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
 .pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
@@ -713,6 +715,8 @@ body{overflow:hidden;background:#1581bd}
   <div class="scene-bar" id="sceneBar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button" aria-label="回大海">⛵<span class="tx"> 回大海</span></button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
   <div class="hud-r">
+    <button class="hb" id="missionBtn" type="button" aria-label="探險任務說明">🎯</button>
+    <button class="hb" id="boardBtn" type="button" aria-label="金幣排行榜">🏆</button>
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋文章與問答">🔍</button>
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
     <button class="hb" id="fsBtn" type="button" aria-label="全螢幕"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -857,7 +861,7 @@ body{overflow:hidden;background:#1581bd}
   <div class="card chest-box mission-box">
     <div class="chest-ico">🎯</div>
     <h3 id="missionT">探險任務</h3>
-    <ol class="gift-steps"><li>點一座島（或從下方島嶼列表點）</li><li>翻開 3 張問答卡，拿 1 枚 🪙 金幣</li><li>拿滿 5 枚，送你 🎁 <b>提示詞禮物包</b>（教你做出自己的資源島，主題與風格自己設定）</li></ol>
+    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島每天再多 1 枚（第 2 天 4 枚、第 3 天 5 枚…）</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣排行榜</li></ol>
     <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
     <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
   </div>
@@ -876,6 +880,7 @@ body{overflow:hidden;background:#1581bd}
 <div class="toast" id="toast" role="status"></div>
 
 <script src="assets/js/pets.js"></script>
+<script src="assets/js/coins.js"></script>
 <script>
 (function(){
 'use strict';
@@ -1452,7 +1457,7 @@ land.addEventListener('click',function(e){var b=e.target.closest('.hut');if(b)op
 /* ---------- 文章閱讀器：留在同一頁，全螢幕才不會中斷 ---------- */
 var reader=$('reader'),readerF=$('readerF'),readerT=$('readerT');
 function openReader(href,title){
-  addHist(href,title);
+  addHist(href,title);COINS.read(href);
   readerT.textContent=title;reader.hidden=false;
   readerF.contentWindow.location.replace(href);
   history.pushState({reader:1},'');
@@ -1491,14 +1496,14 @@ function favListPaint(){
   SP.forEach(function(s){if(s.li)s.li.classList.toggle('fav',isFav(s))});
 }
 function refresh(){
-  var n=candyCount();var gf=n>=5;$('candyN').textContent=n+(gf?' 🎁':'');$('candyBtn').classList.toggle('gift',gf);$('giftBtn').hidden=!gf;
+  var CW=COINS.get(),n=CW.bal;var gf=CW.earned>=5;$('candyN').textContent=n+(gf?' 🎁':'');$('candyBtn').classList.toggle('gift',gf);$('giftBtn').hidden=!gf;
   var nextSet=false;
   ISLES.forEach(function(s,i){
     var done=!!ST.c[i];s.el.classList.toggle('done',done);
     var nx=!done&&!nextSet;if(nx)nextSet=true;s.el.classList.toggle('next',nx);
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🪙 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
-  $('guideTxt').textContent=n===ISLES.length?'太厲害了！所有島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':n>=5?'已經拿到 '+n+' 枚金幣，🎁 提示詞禮物包送你了！繼續往下一座島前進！':n?'已經拿到 '+n+' 枚金幣，繼續往下一座島前進！':'嗨！我是蘋果爸。上船囉，從第一座島出發吧 👇';
+  $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。上船囉，從第一座島出發吧 👇';
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
 
@@ -1784,9 +1789,8 @@ function flip(card){
   if(!ST.c[n]&&flippedIn(n)>=need(n)){
     ST.c[n]=1;save();
     var rc=card.getBoundingClientRect();burst(rc.left+rc.width/2,rc.top+rc.height/2,['🪙','💎','💰','✨']);
-    playSfx('candy');toast('🪙 拿到「'+ISLES[n].name+'」的金幣！');
+    playSfx('candy');COINS.add(1,'拿到「'+ISLES[n].name+'」的金幣');
     var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');
-    if(candyCount()>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}
   }
   if(V.t==='isle'){var pg=$('prog');if(pg)pg.outerHTML=progHTML(V.i);pDots.innerHTML=ISLES.map(function(x,k){return '<i class="'+(k===V.i?'on':'')+(ST.c[k]?' v':'')+'"></i>'}).join('')}
   refresh();
@@ -1820,7 +1824,10 @@ $('startBtn').addEventListener('click',function(){
 function openSearch(){openPanel('search');setTimeout(function(){var i=$('qIn');if(i)i.focus({preventScroll:true})},380)}
 $('searchBtn').addEventListener('click',openSearch);
 $('searchBtn2').addEventListener('click',openSearch);
-$('candyBtn').addEventListener('click',function(){if(candyCount()>=5){openChest();return}openLog()});
+$('candyBtn').addEventListener('click',function(){if(COINS.get().earned>=5){openChest();return}openLog()});
+$('boardBtn').addEventListener('click',function(){COINS.board()});
+$('missionBtn').addEventListener('click',function(){showMission(true)});
+COINS.on(function(ev,w){refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
 function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scrollTop=0;playSfx('chest');burst(innerWidth/2,innerHeight/2,['🪙','💰','💎','⭐','🎉','🐚']);$('giftCopy').focus({preventScroll:true})}
 $('chestClose').addEventListener('click',function(){$('chest').hidden=true});
@@ -1921,18 +1928,19 @@ var mission=$('mission'),msSeen=false;try{msSeen=sessionStorage.getItem('aikb-mi
 function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 try{if(localStorage.getItem('aikb-mission-off')===today())msSeen=true}catch(e){}
 if(HASH_SP>=0)msSeen=true;
-function showMission(){if(msSeen)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;$('missionGo').focus({preventScroll:true})}
+function showMission(force){if(msSeen&&!force)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;$('missionGo').focus({preventScroll:true})}
 function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',today())}catch(e){}}}
 $('missionGo').addEventListener('click',closeMission);
 mission.addEventListener('click',function(e){if(e.target===mission)closeMission()});
-if(seen)setTimeout(showMission,700);
+function startCoins(){COINS.start({done:function(){setTimeout(showMission,400)}})}
+if(seen)setTimeout(startCoins,700);
 function closeIntro(withSound){
   try{sessionStorage.setItem('aikb-intro','1')}catch(e){}
   SFX_ON=withSound;try{sessionStorage.setItem('aic-sfx',withSound?'on':'off')}catch(e){}
   sfxUI();
   if(withSound){tone(1046,0,.2,'sine',.12);bgmStart()}else bgmStop();
   intro.classList.add('hide');document.documentElement.classList.remove('lock');
-  setTimeout(function(){intro.hidden=true},650);setTimeout(showMission,800);
+  setTimeout(function(){intro.hidden=true},650);setTimeout(startCoins,800);
 }
 $('introGo').addEventListener('click',function(){closeIntro(SFX_ON)});
 
