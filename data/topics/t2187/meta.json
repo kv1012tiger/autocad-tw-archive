@@ -1,7 +1,7 @@
 {
   "id": "t2187",
   "board": "cad2d",
-  "order": 99,
+  "order": 118,
   "icon": "📘",
   "title": "平移PAN指令(-PAN用法)",
   "tagline": "早期使用二鍵式滑鼠時，當要平移圖面時，我們要輸入 PAN指令(快捷鍵 P)，…",

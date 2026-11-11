@@ -1,7 +1,7 @@
 {
   "id": "t23303",
   "board": "f44",
-  "order": 66,
+  "order": 65,
   "icon": "📘",
   "title": "關於此圖面包含舊版不支援的自訂物件訊息",
   "tagline": "因為目前AutoCAD版本眾多，有時候dwg會由Autodesk其他套裝軟體…",
