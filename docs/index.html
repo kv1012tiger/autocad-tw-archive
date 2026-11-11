@@ -997,20 +997,27 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .reader.game .reader-bar{border-bottom-color:#38bdf8}
 .reader.game iframe{background:#0a1f35}
 /* 我的小島 */
-.mi-scene{position:relative;height:250px;margin:12px 0 6px;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1f7fb0,#0b4f78 70%)}
-.mi-land{position:absolute;left:6%;right:6%;top:14%;bottom:8%;border-radius:48% 52% 46% 54%/56% 50% 50% 44%;background:radial-gradient(ellipse at 45% 40%,#9be36b,#4f9a2e 75%);box-shadow:0 0 0 10px #f2d79a,0 0 0 18px rgba(166,242,232,.45)}
-.mi-house{position:absolute;left:30%;top:16%;transform:translateX(-50%);text-align:center;line-height:1}
-.mi-house span{display:block;font-size:58px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35))}
-.mi-house.lv0 span{font-size:40px;opacity:.85}.mi-house.lv3 span{font-size:72px}
+.mi-scene{position:relative;height:390px;margin:12px 0 6px;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1f7fb0,#0b4f78 70%)}
+@media (max-width:560px){.mi-scene{height:350px}}
+.mi-land{position:absolute;border-radius:48% 52% 46% 54%/56% 50% 50% 44%;background:radial-gradient(ellipse at 45% 40%,#9be36b,#4f9a2e 75%);box-shadow:0 0 0 10px #f2d79a,0 0 0 18px rgba(166,242,232,.45);transition:left .9s,right .9s,top .9s,bottom .9s}
+.mi-land.t0{left:14%;right:14%;top:17%;bottom:10%}.mi-land.t1{left:10%;right:10%;top:13%;bottom:9%}.mi-land.t2{left:6%;right:6%;top:9%;bottom:7%}.mi-land.t3{left:3.5%;right:3.5%;top:6%;bottom:5%}
+.mi-size{position:absolute;left:10px;top:8px;z-index:60;font-size:12px;font-weight:800;padding:2px 9px;border-radius:9px;background:rgba(0,0,0,.38);color:#fff}
+.mi-sc{position:absolute;line-height:1;pointer-events:none;opacity:.95}
+.mi-house{position:absolute;left:27%;top:19%;transform:translateX(-50%);text-align:center;line-height:1}
+.mi-house span{display:block;font-size:80px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35))}
+.mi-house.lv0 span{font-size:54px;opacity:.85}.mi-house.lv3 span{font-size:104px}
 .mi-house em{display:inline-block;margin-top:2px;padding:1px 8px;border-radius:8px;font-style:normal;font-size:12px;font-weight:800;color:#1f3d12;background:rgba(255,255,255,.85)}
-.mi-fields{position:absolute;left:50%;top:22%;display:flex;gap:6px}
-.mi-plot{display:grid;place-items:center;width:44px;height:36px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
-.mi-plot b{font-size:24px;line-height:1;animation:miGrow 2.4s ease-in-out infinite}
+.mi-fields{position:absolute;left:47%;top:38%;display:flex;gap:6px}
+.mi-plot{display:grid;place-items:center;width:46px;height:40px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.mi-plot b{font-size:27px;line-height:1;animation:miGrow 2.4s ease-in-out infinite}
 .mi-plot.ready{box-shadow:0 0 0 2px #ffd166,0 0 14px #ffd166}
 @keyframes miGrow{50%{transform:translateY(-3px) rotate(4deg)}}
-.mi-deco{position:absolute;font-size:34px;line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
-.mi-pet{position:absolute;left:10%;line-height:1;animation:pwMv var(--t) linear var(--d) infinite}
-.mi-pet i{display:block;font-style:normal;animation:ppFlip var(--t) steps(1) var(--d) infinite}
+.mi-deco{position:absolute;font-size:46px;line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
+.mi-pet{position:absolute;left:0;top:0;margin:-.5em 0 0 -.5em;line-height:1;will-change:transform}
+.mi-pet i{display:block;font-style:normal}
+.mi-pet u{display:block;text-decoration:none}
+.mi-pet.walk u{animation:miHop .42s ease-in-out infinite}
+@keyframes miHop{50%{transform:translateY(-5px)}}
 .mi-pet em{position:absolute;left:50%;top:-15px;transform:translateX(-50%);font-style:normal;font-size:11px;font-weight:800;white-space:nowrap;color:#1f3d12;background:rgba(255,255,255,.85);padding:0 6px;border-radius:7px}
 .mi-empty{position:absolute;left:12%;right:12%;bottom:12%;margin:0;padding:6px 10px;border-radius:12px;background:rgba(0,0,0,.35);color:#fff;font-size:14px;text-align:center}
 .mi-note{margin:6px 0 8px;font-size:14px;color:var(--muted)}
@@ -2545,28 +2552,87 @@ function cropView(c){
 }
 function mineTop(d){return '<div class="mi-top"><button class="btn btn-primary btn-sm" type="button" data-voyage>⛵ 航向別人的島</button><button class="btn btn-ghost btn-sm" type="button" data-setopen="'+(d.open?0:1)+'">'+(d.open?'🔓 開放參觀中（點一下改成只有好友）':'🔒 只有好友能看（點一下開放）')+'</button></div>'}
 function strangerBox(){return '<div class="p-sec"><h4>🤝 先成為好友</h4><p class="mi-note">你是第一次來這座島。加好友後就能幫他澆水、送禮、傳悄悄話；不是好友只能參觀。</p><button class="btn btn-primary btn-sm" type="button" data-maddfriend>➕ 加好友</button></div>'}
+var TIERN=['空地','小島','中型島','大島'];
+function landTier(d){var n=d.h+Math.min(3,d.fields||0)+d.deco.length,t=n<1?0:n<3?1:n<6?2:3;if(d.deco.indexOf('tower')>=0)t=Math.max(t,2);return t}
 function sceneHTML(d){
-  var o='<div class="mi-scene"><div class="mi-land"></div>';
+  var t=landTier(d),o='<div class="mi-scene"><div class="mi-land t'+t+'"></div><span class="mi-size">🏝️ '+TIERN[t]+'</span>';
+  if(t>=1)o+='<span class="mi-sc" style="left:20%;top:80%;font-size:20px">🌼</span><span class="mi-sc" style="left:58%;top:82%;font-size:18px">🌿</span>';
+  if(t>=2)o+='<span class="mi-sc" style="left:40%;top:76%;font-size:22px">🌸</span><span class="mi-sc" style="left:87%;top:62%;font-size:26px">🪨</span>';
+  if(t>=3)o+='<span class="mi-sc" style="left:89%;top:38%;font-size:40px">🌴</span><span class="mi-sc" style="left:28%;top:86%;font-size:20px">🌷</span><span class="mi-sc" style="left:4%;top:62%;font-size:34px">🌴</span>';
   o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
   o+='<div class="mi-fields">'+d.f.map(function(c){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"><b>'+cv.e+'</b></i>'}).join('')+'</div>';
-  var dp={tree:[12,28],fountain:[74,64],tower:[84,18]};
+  var dp={tree:[14,58],fountain:[64,58],tower:[70,20]};
   d.deco.forEach(function(k){o+='<span class="mi-deco" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%">'+DECOI[k][0]+'</span>'});
-  o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" style="top:'+(58+i*11)+'%;--t:'+(9+i*3)+'s;--d:-'+(i*2.7)+'s;font-size:'+(26+Math.min(4,p.lv-1)*4)+'px"><i>'+a[0]+'</i><em>'+esc(p.n)+'</em></span>'}).join('');
+  o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" data-pid="'+esc((MI.fid||'me')+':'+(p.id||('i'+i)))+'" style="font-size:'+(32+Math.min(4,p.lv-1)*4)+'px"><i><u>'+a[0]+'</u></i><em>'+esc(p.n)+'</em></span>'}).join('');
   if(!d.h&&!d.fields&&!d.deco.length&&!d.pets.length)o+='<p class="mi-empty">'+(d.mine?'這座島還是一片空地，先用 🪵 木材和 🪨 石頭蓋一間小屋吧！':'這座島還是一片空地')+'</p>';
   return o+'</div>';
 }
+/* 寵物在島上隨機走動：每隻挑一個陸地上的點走過去、停一下、再挑下一個；位置存在 PW.st，島每 30 秒重畫也不會跳回原點 */
+var PW={st:{},raf:0,t0:0,g:null,rm:!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)};
+function pwGeom(sc,t){
+  var b=sc.getBoundingClientRect(),l=sc.querySelector('.mi-land').getBoundingClientRect(),o=[];
+  sc.querySelectorAll('.mi-house,.mi-plot,.mi-deco').forEach(function(e){var r=e.getBoundingClientRect();o.push([r.left-b.left-8,r.top-b.top-8,r.right-b.left+8,r.bottom-b.top+8])});
+  return {sc:sc,t:t,w:b.width,h:b.height,cx:l.left-b.left+l.width/2,cy:l.top-b.top+l.height/2,a:l.width/2*.8,b:l.height/2*.74,r:o};
+}
+function pwBlocked(G,x,y){
+  var u=(x-G.cx)/G.a,v=(y-G.cy)/G.b;if(u*u+v*v>1)return true;
+  for(var i=0;i<G.r.length;i++){var r=G.r[i];if(x>r[0]&&x<r[2]&&y>r[1]&&y<r[3])return true}
+  return false;
+}
+function pwPick(G,st){
+  for(var k=0;k<30;k++){
+    var an=Math.random()*6.283,rr=Math.sqrt(Math.random()),x=G.cx+Math.cos(an)*rr*G.a,y=G.cy+Math.sin(an)*rr*G.b;
+    if(pwBlocked(G,x,y))continue;
+    if(st.x==null)return [x,y];
+    if(Math.hypot(x-st.x,y-st.y)<40)continue;
+    var ok=1;for(var s=1;s<=10;s++){if(pwBlocked(G,st.x+(x-st.x)*s/10,st.y+(y-st.y)*s/10)){ok=0;break}}
+    if(ok)return [x,y];
+  }
+  return null;
+}
+function pwTick(t){
+  PW.raf=0;
+  var sc=document.querySelector('.mi-scene');
+  if(!sc||V.t!=='mine'||!document.body.contains(sc))return;
+  var dt=Math.min(.1,Math.max(0,(t-(PW.t0||t))/1000));PW.t0=t;
+  if(!PW.g||PW.g.sc!==sc||t-PW.g.t>400)PW.g=pwGeom(sc,t);
+  var G=PW.g;
+  if(G.w<80||G.a<20){PW.raf=requestAnimationFrame(pwTick);return}
+  sc.querySelectorAll('.mi-pet').forEach(function(el){
+    var id=el.getAttribute('data-pid'),st=PW.st[id];
+    if(!st){st=PW.st[id]={x:null,y:0,wait:Math.random()*1.5,dir:1,w:G.w,h:G.h,mv:0};var p0=pwPick(G,st);st.x=p0?p0[0]:G.cx;st.y=p0?p0[1]:G.cy+G.b*.5}
+    if(st.w!==G.w||st.h!==G.h){st.x*=G.w/st.w;st.y*=G.h/st.h;st.w=G.w;st.h=G.h;st.mv=0;st.wait=.3}
+    if(!PW.rm){
+      if(st.mv){
+        var dx=st.tx-st.x,dy=st.ty-st.y,d=Math.hypot(dx,dy),sp=st.spd*dt;
+        if(d<=sp){st.x=st.tx;st.y=st.ty;st.mv=0;st.wait=.8+Math.random()*3.2}
+        else{st.x+=dx/d*sp;st.y+=dy/d*sp;if(Math.abs(dx)>2)st.dir=dx>0?1:-1}
+      }else{
+        st.wait-=dt;
+        if(st.wait<=0){var q=pwPick(G,st);if(q){st.tx=q[0];st.ty=q[1];st.spd=24+Math.random()*18;st.mv=1}else st.wait=1}
+      }
+    }
+    el.style.transform='translate('+st.x.toFixed(1)+'px,'+st.y.toFixed(1)+'px)';
+    el.style.zIndex=Math.round(st.y);
+    el.classList.toggle('walk',!!st.mv);
+    el.firstChild.style.transform=st.dir>0?'scaleX(-1)':'';
+  });
+  PW.raf=requestAnimationFrame(pwTick);
+}
+function pwStart(){if(PW.raf)cancelAnimationFrame(PW.raf);PW.raf=0;PW.t0=0;PW.g=null;pwTick(performance.now())}
 function paintMine(){
   var d=MI.data,box=$('miBox');if(!d||!box)return;
   $('pTitle').textContent=d.nick+' 的小島';
   $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
   var o=sceneHTML(d);
+  if(d.mine){var lt=landTier(d);if(lt<3)o+='<p class="mi-note">🌱 你的島會長大：多蓋小屋、菜田和裝飾，陸地就會越來越大（現在是「'+TIERN[lt]+'」）。</p>'}
   if(d.mine)o+=mineTop(d);
   if(!d.mine){
     var growing=d.f.some(function(c){return c&&cropView(c).left>0});
     if(!d.friend)o+=strangerBox();else o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
       (d.watered?'<button class="btn btn-ghost btn-sm" type="button" disabled>💧 今天已經澆過水了</button>':growing?'<button class="btn btn-primary btn-sm" type="button" data-mwater>💧 幫 '+esc(d.nick)+' 澆水</button>':'<button class="btn btn-ghost btn-sm" type="button" disabled>他的田裡現在沒有在長的菜</button>')+'</div>';
     if(d.pets.length)o+='<div class="p-sec"><h4>🐾 '+esc(d.nick)+' 的寵物</h4><div class="mi-pets">'+d.pets.map(function(p){var a=ANI[p.k]||['🐾',''];return '<div class="mi-pc"><span class="mi-pe">'+a[0]+'</span><div><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'</small></div></div>'}).join('')+'</div></div>';
-    box.innerHTML=o;return;
+    box.innerHTML=o;pwStart();return;
   }
   var R=d.rules,w=COINS.get(),fruit=(w.bag||{}).fruit||0;
   /* 菜園 */
@@ -2599,7 +2665,7 @@ function paintMine(){
   o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
     return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div>'+(costOK(b.cost)?'':'<div class="mi-miss">還缺：'+missText(missOf(b.cost))+'</div>')+'<button class="btn btn-primary btn-sm'+(costOK(b.cost)?'':' need')+'" type="button" data-build="'+b.k+'">🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
   o+='<div class="p-sec"><h4>👣 最近訪客</h4>'+(d.vis&&d.vis.length?'<div class="mi-vis">'+d.vis.map(function(v){return '<span class="mi-v"><i>'+esc(v.a||'🙂')+'</i>'+esc(v.n)+'<small>'+ago(v.t)+'</small></span>'}).join('')+'</div>':'<p class="mi-note">還沒有人來拜訪。開放參觀後，別人就能航向你的島。</p>')+'</div>';
-  box.innerHTML=o;
+  box.innerHTML=o;pwStart();
 }
 /* 小島動作一次只送一個，避免舊的回覆蓋掉新的畫面 */
 function mineAct(q,btn,okFn){
