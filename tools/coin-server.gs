@@ -376,6 +376,7 @@ function handle_(q) {
       rows[jw][C.isle] = JSON.stringify(fi); touched[jw] = 1;
       res.got = { k: wk, n: 1 };
       res.island = islePub_(rows[jw], false, mi);
+      res.island.friend = true;
 
     /* ----- 公告 ----- */
     } else if (a === 'annread') {

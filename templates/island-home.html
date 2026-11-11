@@ -764,7 +764,9 @@ body{overflow:hidden;background:#1581bd}
 .online .tag{display:inline-block;margin-left:6px;padding:1px 9px;border-radius:999px;background:#ff8a2a;color:#fff;font-size:12px;vertical-align:2px}
 @media (max-width:520px){.facts{grid-template-columns:1fr}.plans{grid-template-columns:1fr}}
 
-@media (max-width:480px){.in-scene .hud #missionBtn,.in-scene .hud #boardBtn,.in-scene .hud #bagBtn{display:none}}
+@media (max-width:480px){.in-scene .hud #missionBtn,.in-scene .hud #boardBtn,.in-scene .hud #bagBtn,.in-scene .hud #annBtn{display:none}}
+#annBtn{position:relative}
+@media (max-width:440px){#searchBtn{display:none}}
 #bagBtn{position:relative}.hb-dot{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 11px/17px sans-serif;text-align:center;box-shadow:0 0 0 2px #063a50}.hb-dot[hidden]{display:none}
 @media (max-width:440px){.hud .logo{font-size:0;gap:0}.hud .logo span{font-size:24px}.hud .hud-r{gap:6px}}
 /* 留言碼頭 */
@@ -920,6 +922,35 @@ body{overflow:hidden;background:#1581bd}
 .pt-p{font-weight:900;color:var(--gold)}
 .pt-in{width:100%;box-sizing:border-box;padding:7px 10px;border-radius:10px;border:1.5px solid #ffd166;background:rgba(3,30,44,.7);color:#fff;font-size:15px;text-align:center}
 @media (prefers-reduced-motion:reduce){.mi-pet,.mi-pet i,.mi-plot b,.mi-pe,.pt-e{animation:none}}
+/* 使用說明 */
+.help-box{width:100%;max-width:520px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;overflow:hidden;padding:0;background:var(--card-strong);animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.help-head{flex:none;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 16px 6px}
+.help-head span{font-size:34px;line-height:1}.help-head h3{margin:0;font-size:22px;font-weight:900}
+.help-tabs{flex:none;display:flex;gap:6px;overflow-x:auto;padding:6px 14px 10px;scrollbar-width:none}
+.help-tabs::-webkit-scrollbar{display:none}
+.help-tabs button{flex:none;padding:6px 13px;border-radius:999px;border:1.5px solid rgba(255,209,102,.5);background:transparent;color:var(--ink);font:800 14px var(--font);cursor:pointer;white-space:nowrap}
+.help-tabs button.on{background:#ffd166;color:#3a1a08;border-color:#ffd166}
+.help-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 20px 8px;text-align:left}
+.help-body ul{margin:0;padding-left:20px;font-size:15.5px;line-height:1.75}
+.help-body li{margin-bottom:8px}
+.help-foot{flex:none;padding:10px 16px calc(12px + env(safe-area-inset-bottom));text-align:center;border-top:1px solid rgba(255,255,255,.14);background:rgba(3,30,44,.5)}
+.help-foot .ms-off{display:flex;justify-content:center;margin-top:8px}
+/* 航向別人的島 */
+.mi-top{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.mi-vis{display:flex;flex-wrap:wrap;gap:8px}
+.mi-v{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);font-size:14px}
+.mi-v i{font-style:normal;font-size:18px}.mi-v small{color:var(--muted);font-size:12px}
+.vy-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0}
+.vy-bar .chips{margin:0}
+.vy-c{display:flex;align-items:center;gap:12px;margin-top:8px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(56,189,248,.35)}
+.vy-b{min-width:0;flex:1}.vy-b b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vy-b small{display:block;color:var(--muted);font-size:12.5px}
+.sail{text-align:center;padding:24px 6px}
+.sail-sea{position:relative;height:150px;margin:6px 0 14px;border-radius:20px;overflow:hidden;background:linear-gradient(#7dd3fc,#0b6a9a)}
+.sail-boat{position:absolute;bottom:30px;left:-70px;font-size:62px;line-height:1;animation:sailGo 1.25s ease-in forwards,rsBob .5s ease-in-out infinite}
+.sail-wave{position:absolute;left:0;right:0;bottom:0;height:36px;background:repeating-radial-gradient(circle at 50% 100%,#1d8fc0 0 14px,#0b6a9a 15px 28px)}
+@keyframes sailGo{to{left:calc(100% - 10px)}}
+.sail h3{margin:0 0 4px;font-size:21px}.sail p{margin:0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.sail-boat{animation:none;left:40%}}
 /* 蘋果爸小島：毛孩散步草地 */
 .pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
 .pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
@@ -944,7 +975,8 @@ body{overflow:hidden;background:#1581bd}
   <div class="scene-bar" id="sceneBar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button" aria-label="回大海">⛵<span class="tx"> 回大海</span></button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
   <div class="hud-r">
-    <button class="hb" id="missionBtn" type="button" aria-label="探險任務說明">🎯</button>
+    <button class="hb" id="missionBtn" type="button" aria-label="使用說明與遊戲規則">📖</button>
+    <button class="hb" id="annBtn" type="button" aria-label="站長公告">📢<span class="hb-dot" id="annDot" hidden></span></button>
     <button class="hb" id="boardBtn" type="button" aria-label="排行榜">🏆</button>
     <button class="hb" id="bagBtn" type="button" aria-label="背包與好友">🎒<span class="hb-dot" id="bagDot" hidden></span></button>
     <button class="hb" id="searchBtn" type="button" aria-label="搜尋文章與問答">🔍</button>
@@ -1088,12 +1120,59 @@ body{overflow:hidden;background:#1581bd}
 </div>
 
 <div class="chest mission" id="mission" role="dialog" aria-modal="true" aria-labelledby="missionT" hidden>
-  <div class="card chest-box mission-box">
-    <div class="chest-ico">🎯</div>
-    <h3 id="missionT">探險任務</h3>
-    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島第 2 天 4 枚，第 3 天起每天 5 枚</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🧺 到 🍎果園島、⛏️礦山島、🌲森林島、🪨採石島採集物資，運氣好還能撿到 💎 鑽石；物資可以到 🎒 背包的兌換所換金幣</li><li>🏝️ 登島後你有自己的小島：用物資蓋小屋、菜園、裝飾；到 🐾 寵物島花金幣領養寵物，種菜餵牠、每天摸摸，牠會送你禮物</li><li>📮 到留言碼頭留言給蘋果爸；在 🎒 背包用旅人編號加好友、送禮、傳悄悄話</li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣、物資、鑽石排行榜</li></ol>
-    <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
-    <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
+  <div class="card help-box">
+    <div class="help-head"><span>📖</span><h3 id="missionT">使用說明與遊戲規則</h3></div>
+    <div class="help-tabs" id="helpTabs" role="tablist">
+      <button type="button" class="on" data-hp="0">🪙 賺金幣</button><button type="button" data-hp="1">⛏️ 採集</button><button type="button" data-hp="2">🏝️ 我的小島</button><button type="button" data-hp="3">🐾 寵物</button><button type="button" data-hp="4">👥 好友留言</button><button type="button" data-hp="5">🎮 其他</button>
+    </div>
+    <div class="help-body" id="helpBody">
+      <section class="hp" data-p="0"><ul>
+        <li>📅 <b>每天登島</b>送 3 枚 🪙；連續第 2 天 4 枚，第 3 天起每天 5 枚。同一帳號一天只算一次，換手機也一樣。</li>
+        <li>📖 <b>爬文</b>：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）。</li>
+        <li>⏱️ <b>在線</b>：在島上每待 5 分鐘送 1 枚（每天最多 3 枚）。</li>
+        <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
+        <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
+        <li>🎁 累積拿滿 5 枚，送你「提示詞禮物包」。</li>
+        <li>🏪 物資、鑽石、南瓜都能在 🎒 背包的兌換所換金幣。</li>
+        <li>🔑 登島碼是你的帳號鑰匙，請記下來、不要給別人；忘記了用 LINE 官方帳號問蘋果爸。</li>
+      </ul></section>
+      <section class="hp" data-p="1" hidden><ul>
+        <li>🍎 果園島、⛏️ 礦山島、🌲 森林島、🪨 採石島：<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
+        <li>每座島每天的總量隨機 30～80 份，大家一起採，採光了要等明天重新長出來。</li>
+        <li>每人每座島每天最多採 <b>5 次</b>，每次 1～3 個；兩次採集要隔 30 秒。</li>
+        <li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
+        <li>🏪 兌換所：10 個同種物資換 1 枚 🪙；1 顆 💎 換 5 枚；5 顆 🎃 換 1 枚；每天最多換 3 次。</li>
+        <li>🔊 打開上方喇叭，點擊會有音效和特效。</li>
+      </ul></section>
+      <section class="hp" data-p="2" hidden><ul>
+        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵10 🪨5；Lv2 🪵20 🪨15 🔩5；Lv3 🪵40 🪨30 🔩15 💎1。小屋等級就是可以養的寵物數。</li>
+        <li>🟫 菜田最多 3 塊（🪵5 🪨5／🪵10 🪨10／🪵20 🪨15 🔩5）。裝飾：🌳 果樹、⛲ 噴水池、🗼 瞭望塔各一座，島主分 +5／+10／+20。</li>
+        <li>🌱 <b>種菜</b>：用 🍎 水果換種子，照真實時間長大——🥕 4 小時、🥬 8 小時、🎃 24 小時；熟了要自己收成，放著不會壞。</li>
+        <li>🏆 島主分＝小屋等級×10＋裝飾分＋寵物親密度，會上「島主」排行榜。</li>
+        <li>⛵ <b>航向別人的島</b>：可以看別人蓋了什麼，也能看到自己的最近訪客。在 🏆 或小島裡可以設定「開放參觀」或「只有好友能看」。</li>
+        <li>💧 <b>澆水</b>：每天可以幫每位好友澆一次水，他的菜提早 1 小時長好，你拿 1 個隨機物資。不是好友只能參觀、不能澆水。</li>
+      </ul></section>
+      <section class="hp" data-p="3" hidden><ul>
+        <li>🐾 到寵物島領養，要先蓋好小屋；能養幾隻看小屋等級。</li>
+        <li>領養價格（金幣）：倉鼠 10、兔兔 15、烏龜 15、狗狗 20、貓貓 20、鸚鵡 25；稀有的狐狸 40、熊貓 60。可以幫牠取名字。</li>
+        <li>🍽️ <b>飽足度</b>每天掉 25。🥕 +20、🥬 +35、🎃 +60、🍎 +10。餓了不會跑掉，只是不開心、不送禮。</li>
+        <li>✋ <b>摸摸</b>每天一次，親密度 +1；每 10 點升一級，寵物會變大、有新稱號。</li>
+        <li>🎁 飽足度 50 以上時摸摸，寵物會送你 1 個物資，10% 機率改送 1 枚金幣。</li>
+      </ul></section>
+      <section class="hp" data-p="4" hidden><ul>
+        <li>🎒 背包裡有你的 <b>旅人編號</b>（5 碼，可以公開給朋友）。輸入對方的編號就能互加好友。</li>
+        <li>好友可以：🎁 每天送對方 1 個物資、✉️ 傳悄悄話（100 字）、🏝️ 參觀小島、💧 澆水。</li>
+        <li>📮 <b>留言碼頭</b>：留言給蘋果爸（300 字，每天 10 則，可貼網址），蘋果爸會回覆你。</li>
+        <li>📢 <b>公告</b>：站長發的最新消息，登島時會通知你，也能按上方 📢 重看。</li>
+        <li>🏆 <b>排行榜</b>有四頁：金幣、物資、鑽石、島主。</li>
+      </ul></section>
+      <section class="hp" data-p="5" hidden><ul>
+        <li>🎮 <b>遊戲島</b>有兩個 AutoCAD 指令遊戲：指令快打（60 秒）和指令跑酷（連擊），各自有全站排行榜。</li>
+        <li>🔮 占卜島可以搜尋全部文章與問答；🏰 城堡和 ⛵ 報名碼頭有課程介紹與報名方式。</li>
+        <li>🎯 想再看這份說明，按上方的 📖 就能隨時打開。</li>
+      </ul></section>
+    </div>
+    <div class="help-foot"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button><label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label></div>
   </div>
 </div>
 
@@ -1790,6 +1869,7 @@ function route(){
   if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
   else if(h==='home'||h==='castle'||h==='search'||h==='dock'||h==='msg'||h==='game'||h==='mine'||h==='pets'){openPanel(h);placeBoat(spotIdx(h),true)}
   else if((m=h.match(/^res-(\d)$/))&&RESI[+m[1]]){openPanel('res',+m[1]);placeBoat(RESI[+m[1]].si,true)}
+  else if(!h&&panel.classList.contains('open'))closePanel();
 }
 window.addEventListener('hashchange',route);
 $('sceneBack').addEventListener('click',function(){location.hash=''});
@@ -2272,9 +2352,9 @@ function costOK(cost){var w=COINS.get(),b=w.bag||{};for(var k in cost){var have=
 function renderMine(fid){
   MI.fid=fid||null;MI.data=null;clearInterval(MI.timer);
   var w=COINS.get();
-  pBody.innerHTML='<div class="ph" style="--c:#fde047"><span class="ph-e">🏝️</span><div><div class="p-kicker">'+(fid?'FRIEND ISLAND・參觀好友':'MY ISLAND・我的小島')+'</div><h3 id="pTitle">'+(fid?'好友的小島':(w.nick?esc(w.nick)+' 的小島':'我的小島'))+'</h3><p id="miSub">'+(fid?'看看好友蓋了什麼，順手幫忙澆水':'用採集到的物資蓋房子、種菜、養寵物')+'</p></div></div><div id="miBox"><p class="s-count">登上小島中…</p></div>';
-  $('pStep').textContent=fid?'🏝️ 參觀好友小島':'🏝️ 我的小島';
-  footSimple('← 回地圖',fid?'🏝️ 回我的小島':'🐾 寵物島 →');
+  pBody.innerHTML='<div class="ph" style="--c:#fde047"><span class="ph-e">🏝️</span><div><div class="p-kicker">'+(fid?'VISIT・參觀小島':'MY ISLAND・我的小島')+'</div><h3 id="pTitle">'+(fid?'旅人的小島':(w.nick?esc(w.nick)+' 的小島':'我的小島'))+'</h3><p id="miSub">'+(fid?'看看他蓋了什麼，好友還能幫忙澆水':'用採集到的物資蓋房子、種菜、養寵物')+'</p></div></div><div id="miBox"><p class="s-count">登上小島中…</p></div>';
+  $('pStep').textContent=fid?'🏝️ 參觀小島':'🏝️ 我的小島';
+  footSimple(fid?'← 航行清單':'← 回地圖',fid?'🏝️ 回我的小島':'🐾 寵物島 →');
   if(!w.code){$('miBox').innerHTML='<div class="mb-login"><p>取個暱稱，就能擁有自己的小島。</p><button class="btn btn-primary btn-sm" type="button" data-mjoin2>🏝️ 取暱稱・登島</button></div>';return}
   loadMine();
   MI.timer=setInterval(function(){if(V.t!=='mine'){clearInterval(MI.timer);return}paintMine()},30000);
@@ -2291,6 +2371,8 @@ function cropView(c){
   var left=Math.max(0,c.left-(Date.now()-MI.at)),p=1-left/c.total,v=VEGI[c.v];
   return {left:left,p:p,e:left<=0?v[0]:p<.34?'🌱':'🌿',ready:left<=0};
 }
+function mineTop(d){return '<div class="mi-top"><button class="btn btn-primary btn-sm" type="button" data-voyage>⛵ 航向別人的島</button><button class="btn btn-ghost btn-sm" type="button" data-setopen="'+(d.open?0:1)+'">'+(d.open?'🔓 開放參觀中（點一下改成只有好友）':'🔒 只有好友能看（點一下開放）')+'</button></div>'}
+function strangerBox(){return '<div class="p-sec"><h4>🤝 先成為好友</h4><p class="mi-note">你是第一次來這座島。加好友後就能幫他澆水、送禮、傳悄悄話；不是好友只能參觀。</p><button class="btn btn-primary btn-sm" type="button" data-maddfriend>➕ 加好友</button></div>'}
 function sceneHTML(d){
   var o='<div class="mi-scene"><div class="mi-land"></div>';
   o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
@@ -2306,9 +2388,10 @@ function paintMine(){
   $('pTitle').textContent=d.nick+' 的小島';
   $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
   var o=sceneHTML(d);
+  if(d.mine)o+=mineTop(d);
   if(!d.mine){
     var growing=d.f.some(function(c){return c&&cropView(c).left>0});
-    o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
+    if(!d.friend)o+=strangerBox();else o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
       (d.watered?'<button class="btn btn-ghost btn-sm" type="button" disabled>💧 今天已經澆過水了</button>':growing?'<button class="btn btn-primary btn-sm" type="button" data-mwater>💧 幫 '+esc(d.nick)+' 澆水</button>':'<button class="btn btn-ghost btn-sm" type="button" disabled>他的田裡現在沒有在長的菜</button>')+'</div>';
     if(d.pets.length)o+='<div class="p-sec"><h4>🐾 '+esc(d.nick)+' 的寵物</h4><div class="mi-pets">'+d.pets.map(function(p){var a=ANI[p.k]||['🐾',''];return '<div class="mi-pc"><span class="mi-pe">'+a[0]+'</span><div><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'</small></div></div>'}).join('')+'</div></div>';
     box.innerHTML=o;return;
@@ -2343,6 +2426,7 @@ function paintMine(){
   ['tree','fountain','tower'].forEach(function(k){var x=R.deco[k];B.push(d.deco.indexOf(k)>=0?{e:DECOI[k][0],n:x.name,t:'已經蓋好・島主分 +'+x.pts,done:1}:{k:k,e:DECOI[k][0],n:x.name,t:'裝飾・島主分 +'+x.pts,cost:x.cost})});
   o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
     return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div><button class="btn btn-primary btn-sm" type="button" data-build="'+b.k+'"'+(costOK(b.cost)?'':' disabled')+'>🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
+  o+='<div class="p-sec"><h4>👣 最近訪客</h4>'+(d.vis&&d.vis.length?'<div class="mi-vis">'+d.vis.map(function(v){return '<span class="mi-v"><i>'+esc(v.a||'🙂')+'</i>'+esc(v.n)+'<small>'+ago(v.t)+'</small></span>'}).join('')+'</div>':'<p class="mi-note">還沒有人來拜訪。開放參觀後，別人就能航向你的島。</p>')+'</div>';
   box.innerHTML=o;
 }
 /* 小島動作一次只送一個，避免舊的回覆蓋掉新的畫面 */
@@ -2354,7 +2438,7 @@ function mineAct(q,btn,okFn){
   COINS.api(q).then(function(j){
     end();
     if(!j.ok){toast('⚠️ '+COINS.errText(j));if(btn)btn.disabled=false;if(V.t==='mine'&&!MI.fid)loadMine();return}
-    if(j.island){MI.data=j.island;MI.at=Date.now()}
+    if(j.island){var fr=MI.data&&MI.data.friend;MI.data=j.island;if(MI.data.friend==null&&fr!=null)MI.data.friend=fr;MI.at=Date.now()}
     if(okFn)okFn(j);
     if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
   }).catch(function(){end();toast('⚠️ 暫時連不上小島，請稍後再試');if(btn)btn.disabled=false});
@@ -2365,6 +2449,9 @@ pBody.addEventListener('click',function(e){
   var t=e.target.closest('button,[data-pat]');if(!t||V.t!=='mine')return;
   var d=t.dataset;
   if(d.mjoin2!=null){COINS.need(function(){renderMine(null)});return}
+  if(d.voyage!=null){openPanel('voyage');return}
+  if(d.setopen!=null){mineAct({a:'setopen',o:+d.setopen},t,function(){toast(+d.setopen?'🔓 已開放別人參觀你的小島':'🔒 現在只有好友能參觀你的小島')});return}
+  if(d.maddfriend!=null){t.disabled=true;COINS.api({a:'fadd',fid:MI.fid}).then(function(j){if(!j.ok){toast('⚠️ '+COINS.errText(j));t.disabled=false;return}toast('👥 和 '+j.added.nick+' 成為好友了！');if(MI.data)MI.data.friend=true;if(V.t==='mine')paintMine()}).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});return}
   if(d.build){mineAct({a:'build',k:d.build},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 蓋好了！')});return}
   if(d.plant){mineAct({a:'plant',i:+d.i,v:d.plant},t,function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[d.plant][1]+'，'+VEGI[d.plant][3]+'後收成')});return}
   if(d.harvest!=null){mineAct({a:'harvest',i:+d.harvest},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
@@ -2373,7 +2460,40 @@ pBody.addEventListener('click',function(e){
     if(j.gift){var g=GIFT_I[j.gift.k]||['🎁',''];setTimeout(function(){fxAt(t,[g[0],g[0],'🎁','✨'])},350);toast('💕 '+(p?p.n:'寵物')+' 送你 '+g[0]+' '+g[1]+' ×1！')}else toast('💕 親密度 +1'+(p&&p.full<50?'（餵飽一點，牠就會送你禮物）':''))});return}
   if(d.mwater!=null){mineAct({a:'water',fid:MI.fid},t,function(j){var g=GIFT_I[j.got.k]||['🎁',''];fxAt(t,['💧','💧','🌱',g[0]]);playSfx('flip');toast('💧 澆好水了！你拿到 '+g[0]+' '+g[1]+' ×1')});return}
 });
-window.ISLE_VISIT=function(fid){MI.visitFid=fid;openPanel('mine',1);placeBoat(MINE_SPOT.si)};
+window.ISLE_VISIT=function(fid,nick){MI.visitFid=fid;MI.sailNick=nick||'';openPanel('sail',0);placeBoat(MINE_SPOT.si)};
+function renderSail(){
+  pBody.innerHTML='<div class="sail"><div class="sail-sea"><span class="sail-boat">⛵</span><i class="sail-wave"></i></div><h3>航向 '+(MI.sailNick?esc(MI.sailNick)+' 的小島':'別人的小島')+'…</h3><p>風平浪靜，馬上就到！</p></div>';
+  $('pStep').textContent='⛵ 航行中';pFoot.hidden=true;playSfx('row');
+  setTimeout(function(){if(V.t==='sail')openPanel('mine',1)},reduce?200:1300);
+}
+/* 航向別人的島：開放參觀、蓋了東西的島都會出現在清單裡 */
+var VY={list:null,sort:'score',seq:0};
+function renderVoyage(){
+  var my=++VY.seq;
+  pBody.innerHTML='<div class="ph" style="--c:#38bdf8"><span class="ph-e">⛵</span><div><div class="p-kicker">VOYAGE・航向別人的島</div><h3 id="pTitle">航向別人的島</h3><p>挑一座島登陸，看看別人蓋了什麼</p></div></div>'+
+    '<div class="vy-bar"><div class="chips"><button class="chip'+(VY.sort==='score'?' on':'')+'" type="button" data-vsort="score">🏆 島主分</button><button class="chip'+(VY.sort==='seen'?' on':'')+'" type="button" data-vsort="seen">🕘 最近上線</button></div><button class="btn btn-primary btn-sm" type="button" data-vrand>🎲 隨機航行</button></div>'+
+    '<div id="vyList"><p class="s-count">看看海上有哪些島…</p></div><p class="fav-note">只有「開放參觀」而且已經蓋了東西的島會出現在這裡；你也可以在 🏝️ 我的小島裡設定自己的島要不要開放。</p>';
+  $('pStep').textContent='⛵ 航向別人的島';footSimple('← 回我的小島','🎲 隨機航行');
+  COINS.call({a:'voyage'}).then(function(j){if(my!==VY.seq||V.t!=='voyage')return;VY.list=(j&&j.list)||[];paintVoyage()})
+    .catch(function(){if(my===VY.seq&&$('vyList'))$('vyList').innerHTML='<p class="s-count">⚠️ 暫時連不上，請稍後再試</p>'});
+}
+function vyOthers(){var me=COINS.get().fid;return (VY.list||[]).filter(function(x){return x.fid!==me})}
+function paintVoyage(){
+  var el=$('vyList');if(!el)return;
+  var list=vyOthers();if(VY.sort==='seen')list=list.slice().sort(function(a,b){return b.seen-a.seen});
+  if(!list.length){el.innerHTML='<div class="t-empty"><span>⛵</span><b>海上還沒有其他人的島</b><small>等有人蓋好小屋，這裡就會出現。你也可以先去蓋自己的小屋！</small></div>';return}
+  el.innerHTML=list.map(function(x){return '<div class="vy-c"><span class="mb-av">'+COINS.av(x)+'</span><div class="vy-b"><b>'+esc(x.nick)+'</b><small>🏝️ 島主分 '+x.score+'・小屋 Lv'+x.h+'・🐾 '+x.pets+' 隻・'+(x.seen?ago(x.seen)+'上線':'')+'</small></div><button class="btn btn-primary btn-sm" type="button" data-sail="'+esc(x.fid)+'" data-n="'+esc(x.nick)+'">⛵ 航向</button></div>'}).join('');
+}
+function voyageRandom(){
+  var l=vyOthers();if(!l.length){toast('海上還沒有其他人的島');return}
+  var x=l[Math.floor(Math.random()*l.length)];COINS.need(function(){window.ISLE_VISIT(x.fid,x.nick)});
+}
+pBody.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t||V.t!=='voyage')return;var d=t.dataset;
+  if(d.vsort){VY.sort=d.vsort;[].forEach.call(pBody.querySelectorAll('[data-vsort]'),function(b){b.classList.toggle('on',b===t)});paintVoyage();return}
+  if(d.vrand!=null){voyageRandom();return}
+  if(d.sail){COINS.need(function(){window.ISLE_VISIT(d.sail,d.n)});return}
+});
 
 /* ---------- 寵物島：領養狗狗、貓貓和其他動物 ---------- */
 function renderPets(){
@@ -2539,7 +2659,7 @@ function actsHTML(){
   return '<button class="act" type="button" data-share="'+esc(h)+'" data-title="'+esc(title)+'">🔗<span class="tx"> 分享</span></button>'+(s?'<button class="act" type="button" id="pFavBtn" data-fav="'+s.si+'"></button>':'');
 }
 function render(dir){
-  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();else if(V.t==='mine')renderMine(V.i===1?MI.visitFid:null);else if(V.t==='pets')renderPets();
+  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();else if(V.t==='mine')renderMine(V.i===1?MI.visitFid:null);else if(V.t==='pets')renderPets();else if(V.t==='sail')renderSail();else if(V.t==='voyage')renderVoyage();
   else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
@@ -2568,6 +2688,8 @@ backdrop.addEventListener('click',closePanel);
 pPrev.addEventListener('click',function(){
   if(V.t==='isle')openSi(curSi()-1,-1);else if(V.t==='hut'){if(V.i>0)openPanel('hut',V.i-1,-1);else closePanel()}
   else if(V.t==='session')openPanel('dock',0,-1);
+  else if(V.t==='voyage')openPanel('mine',0);
+  else if(V.t==='mine'&&V.i===1)openPanel('voyage');
   else closePanel();
 });
 pNext.addEventListener('click',function(){
@@ -2578,6 +2700,7 @@ pNext.addEventListener('click',function(){
   else if(V.t==='res'){openPanel('res',(V.i+1)%RESI.length);placeBoat(RESI[V.i].si)}
   else if(V.t==='msg')openPanel('home');
   else if(V.t==='game'){openPanel('res',0);placeBoat(RESI[0].si)}
+  else if(V.t==='voyage')voyageRandom();
   else if(V.t==='mine'){if(V.i===1)openPanel('mine',0);else{openPanel('pets');placeBoat(PET_SPOT.si)}}
   else if(V.t==='pets'){openPanel('mine',0);placeBoat(MINE_SPOT.si)}
   else if(V.t==='session')closePanel();
@@ -2636,6 +2759,7 @@ $('candyBtn').addEventListener('click',function(){if(COINS.get().earned>=5){open
 $('boardBtn').addEventListener('click',function(){COINS.board()});
 $('bagBtn').addEventListener('click',function(){COINS.bag()});
 $('missionBtn').addEventListener('click',function(){showMission(true)});
+$('annBtn').addEventListener('click',function(){if(window.COINS&&COINS.ann)COINS.ann.open()});
 /* 背包紅點（未讀悄悄話）、物資島背包、站長的待回覆留言 */
 var pendAsked=false;
 function socialPaint(w){
@@ -2748,8 +2872,12 @@ var mission=$('mission'),msSeen=false;try{msSeen=sessionStorage.getItem('aikb-mi
 function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 try{if(localStorage.getItem('aikb-mission-off')===today())msSeen=true}catch(e){}
 if(HASH_SP>=0)msSeen=true;
-function showMission(force){if(msSeen&&!force)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;$('missionGo').focus({preventScroll:true})}
-function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',today())}catch(e){}}}
+function helpTab(i){[].forEach.call(document.querySelectorAll('#helpTabs [data-hp]'),function(b){b.classList.toggle('on',+b.dataset.hp===i)});[].forEach.call(document.querySelectorAll('#helpBody .hp'),function(x){x.hidden=+x.dataset.p!==i});$('helpBody').scrollTop=0}
+$('helpTabs').addEventListener('click',function(e){var b=e.target.closest('[data-hp]');if(b)helpTab(+b.dataset.hp)});
+function showMission(force){if(msSeen&&!force)return;msSeen=true;try{sessionStorage.setItem('aikb-mission','1')}catch(e){}mission.hidden=false;helpTab(0);$('missionGo').focus({preventScroll:true})}
+function closeMission(){mission.hidden=true;if($('missionOff').checked){try{localStorage.setItem('aikb-mission-off',today())}catch(e){}}
+  var first=true;try{first=localStorage.getItem('aikb-help-seen')!=='1';localStorage.setItem('aikb-help-seen','1')}catch(e){}
+  if(first)setTimeout(function(){toast('📖 想再看使用說明和遊戲規則，按上方的 📖 就能打開')},500)}
 $('missionGo').addEventListener('click',closeMission);
 mission.addEventListener('click',function(e){if(e.target===mission)closeMission()});
 function startCoins(){COINS.start({done:function(){setTimeout(showMission,400)}})}
@@ -2766,6 +2894,30 @@ $('introGo').addEventListener('click',function(){closeIntro(SFX_ON)});
 
 var rzT;
 window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){layout();drawScene()},120)});
+/* ---------- 返回鍵與關閉：先關掉開著的畫面，到最外層才問要不要離開 ---------- */
+var leaving=false;
+function guardArm(){try{history.pushState({top:1},'',location.href)}catch(e){}}
+function closeTopLayer(){
+  var ovs=document.querySelectorAll('.cw-ov');
+  if(ovs.length){var ov=ovs[ovs.length-1],x=ov.querySelector('[data-x]');if(x)x.click();else ov.remove();return true}
+  if(!$('mission').hidden){closeMission();return true}
+  if(!$('chest').hidden){$('chest').hidden=true;return true}
+  if(!reader.hidden){closeReader();return true}
+  if(!logEl.hidden){closeLog();return true}
+  if(panel.classList.contains('open')){closePanel();return true}
+  if(SCN){try{history.replaceState({root:1},'',location.pathname+location.search)}catch(e){}hideScene();return true}
+  return false;
+}
+try{history.replaceState({root:1},'',location.href);guardArm()}catch(e){}
+window.addEventListener('popstate',function(e){
+  if(!(e.state&&e.state.root))return;
+  if(closeTopLayer()){guardArm();return}
+  if(confirm('要離開論壇資源島嗎？')){leaving=true;history.back()}else guardArm();
+});
+window.addEventListener('beforeunload',function(e){
+  if(leaving||location.hostname!=='kv1012tiger.github.io')return;
+  e.preventDefault();e.returnValue='';
+});
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
 </script>

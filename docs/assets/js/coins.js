@@ -25,12 +25,12 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
-    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     save(); emit({ t: 'sync' });
   }
 
   /* ---------- 呼叫試算表（長文字用 POST） ---------- */
-  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, friends: 1 };
+  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, friends: 1, anns: 1, voyage: 1 };
   function call(o, post, retried) {
     var req = post ? fetch(API, { method: 'POST', body: JSON.stringify(o), cache: 'no-store' })
       : fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' });
@@ -61,7 +61,7 @@
     tired: '今天在這座島採夠了，明天再來', empty: '這座島今天的物資被採光了，明天會再長出來',
     maxed: '已經蓋到最高級了', busy: '這塊田已經種了東西', notyet: '還沒長好喔，再等等', nohouse: '要先蓋小屋才能領養寵物',
     petmax: '小屋住滿了，升級小屋就能多養一隻', nocoin: '金幣不夠喔', petfull: '牠已經吃得飽飽的了', patted: '今天已經摸過牠了',
-    watered: '今天已經幫他澆過水了', nocrop: '他的田裡現在沒有在長的菜'
+    watered: '今天已經幫他澆過水了', nocrop: '他的田裡現在沒有在長的菜', closed: '這座島的主人沒有開放參觀', annshort: '公告內容至少要 2 個字'
   };
   function errText(j) {
     if (!j) return ERR.bad;
@@ -168,7 +168,13 @@
     '.cw-fr .d{font-size:13px;color:#b9d8e4;margin:3px 0 6px}.cw-fr .k{display:flex;gap:6px;flex-wrap:wrap}' +
     '.cw-note{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.07);font-size:14px;line-height:1.5}.cw-note small{display:inline;margin:0;font-size:12px}' +
     '.cw-dot{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 12px/18px sans-serif;text-align:center}' +
-    '.cw-ta{width:100%;box-sizing:border-box;min-height:70px;margin:6px 0 2px;padding:8px 10px;border-radius:12px;border:1.5px solid #ffd166;background:#06344a;color:#fff;font:15px/1.5 "Noto Sans TC",sans-serif;resize:vertical}';
+    '.cw-ta{width:100%;box-sizing:border-box;min-height:70px;margin:6px 0 2px;padding:8px 10px;border-radius:12px;border:1.5px solid #ffd166;background:#06344a;color:#fff;font:15px/1.5 "Noto Sans TC",sans-serif;resize:vertical}' +
+    '.ann{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,209,102,.3);text-align:left}' +
+    '.ann.new{border-color:#ffd166;background:rgba(255,209,102,.12)}' +
+    '.ann h4{margin:0 0 2px;font-size:17px}.ann h4 em{margin-left:6px;padding:0 7px;border-radius:999px;font-style:normal;font-size:11px;background:#ff5e62;color:#fff}' +
+    '.ann small{display:block;margin:0 0 6px;font-size:12.5px;color:#b9d8e4}' +
+    '.ann-t{font-size:15px;line-height:1.7;word-break:break-word;overflow-wrap:anywhere}.ann-t a{color:#7fd8ff}' +
+    '.ann-k{display:flex;gap:8px;margin-top:8px}.ann-list{max-height:48vh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;margin-top:8px}';
   function injectCSS() { var st = document.createElement('style'); st.textContent = CSS; (document.head || document.documentElement).appendChild(st); }
   var toastEl, toastT;
   function toast(msg) {
@@ -333,6 +339,7 @@
     }, function (e) { topReq = null; throw e; });
     return topReq;
   }
+  function openLabel() { return P.open === false ? '🔒 小島只給好友看' : '🔓 小島開放參觀'; }
   function bagLine(b) { return RES_KEYS.map(function (k) { return RES[k][0] + ' ' + ((b && b[k]) || 0); }).join('　'); }
   function board(tab) {
     if (!P.code) { welcome(function (ok) { if (ok) board(tab); }); return; }
@@ -341,12 +348,20 @@
       '<div class="cw-tabs">' + TABS.map(function (t) { return '<button type="button" data-tab="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div>' +
       '<small class="cw-tn" style="margin-top:4px"></small><div class="cw-body"><p>載入中…</p></div>' +
       '<div class="cw-me">' + av(P) + ' 你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '<br>🪙 <b>' + P.bal + '</b>・🧺 ' + (P.tres || 0) + '・💎 ' + (P.tdia || 0) + '・連續登島 ' + (P.streak || 0) + ' 天<br>' +
-      '<button class="cw-link" type="button" data-bag>🎒 背包與好友</button>・<button class="cw-link" type="button" data-av>換頭像</button>・<button class="cw-link" type="button" data-code>看登島碼</button>・<button class="cw-link" type="button" data-nick>改暱稱</button>・<button class="cw-link" type="button" data-sw>換帳號</button></div>' +
+      '<button class="cw-link" type="button" data-bag>🎒 背包與好友</button>・<button class="cw-link" type="button" data-av>換頭像</button>・<button class="cw-link" type="button" data-open>' + openLabel() + '</button>・<button class="cw-link" type="button" data-code>看登島碼</button>・<button class="cw-link" type="button" data-nick>改暱稱</button>・<button class="cw-link" type="button" data-sw>換帳號</button></div>' +
       '<div class="cw-row"><button class="cw-b p" type="button" data-x>關閉</button></div>',
       function (ov, close) {
         ov.querySelector('[data-x]').addEventListener('click', close);
         ov.querySelector('[data-bag]').addEventListener('click', function () { close(); bag(); });
         ov.querySelector('[data-av]').addEventListener('click', function () { close(); pickAvatar(); });
+        var ob = ov.querySelector('[data-open]');
+        ob.addEventListener('click', function () {
+          ob.disabled = true;
+          api({ a: 'setopen', o: P.open === false ? 1 : 0 }).then(function (j) {
+            ob.disabled = false; ob.textContent = openLabel();
+            if (j.ok) toast(P.open === false ? '🔒 現在只有好友能參觀你的小島' : '🔓 已開放別人參觀你的小島'); else toast('⚠️ ' + errText(j));
+          }).catch(function () { ob.disabled = false; netFail(); });
+        });
         ov.querySelector('[data-code]').addEventListener('click', function () { close(); showCode(false); });
         ov.querySelector('[data-nick]').addEventListener('click', function () { close(); rename(); });
         ov.querySelector('[data-sw]').addEventListener('click', function () { close(); welcome(function (ok) { if (ok) daily(); }, 'login'); });
@@ -357,8 +372,9 @@
           if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : k === 'isle' ? '還沒有人蓋小島，去我的小島蓋一間小屋吧！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
           body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
             var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : k === 'isle' ? '🏝️ ' + r.v : '🪙 ' + r.v;
+            var sail = (k === 'isle' && r.fid && r.fid !== P.fid && window.ISLE_VISIT) ? '<button class="cw-mini" type="button" data-sail="' + esc(r.fid) + '" data-n="' + esc(r.nick) + '">⛵</button>' : '';
             return '<li class="' + (r.nick === P.nick ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="a">' + av(r) + '</span><span class="n">' + esc(r.nick) +
-              (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span></li>';
+              (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span>' + sail + '</li>';
           }).join('') + '</ol>';
         }
         function show(k) {
@@ -367,7 +383,10 @@
           ov.querySelector('.cw-tn').textContent = TAB_NOTE[k];
           paint(k);
         }
-        ov.addEventListener('click', function (e) { var b = e.target.closest('[data-tab]'); if (b) show(b.dataset.tab); });
+        ov.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-tab]'); if (b) { show(b.dataset.tab); return; }
+          var sl = e.target.closest('[data-sail]'); if (sl) { close(); window.ISLE_VISIT(sl.dataset.sail, sl.dataset.n); }
+        });
         show(tab);
         // 先顯示上次存的名單，背景再更新成最新的
         fetchTop().then(function () { if (ov.parentNode) paint(cur); })
@@ -522,6 +541,90 @@
     }).catch(function () { el.innerHTML = '👣 造訪紀錄暫時連不上'; });
   }
 
+  /* ---------- 公告：站長發布，大家登島時收到通知 ---------- */
+  var ANN = { list: [], max: 0 }, ANN_KEY = 'cw-ann-seen';
+  function annSeen() {
+    var s = P.code ? (+P.annSeen || 0) : 0;
+    try { s = Math.max(s, +localStorage.getItem(ANN_KEY) || 0); } catch (e) {}
+    return s;
+  }
+  function annUnread() { var s = annSeen(); return ANN.list.filter(function (a) { return a.id > s; }); }
+  function annDot() {
+    var d = document.getElementById('annDot'); if (!d) return;
+    var n = annUnread().length; d.hidden = !n; d.textContent = n;
+  }
+  function annLoad() {
+    return call({ a: 'anns' }).then(function (j) { if (j && j.ok) { ANN.list = j.list || []; ANN.max = j.max || 0; annDot(); } return ANN; });
+  }
+  function annMark() {
+    try { localStorage.setItem(ANN_KEY, String(ANN.max)); } catch (e) {}
+    if (P.code && (+P.annSeen || 0) < ANN.max) api({ a: 'annread', seq: ANN.max }).catch(function () {});
+    annDot();
+  }
+  function annItem(a, isNew, edit) {
+    return '<article class="ann' + (isNew ? ' new' : '') + '"><h4>' + esc(a.title) + (isNew ? '<em>新</em>' : '') + '</h4><small>' + esc(a.t) + '・' + esc(a.by) + (a.re ? '・已編輯 ' + esc(a.re) : '') + '</small><div class="ann-t">' + linkify(a.text) + '</div>' +
+      (edit ? '<div class="ann-k"><button class="cw-mini" type="button" data-aedit="' + a.id + '">✏️ 編輯</button><button class="cw-mini" type="button" data-adel="' + a.id + '">🗑️ 刪除</button></div>' : '') + '</article>';
+  }
+  function annShow(popup) {
+    var seen = annSeen(), list = popup ? annUnread().slice(0, 5) : ANN.list, canPost = !!(P.code && P.ann);
+    if (!popup && list.length) annMark(); // 打開公告清單就算看過
+    modal('<div class="cw-ic">📢</div><h3>' + (popup ? '站長公告' : '公告') + '</h3><div class="ann-list">' +
+      (list.length ? list.map(function (a) { return annItem(a, a.id > seen, canPost && !popup); }).join('') : '<p>目前沒有公告。</p>') + '</div>' +
+      (canPost && !popup ? '<div class="cw-row"><button class="cw-b" type="button" data-anew>＋ 新增公告</button></div>' : '') +
+      '<div class="cw-row"><button class="cw-b p" type="button" data-x>' + (popup ? '知道了' : '關閉') + '</button>' + (popup && ANN.list.length > list.length ? '<button class="cw-b" type="button" data-aall>看全部公告</button>' : '') + '</div>',
+      function (ov, close) {
+        ov.querySelector('[data-x]').addEventListener('click', function () { close(); if (popup) annMark(); });
+        var all = ov.querySelector('[data-aall]'); if (all) all.addEventListener('click', function () { close(); annShow(false); });
+        ov.addEventListener('click', function (e) {
+          var t = e.target.closest('button'); if (!t) return;
+          if (t.dataset.anew != null) { close(); annEdit(null); }
+          else if (t.dataset.aedit) { close(); annEdit(+t.dataset.aedit); }
+          else if (t.dataset.adel) {
+            if (!confirm('要刪除這則公告嗎？')) return;
+            t.disabled = true;
+            api({ a: 'anndel', id: +t.dataset.adel }).then(function (j) {
+              if (!j.ok) { toast('⚠️ ' + errText(j)); t.disabled = false; return; }
+              toast('🗑️ 公告已刪除'); close(); annLoad().then(function () { annShow(false); });
+            }).catch(function () { t.disabled = false; netFail(); });
+          }
+        });
+      }, popup, 'wide');
+  }
+  function annEdit(id) {
+    var cur = id ? ANN.list.filter(function (a) { return a.id === id; })[0] : null;
+    modal('<div class="cw-ic">✍️</div><h3>' + (cur ? '編輯公告' : '新增公告') + '</h3>' +
+      '<input class="cw-in" maxlength="40" placeholder="標題（40 字內）" value="' + esc(cur ? cur.title : '') + '">' +
+      '<textarea class="cw-ta" maxlength="500" placeholder="公告內容（500 字內，可以貼網址）" style="min-height:130px">' + esc(cur ? cur.text : '') + '</textarea><div class="cw-err"></div>' +
+      '<div class="cw-row"><button class="cw-b p" type="button" data-ok>' + (cur ? '儲存' : '發布') + '</button><button class="cw-b" type="button" data-x>取消</button></div>' +
+      '<small>發布後，所有人下次登島都會收到通知。</small>',
+      function (ov, close) {
+        var ti = ov.querySelector('.cw-in'), tx = ov.querySelector('.cw-ta'), err = ov.querySelector('.cw-err'), ok = ov.querySelector('[data-ok]');
+        ov.querySelector('[data-x]').addEventListener('click', function () { close(); annShow(false); });
+        ok.addEventListener('click', function () {
+          if (tx.value.trim().length < 2) { err.textContent = ERR.annshort; return; }
+          ok.disabled = true; ok.textContent = '送出中…';
+          api({ a: cur ? 'annedit' : 'annpost', id: id || 0, title: ti.value.trim(), text: tx.value }, true).then(function (j) {
+            ok.disabled = false; ok.textContent = cur ? '儲存' : '發布';
+            if (!j.ok) { err.textContent = errText(j); return; }
+            toast(cur ? '✏️ 公告已更新' : '📢 公告發布了！'); close(); annLoad().then(function () { annShow(false); });
+          }).catch(function () { ok.disabled = false; ok.textContent = cur ? '儲存' : '發布'; err.textContent = '連不上金幣小島，請稍後再試'; });
+        });
+        setTimeout(function () { ti.focus(); }, 60);
+      }, true, 'wide');
+  }
+  function annOpen() { annLoad().then(function () { annShow(false); }).catch(function () { toast('⚠️ 暫時連不上公告，請稍後再試'); }); }
+  function whenIdle(fn, tries) {
+    tries = tries || 0;
+    if (document.querySelector('#mission:not([hidden]),#intro:not([hidden]),.cw-ov') && tries < 120) { setTimeout(function () { whenIdle(fn, tries + 1); }, 1000); return; }
+    fn();
+  }
+  function annCheck() {
+    return annLoad().then(function () {
+      if (!annUnread().length) return;
+      whenIdle(function () { if (annUnread().length) annShow(true); });
+    });
+  }
+
   /* ---------- 啟動 ---------- */
   load();
   injectCSS();
@@ -537,6 +640,7 @@
     read: read,
     board: board,
     bag: bag,
+    ann: { open: annOpen, check: annCheck },
     avatar: pickAvatar,
     visit: visit,
     toast: toast,
@@ -560,6 +664,7 @@
         var d = daily(); online();
         // 首頁：先在背景把排行榜抓好，按 🏆 時就不用等
         if (opt.ask !== false) setTimeout(function () { fetchTop().catch(function () {}); }, 2500);
+        if (opt.ask !== false && d) d.then(annCheck).catch(function () {});
         // 老玩家還沒選頭像：這次瀏覽提醒一次
         if (opt.ask !== false && d) d.then(function () {
           var asked = false; try { asked = sessionStorage.getItem('cw-av') === '1'; sessionStorage.setItem('cw-av', '1'); } catch (e) {}
