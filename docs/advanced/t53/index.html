@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>巨集概論 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-advanced">← 回進階討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#a5b8ff;--g1:#b3c4f0;--g2:#3b4a98">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐅</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🐆</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">💻 進階討論島</span>
+    <h1 class="topic-title">📘 巨集概論</h1>
+    <p class="topic-tagline">一般巨集使用反斜線 (\) 表示暫停以等待使用者輸入，使用分號 (;) 或 …</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-05</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>一般巨集使用反斜線 (\) 表示暫停以等待使用者輸入，使用分號 (;) 或 空格 表示按下 Enter 鍵。</p>
+<p>下列巨集範例中，將繪製半徑為 10 個單位的圓。</p>
+<p>^C^C_CIRCLE;\10;</p>
+<p>巨集可應用的範圍為 下拉式功能表、工具列按鈕、工具選項板等。</p>
+<p>-------------------------------------------------------------------------------------------------------------</p>
+<p>※ 下拉式功能表</p>
+<p>附圖:CUI功能表</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>附圖:CUI功能表巨集</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>附圖:輔助繪圖-下拉式功能表</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>※ 工具列按鈕</p>
+<p>附圖:CUI工具列</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>附圖:CUI工具列巨集</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>附圖:輔助繪圖工具-工具列</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>※ 工具選項板</p>
+<p>附圖:工具選項版巨集</p>
+<img src="images/07.jpg" alt="" loading="lazy">
+<p>附圖:輔助繪圖工具-工具選項版</p>
+<img src="images/08.jpg" alt="" loading="lazy">
+<p>•特殊字元 ^C^C 會取消任何執行中的指令。</p>
+<p>•特殊字元底線 (_) 會自動將隨後的指令轉換為其他語言。</p>
+<p>•項目 CIRCLE 會啟動 CIRCLE 指令。</p>
+<p>•特殊字元反斜線 (\) 會使巨集執行暫停，以便使用者指定中心點。</p>
+<p>•項目 10 是對半徑提示的回應。</p>
+<p>•功能表巨集中的分號 (;) 會啟用 ENTER 鍵。</p>
+<p>註:當你使用 SELECT 指令時會延遲巨集暫停後的繼續執行，巨集在完成物件選取後才繼續執行。當在特殊字元 ^C^C 前面加 * 符號，*^C^C即變成連續式巨集。</p>
+<p>=================================================================</p>
+<p>巨集範例說明:</p>
+<p>^C^C_CIRCLE;\10;</p>
+<p>使用者可能正在執行其他指令，當你點選了巨集；</p>
+<p>1.^C^C ...會先取消執行中的指令</p>
+<p>2.CIRCLE; ...下達 CIRCLE 指令 後 ENTER</p>
+<p>3.\ ...請使用者指定圓的半徑</p>
+<p>4.10; ...下達半徑為 10 後 ENTER</p>
+<p>=================================================================</p>
+<div class="section-title">在功能表巨集中使用的特殊字元</div>
+<p>字元描述</p>
+<p>------------------------------------------------------------------</p>
+<p>; 啟用 Enter 鍵</p>
+<p>[空格] 輸入一個空格；功能表項目中指令序列間的空格相當於按下空白鍵</p>
+<p>\ 暫停以等待使用者輸入 (Accelerators 節中無法使用)</p>
+<p>_ 轉換緊隨其後的 AutoCAD 指令與選項</p>
+<p>+ 將功能表巨集延續到下一行 (如果是最後一個字元)</p>
+<p>=* 顯示目前的頂層下拉功能表、快顯功能表或影像功能表</p>
+<p>*^C^C 重複項目的字首</p>
+<p>^B 開啟或關閉鎖點 (Ctrl+B)</p>
+<p>^C 取消指令 (Esc)</p>
+<p>^D 開啟或關閉座標顯示 (Ctrl+D)</p>
+<p>^E 設定下一個等角平面 (Ctrl+E)</p>
+<p>^G 開啟或關閉格點 (Ctrl+G)</p>
+<p>^H 發出倒退鍵</p>
+<p>^O 開啟或關閉正交</p>
+<p>^P 開啟或關閉 MENUECHO</p>
+<p>^Q 將所有提示、狀態列示和輸入回應至印表機 (Ctrl+Q)</p>
+<p>^T 開啟或關閉數位板 (Ctrl+T)</p>
+<p>^V 變更目前的視埠。</p>
+<p>^Z 空字元，會抑制在功能表項目結尾自動加入空白鍵</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t52/index.html">← CUI自訂檔_建立快速鍵的步驟</a>
+    <a class="btn-ghost" href="../t371/index.html">CUI自訂檔_建立鍵盤快速鍵2 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t53-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
