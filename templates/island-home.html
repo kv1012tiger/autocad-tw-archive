@@ -589,6 +589,30 @@ body{overflow:hidden;background:#1581bd}
   .quest .qbtn i{font-size:21px}
 }
 .quest-log{display:flex;justify-content:center;margin-top:14px}
+/* ===== 選單懸浮：平常縮成一顆按鈕，點一下展開，移動地圖或點小島就收起 ===== */
+:root{--hud:0px}
+.qtog,.htog{font:inherit;cursor:pointer}
+.qtog{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:52px;height:52px;padding:0;border:0;border-radius:50%;background:linear-gradient(135deg,#ffb347,#ff6a3d);color:#fff;font-weight:900;font-size:11px;line-height:1.1}
+.qtog i{font-style:normal;font-size:22px;line-height:1}
+.quest:not(.mini) .qtog{display:none}
+.quest.mini{width:auto;gap:0;padding:3px;border-radius:50%}
+.quest.mini .qbtn,.quest.mini .qfold{display:none}
+.quest:not(.mini){animation:qopen .22s ease-out}
+@keyframes qopen{from{opacity:0;transform:translateX(-50%) translateY(10px) scale(.94)}to{opacity:1;transform:translateX(-50%)}}
+.qfold,.hfold{position:absolute;left:50%;transform:translateX(-50%);width:46px;height:20px;padding:0;border:2px solid #ffd166;background:rgba(3,42,60,.92);color:#ffd166;font-size:14px;line-height:1;cursor:pointer}
+.qfold{top:-15px;border-bottom:0;border-radius:12px 12px 0 0}
+.hfold{display:none;bottom:-17px;border-top:0;border-radius:0 0 12px 12px}
+html:not(.hud-full) .hud:not(.mini) .hfold{display:block}
+.guide-float{bottom:calc(84px + env(safe-area-inset-bottom))}
+body.dock-open .guide-float{bottom:calc(96px + env(safe-area-inset-bottom))}
+.htog{display:flex;align-items:center;gap:6px;position:relative;padding:7px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.6);background:rgba(3,42,60,.9);color:var(--gold);font-weight:900;font-size:16px;box-shadow:0 4px 14px rgba(0,30,50,.45);white-space:nowrap}
+.htog i{font-style:normal;font-size:12px;opacity:.8}
+.htog.bump{animation:bump .6s cubic-bezier(.3,1.6,.5,1)}
+.hb-dot.p{min-width:0;width:13px;height:13px;padding:0;top:-3px;right:-2px}
+.hud:not(.mini) .htog{display:none}
+.hud.mini{left:auto;right:8px;top:calc(8px + env(safe-area-inset-top));width:auto;padding:0;gap:0;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.hud.mini>:not(.htog){display:none}
+html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .guide-float{position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:59;margin:0 auto;max-width:520px;background:none;border:0;padding:0;cursor:pointer;text-align:left}
 .guide[hidden],.log[hidden],.scene[hidden]{display:none}
 .log{position:fixed;left:0;right:0;top:var(--hud,60px);bottom:0;z-index:75;overflow-y:auto;background:linear-gradient(180deg,#0a5f80,#053049)}
@@ -973,7 +997,8 @@ body{overflow:hidden;background:#1581bd}
 <body>
 <div class="deco" aria-hidden="true"><div class="moon"></div><span class="bat">🦜</span><span class="bat b2">🦜</span></div>
 
-<header class="hud">
+<header class="hud mini" id="hud">
+  <button class="htog" id="hudTog" type="button" aria-label="展開選單" aria-expanded="false">🪙 <b id="htogN">0</b><i>▾</i><span class="hb-dot p" id="htogDot" hidden></span></button>
   <a class="logo" href="#"><span>🏝️</span>論壇資源島</a>
   <div class="scene-bar" id="sceneBar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button" aria-label="回大海">⛵<span class="tx"> 回大海</span></button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
@@ -986,6 +1011,7 @@ body{overflow:hidden;background:#1581bd}
     <button class="hb" id="sfxBtn" type="button" aria-label="關閉音效">🔊</button>
     <button class="hb" id="fsBtn" type="button" aria-label="全螢幕"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   </div>
+  <button class="hfold" id="hudFold" type="button" aria-label="收起選單">⌃</button>
 </header>
 
 <main>
@@ -997,8 +1023,10 @@ body{overflow:hidden;background:#1581bd}
     <div class="boat" id="boat" aria-hidden="true"><span><svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 6v50" stroke="#4a2a12" stroke-width="3"/><path d="M40 8l18 5-18 5z" fill="#e11d2e"/><path d="M42 20c14 2 22 11 22 28H42z" fill="#20222c" stroke="#0b0c10" stroke-width="1.5"/><path d="M38 20c-14 2-22 11-22 28h22z" fill="#2c2f3b" stroke="#0b0c10" stroke-width="1.5"/><g fill="#fff"><circle cx="53" cy="33" r="5"/><rect x="50.6" y="36.5" width="4.8" height="4" rx="1"/></g><g fill="#20222c"><circle cx="51.2" cy="32.6" r="1.3"/><circle cx="54.8" cy="32.6" r="1.3"/></g><path d="M46 42l14 3M60 42l-14 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M8 52h64l-8 17a5 5 0 0 1-4.5 3h-39a5 5 0 0 1-4.5-3z" fill="#8a5527" stroke="#3b2210" stroke-width="2"/><path d="M12 59h56" stroke="#5f3816" stroke-width="2"/><circle cx="26" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="40" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="54" cy="64" r="2.4" fill="#2a1a0c"/></svg></span></div>
   </div></div>
 </section>
-<button class="guide guide-float" id="guideBox" type="button"><span class="tav" aria-hidden="true"></span><span class="bubble" id="guideTxt">嗨！我是蘋果爸。上船囉，從第一座島出發吧 👇</span></button>
-<nav class="quest" aria-label="快速功能">
+<button class="guide guide-float" id="guideBox" type="button"><span class="tav" aria-hidden="true"></span><span class="bubble" id="guideTxt">嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇</span></button>
+<nav class="quest mini" id="quest" aria-label="快速功能">
+  <button class="qtog" type="button" id="questTog" aria-label="展開選單" aria-expanded="false"><i>⛵</i>選單</button>
+  <button class="qfold" type="button" id="questFold" aria-label="收起選單">⌄</button>
   <button class="qbtn hot" type="button" id="startBtn"><i>⛵</i>探險</button>
   <button class="qbtn" type="button" id="randBtn"><i>🎲</i>隨機</button>
   <button class="qbtn" type="button" id="searchBtn2"><i>🔮</i>搜尋</button>
@@ -1163,7 +1191,7 @@ body{overflow:hidden;background:#1581bd}
         <li>🎁 飽足度 50 以上時摸摸，寵物會送你 1 個物資，10% 機率改送 1 枚金幣。</li>
       </ul></section>
       <section class="hp" data-p="4" hidden><ul>
-        <li>🎒 背包裡有你的 <b>旅人編號</b>（5 碼，可以公開給朋友）。輸入對方的編號就能互加好友。</li>
+        <li>🎒 背包裡有你的 <b>海島編號</b>（5 碼，可以公開給朋友）。輸入對方的編號就能互加好友。</li>
         <li>好友可以：🎁 每天送對方 1 個物資、✉️ 傳悄悄話（100 字）、🏝️ 參觀小島、💧 澆水。</li>
         <li>📮 <b>留言碼頭</b>：留言給蘋果爸（300 字，每天 10 則，可貼網址），蘋果爸會回覆你。</li>
         <li>📢 <b>公告</b>：站長發的最新消息，登島時會通知你，也能按上方 📢 重看。</li>
@@ -1630,7 +1658,7 @@ function drawIslets(W,H,f,edge){
 }
 var G={};
 function layout(){
-  document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
+  hudSync();
   var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:9,rows=port?9:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
@@ -1750,8 +1778,8 @@ world.addEventListener('click',function(e){if(dragged){e.stopPropagation();e.pre
 
 /* ---------- 航海清單 ---------- */
 var logEl=$('log');
-function openLog(){logEl.hidden=false;logEl.scrollTop=0}
-function closeLog(){logEl.hidden=true}
+function openLog(){logEl.hidden=false;logEl.scrollTop=0;hudSync()}
+function closeLog(){logEl.hidden=true;hudSync()}
 $('logBtn').addEventListener('click',openLog);
 $('logClose').addEventListener('click',closeLog);
 var gb=$('guideBox'),gbT;
@@ -1861,7 +1889,7 @@ function hideScene(){if(!SCN)return;SCN=null;scene.hidden=true;land.innerHTML=''
 /* 島上時：回大海、島名、分享、收藏併進最上面那一列 */
 function sceneHud(on){
   document.documentElement.classList.toggle('in-scene',on);
-  document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
+  hudSync();
 }
 /* 網址：#isle-島代號、#isle-島代號/小屋序號、#qa-問答島序號、#home、#castle */
 function route(){
@@ -1961,7 +1989,7 @@ function refresh(){
     var nx=!done&&!nextSet;if(nx)nextSet=true;s.el.classList.toggle('next',nx);
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🪙 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
-  $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。上船囉，從第一座島出發吧 👇';
+  $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇';
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
 
@@ -2897,6 +2925,47 @@ $('introGo').addEventListener('click',function(){closeIntro(SFX_ON)});
 
 var rzT;
 window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){layout();drawScene()},120)});
+/* ---------- 選單懸浮：上方、下方平常都縮成一顆按鈕，點一下展開，移動地圖或點小島就收起 ---------- */
+/* 地圖畫面：上方選單懸浮在地圖上（--hud 為 0，地圖延伸到最上緣）；島上、清單：維持完整一列（--hud 為那一列的高度） */
+var hudWasFull=false;
+function hudFull(){return document.documentElement.classList.contains('in-scene')||!logEl.hidden}
+function hudSync(){
+  var h=document.getElementById('hud'),full=hudFull(),H=document.documentElement;
+  H.classList.toggle('hud-full',full);
+  if(full)h.classList.remove('mini');else if(hudWasFull)h.classList.add('mini');
+  hudWasFull=full;
+  H.style.setProperty('--hud',full?h.offsetHeight+'px':'0px');
+}
+function hudOpen(on){$('hud').classList.toggle('mini',!on);$('hudTog').setAttribute('aria-expanded',on?'true':'false')}
+function dockOpen(on){$('quest').classList.toggle('mini',!on);$('questTog').setAttribute('aria-expanded',on?'true':'false');document.body.classList.toggle('dock-open',on)}
+function menusOpen(){return(!$('hud').classList.contains('mini')&&!hudFull())||!$('quest').classList.contains('mini')}
+function collapseMenus(){if(!hudFull())hudOpen(false);dockOpen(false)}
+$('hudTog').addEventListener('click',function(){hudOpen(true)});
+$('hudFold').addEventListener('click',function(){hudOpen(false)});
+$('questTog').addEventListener('click',function(){dockOpen(true)});
+$('questFold').addEventListener('click',function(){dockOpen(false)});
+$('quest').addEventListener('click',function(e){if(e.target.closest('.qbtn'))dockOpen(false)});
+$('hud').addEventListener('click',function(e){if(!hudFull()&&e.target.closest('#missionBtn,#annBtn,#boardBtn,#bagBtn,#searchBtn,#candyBtn'))hudOpen(false)});
+world.addEventListener('pointerdown',collapseMenus,{passive:true});
+world.addEventListener('wheel',collapseMenus,{passive:true});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')collapseMenus()});
+/* 收起時的小按鈕：同步金幣數字，公告／背包有紅點時也亮紅點 */
+(function(){
+  var cn=$('candyN'),tn=$('htogN'),tg=$('hudTog'),last=null,t0=Date.now();
+  function coins(){
+    var t=cn.textContent;tn.textContent=t;
+    if(last!==null&&t!==last&&Date.now()-t0>5000){tg.classList.remove('bump');void tg.offsetWidth;tg.classList.add('bump')}
+    last=t;
+  }
+  var ad=$('annDot'),bd=$('bagDot'),td=$('htogDot');
+  function dots(){td.hidden=!!ad.hidden&&!!bd.hidden}
+  coins();dots();
+  if(window.MutationObserver){
+    new MutationObserver(coins).observe(cn,{childList:true,characterData:true,subtree:true});
+    var mo=new MutationObserver(dots);
+    [ad,bd].forEach(function(d){mo.observe(d,{attributes:true,attributeFilter:['hidden']})});
+  }
+})();
 /* ---------- 返回鍵與關閉：先關掉開著的畫面，到最外層才問要不要離開 ---------- */
 var leaving=false;
 function guardArm(){try{history.pushState({top:1},'',location.href)}catch(e){}}
@@ -2928,6 +2997,7 @@ function closeTopLayer(){
   if(!logEl.hidden){closeLog();return true}
   if(panel.classList.contains('open')){closePanel();return true}
   if(SCN){try{history.replaceState({root:1},'',location.pathname+location.search)}catch(e){}hideScene();return true}
+  if(menusOpen()){collapseMenus();return true}
   return false;
 }
 /* 重新整理時，這一筆紀錄本來就是「top」（前面已有 root），不要再多疊一層，否則要按好幾次返回 */

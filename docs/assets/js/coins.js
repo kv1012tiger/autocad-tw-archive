@@ -54,7 +54,7 @@
   var ERR = {
     short: '暱稱至少要 2 個字', taken: '這個暱稱已經有人用了，換一個吧', reserved: '這個暱稱保留給站長，換一個吧',
     nocode: '找不到這組登島碼，請再確認一次', bad: '資料有誤，請重新整理後再試',
-    nofid: '找不到這個旅人編號，請再確認一次', self: '這是你自己的旅人編號喔', fmax: '好友最多 50 位',
+    nofid: '找不到這個海島編號，請再確認一次', self: '這是你自己的海島編號喔', fmax: '好友最多 50 位',
     notfriend: '要先互加好友才行', gifted: '今天已經送過這位好友了，明天再送', few: '數量不夠喔',
     trademax: '今天的兌換次數用完了，明天再來', notemax: '今天的悄悄話已經用完了，明天再聊',
     msgshort: '留言至少要 2 個字', msgmax: '今天的留言次數用完了，明天再來', admin: '只有站長可以這樣做',
@@ -415,7 +415,7 @@
       }, !!isNew);
   }
 
-  /* ---------- 背包：物資、兌換所、旅人編號、好友、悄悄話 ---------- */
+  /* ---------- 背包：物資、兌換所、海島編號、好友、悄悄話 ---------- */
   function copy(s, msg) {
     function fb() { var ta = document.createElement('textarea'); ta.value = s; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); toast(msg); }
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(s).then(function () { toast(msg); }, fb); else fb();
@@ -438,9 +438,9 @@
             RES_KEYS.map(function (k) { return '<button type="button" data-trade="' + k + '"' + (left && (b[k] || 0) >= 10 ? '' : ' disabled') + '>10 ' + RES[k][0] + ' → 1 🪙</button>'; }).join('') +
             '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + '>1 💎 → 5 🪙</button>' +
             '<button type="button" data-trade="pumpkin"' + (left && ((P.veg || {}).pumpkin || 0) >= 5 ? '' : ' disabled') + '>5 🎃 → 1 🪙</button></div></div>';
-          h += '<div class="cw-sec"><h4>🪪 我的旅人編號</h4><div class="cw-fid"><b>#' + esc(P.fid || '……') + '</b>' + (P.fid ? '<button class="cw-mini" type="button" data-copyfid>複製</button>' : '') + '</div>' +
-            '<small>把旅人編號給朋友，對方在這裡輸入就能互加好友。登島碼是你的鑰匙，不要給別人。</small>' +
-            '<div class="cw-add"><input class="cw-in" maxlength="6" placeholder="輸入好友的旅人編號" autocapitalize="characters" data-fidin><button class="cw-mini p" type="button" data-fadd>加好友</button></div><div class="cw-err" data-ferr></div></div>';
+          h += '<div class="cw-sec"><h4>🪪 我的海島編號</h4><div class="cw-fid"><b>#' + esc(P.fid || '……') + '</b>' + (P.fid ? '<button class="cw-mini" type="button" data-copyfid>複製</button>' : '') + '</div>' +
+            '<small>把海島編號給朋友，對方在這裡輸入就能互加好友。登島碼是你的鑰匙，不要給別人。</small>' +
+            '<div class="cw-add"><input class="cw-in" maxlength="6" placeholder="輸入好友的海島編號" autocapitalize="characters" data-fidin><button class="cw-mini p" type="button" data-fadd>加好友</button></div><div class="cw-err" data-ferr></div></div>';
           h += '<div class="cw-sec"><h4>👥 好友' + (FR ? '（' + FR.length + '）' : '') + '</h4>' + friendsHTML() + '</div>';
           h += '<div class="cw-sec"><h4>✉️ 悄悄話' + (P.unread ? '<span class="cw-dot">' + P.unread + '</span>' : '') + '</h4>' + inboxHTML() + '</div>';
           var keep = ov.querySelector('[data-fidin]'), kv = keep ? keep.value : '';
@@ -449,7 +449,7 @@
         }
         function friendsHTML() {
           if (!FR) return '<small>載入中…</small>';
-          if (!FR.length) return '<small>還沒有好友。把你的旅人編號分享給朋友，或輸入朋友的旅人編號。</small>';
+          if (!FR.length) return '<small>還沒有好友。把你的海島編號分享給朋友，或輸入朋友的海島編號。</small>';
           return '<div class="cw-fr">' + FR.map(function (f) {
             var o = open[f.fid] || '';
             return '<div><div class="h"><i>' + av(f) + '</i><b>' + esc(f.nick) + '</b><small style="margin:0">#' + esc(f.fid) + '</small></div>' +
@@ -480,10 +480,10 @@
               toast('🏪 換到 ' + j.add + ' 枚金幣！'); paint();
             }).catch(function () { netFail(); paint(); });
           } else if (d.visit) { close(); window.ISLE_VISIT(d.visit); }
-          else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製旅人編號 #' + P.fid);
+          else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製海島編號 #' + P.fid);
           else if (d.fadd != null) {
             var inp = ov.querySelector('[data-fidin]'), v = inp.value.replace(/[^0-9a-z]/gi, '').toUpperCase(), fe = ov.querySelector('[data-ferr]');
-            if (v.length !== 5) { fe.textContent = '旅人編號是 5 個字'; return; }
+            if (v.length !== 5) { fe.textContent = '海島編號是 5 個字'; return; }
             busy(t);
             api({ a: 'fadd', fid: v }).then(function (j) {
               if (!j.ok) { paint(); ov.querySelector('[data-ferr]').textContent = errText(j); return; }
