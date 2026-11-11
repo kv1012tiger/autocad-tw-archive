@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD 複雜3D模型建構方法 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">🧊 AutoCAD 複雜3D模型建構方法</h1>
+    <p class="topic-tagline">關於這個主題：AutoCAD 2010 彩現III</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-08-03</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>關於這個主題：<b>AutoCAD 2010 彩現III</b></p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>這算是我第一次嘗試建構大型的3D量體，這在電腦配備上算是一大考驗</p>
+<p>我的電腦配備應該算是中等等級(應該吧...)，所以想了一些方法來補救</p>
+<p>因為不是每個人的電腦配備都是頂級的，以下提供我的方法和各位分享</p>
+<p>現在了解跑3D模型真的很辛苦，尤其是在算圖的時候要花很多時間</p>
+<p>希望有經驗的朋友也可一起參與討論，分享一下寶貴的經驗，看看怎麼做可以提升效率!!</p>
+<p>1.原則上這個模型若是使用 擬真或概念 的視覺型式，在使用約束環轉時已經跑不動啦(應該是顯卡等級不足吧)，所以先使用2D線架構來轉視圖，找到適合的視景就使用 VIEW 把它記住，系統會以建立相機來設定。</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>2.這樣可以方便日後的 RENDER圖</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>3.建模時跟畫2D圖一樣，必須考量到以後的修圖，若一開始就完全將物件建立再同一張圖，那以後改圖時由於量體複雜度高，電腦的運算會很吃力，所以可把圖拆開來建模以及貼材質(RENDER圖)。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>4.然後搭配使用 外部參考的方式</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>5.修模型時只需要到外部參考母圖來作業</p>
+<p>a.先在側視圖畫出這樣的斷面</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>b.模擬薄膜斷面(擠出厚度不用太大)</p>
+<img src="images/07.jpg" alt="" loading="lazy">
+<p>c.再來建立薄膜上視圖，然後把他們疊在一起</p>
+<img src="images/08.jpg" alt="" loading="lazy">
+<p>d.使用交集後即可完成</p>
+<img src="images/09.jpg" alt="" loading="lazy">
+<p>6.改好模型要算圖時可以再到子圖(組合好的3D模型)即可</p>
+<img src="images/10.jpg" alt="" loading="lazy">
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t2855/index.html">← AutoCAD 2010 電子報</a>
+    <a class="btn-ghost" href="../t3732/index.html">AutoCAD初階、進階學習四部曲 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t3679-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

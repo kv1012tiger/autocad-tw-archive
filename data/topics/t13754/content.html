@@ -1,0 +1,24 @@
+<p>相信在職場中工作多年的朋友們（包括我），一直在找尋更快更有效率的作圖方式，最快速的方式不外乎使用「外掛程式」，而何謂外掛程式呢，就是大家常常聽到的「LISP程式」，在AutoCAD中可以透過LISP，完成平時作圖時繁瑣的步驟，幾乎是說可以一鍵完成工作任務。但是學習LISP語法需要花時間專研、測試及學習，剛開始通常會讓人摸不著頭緒，若是沒有長時間練習使用，過一陣子後可能就會忘了當初寫下的語法結構。</p>
+<p>工作中有很多繪圖需求，不一定都要靠LISP程式，其實可以使用「巨集」語法達成，在這裡先跟各位分享學LISP之前，建議先了解「巨集」語法，巨集也可以解釋為「連續指令」，一般透過指令功能繪圖時，一次只可以執行一種指令，使用「巨集」可以串聯指令功能，即時完成繁瑣或重複的步驟，蠻類似使用LISP達成的效果。而且使用巨集有一大好處，就是語法單純簡單（隨寫隨用），但是無法完成不太複雜的需求，因為巨集無法使用判斷式，僅能完成單一的供作需求而已，進階的繪圖需求仍需要透過LISP滿足。</p>
+<p>之前有寫了二篇教學文，有興趣的朋友請爬文參考，有操作疑慮或問題請大家再提出來討論吧～</p>
+<p><b>「教學」巨集概論</b></p>
+<p><a href="https://www.autocad-tw.com/t53-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t53-topic</a></p>
+<p><b>「教學」工具選項板_巨集篇</b></p>
+<p><a href="https://www.autocad-tw.com/t33-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t33-topic</a></p>
+<p>這裡分享我工作中使用到的「巨集」，趕快來試試練習吧！</p>
+<p>註：由於AutoCAD升級進版，巨集在不同的版本中，需要測試修改部分語法。</p>
+<div class="section-title">文字旋轉對齊</div>
+<p>^C^CROTATE;\;INS;@;R;INS;270;PER;\</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/-W_0yE7AvM4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="section-title">自動轉成圖塊（2013以上版本）</div>
+<p>^C^CSELECT;\copybase;\ERASE;_pasteblock;@;</p>
+<div class="section-title">自動轉成圖塊（2012以下版本）</div>
+<p>^C^C;SELECT;\copybase;\P;;ERASE;P;;_pasteblock;@;</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/6lBnbbyaE9o" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="section-title">全選分解改2號色</div>
+<p>^C^CEXPLODE;ALL;CHANGE;ALL;;P;C;2;;</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/3IYiufwGO7k" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="section-title">相關教學：</div>
+<p><a href="https://www.autocad-tw.com/t33-topic" target="_blank" rel="noopener">「教學」工具選項板_巨集篇</a></p>
+<p><a href="https://www.autocad-tw.com/t53-topic" target="_blank" rel="noopener">「教學」巨集概論</a></p>
+<p><a href="https://www.autocad-tw.com/search?search_keywords=%E5%B7%A8%E9%9B%86&amp;search_where=f29" target="_blank" rel="noopener">相關巨集操作影片（點我）</a></p>

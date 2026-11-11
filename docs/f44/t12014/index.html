@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rhino建模 + AutoCAD材質 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">🧊 Rhino建模 + AutoCAD材質</h1>
+    <p class="topic-tagline">日前有發佈一篇透過AutoCAD 2012建模的[作品]電鑽，AutoCAD…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2011-12-21</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>日前有發佈一篇透過AutoCAD 2012建模的<a href="https://www.autocad-tw.com/t11960-topic" target="_blank" rel="noopener">[作品]電鑽</a>，AutoCAD對於平滑曲面的功能真的不是很齊全！個人我是比較追求完美（精益求精），所以想說透過跨軟體組合搭配，效果方面出奇的好，在此也跟大家一同分享喔～</p>
+<p>這回我再次嘗試以Rhino建模，由於第一次使用Rhino，雖然可以按照書上的步驟，但是這本書藉是編著的，有很多細節均未交代，所以還需要花時間反覆練習與測試，終於皇天不負苦心人，花了我大概二天的時間，終於有了第一個Rhino作品～</p>
+<img src="images/01.png" alt="" loading="lazy">
+<img src="images/02.png" alt="" loading="lazy">
+<img src="images/03.png" alt="" loading="lazy">
+<img src="images/04.png" alt="" loading="lazy">
+<p>關於彩現貼材質部分我透過熟悉的AutoCAD來快速幫我完成，但是在Rhino轉出到AutoCAD面臨到一些問題，在這裡測試了幾種方式，發現使用IGES格式與AutoCAD相容性最高，從AutoCAD插入IGES檔案後，對於AutoCAD也比較不耗效能（耗資源），底下分幾種！</p>
+<p>Rhino有幾種轉檔方式，第一種可以直接使用另存新檔方式，檔案格式可以選用DWG或DXF，再來可以直接透過AutoCAD開啟。</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>需注意在匯出DWG檔同時，要記得更改內定值，可依照使用者需求選擇模型類型！</p>
+<img src="images/06.png" alt="" loading="lazy">
+<p>一開始預設值為「網格」，這個效果我覺得很耗效能，在AutoCAD中會因不同的視覺形式造成LAG(延遲)</p>
+<img src="images/07.png" alt="" loading="lazy">
+<p>AutOCAD開啟時物件類型會轉換成為「聚合面網面」，大家光看到「掣點」是不是就很頭疼啊～</p>
+<img src="images/08.png" alt="" loading="lazy">
+<p>一般使用AutoCAD 2011以下版本，我會建議請將物件類型轉成「SOLIDES」</p>
+<img src="images/09.png" alt="" loading="lazy">
+<p>這樣在AutoCAD中打開，物件類型就會是3D實體。但是在Rhino中的模型需要是「封閉的曲面」才可以轉出為3D實體。</p>
+<img src="images/10.png" alt="" loading="lazy">
+<p>再來一樣還是那句老話「新功能新優勢」，AutoCAD 2012可以匯出及匯入IGES格式，這樣的3D模型比較不會有破面的情形產生，在Rhino另存新檔選擇IGES格式！</p>
+<img src="images/11.png" alt="" loading="lazy">
+<p>在AutoCAD 2012選擇功能區上的「匯入」功能按鈕。</p>
+<img src="images/12.png" alt="" loading="lazy">
+<p>檔案類型請切換到「IGES」格式，再來瀏覽選用剛剛Rhino轉出的檔案。</p>
+<img src="images/13.png" alt="" loading="lazy">
+<p>AutoCAD 2012會出現提示「正在處理後台工作」對話訊息</p>
+<img src="images/14.png" alt="" loading="lazy">
+<p>使用者可以在畫面右下方查看「匯入工作」</p>
+<img src="images/15.png" alt="" loading="lazy">
+<p>完成後按滑鼠右鍵選擇「插入」即可</p>
+<img src="images/16.png" alt="" loading="lazy">
+<p>根據預設值顏色為黑色，建議可以在AutoCAD中分群組或分圖層，再來就比較方面貼材質作業</p>
+<img src="images/17.png" alt="" loading="lazy">
+<p>轉換完畢的模型為「曲面」，這類型還可以使用在平面快照，可以說是一舉數得啊～</p>
+<img src="images/18.png" alt="" loading="lazy">
+<p>透過AutoCAD新版的材質瀏覽器，可以選用預設的材質庫，讓使用者貼材質非常簡單又方便～</p>
+<img src="images/19.png" alt="" loading="lazy">
+<p>影片展示：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/Pdjqm3ci1VA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>AutoCAD 2012彩現：</p>
+<img src="images/20.png" alt="" loading="lazy">
+<img src="images/21.png" alt="" loading="lazy">
+<img src="images/22.png" alt="" loading="lazy">
+<img src="images/23.png" alt="" loading="lazy">
+<img src="images/24.png" alt="" loading="lazy">
+<img src="images/25.png" alt="" loading="lazy">
+<img src="images/26.png" alt="" loading="lazy">
+<img src="images/27.png" alt="" loading="lazy">
+<p>再來還可搭配 AutoCAD 2012 3D新功能 VIEWBASE基礎視圖，讓你的配置中快速建立三視圖投影。</p>
+<img src="images/28.png" alt="" loading="lazy">
+<img src="images/29.png" alt="" loading="lazy">
+<p>相關影片: <a href="https://youtu.be/n2YbEBfUfjA" target="_blank" rel="noopener">https://youtu.be/n2YbEBfUfjA</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t11722/index.html">← AutoCAD 2013 將使用一個新的DWG格式</a>
+    <a class="btn-ghost" href="../t12249/index.html">AutoCAD免費網路版 - AutoCAD 易 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t12014-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

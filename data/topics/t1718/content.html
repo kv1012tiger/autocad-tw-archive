@@ -1,0 +1,50 @@
+<p>我們一般在工作時所使用到的軟體一定不僅止於AutoCAD，像是會使用到OFFICE或是其他工具程式(美工軟體)，甚至開啟特定的資料夾等等。現在可以透過AutoCAD本身預設的 啟動應用程式 指令，來快速啟動開啟OFFICE軟體或是檔案總管，而且還可以 自訂啟動應用程式。</p>
+<p>PS:或許你已知道這個方法，也請分享給你週遭的朋友吧~</p>
+<p><b>※秘訣一※</b></p>
+<p>一般使用 Express工具 ALIASEDIT指令 來新增自訂即可，新增完畢後不需要關閉重新啟動AutoCAD，只要輸入 REINIT指令 重新載入 PGP檔 更新即可。</p>
+<div class="section-title">[Windows 程式]：</div>
+<p>EEE → start EXPLORER (檔案總管)</p>
+<p>NNN → start NOTEPAD (記事本)</p>
+<p>PPP → start PBRUSH (小畫家)</p>
+<p>DOS → start cmd (命令提示字元)</p>
+<p>WWW → start calc (小算盤)</p>
+<p>CCC → start control (控制台)</p>
+<p>DOC → start WINWORD (Microsoft Office Word)</p>
+<p>XLS → start EXCEL (Microsoft Office Excel)</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/fDuMo3fdViE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>※秘訣二※</b></p>
+<p>也可以使用 acad.pgp 來自訂啟動應用程式，新增完畢後不需要關閉重新啟動AutoCAD，只要輸入 REINIT指令 重新載入 PGP檔 更新即可。</p>
+<div class="section-title">[個人化設定]：</div>
+<p>LSP → 系統程式檔</p>
+<p>PGP → 系統別名檔</p>
+<p>MNS → 功能表檔</p>
+<p>AAA → 資料夾</p>
+<div class="section-title">acad.pgp 語法:</div>
+<p>LSP, start NOTEPAD &quot;D:\Menu2008\acad2008.LSP&quot;, 1,,</p>
+<p>PGP, start NOTEPAD &quot;D:\Menu2008\acad.pgp&quot;, 1,,</p>
+<p>MNS, start NOTEPAD &quot;D:\Menu2008\AT2008.mns&quot;, 1,,</p>
+<p>AAA, start explorer &quot;D:\Atsai\@論壇\2D教學\@課程&quot;, 1,,</p>
+<div class="section-title">範例影片的語法路徑請按照個人PC的路徑來指定</div>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/CrEVjbjs6aw" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><b>※秘訣三※</b>2013-08-29補充：</p>
+<p>●透過「<b>ALIASEDIT指令</b>」自訂開啟網頁，即可在<b>AutoCAD</b>中，輸入<b>CAD</b>指令開啟顧問論壇的網頁。</p>
+<p>方式如下：</p>
+<p>1.輸入 ALIASEDIT指令 → 開啟「ALIASEDIT」→「Shell Commands」頁籤 →「Add」</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>2.「Alias」欄位 → 輸入啟用指令「<b>CAD</b>」</p>
+<p>「Command」欄位 → 輸入網頁網址「START <a href="https://www.autocad-tw.com/" target="_blank" rel="noopener">https://www.autocad-tw.com/</a>」...需在網址前面加上START</p>
+<p>「Flag」欄位 → 設定「<b>1</b>」→「OK」→ 儲存關閉「ALIASEDIT」</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>3.在AutoCAD中，輸入REINIT指令 →「PGP檔」打勾 →「確定」...此步驟只需設定一次即可生效，下次開啟AutoCAD或圖檔不需再設定。</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>[/url]</p>
+<p>●透過「<b>PGP檔設定</b>」自訂開啟網頁，即可在<b>AutoCAD</b>中，輸入<b>CAD</b>指令開啟顧問論壇的網頁。</p>
+<p>方式如下：</p>
+<p>1.「<b>編輯別名</b>」→ 開啟「<b>PGP檔</b>」</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>2.在acad.pgp最下方加入語法：「CAD,START <a href="https://www.autocad-tw.com/,1,," target="_blank" rel="noopener">https://www.autocad-tw.com/,1,,</a>」→ 儲存關閉「acad.pgp」</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>3.在AutoCAD中，輸入REINIT指令 →「PGP檔」打勾 →「確定」...此步驟只需設定一次即可生效，下次開啟AutoCAD或圖檔不需再設定。</p>
+<img src="images/06.png" alt="" loading="lazy">
+<p><b>前篇主題：[討論]可以使用AutoCAD開啟檔案總管或是EXCEL嗎?</b></p>
+<p><a href="https://www.autocad-tw.com/t1717-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t1717-topic</a></p>

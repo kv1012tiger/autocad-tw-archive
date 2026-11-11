@@ -1,0 +1,21 @@
+<p>我想要請問老師問題，我們公司是畫結構圖的，目前公司想要使用外部參考與建築師共用server，</p>
+<p>當建築師改圖時我們公司的圖面也馬上更新，不曉的第一步該如何做?</p>
+<p>關於協同作業的觀念，這裡以建築及結構互相交換平面圖為例，一般為了節省套圖時的作業步驟，通常不建議使用者使用「INSERT」指令插入為圖塊，因為每一次修改更新圖檔，彼此就必須先將舊的圖塊刪除及清除圖塊，再來就要重新插入為圖塊，程序及效率就非常不符合經濟效益。</p>
+<p>最好的作法可透過「外部參考」方式，日後只要交換彼此的平面底圖，就可以立即顯示更新修改的部份，為了方便彼此辨識，使用者還可以加上「修訂雲形」註記。</p>
+<p>▼<b>建築圖與結構圖「共用server」，外部參考平面底圖範例操作</b>：</p>
+<p>第一步先將「共用server」指定網路磁碟機，範例共用網路磁碟機為 X槽。</p>
+<p>步驟1：X槽下新增案號資料夾「T121201」</p>
+<p>步驟2：「T121201」資料夾下，新增建築圖用資料夾「ARCH」</p>
+<p>步驟3：「ARCH」資料夾下，有 &quot;XA-5F.dwg&quot;</p>
+<p>步驟4：T121201資料夾下，新增結構圖用資料夾「STRU」</p>
+<p>步驟5：「STRU」資料夾下，有 &quot;XS-5F.dwg&quot;</p>
+<p>步驟6：開啟建築圖 &quot;XA-5F.dwg&quot; ，插入外部參考結構圖 &quot;XS-5F.dwg&quot; ，使用「相對路徑」及「覆疊類型」</p>
+<p>步驟7：開啟結構圖 &quot;XS-5F.dwg&quot; ，插入外部參考建築圖 &quot;XA-5F.dwg&quot; ，使用「相對路徑」及「覆疊類型」</p>
+<p>※完成以上步驟後，日後只要「建築圖」&quot;XA-5F.dwg&quot; 有修改，只要儲存檔案後，再開啟「結構圖」&quot;XS-5F.dwg&quot; 即可同步更新「建築圖」。</p>
+<p>反之，修改完「結構圖」&quot;XS-5F.dwg&quot; ，只要儲存檔案後，再開啟「建築圖」&quot;XA-5F.dwg&quot; 即可同步更新「結構圖」。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/IiKtn7qQk0Q" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<div class="section-title">相關文章：</div>
+<p>外部參考 - AutoCAD Demo 外部參考 參考管理員</p>
+<p>[影片]外部參考優點</p>
+<p>[影音]AutoCAD 2D 外部參考XREF 參考類型(貼附-覆疊)</p>
+<p>[影音]AutoCAD 2D 外部參考XREF 保留外部參考圖層的變更</p>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>錯誤的註解比例(比例清單)-造成檔案異常容量變大 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">📘 錯誤的註解比例(比例清單)-造成檔案異常容量變大</h1>
+    <p class="topic-tagline">從AutoCAD 2008版本開始，增加了一個 註解比例 的新功能，但是由於…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-10-29</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>從AutoCAD 2008版本開始，增加了一個 註解比例 的新功能，但是由於軟體的 註解比例BUG 會造成產生大量的 錯誤比例清單，這樣會造成檔案異常的大，在開啟圖面時也會造成lag，而且當你插入了這個問題圖檔也會有這些問題，建議隔離未處理的圖檔，否則會類似病毒的狀況蔓延開來。</p>
+<p><b>可以從一下二個地方來判斷是否是 錯誤比例清單 的圖檔:</b></p>
+<p>1.開啟AutoCAD 2008程式，在畫面右下方，當你點選 註解比例 時，顯示過多的比例清單。</p>
+<img src="images/01.png" alt="" loading="lazy">
+<p>正常的比例清單:</p>
+<p>錯誤的比例清單:</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>2.開啟AutoCAD 2008程式 →「選項」對話方塊 →「使用者設定」→「編輯比例清單」</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>正常情況下會顯示，若有過多錯誤的比例清單，將無法顯示:</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>當無法顯示時，可以輸入 scalelistedit指令，會出現以下訊息:</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p>而這個情況非常類似2000以後版本的 錯誤圖層過濾器，也是會造成 檔案異常的大，在開啟圖面時也會造成lag等問題，我在另一篇文章中也有分享 清除錯誤圖層過濾器 解決方法。</p>
+<p>完整說明 &gt;&gt; <a href="https://www.autocad-tw.com/t811-topic" target="_blank" rel="noopener">[發帖精華]錯誤的圖層過濾器-造成檔案異常容量變大</a></p>
+<div class="section-title">而關於 清除錯誤比例清單 方法如下: ◆</div>
+<p><b>※※※ AutoCAD 2008 以上版本 ※※※</b></p>
+<p>方法1：請將比例清單 重置 即可。重置:刪除所有自訂比例，並還原預設比例清單，存檔後這樣一來檔案大小即可正常。</p>
+<p>單一圖檔手動清除步驟如下:</p>
+<p>---------------------------------------------------</p>
+<p>指令: -scalelistedit</p>
+<p>輸入選項 [列示(?)/加入(A)/刪除(D)/重置(R)/結束(E)] &lt;加入&gt;: R</p>
+<p>是否將比例清單重置為預設值？[是(Y)/否(N)] &lt;否&gt;: Y</p>
+<p>比例清單重置為預設項目。</p>
+<p>輸入選項 [列示(?)/加入(A)/刪除(D)/重置(R)/結束(E)] &lt;加入&gt;: E</p>
+<p>---------------------------------------------------</p>
+<p>方法2：將手動清除步驟掛入功能表</p>
+<p>功能表巨集語法:</p>
+<p>[清除錯誤比例清單]^C^C-scalelistedit;R;Y;E;</p>
+<p>方法3：也可以到原廠下載修復程式:</p>
+<p><a href="http://usa.autodesk.com/adsk/servlet/ps/dl/item?siteID=123112&amp;id=11062617&amp;linkID=9240618" target="_blank" rel="noopener">http://usa.autodesk.com/adsk/servlet/ps/dl/item?siteID=123112&amp;id=11062617&amp;linkID=9240618</a></p>
+<p><b>※※※ AutoCAD 2007 以下版本 ※※※</b></p>
+<p>方法1：當你沒有2008以上版本的軟體時，可以使用 WBLOCK 方式:</p>
+<p>開啟 錯誤比例清單問題圖檔，使用 WBLOCK 製作外部圖塊即可。因為2007以下版本沒有註解比例功能，所以製作 WBLOCK 時會忽略 註解比例(比例清單)，下次開圖請打開新做的圖檔，這樣一來檔案大小即可正常。</p>
+<p>PS:使用 AutoCAD 2007 以下版本 ，開啟 錯誤比例清單問題圖檔 時不會造成lag，但是檔案異常放大問題依然存在，建議你趕快處理不要忽視。</p>
+<p><b>補充：</b></p>
+<p>從AutoCAD 2009版本開始，當開啟有大量的註解比例時，系統會出現對話方塊來提示喔!!</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t8105/index.html">← 專屬AutoCAD 2011的Subscription Advantage Pack功能加值包</a>
+    <a class="btn-ghost" href="../t813/index.html">關於AutoCAD DWG檔案異常容量變大 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t812-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

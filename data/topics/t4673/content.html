@@ -1,0 +1,45 @@
+<p>今年 Autodesk 針對 Subscription合約用戶 又放出了獨享福利，這個原廠開發的 Subscription Advantage Pack ，目前只能使用在 AutoCAD 2010版本，如果您不是 Subscription合約用戶 那就要等到 AutoCAD 2011版本 才可以使用到這些新功能。</p>
+<p><b>功能區</b></p>
+<img src="images/01.png" alt="" loading="lazy">
+<p><b>工具列</b></p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>關於 Subscription工具 的隔離物件、繪製、選擇及繪製順序等四種功能，這是集合業界用戶的建議，早期部分功能都可是靠AutoLISP來滿足，現在 Autodesk 把它開發整合到 AutoCAD 2010版本，使用新功能目的一樣可以提昇您的日常工作效率。</p>
+<p>※目前 Subscription Advantage Pack 只提供英文版本，但可視需要安裝於任何當地語系化版本的 AutoCAD。</p>
+<p>即使您將其載入非英文版的 AutoCAD 中，亦只會以英文顯示所有的新指令及相關指令。在這裡我有將他中文化，但是僅止於使用介面而已。</p>
+<p><b>中文化功能區</b></p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>以下我整理了一些重點文章及影片和所有朋友分享(請記得打開喇叭)，有興趣的朋友請提出來一起討論~</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/ySINYUgtO84_TW" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=ySINYUgtO84" target="_blank" rel="noopener">https://www.youtube.com/watch?v=ySINYUgtO84</a></p>
+<div class="section-title">隔離物件功能</div>
+<p>物件隔離</p>
+<p>隱藏所有物件 (所選物件的物件除外)。</p>
+<p>物件隱藏</p>
+<p>關閉所選的物件。</p>
+<p>取消物件隔離</p>
+<p>還原所有使用 ISOLATE 功能隱藏的物件。</p>
+<div class="section-title">繪製功能</div>
+<p>建立相同物件</p>
+<p>將所選物件的性質套用並建立相同的物件。</p>
+<div class="section-title">選擇功能</div>
+<p>選擇相似物件</p>
+<p>將所選物件的性質或物件類型，根據該條件來建立類似的選集。</p>
+<p><b>設定</b></p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>代碼:</p>
+<p>SELECTSIMILARMODE系統變數</p>
+<p>設定選擇物件類型條件，使用下列值的總和，將此設定儲存為位元碼：</p>
+<p>0 無</p>
+<p>1 Color (顏色)</p>
+<p>2 Layer (圖層)</p>
+<p>4 Linetype (線型)</p>
+<p>8 Linetype scale (線型比例)</p>
+<p>16 Lineweight (線粗)</p>
+<p>32 Plot style (出圖型式)</p>
+<p>64 Object style (物件型式)</p>
+<p>128 Name (名稱)</p>
+<div class="section-title">繪製順序功能</div>
+<p>將註解置於前方</p>
+<p>將文字與標註置於圖面中所有其他物件的前方。</p>
+<p>將剖面線置於下方</p>
+<p>將剖面線物件移到圖面中繪製物件順序的底端。</p>
