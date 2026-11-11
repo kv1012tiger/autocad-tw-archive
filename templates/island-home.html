@@ -3030,6 +3030,7 @@ window.addEventListener('beforeunload',function(e){
   e.preventDefault();e.returnValue='';
 });
 if(window.IntersectionObserver&&MSG_SPOT&&MSG_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))msgPrefetch()},{rootMargin:'300px'}).observe(MSG_SPOT.el);
+setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
 </script>
