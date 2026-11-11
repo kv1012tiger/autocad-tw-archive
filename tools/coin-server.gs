@@ -88,7 +88,9 @@ var MSG_LEN = 300, MSG_DAY = 10, MSG_GAP = 60 * 1000, MSG_PAGE = 20;
 var NOTE_LEN = 100, NOTE_DAY = 20;
 
 /* ---------- 工作表 ---------- */
+var SHEETS_ = {};
 function sheet_(name, head) {
+  if (SHEETS_[name]) return SHEETS_[name]; // 同一次執行只檢查一次標題列，省下重複讀取
   var ss = SpreadsheetApp.getActive();
   var sh = ss.getSheetByName(name);
   if (!sh) {
@@ -100,6 +102,7 @@ function sheet_(name, head) {
     sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#ffe8a3');
     sh.setFrozenRows(1);
   }
+  SHEETS_[name] = sh;
   return sh;
 }
 function players_() { return sheet_('玩家', P_HEAD); }
@@ -119,6 +122,13 @@ function findFid_(rows, fid) {
   for (var i = 0; i < rows.length; i++) if (String(rows[i][C.fid]).toUpperCase() === fid) return i;
   return -1;
 }
+
+/* ---------- 快取（Google CacheService）：留言、造訪紀錄、站長名單 ---------- */
+function cget_(k) { try { var v = CacheService.getScriptCache().get(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function cput_(k, v, sec) { try { CacheService.getScriptCache().put(k, JSON.stringify(v), sec); } catch (e) {} }
+function cdel_(k) { try { CacheService.getScriptCache().remove(k); } catch (e) {} }
+function ver_(name) { return cget_('ver:' + name) || 0; }
+function bump_(name) { cput_('ver:' + name, ver_(name) + 1, 21600); } // 在鎖裡面呼叫，不會同時加
 
 /* ---------- 工具 ---------- */
 function day_(offset) {
@@ -198,9 +208,11 @@ function doPost(e) {
 }
 
 function handle_(q) {
+  SHEETS_ = {};
   var a = String(q.a || '');
   if (a === 'top') return top_(q);
   if (a === 'visitors') return { ok: true, v: visitors_(String(q.isle || '')) };
+  if (a === 'visall') return { ok: true, vs: visStats_() };
   if (a === 'msgs') return msgs_(q);
   if (a === 'anns') return anns_();
   if (a === 'voyage') return voyage_();
@@ -272,7 +284,7 @@ function handle_(q) {
           if (String(recent[x][0]) === me.code && String(recent[x][1]) === isle) { dup = true; break; }
         }
       }
-      if (!dup) vs.appendRow([new Date(), r[C.nick], me.code, isle, text_(q.name, 30), t2, me.admin ? '是' : '']);
+      if (!dup) { vs.appendRow([new Date(), r[C.nick], me.code, isle, text_(q.name, 30), t2, me.admin ? '是' : '']); cdel_('vis'); }
       res.v = visitors_(isle);
     } else if (a === 'nick') {
       var nn = cleanNick_(q.nick);
@@ -462,6 +474,7 @@ function handle_(q) {
       r[C.msgN] = num_(r[C.msgN]) + 1;
       r[C.msgLast] = Date.now();
       sheet_('留言板', M_HEAD).appendRow(['M' + Date.now().toString(36).toUpperCase(), new Date(), r[C.nick], r[C.code], r[C.av], body, '', '', '', '']);
+      bump_('msgs');
     } else if (a === 'reply' || a === 'hide' || a === 'mdel') {
       var ms = sheet_('留言板', M_HEAD), mrow = msgRow_(ms, q.id);
       if (!mrow) return { ok: false, err: 'bad', p: me };
@@ -479,6 +492,7 @@ function handle_(q) {
         mv[9] = '刪除';
       }
       ms.getRange(mrow, 1, 1, M_HEAD.length).setValues([mv]);
+      bump_('msgs');
     } else {
       return { ok: false, err: 'bad' };
     }
@@ -494,20 +508,27 @@ function handle_(q) {
   }
 }
 
-function visitors_(isle) {
-  var vs = sheet_('造訪紀錄', V_HEAD);
-  var n = vs.getLastRow() - 1;
-  if (n < 1 || !isle) return { list: [], total: 0 };
-  var rows = vs.getRange(2, 1, n, V_HEAD.length).getValues();
-  var seen = {}, list = [], total = 0;
-  for (var i = rows.length - 1; i >= 0; i--) {
-    var r = rows[i];
-    if (String(r[3]) !== isle || r[6] === '是' || seen[r[2]]) continue;
-    seen[r[2]] = 1; total++;
-    if (list.length < 12) list.push({ nick: plain_(r[1]), d: Utilities.formatDate(new Date(r[0]), TZ, 'M/d') });
+/* 造訪紀錄：一次掃過整張表，算好每座島的人數與最近 12 位，快取 2 分鐘（有人新留下足跡就清掉） */
+var VIS_TTL = 120;
+function visStats_() {
+  var hit = cget_('vis');
+  if (hit) return hit;
+  var vs = sheet_('造訪紀錄', V_HEAD), n = vs.getLastRow() - 1, out = {};
+  if (n > 0) {
+    var rows = vs.getRange(2, 1, n, V_HEAD.length).getValues(), seen = {};
+    for (var i = rows.length - 1; i >= 0; i--) {
+      var r = rows[i], k = String(r[3]);
+      if (!k || r[6] === '是' || seen[k + '|' + r[2]]) continue;
+      seen[k + '|' + r[2]] = 1;
+      var o = out[k] || (out[k] = { total: 0, list: [] });
+      o.total++;
+      if (o.list.length < 12) o.list.push({ nick: plain_(r[1]), d: Utilities.formatDate(new Date(r[0]), TZ, 'M/d') });
+    }
   }
-  return { list: list, total: total };
+  cput_('vis', out, VIS_TTL);
+  return out;
 }
+function visitors_(isle) { return (isle && visStats_()[isle]) || { list: [], total: 0 }; }
 
 /* 排行榜：coin（目前金幣）、res（累計採集的物資）、dia（累計撿到的鑽石）。
    三份名單一起算好，在 Google 快取放 60 秒，期間不用重讀整張玩家表。 */
@@ -746,12 +767,20 @@ function msgRow_(sh, id) {
   for (var x = ids.length - 1; x >= 0; x--) if (String(ids[x][0]) === id) return x + 2;
   return 0;
 }
-function msgs_(q) {
-  var rows = rows_(players_()), i = find_(rows, q.code), admin = i >= 0 && rows[i][C.admin] === '是';
-  var code = i >= 0 ? String(rows[i][C.code]).toUpperCase() : '';
-  var sh = sheet_('留言板', M_HEAD), n = sh.getLastRow() - 1, list = [], pending = 0;
-  var avOf = {};
+/* 留言：每一頁（站長版／一般版）快取 60 秒；有人留言、回覆、隱藏、刪除時換版本號，快取就自動作廢 */
+var MSG_TTL = 60, MSG_CACHE_PAGES = 10;
+function adminCodes_() {
+  var hit = cget_('adm');
+  if (hit) return hit;
+  var out = [];
+  rows_(players_()).forEach(function (r) { if (r[C.admin] === '是') out.push(String(r[C.code]).toUpperCase()); });
+  cput_('adm', out, 600);
+  return out;
+}
+function msgsBuild_(admin, prefix) {
+  var rows = rows_(players_()), avOf = {};
   rows.forEach(function (r) { avOf[String(r[C.code]).toUpperCase()] = plain_(r[C.av]); });
+  var sh = sheet_('留言板', M_HEAD), n = sh.getLastRow() - 1, list = [], pending = 0;
   if (n > 0) {
     var vals = sh.getRange(2, 1, n, M_HEAD.length).getValues();
     for (var x = vals.length - 1; x >= 0; x--) {
@@ -760,12 +789,31 @@ function msgs_(q) {
       if (!v[6] && st !== '隱藏') pending++;
       var who = String(v[3]).toUpperCase();
       list.push({ id: String(v[0]), t: fmt_(v[1]), nick: plain_(v[2]), av: avOf[who] || plain_(v[4]), text: plain_(v[5]),
-        reply: plain_(v[6]), rt: fmt_(v[7]), re: fmt_(v[8]), hidden: st === '隱藏', mine: !!code && who === code });
+        reply: plain_(v[6]), rt: fmt_(v[7]), re: fmt_(v[8]), hidden: st === '隱藏', w: who });
     }
   }
-  var page = Math.max(1, num_(q.page) || 1), total = list.length;
-  return { ok: true, total: total, pending: admin ? pending : 0, admin: admin, page: page,
-    pages: Math.max(1, Math.ceil(total / MSG_PAGE)), list: list.slice((page - 1) * MSG_PAGE, page * MSG_PAGE) };
+  var total = list.length, pages = Math.max(1, Math.ceil(total / MSG_PAGE)), all = {}, first = {};
+  for (var p = 1; p <= Math.min(pages, MSG_CACHE_PAGES); p++) {
+    first = { total: total, pending: admin ? pending : 0, pages: pages, list: list.slice((p - 1) * MSG_PAGE, p * MSG_PAGE) };
+    all[prefix + p] = JSON.stringify(first);
+  }
+  try { CacheService.getScriptCache().putAll(all, MSG_TTL); } catch (e) {}
+  return { total: total, pending: admin ? pending : 0, pages: pages, list: list };
+}
+function msgs_(q) {
+  var code = String(q.code || '').toUpperCase();
+  var admin = !!code && adminCodes_().indexOf(code) >= 0;
+  var page = Math.max(1, num_(q.page) || 1);
+  var prefix = 'msgs:' + ver_('msgs') + ':' + (admin ? 'a' : 'p') + ':';
+  var pg = page <= MSG_CACHE_PAGES ? cget_(prefix + page) : null;
+  if (!pg) {
+    var all = msgsBuild_(admin, prefix);
+    pg = { total: all.total, pending: all.pending, pages: all.pages, list: all.list.slice((page - 1) * MSG_PAGE, page * MSG_PAGE) };
+  }
+  return { ok: true, total: pg.total, pending: pg.pending, admin: admin, page: page, pages: pg.pages,
+    list: pg.list.map(function (m) {
+      return { id: m.id, t: m.t, nick: m.nick, av: m.av, text: m.text, reply: m.reply, rt: m.rt, re: m.re, hidden: m.hidden, mine: !!code && m.w === code };
+    }) };
 }
 
 /* ---------- 站長帳號：在 Apps Script 編輯器執行一次 ---------- */
