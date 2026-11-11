@@ -51,10 +51,11 @@ var RES = {
   stone: { name: '採石島', item: '石頭', col: C.stone }
 };
 var RES_KEYS = ['fruit', 'iron', 'wood', 'stone'];
-var STOCK_MIN = 30, STOCK_MAX = 80;  // 每座物資島每天的總量（隨機）
+var STOCK_MIN = 60, STOCK_MAX = 160; // 每座物資島每天的總量（隨機）
+var GATHER_N = [2, 6];               // 每次採集拿到幾個（2～6，原本是 1～3，加倍）
 var DIA_MAX = 2;                     // 每座物資島每天藏 0～2 顆鑽石（隨機）
 var GATHER_MAX = 5;                  // 每人每座島每天最多採 5 次
-var GATHER_GAP = 30 * 1000;          // 兩次採集至少隔 30 秒
+var GATHER_GAP = 5 * 1000;           // 兩次採集至少隔 5 秒
 var TRADE_RATE = 10;                 // 10 個同種物資換 1 枚金幣
 var DIA_RATE = 5;                    // 1 顆鑽石換 5 枚金幣
 var TRADE_MAX = 3;                   // 每天最多兌換 3 次
@@ -298,6 +299,7 @@ function handle_(q) {
   if (a === 'voyage') return voyage_();
   if (a === 'drops') return dropsPub_();
   if (a === 'isl') return islLite_();
+  if (a === 'island' && !q.fid) return islandOwn_(q); // 看自己的小島：只讀、不排隊等鎖，快很多
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
@@ -397,7 +399,7 @@ function handle_(q) {
       if ((tc[rk] || 0) >= GATHER_MAX) return { ok: false, err: 'tired', p: me };
       var st = isles_(), isl = st.map[rk], left = isl.total - isl.taken;
       if (left <= 0) return { ok: false, err: 'empty', p: me, isles: islesPub_(st, r) };
-      var got = Math.min(left, 1 + Math.floor(Math.random() * 3)), from = isl.taken;
+      var got = Math.min(left, GATHER_N[0] + Math.floor(Math.random() * (GATHER_N[1] - GATHER_N[0] + 1))), from = isl.taken;
       isl.taken += got;
       var dia = 0;
       isl.dias.forEach(function (pos) { if (pos > from && pos <= isl.taken) dia++; });
@@ -452,7 +454,7 @@ function handle_(q) {
       res.island = islePub_(r, true);
     } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'adopt' || a === 'feed' || a === 'pat') {
       var out = isleAct_(a, q, r, me);
-      if (out.err) return { ok: false, err: out.err, p: me };
+      if (out.err) return { ok: false, err: out.err, miss: out.miss, p: me };
       if (out.add) res.add = out.add;
       if (out.gift) res.gift = out.gift;
       if (out.got) res.got = out.got;
@@ -784,6 +786,20 @@ function cropLeft_(c, now) { return Math.max(0, num_(c.t) + VEG[c.v].hours * HOU
 function fullNow_(p, now) { return Math.max(0, Math.min(100, Number(p.full) - HUNGER_PER_DAY * (now - num_(p.ft)) / DAY_MS)); }
 function petLv_(p) { return 1 + Math.floor(num_(p.aff) / 10); }
 function hasCost_(r, cost) { for (var k in cost) if (num_(r[BAG_COL[k]]) < cost[k]) return false; return true; }
+/* 看自己的小島（只讀，不寫回試算表、不佔用鎖）：登入小島時最常被呼叫，所以走最短的路 */
+function islandOwn_(q) {
+  var rows = rows_(players_()), i = find_(rows, q.code);
+  if (i < 0) return { ok: false, err: 'nocode' };
+  var r = rows[i];
+  resetDay_(r); // 只改記憶體裡的這一列（跨日的今日計數歸零），不存回去
+  return { ok: true, add: 0, island: islePub_(r, true), p: profile_(r) };
+}
+/* 還缺多少：{ wood: 3, stone: 2 }（只列不夠的） */
+function missCost_(r, cost) {
+  var m = {};
+  for (var k in cost) { var have = num_(r[BAG_COL[k]]); if (have < cost[k]) m[k] = cost[k] - have; }
+  return m;
+}
 function payCost_(r, cost) { for (var k in cost) r[BAG_COL[k]] = num_(r[BAG_COL[k]]) - cost[k]; }
 var COST_NAME = { fruit: '水果', iron: '鐵礦', wood: '木材', stone: '石頭', dia: '鑽石' };
 function costText_(cost) { return Object.keys(cost).map(function (k) { return COST_NAME[k] + '×' + cost[k]; }).join(' '); }
@@ -816,7 +832,7 @@ function isleAct_(a, q, r, me) {
       if (o.deco.indexOf(kind) >= 0) return { err: 'maxed' };
       cost = DECO[kind].cost; label = DECO[kind].name;
     } else return { err: 'bad' };
-    if (!hasCost_(r, cost)) return { err: 'few' };
+    if (!hasCost_(r, cost)) return { err: 'few', miss: missCost_(r, cost) }; // 一併告訴網頁還缺什麼
     payCost_(r, cost);
     if (kind === 'house') o.h++;
     else if (kind === 'field') { o.fields++; o.f.push(null); }
