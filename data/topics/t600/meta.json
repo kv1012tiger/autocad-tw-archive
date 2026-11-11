@@ -1,7 +1,7 @@
 {
   "id": "t600",
   "board": "cad2d",
-  "order": 87,
+  "order": 91,
   "icon": "📘",
   "title": "橢圓轉弧(聚合線)",
   "tagline": "一般最快的方式是使用 AutoLISP程式來處理，但若沒有程式又無程式基礎，…",
