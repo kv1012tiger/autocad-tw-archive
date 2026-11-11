@@ -87,6 +87,77 @@ var BAG_COL = { fruit: C.fruit, iron: C.iron, wood: C.wood, stone: C.stone, dia:
 var MSG_LEN = 300, MSG_DAY = 10, MSG_GAP = 60 * 1000, MSG_PAGE = 20;
 var NOTE_LEN = 100, NOTE_DAY = 20;
 
+/* ---------- 漂流寶物（隨機出現在各座島的金幣、鑽石）與每日任務 ---------- */
+var DROP_SLOT = 15 * 60 * 1000;   // 每 15 分鐘換一批
+var DROP_GRACE = 90 * 1000;       // 換批後 90 秒內，上一批還可以撿（網路慢的緩衝）
+var DROP_COINS = 3;               // 每批有幾座島出現金幣
+var DROP_DIA_CHANCE = 0.25;       // 每批另外有一座島出現鑽石的機率
+var DROP_COIN_DAY = 4, DROP_DIA_DAY = 1;   // 每人每天最多撿幾枚金幣、幾顆鑽石
+var DROP_SALT = 'isle-drop-v1';
+var QUEST_N = 3, QUEST_COIN = 1;  // 每天 3 個任務，每個 1 枚金幣
+/* 網站地圖上每座島的代號（和網頁的 ISLAND_KEYS 一致；新增島嶼時要一起加） */
+var DROP_SPOTS = [
+  'home', 'mine', 'search', 'msg', 'qa-0', 'isle-beginner',
+  'qa-1', 'res-0', 'isle-cad2d', 'qa-2', 'game', 'isle-quiz',
+  'qa-3', 'pets', 'res-1', 'isle-cad3d', 'qa-4', 'isle-f44',
+  'qa-5', 'isle-videos', 'res-2', 'qa-6', 'isle-advanced', 'qa-7',
+  'isle-courses', 'res-3', 'qa-8', 'isle-realtime', 'isle-announce', 'isle-career',
+  'isle-plugins', 'castle', 'dock'
+];
+function hash_(str) {
+  var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (var i = 0; i < str.length; i++) { var ch = str.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (h1 ^ h2) >>> 0;
+}
+function rng_(seed) {
+  var a = seed >>> 0;
+  return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function dropSlot_() { return Math.floor(Date.now() / DROP_SLOT); }
+/* 這一批有哪些寶物：由批次編號算出來，不用存；每位玩家各撿各的，不用搶 */
+function dropAt_(slot) {
+  var rnd = rng_(hash_(DROP_SALT + '|' + slot)), keys = DROP_SPOTS.slice(), out = [];
+  for (var i = 0; i < DROP_COINS && keys.length; i++) out.push({ k: keys.splice(Math.floor(rnd() * keys.length), 1)[0], t: 'c' });
+  if (rnd() < DROP_DIA_CHANCE && keys.length) out.push({ k: keys.splice(Math.floor(rnd() * keys.length), 1)[0], t: 'd' });
+  return out;
+}
+function dropsPub_() {
+  var slot = dropSlot_();
+  return { ok: true, slot: slot, left: (slot + 1) * DROP_SLOT - Date.now(), list: dropAt_(slot), max: { c: DROP_COIN_DAY, g: DROP_DIA_DAY } };
+}
+var QUESTS = {
+  gather3: { e: '⛏️', t: '在物資島採集 3 次', chk: function (r) { var c = counts_(r[C.gToday]), n = 0; Object.keys(c).forEach(function (k) { n += c[k]; }); return n >= 3; } },
+  trade1: { e: '🏪', t: '到兌換所換 1 次',
+    ok: function (r) { var b = bag_(r), m = 0; Object.keys(b).forEach(function (k) { m = Math.max(m, b[k]); }); return m >= TRADE_RATE || num_(r[C.dia]) >= 1; },
+    chk: function (r) { return num_(r[C.trades]) >= 1; } },
+  msg1: { e: '📮', t: '在留言碼頭留言 1 次', chk: function (r) { return num_(r[C.msgN]) >= 1; } },
+  water1: { e: '💧', t: '幫好友的菜園澆水 1 次', ok: function (r) { return list_(r[C.friends]).length >= 1; },
+    chk: function (r, o) { return !!o.wd && o.wd.d === day_() && o.wd.f.length >= 1; } },
+  gift1: { e: '🎁', t: '送好友一份禮物', ok: function (r) { return list_(r[C.friends]).length >= 1; }, chk: function (r) { return list_(r[C.gifts]).length >= 1; } },
+  pat1: { e: '🐾', t: '摸摸小島上的寵物', ok: function (r, o) { return o.pets.length >= 1; },
+    chk: function (r, o) { return o.pets.some(function (p) { return num_(p.pd) === day_(); }); } },
+  visit2: { e: '🧭', t: '拜訪 2 座不同的島', chk: function (r, o) { return !!o.q && o.q.d === day_() && o.q.v.length >= 2; } },
+  drop1: { e: '✨', t: '撿到 1 個漂流寶物', chk: function (r, o) { return !!o.dr && o.dr.d === day_() && (num_(o.dr.c) + num_(o.dr.g)) >= 1; } }
+};
+/* 每人每天從「做得到的任務」裡抽 3 個，抽好就存起來（當天不會變） */
+function pickQuests_(r, o) {
+  var pool = Object.keys(QUESTS).filter(function (k) { return !QUESTS[k].ok || QUESTS[k].ok(r, o); });
+  var rnd = rng_(hash_(String(r[C.code]) + '|' + day_() + '|q')), out = [];
+  while (out.length < QUEST_N && pool.length) out.push(pool.splice(Math.floor(rnd() * pool.length), 1)[0]);
+  return out;
+}
+function qState_(o, r) {
+  if (o.q && o.q.d === day_() && Array.isArray(o.q.ids)) return false;
+  o.q = { d: day_(), ids: pickQuests_(r, o), done: [], v: [] };
+  return true;
+}
+function questSync_(r) {
+  var o = isleOf_(r);
+  if (qState_(o, r)) r[C.isle] = JSON.stringify(o);
+}
+
 /* ---------- 工作表 ---------- */
 var SHEETS_ = {};
 function sheet_(name, head) {
@@ -174,13 +245,22 @@ function counts_(v) {
 function countsStr_(o) { return Object.keys(o).map(function (k) { return k + ':' + o[k]; }).join(','); }
 function bag_(r) { return { fruit: num_(r[C.fruit]), iron: num_(r[C.iron]), wood: num_(r[C.wood]), stone: num_(r[C.stone]) }; }
 function profile_(r) {
+  var io = isleOf_(r), pd = day_(), cur = String(dropSlot_());
   return { code: String(r[C.code]), nick: plain_(r[C.nick]), bal: num_(r[C.bal]), earned: num_(r[C.earned]),
     streak: num_(r[C.streak]), admin: r[C.admin] === '是', qa: list_(r[C.qaDone]),
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
     trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
-    veg: isleOf_(r).veg, score: isleScore_(isleOf_(r)),
-    open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是' };
+    veg: io.veg, score: isleScore_(io),
+    open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是',
+    dr: io.dr && io.dr.d === pd && Array.isArray(io.dr.k)
+      ? { c: num_(io.dr.c), g: num_(io.dr.g), k: io.dr.k.filter(function (x) { return x.split(':')[0] === cur; }).map(function (x) { return x.split(':')[1]; }) }
+      : { c: 0, g: 0, k: [] },
+    drMax: { c: DROP_COIN_DAY, g: DROP_DIA_DAY },
+    qs: io.q && io.q.d === pd && Array.isArray(io.q.ids)
+      ? io.q.ids.filter(function (id) { return QUESTS[id]; }).map(function (id) { return { id: id, e: QUESTS[id].e, t: QUESTS[id].t, ok: !!QUESTS[id].chk(r, io), got: io.q.done.indexOf(id) >= 0 }; })
+      : [],
+    qCoin: QUEST_COIN };
 }
 function pub_(r) { return { nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || '') }; }
 function resetDay_(r) {
@@ -216,6 +296,8 @@ function handle_(q) {
   if (a === 'msgs') return msgs_(q);
   if (a === 'anns') return anns_();
   if (a === 'voyage') return voyage_();
+  if (a === 'drops') return dropsPub_();
+  if (a === 'isl') return islLite_();
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
@@ -238,6 +320,7 @@ function handle_(q) {
     var r = rows[i];
     if (!r[C.fid]) r[C.fid] = newFid_(rows);
     resetDay_(r);
+    questSync_(r);
     var me = profile_(r);
     var res = { ok: true, add: 0 };
     var touched = {}; // 一起被改到的其他玩家（加好友、送禮、悄悄話）
@@ -285,6 +368,10 @@ function handle_(q) {
         }
       }
       if (!dup) { vs.appendRow([new Date(), r[C.nick], me.code, isle, text_(q.name, 30), t2, me.admin ? '是' : '']); cdel_('vis'); }
+      var vo = isleOf_(r);
+      qState_(vo, r);
+      if (vo.q.v.indexOf(isle) < 0 && vo.q.v.length < 30) vo.q.v.push(isle);
+      r[C.isle] = JSON.stringify(vo);
       res.v = visitors_(isle);
     } else if (a === 'nick') {
       var nn = cleanNick_(q.nick);
@@ -317,6 +404,7 @@ function handle_(q) {
       if (dia) isl.found += dia;
       st.sh.getRange(isl.row, 5).setValue(isl.taken);
       if (dia) st.sh.getRange(isl.row, 7).setValue(isl.found);
+      cdel_('isl');
       tc[rk] = (tc[rk] || 0) + 1;
       r[C.gToday] = countsStr_(tc);
       r[C.gLast] = now;
@@ -389,6 +477,42 @@ function handle_(q) {
       res.got = { k: wk, n: 1 };
       res.island = islePub_(rows[jw], false, mi);
       res.island.friend = true;
+
+    /* ----- 漂流寶物、每日任務 ----- */
+    } else if (a === 'drop') {
+      var dk = String(q.k || ''), ds = num_(q.s), dcur = dropSlot_();
+      var dok = ds === dcur || (ds === dcur - 1 && Date.now() % DROP_SLOT < DROP_GRACE);
+      if (!dok || DROP_SPOTS.indexOf(dk) < 0) return { ok: false, err: 'nodrop', p: me };
+      var spawn = null;
+      dropAt_(ds).forEach(function (x) { if (x.k === dk) spawn = x; });
+      if (!spawn) return { ok: false, err: 'nodrop', p: me };
+      var od = isleOf_(r), dday = day_();
+      if (!od.dr || od.dr.d !== dday || !Array.isArray(od.dr.k)) od.dr = { d: dday, c: 0, g: 0, k: [] };
+      var dkey = ds + ':' + dk;
+      if (od.dr.k.indexOf(dkey) >= 0) return { ok: false, err: 'got', p: me };
+      if (spawn.t === 'c') {
+        if (num_(od.dr.c) >= DROP_COIN_DAY) return { ok: false, err: 'dropmax', p: me };
+        od.dr.c = num_(od.dr.c) + 1; res.add = 1;
+      } else {
+        if (num_(od.dr.g) >= DROP_DIA_DAY) return { ok: false, err: 'dropmax', p: me };
+        od.dr.g = num_(od.dr.g) + 1;
+        r[C.dia] = num_(r[C.dia]) + 1; r[C.tdia] = num_(r[C.tdia]) + 1;
+      }
+      od.dr.k.push(dkey);
+      if (od.dr.k.length > 12) od.dr.k = od.dr.k.slice(-12);
+      r[C.isle] = JSON.stringify(od);
+      res.got = { t: spawn.t, k: dk };
+    } else if (a === 'qclaim') {
+      var oq = isleOf_(r);
+      qState_(oq, r);
+      var qid = String(q.id || '');
+      if (oq.q.ids.indexOf(qid) < 0 || !QUESTS[qid]) return { ok: false, err: 'bad', p: me };
+      if (oq.q.done.indexOf(qid) >= 0) return { ok: false, err: 'got', p: me };
+      if (!QUESTS[qid].chk(r, oq)) return { ok: false, err: 'notyet', p: me };
+      oq.q.done.push(qid);
+      res.add = QUEST_COIN;
+      r[C.isle] = JSON.stringify(oq);
+      res.got = { t: 'q', k: qid };
 
     /* ----- 公告 ----- */
     } else if (a === 'annread') {
@@ -609,6 +733,20 @@ function isles_() {
       dias: plain_(v[5]).split(',').filter(String).map(Number), found: num_(v[6]) };
   });
   return { sh: sh, map: map };
+}
+/* 地圖上顯示「資源島現在有沒有東西可採」用的輕量版：只讀、不重抽、快取 20 秒（有人採集就清掉） */
+function islLite_() {
+  var hit = cget_('isl');
+  if (hit) return hit;
+  var sh = sheet_('物資島', R_HEAD), n = sh.getLastRow() - 1, t = day_(), left = {};
+  RES_KEYS.forEach(function (k) { left[k] = 1; }); // 今天還沒人來過 → 當作還有
+  (n > 0 ? sh.getRange(2, 1, n, R_HEAD.length).getValues() : []).forEach(function (v) {
+    var k = String(v[0]);
+    if (RES[k] && Number(v[2]) === t) left[k] = Math.max(0, num_(v[3]) - num_(v[4]));
+  });
+  var out = { ok: true, left: left };
+  cput_('isl', out, 20);
+  return out;
 }
 function islesPub_(st, r) {
   var o = {}, tc = r ? counts_(r[C.gToday]) : {};
