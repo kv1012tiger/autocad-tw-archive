@@ -1,7 +1,7 @@
 {
   "id": "t366",
   "board": "cad2d",
-  "order": 56,
+  "order": 40,
   "icon": "📘",
   "title": "遮蔽 WIPEOUT指令",
   "tagline": "AutoCAD並沒有 背景不透明 的功能，但是可以使用 遮蔽 WIPEOUT…",

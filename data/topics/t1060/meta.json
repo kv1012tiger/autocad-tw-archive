@@ -1,7 +1,7 @@
 {
   "id": "t1060",
   "board": "cad3d",
-  "order": 8,
+  "order": 7,
   "icon": "🧊",
   "title": "AutoCAD 3D繪圖的問題",
   "tagline": "問：我想要在東南等角視圖下畫前視圖和右側視圖，有什麼方法可以快速轉換UCS，…",

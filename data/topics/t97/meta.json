@@ -1,7 +1,7 @@
 {
   "id": "t97",
   "board": "cad2d",
-  "order": 66,
+  "order": 50,
   "icon": "📘",
   "title": "繪圖順序 DRAWORDER 指令介紹",
   "tagline": "◆圖層順序排列方式",

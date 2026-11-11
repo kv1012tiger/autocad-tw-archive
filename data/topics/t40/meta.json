@@ -1,7 +1,7 @@
 {
   "id": "t40",
   "board": "cad2d",
-  "order": 60,
+  "order": 44,
   "icon": "📘",
   "title": "Autocad與Excel的連結運用",
   "tagline": "OLE物件只提供單純的 連結參考文件，並可自動或手動更新連結。",
