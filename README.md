@@ -4,7 +4,7 @@
 
 收錄內容僅限管理員自己發表的主題首篇，不包含其他會員的回覆，也不包含「回覆可見」的內容。
 
-- 網站：https://kv1012tiger.github.io/autocad-tw-archive/
+- 網站：https://kv1012tiger.github.io/autocad-tw-island/
 
 ## 授權說明
 

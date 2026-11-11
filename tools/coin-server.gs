@@ -11,7 +11,7 @@
  * 工作表「下載紀錄」：逐筆記錄誰在什麼時間下載了哪篇文章的哪個檔案。
  * 工作表「造訪紀錄」：每位玩家每天第一次登上某座島時記一筆（誰、哪座島、什麼時間）。
  */
-var SITE = 'https://kv1012tiger.github.io/autocad-tw-archive/';
+var SITE = 'https://kv1012tiger.github.io/autocad-tw-island/';
 var TZ = 'Asia/Taipei';
 var OWNER = [{ nick: 'Tiger&蘋果爸', admin: true }, { nick: '蘋果爸', admin: false }];
 var RESERVED = /蘋果爸|管理員|站長|autocad\s*顧問|admin/i;
