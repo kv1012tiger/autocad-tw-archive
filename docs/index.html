@@ -2823,7 +2823,7 @@ sfxUI();
 var BGM={on:false,timer:null,nodes:[],step:0,master:null};
 function bnote(a,f,t,dur,type,vol){var o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(BGM.master);o.start(t);o.stop(t+dur+.05)}
 
-var BGM_STEP=260;
+var BGM_STEP=260,BGM_VOL=2;/* 背景音樂總音量（1＝原本；2＝大一倍） */
 function bgmInit(a){
   [[73.42,'triangle',.03],[110,'sine',.025]].forEach(function(d,i){var o=a.createOscillator(),g=a.createGain(),l=a.createOscillator(),lg=a.createGain();o.type=d[1];o.frequency.value=d[0];g.gain.value=d[2];l.frequency.value=.09+i*.05;lg.gain.value=d[2]*.6;l.connect(lg);lg.connect(g.gain);o.connect(g);g.connect(BGM.master);o.start();l.start();BGM.nodes.push(o,l)});
   var n=a.sampleRate*4,b=a.createBuffer(1,n,a.sampleRate),dd=b.getChannelData(0);for(var i=0;i<n;i++)dd[i]=Math.random()*2-1;
@@ -2842,7 +2842,7 @@ function bgmTick(a){
 
 function bgmStart(){
   if(!SFX_ON||BGM.on)return;var a=ac();if(!a)return;BGM.on=true;
-  BGM.master=a.createGain();BGM.master.gain.setValueAtTime(0,a.currentTime);BGM.master.gain.linearRampToValueAtTime(1,a.currentTime+2.5);BGM.master.connect(a.destination);
+  BGM.master=a.createGain();BGM.master.gain.setValueAtTime(0,a.currentTime);BGM.master.gain.linearRampToValueAtTime(BGM_VOL,a.currentTime+2.5);BGM.master.connect(a.destination);
   try{bgmInit(a)}catch(e){}
   BGM.timer=setInterval(function(){if(!document.hidden)try{bgmTick(a)}catch(e){}},BGM_STEP);
 }
