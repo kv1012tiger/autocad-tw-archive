@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>出圖型式表 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📄 出圖型式表</h1>
+    <p class="topic-tagline">一般使用的出圖習慣都是沿用傳統的方式 顏色相關的出圖型式表 (CTB)</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>一般使用的出圖習慣都是沿用傳統的方式 顏色相關的出圖型式表 (CTB)</p>
+<p>而其他領域有不同的需求而使用顏色已無法滿足需求，所以才會開發 具名的出圖型式表 (STB)</p>
+<p>所以依領域需求 AutoCAD 提供轉換的功能來滿足需求，所以你依照需求將設定變更即可。</p>
+<p>以下回答及補充供大家參考，有問題請再提~</p>
+<p><b>Q1: 我使用的是CAD 2006 版 ，在出圖型式中有分 *.stb 及 *.ctb 兩種副檔名的格式，請問他們有何不同及差別呢？</b></p>
+<p><b>A1</b><b>:</b> AutoCAD 的出圖型式表有 CTB檔 及 STB檔 兩種格式：</p>
+<p>CTB檔 是指顏色相關出圖型式表，用以 顏色 來決定出圖之筆寬。</p>
+<p>STB檔 則是依照 物件性質 包含出圖型式及其 特性，如同一顏色的物件文字或線段可有2種筆寬。</p>
+<p>※圖面可以使用 具名出圖型式 或 顏色相關出圖型式，但是不能二者都使用。</p>
+<p><b>Q2: 可是當我在使用2006的時候，卻發現某些圖檔無法自訂或修改出圖型式 ( 只能使用 *.stb 格式 )？</b></p>
+<p><b>A2:</b>因為圖面一開始即設定使用 具名出圖型式(STB)，所以編輯定義筆寬的方式不太一樣，你可使用 CONVERTPSTYLES 指令將 目前圖面 轉換回 顏色相關出圖型式(CTB)。</p>
+<img src="images/01.gif" alt="" loading="lazy">
+<p>-----------------------------------------------------</p>
+<p>※補充※</p>
+<div class="section-title">CONVERTCTB 指令</div>
+<p>將與顏色相關的出圖型式表 (CTB) 轉換成具名的出圖型式表 (STB)。</p>
+<div class="section-title">CONVERTPSTYLES 指令</div>
+<p>將目前圖面轉換為具名出圖型式或顏色相關出圖型式。</p>
+<p>◆在轉換圖面時，<b>CONVERTPSTYLES 指令</b>將 <b>PSTYLEMODE</b><b>系統變數</b>設定為相應的設定 (1 = 具名，0 = 顏色相關)。</p>
+<div class="section-title">預設出圖型式模式</div>
+<p>控制出圖型式選項。 出圖型式是出圖型式表內所定義的性質設定值集合，可於圖面出圖時套用。 使用「選項」對話方塊來變更預設出圖型式設定值，不會影響目前圖面﹔僅影響新圖面或在舊版 AutoCAD 中建立的圖面 (這些圖面未曾以 AutoCAD 2000 或更高版的格式來儲存)。</p>
+<p>◆預設的出圖型式設定值是「使用與顏色相關的出圖型式」。 依預設，「性質」工具列中的「出圖型式控制」不可用。 當您選取「使用具名的出圖型式」選項，並開啟一個新圖面時，可以使用「出圖型式控制」。 (系統變數 PSTYLEPOLICY)</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t107/index.html">← 平滑視圖轉移特效 VTENABLE 系統變數介紹</a>
+    <a class="btn-ghost" href="../t114/index.html">AutoCAD 2008「資料萃取」精靈 dataextraction指令 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t112-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

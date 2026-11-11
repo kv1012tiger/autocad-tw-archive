@@ -210,7 +210,7 @@
       [].map.call(a.children.length ? a.children : [a], function (c) { return c.textContent.trim(); }).filter(Boolean).join(' · ') || a.href;
     return String(n).replace(/^⬇️?\s*下載\s*/, '').replace(/\s+/g, ' ').trim().slice(0, 80);
   }
-  var EARN_HTML = '<p style="text-align:left;margin-top:12px">賺金幣的方法：<br>📅 每天登島送 3 枚（連續登島每天多 1 枚）<br>📖 爬文：每看 3 篇有一半機率送 1 枚<br>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）<br>💬 翻開一座問答島的 3 張問答卡送 1 枚</p>';
+  var EARN_HTML = '<p style="text-align:left;margin-top:12px">賺金幣的方法：<br>📅 每天登島送 3 枚（連續第 2 天 4 枚，第 3 天起每天 5 枚）<br>📖 爬文：每看 3 篇有一半機率送 1 枚<br>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）<br>💬 翻開一座問答島的 3 張問答卡送 1 枚</p>';
   function noCoin() {
     modal('<div class="cw-ic">🪙</div><h3>金幣不足</h3><p>下載一個資源需要 <b>1 枚金幣</b>，你目前有 <b>' + P.bal + '</b> 枚。</p>' + EARN_HTML +
       '<div class="cw-row"><button class="cw-b p" type="button" data-x>知道了</button></div>',

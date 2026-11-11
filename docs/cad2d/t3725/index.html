@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HATCH剖面線的繪圖順序 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📘 HATCH剖面線的繪圖順序</h1>
+    <p class="topic-tagline">一般使用AutoCAD作圖時須了解圖面物件繪圖順序，如果你的圖面物件是屬於 …</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-08-10</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>一般使用AutoCAD作圖時須了解圖面物件繪圖順序，如果你的圖面物件是屬於 線段、文字方面，這部分屬於單線狀態所以沒有繪圖順序的覆蓋問題，當您的物件為 填滿區域 就必須了解運用 繪圖順序。</p>
+<p>以下圖片中的 混凝土柱 填滿剖面線，遮蔽了其他線段物件:</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>以下圖片中的 混凝土柱 填滿剖面線，依照需求是需要置於最下方:</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>所以為了避免遮到其他物件，在建立剖面線(HATCH)時，會依照預設為 置於邊界後方。將填充線或填滿置於填充線邊界後方。</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>繪圖順序:</p>
+<p>指定剖面線或填滿的繪圖順序。您可以將剖面線或填滿置於所有其他物件的後面、前面、填充線邊界的後面或前面。(HPDRAWORDER 系統變數)</p>
+<p>若圖面中的 混凝土柱及混凝土牆 剖面線物件已經跑掉，也就是沒有正常的置於最下方。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>這時候可以透過 繪圖順序 DRAWORDER指令 來變更物件的順序:</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>說明:</p>
+<p>▲置於物件上方:</p>
+<p>將選取的物件移到指定的參考物件上方。</p>
+<p>▲置於物件下方</p>
+<p>將選取的物件移到指定的參考物件下方。</p>
+<p>▲置於最上方</p>
+<p>將選取的物件移到圖面中物件序列的頂端。</p>
+<p>▲置於最下方</p>
+<p>將選取的物件移到圖面中物件序列的底端。</p>
+<p>這時候您若有分圖層建立物件，即可輕鬆使用圖層開關來快速變更 繪圖順序。</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>影片展示(建議使用高畫質HQ播放，畫面解析度較佳)：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/4K4rhsu-AJs" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>在這裡也分享一個進階作法，透過巨集語法+LISP語法方式，這不算是一個程式喔，</p>
+<p>所以可以把我提供的語法使用 新增工具按鈕或是新增工具選項板按鈕 即可快速完成!</p>
+<p>巨集語法+LISP語法:</p>
+<p>^C^CDRAWORDER;(SSGET &quot;X&quot; &#x27;((0 . &quot;HATCH&quot;)));;B;REGEN;</p>
+<p>說明:過濾選擇剖面線，再將其置於最下方</p>
+<p>影片展示(建議使用高畫質HQ播放，畫面解析度較佳)：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/3TREzs3EANY" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>以前我在事務所上班時，常常使用剖面線來上色，這時候圖面的繪圖順序就比較複雜，</p>
+<p>當時我們都是透過 LISP+DCL 來快速處理，這部份的需求比較偏項建築領域，</p>
+<p>所以只能自行開發程式來滿足工作需求有效提昇工作效率!</p>
+<p>影片展示(建議使用高畫質HQ播放，畫面解析度較佳)：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/qH3D2ytcN1s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t366/index.html">← 遮蔽 WIPEOUT指令</a>
+    <a class="btn-ghost" href="../t377/index.html">小技巧_「測量」MEASURE指令 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t3725-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

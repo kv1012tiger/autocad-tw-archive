@@ -22,7 +22,8 @@ var C = { code: 0, nick: 1, bal: 2, earned: 3, streak: 4, last: 5, first: 6, see
   day: 11, onl: 12, rd: 13, qa: 14 };
 var D_HEAD = ['時間', '暱稱', '登島碼', '文章', '文章網址', '檔案', '下載後剩餘金幣', '備註'];
 var V_HEAD = ['時間', '暱稱', '登島碼', '小島代號', '小島', '日期', '管理員'];
-var DAILY = 3;
+var DAILY = 3;      // 第 1 天 3 枚、第 2 天 4 枚
+var DAILY_MAX = 5;  // 第 3 天起每天固定 5 枚
 var CAP = { online: 3, read: 3, qa: 9 };
 var KIND_COL = { online: C.onl, read: C.rd, qa: C.qa };
 var ALPHA = '23456789ABCDFGHJKMNPQRSTUVWXYZ';
@@ -139,7 +140,7 @@ function handle_(q) {
       if (Number(r[C.last]) !== t) {
         r[C.streak] = Number(r[C.last]) === day_(-1) ? num_(r[C.streak]) + 1 : 1;
         r[C.last] = t;
-        res.add = DAILY + (r[C.streak] - 1);
+        res.add = Math.min(DAILY + (r[C.streak] - 1), DAILY_MAX);
       }
     } else if (a === 'earn') {
       var k = String(q.k || '');

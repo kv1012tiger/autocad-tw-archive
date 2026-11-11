@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>建立3D地形 斷面混成 LOFT指令 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">🧊 建立3D地形 斷面混成 LOFT指令</h1>
+    <p class="topic-tagline">建立3D地形的方式因人而異，這裡提供一個簡單的方式跟大家分享，有其它方式也請…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · </p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>建立3D地形的方式因人而異，這裡提供一個簡單的方式跟大家分享，有其它方式也請您不另指教喔!</p>
+<p>我的方式是先在2D畫好地形的斷面圖，如果依據等高線圖來話畫斷面會比較準確!</p>
+<p>若沒有也可以隨時調整斷面，記得在3D空間中要以Z軸來上下拉伸調整。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/B6nlAvXnX28" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>斷面混成 LOFT指令:在多個斷面之間的空間內建立 3D 實體或曲面。</p>
+<p>相關討論文章(感謝meet_emily):</p>
+<p><a href="http://autocad.bestoforum.net/forum-f16/topic-t3124.htm#22148" target="_blank" rel="noopener">http://autocad.bestoforum.net/forum-f16/topic-t3124.htm#22148</a></p>
+<p>另外還可以依照需求將曲面增厚，範例中另外搭配 SECTIONPLANE指令，可以產生即時剖面，還可以建立2D或3D物件!</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/crrVjF0XZGg" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>剖面平面 SECTIONPLANE指令:建立剖面物件，做為穿過 3D 物件的切面。</p>
+<p>增厚 THICKEN指令:將曲面轉換為具有指定厚度的 3D 實體。</p>
+<p>相關影片:[影片]建立剖面平面 SECTIONPLANE</p>
+<p><a href="https://www.autocad-tw.com/t4046-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t4046-topic</a></p>
+<p>*專屬會員朋友請到以下版區下載[檔案]建立3D地形 斷面混成 LOFT指令範例.zip</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p><b>專屬資源下載:</b></p>
+<p><a href="https://www.autocad-tw.com/t10313-topic" target="_blank" rel="noopener">https://www.autocad-tw.com/t10313-topic</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t40/index.html">← Autocad與Excel的連結運用</a>
+    <a class="btn-ghost" href="../t51/index.html">CUI自訂檔_建立和編輯工具列 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t4151-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

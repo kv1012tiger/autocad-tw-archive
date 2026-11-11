@@ -1,7 +1,7 @@
 {
   "id": "t1901",
   "board": "cad2d",
-  "order": 86,
+  "order": 135,
   "icon": "🧭",
   "title": "UCS 座標圖示怎麼控制",
   "tagline": "隱藏圖示、固定在左下角，一個 UCSICON 就搞定",

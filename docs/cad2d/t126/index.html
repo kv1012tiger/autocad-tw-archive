@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>插入 功能表使用說明 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📢 插入 功能表使用說明</h1>
+    <p class="topic-tagline">『插入圖塊』- 每天都會使用，搭配圖塊單位更有效率。</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-09</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>『插入圖塊』- 每天都會使用，搭配圖塊單位更有效率。</p>
+<p>『外部參考(管理員)』- 每天一定要用，因為圖檔很多用於圖框連結時非常省事。</p>
+<p>『點陣式影像(管理員)』- 偶而用到，也是圖框連結影像檔(事務所LOGO)。</p>
+<p>『功能變數』- 會用，圖框放置圖檔路徑、檔名及使用者等等。</p>
+<p>『配置』- 會用，插入樣版檔的方式。</p>
+<p>『3D Studio檔 (*.3ds)』- 沒有用到。</p>
+<p>『ACIS檔(*.sat)』- 沒有用到。</p>
+<p>『圖面交換二進位檔(*.dxb)』- 很少用。</p>
+<p>『Window中繼檔(*.wmf)』- 偶而用到，轉換給OFFICE使用。</p>
+<p>『OLE物件』- 偶而用到，插入Excel表格。</p>
+<p>『超連結』- 會用，使用詳圖圖號，自動開啟DWG圖檔</p>
+<p>※以下說明提供給大家參考，有問題請提出大夥一塊研討喔~</p>
+<p>------------------------------------------------</p>
+<div class="section-title">插入圖塊...[INSERT 指令]</div>
+<p>將一個圖面或具名圖塊放置在目前圖面內。</p>
+<div class="section-title">外部參考(管理員)...[XREF 指令]</div>
+<p>您可以將整個圖面作為外部參考 (xref) 貼附到目前圖面中。 透過外部參考，參考圖面中的變更將反應在目前圖面中。</p>
+<div class="section-title">點陣式影像(管理員)...[IMAGE 指令]</div>
+<p>您可以在圖面中檢視與操控點陣式影像以及關聯的檔案路徑。</p>
+<div class="section-title">功能變數...[FIELD 指令]</div>
+<p>透過功能變數建立多行文字物件，當功能變數值變更時可自動更新。(此功能搭配圖紙集後效能最好，即時同步更新圖號及圖名)</p>
+<div class="section-title">配置...[LAYOUT 指令]</div>
+<p>圖紙空間是圖紙配置環境，您可在其中指定圖紙尺寸、加入標題圖塊、顯示模型的多重視景，以及建立圖面的標註與註記。</p>
+<p>◆3D Studio檔 (*.3ds)...[3DSIN 指令]</p>
+<p>匯入 3D Studio (3DS) 檔案。(通常與 3ds max 或 Autodesk VIZ 配合使用)</p>
+<p>◆ACIS檔(*.sat)...[ACISIN 指令]</p>
+<p>匯入 ACIS 檔案，並在圖面中建立主體物件、實體或面域。(轉換後，程式可使用其 ShapeManager 模型程式建立新物件，並執行</p>
+<p>3D 作業與實體編輯)</p>
+<p>◆圖面交換二進位檔(*.dxb)...[DXBIN 指令]</p>
+<p>使用 DXB 非系統檔案驅動程式支援 DXB (圖面交換格式二進位) 檔案格式。(通常用於將 3D實體 圖面「壓平」為 2D 圖面)</p>
+<p>◆Window中繼檔(*.wmf)...[WMFIN 指令]</p>
+<p>WMF 檔包含向量資訊，這些向量資訊可以被重新調整尺寸與列印，而不會損失解析度。(通常用於Microsoft Office Word、Excel</p>
+<p>、PowerPoint 等)</p>
+<div class="section-title">OLE物件...[INSERTOBJ 指令]</div>
+<p>您可以將資訊從支援 OLE 的其它應用程式匯入圖面。</p>
+<div class="section-title">超連結...[HYPERLINK 指令]</div>
+<p>將超連結貼附至物件或修改既有的超連結。(指定CAD物件聯結開啟其他檔案程式，也可連結DWG檔)</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t121/index.html">← 匯出eps檔案</a>
+    <a class="btn-ghost" href="../t129/index.html">AutoCAD 螢幕顯示問題 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t126-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

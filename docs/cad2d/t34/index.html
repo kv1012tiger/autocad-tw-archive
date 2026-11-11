@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>工具選項板_控制工具性質篇 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-cad2d">← 回2D 討論島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#7ee081;--g1:#9be86f;--g2:#2f8f3a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐌</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦗</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🐝</b></i></span></div>
+    <span class="topic-badge">📐 2D 討論島</span>
+    <h1 class="topic-title">📘 工具選項板_控制工具性質篇</h1>
+    <p class="topic-tagline">在進行標註時可以不變更目前圖層，而標註會在標註圖層的設定，使用 工具選項板 …</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2008-05-04</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>在進行標註時可以不變更目前圖層，而標註會在標註圖層的設定，使用 工具選項板 即可滿足需求，這是一個很好的實務需求的問題，另外也可以使用自訂工具列按鈕 的巨集方式來滿足需求喔~</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>1.確認圖層性質管理員，主要圖層 及 標註專用圖層 二個圖層。</p>
+<p>2.「工具」功能表 →「工具選項板視窗」→「指令工具」→「線性標註」..滑鼠右鍵 →「性質」。</p>
+<p>3.「一般」→「圖層」..選擇 標註專用圖層 →「確定」。</p>
+<p>4.輸入 LINE指令 劃一條長度為 50單位 的線段。</p>
+<p>5.點選 工具選項板 的 線性標註，即可自動切換為 標註專用圖層 ，標註完畢後回復成 主要圖層。</p>
+<p>PS:這樣一來可以省去切換圖層的步驟，即可有效 分類圖層 及 圖層開關控制 了。</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/0VM-CGXcurk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=0VM-CGXcurk" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0VM-CGXcurk</a></p>
+<p>※※※指定工具性質的取代※※※</p>
+<p>1.將工具放到工具選項板上之後，您可以變更其性質。例如，除了變更標註圖層外，您還可以變更圖塊的插入比例或剖面線樣式的角度。</p>
+<p>2.在某些情況下，您可能需要為工具指定特定的性質取代。例如，您可能需要將剖面線自動放置於預先指定的圖層中，而不考慮目前圖層設定。此功能可以在建立某些物件時自動設定其性質，從而節省時間並減少錯誤。</p>
+<div class="section-title">如果在圖面上缺少某個圖層，則會自動建立該圖層。</div>
+<p>■如果您要在其中加入內容的圖層目前已關閉或凍結，則會暫時開啟或解凍此圖層。</p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t332/index.html">← 如何使用DWG TrueView 2008將圖檔轉成其他版本</a>
+    <a class="btn-ghost" href="../t366/index.html">遮蔽 WIPEOUT指令 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t34-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

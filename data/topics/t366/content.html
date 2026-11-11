@@ -1,0 +1,24 @@
+<p>AutoCAD並沒有 背景不透明 的功能，但是可以使用 遮蔽 WIPEOUT指令；使用空白區域覆蓋既有的物件，來達到你要的效果。</p>
+<p>*建議將 紅色&quot;computer system&quot;方塊 製作為圖塊，將來比較好修改及管理。</p>
+<p>使用遮蔽物件以空白區域覆蓋既有物件，可以騰出空間供註解使用或遮蔽詳細資料。</p>
+<p>遮蔽物件是一個多邊形區域，可以使用目前背景顏色遮蔽底層物件。本區域由遮蔽框包圍，您可以打開此框進行編輯，關閉此框進行出圖。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<div class="section-title">動態操作如下：</div>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/4tTvhB08OcE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>如果在文字上的使用，要有遮蔽的效果可以使用 多行文字 的遮罩功能：</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/2G53cOJR7nE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>若是要使用在 屬性圖塊 ，可能就需要一點技巧運用，可以參考以下的文章:</p>
+<p>使用的指令:ATTDEF、BLOCK、WIPEOUT、DRAWORDER、INSERT、PLOT</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/aMIDSfwIGK8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>如果「遮蔽框線」不想要列印，可以把遮蔽框線的「圖層顏色」指定為「255」號色即可。</p>
+<p>或者輸入WIPEOUTFRAME系統變數，設定為 2 (可見不可出圖)。</p>
+<p>※補充圖層顏色255號色作法：</p>
+<p>步驟1：新增「遮蔽」專屬圖層，顏色指定255號色</p>
+<img src="images/02.png" alt="" loading="lazy">
+<p>步驟2：出圖圖筆設置，將255號色的 過網(墨水量) 改為 1</p>
+<img src="images/03.png" alt="" loading="lazy">
+<p>步驟3：CAD中可見</p>
+<img src="images/04.png" alt="" loading="lazy">
+<p>步驟4：出圖時即可不可見</p>
+<img src="images/05.png" alt="" loading="lazy">
+<p><b>延伸閱讀</b> &gt;&gt; <a href="https://www.autocad-tw.com/t5889-topic" target="_blank" rel="noopener">[知識]關於AutoCAD 的遮蔽(wipeout)指令</a></p>
