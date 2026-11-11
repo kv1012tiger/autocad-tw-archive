@@ -13,6 +13,8 @@
  * 工作表「留言板」：留言碼頭的留言與站長回覆；狀態欄填「隱藏」就不會出現在網站上。
  * 工作表「物資島」：四座物資島今天的總量、已採集數量、鑽石藏在第幾份（每天第一次有人來時自動重抽）。
  * 工作表「悄悄話」：好友之間的悄悄話與送禮紀錄。
+ * 工作表「小島紀錄」：每位玩家在自己小島上蓋房子、種菜收成、領養寵物的紀錄。
+ * 玩家表最後一欄「小島資料」是 JSON：房子等級、菜田、裝飾、寵物、蔬菜庫存（請不要手動改壞格式）。
  */
 var SITE = 'https://kv1012tiger.github.io/autocad-tw-island/';
 var TZ = 'Asia/Taipei';
@@ -22,11 +24,11 @@ var RESERVED = /蘋果爸|管理員|站長|autocad\s*顧問|admin/i;
 var P_HEAD = ['登島碼', '暱稱', '目前金幣', '累計金幣', '連續登島天數', '最後登島日', '第一次登島', '最後上線',
   '下載次數', '最近下載', '管理員', '今日', '今日在線金幣', '今日爬文金幣', '今日問答金幣', '已拿金幣的問答島',
   '頭像', '旅人編號', '好友', '水果', '鐵礦', '木材', '石頭', '鑽石', '累計物資', '累計鑽石',
-  '今日採集', '最後採集', '今日兌換', '今日送禮', '今日留言', '最後留言', '今日悄悄話', '未讀悄悄話'];
+  '今日採集', '最後採集', '今日兌換', '今日送禮', '今日留言', '最後留言', '今日悄悄話', '未讀悄悄話', '小島資料'];
 var C = { code: 0, nick: 1, bal: 2, earned: 3, streak: 4, last: 5, first: 6, seen: 7, dls: 8, recent: 9, admin: 10,
   day: 11, onl: 12, rd: 13, qa: 14, qaDone: 15,
   av: 16, fid: 17, friends: 18, fruit: 19, iron: 20, wood: 21, stone: 22, dia: 23, tres: 24, tdia: 25,
-  gToday: 26, gLast: 27, trades: 28, gifts: 29, msgN: 30, msgLast: 31, noteN: 32, unread: 33 };
+  gToday: 26, gLast: 27, trades: 28, gifts: 29, msgN: 30, msgLast: 31, noteN: 32, unread: 33, isle: 34 };
 var D_HEAD = ['時間', '暱稱', '登島碼', '文章', '文章網址', '檔案', '下載後剩餘金幣', '備註'];
 var V_HEAD = ['時間', '暱稱', '登島碼', '小島代號', '小島', '日期', '管理員'];
 var M_HEAD = ['編號', '時間', '暱稱', '登島碼', '頭像', '內容', '回覆', '回覆時間', '回覆修改時間', '狀態'];
@@ -56,6 +58,28 @@ var TRADE_RATE = 10;                 // 10 個同種物資換 1 枚金幣
 var DIA_RATE = 5;                    // 1 顆鑽石換 5 枚金幣
 var TRADE_MAX = 3;                   // 每天最多兌換 3 次
 var FRIEND_MAX = 50;
+/* ---------- 我的小島：蓋房子、種菜、養寵物 ---------- */
+var L_HEAD = ['時間', '暱稱', '登島碼', '動作', '內容'];
+var HOUR = 3600 * 1000, DAY_MS = 24 * HOUR;
+var HOUSE = [null, { wood: 10, stone: 5 }, { wood: 20, stone: 15, iron: 5 }, { wood: 40, stone: 30, iron: 15, dia: 1 }];
+var FIELD = [{ wood: 5, stone: 5 }, { wood: 10, stone: 10 }, { wood: 20, stone: 15, iron: 5 }];
+var DECO = {
+  tree: { name: '果樹', cost: { fruit: 10, wood: 5 }, pts: 5 },
+  fountain: { name: '噴水池', cost: { stone: 20, iron: 10 }, pts: 10 },
+  tower: { name: '瞭望塔', cost: { wood: 30, iron: 20, dia: 1 }, pts: 20 }
+};
+var VEG = {
+  carrot: { name: '胡蘿蔔', seed: 1, hours: 4, n: 2, food: 20 },
+  cabbage: { name: '高麗菜', seed: 2, hours: 8, n: 3, food: 35 },
+  pumpkin: { name: '南瓜', seed: 3, hours: 24, n: 2, food: 60 }
+};
+var FRUIT_FOOD = 10, HUNGER_PER_DAY = 25, PUMPKIN_RATE = 5, WATER_BONUS = HOUR;
+var ANIMALS = {
+  hamster: { name: '倉鼠', cost: 10 }, rabbit: { name: '兔兔', cost: 15 }, turtle: { name: '烏龜', cost: 15 },
+  dog: { name: '狗狗', cost: 20 }, cat: { name: '貓貓', cost: 20 }, parrot: { name: '鸚鵡', cost: 25 },
+  fox: { name: '狐狸', cost: 40 }, panda: { name: '熊貓', cost: 60 }
+};
+var BAG_COL = { fruit: C.fruit, iron: C.iron, wood: C.wood, stone: C.stone, dia: C.dia };
 /* 留言碼頭與悄悄話 */
 var MSG_LEN = 300, MSG_DAY = 10, MSG_GAP = 60 * 1000, MSG_PAGE = 20;
 var NOTE_LEN = 100, NOTE_DAY = 20;
@@ -141,7 +165,8 @@ function profile_(r) {
     streak: num_(r[C.streak]), admin: r[C.admin] === '是', qa: list_(r[C.qaDone]),
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
-    trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length };
+    trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
+    veg: isleOf_(r).veg, score: isleScore_(isleOf_(r)) };
 }
 function pub_(r) { return { nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || '') }; }
 function resetDay_(r) {
@@ -288,11 +313,50 @@ function handle_(q) {
       if (tk === 'dia') {
         if (num_(r[C.dia]) < 1) return { ok: false, err: 'few', p: me };
         r[C.dia] = num_(r[C.dia]) - 1; res.add = DIA_RATE;
+      } else if (tk === 'pumpkin') {
+        var tis = isleOf_(r);
+        if (tis.veg.pumpkin < PUMPKIN_RATE) return { ok: false, err: 'few', p: me };
+        tis.veg.pumpkin -= PUMPKIN_RATE; r[C.isle] = JSON.stringify(tis); res.add = 1;
       } else if (RES[tk]) {
         if (num_(r[RES[tk].col]) < TRADE_RATE) return { ok: false, err: 'few', p: me };
         r[RES[tk].col] = num_(r[RES[tk].col]) - TRADE_RATE; res.add = 1;
       } else return { ok: false, err: 'bad' };
       r[C.trades] = num_(r[C.trades]) + 1;
+
+    /* ----- 我的小島 ----- */
+    } else if (a === 'island') {
+      if (q.fid && String(q.fid).toUpperCase() !== String(r[C.fid])) {
+        var jv = findFid_(rows, q.fid);
+        if (jv < 0) return { ok: false, err: 'nofid', p: me };
+        if (list_(r[C.friends]).indexOf(String(rows[jv][C.fid])) < 0) return { ok: false, err: 'notfriend', p: me };
+        res.island = islePub_(rows[jv], false, isleOf_(r));
+      } else res.island = islePub_(r, true);
+    } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'adopt' || a === 'feed' || a === 'pat') {
+      var out = isleAct_(a, q, r, me);
+      if (out.err) return { ok: false, err: out.err, p: me };
+      if (out.add) res.add = out.add;
+      if (out.gift) res.gift = out.gift;
+      if (out.got) res.got = out.got;
+      if (out.log) sheet_('小島紀錄', L_HEAD).appendRow([new Date(), r[C.nick], r[C.code], out.log[0], out.log[1]]);
+      res.island = islePub_(r, true);
+    } else if (a === 'water') {
+      var jw = findFid_(rows, q.fid);
+      if (jw < 0 || jw === i) return { ok: false, err: 'bad', p: me };
+      if (list_(r[C.friends]).indexOf(String(rows[jw][C.fid])) < 0) return { ok: false, err: 'notfriend', p: me };
+      var mi = isleOf_(r), fi = isleOf_(rows[jw]), today = day_();
+      if (mi.wd.d !== today) mi.wd = { d: today, f: [] };
+      if (mi.wd.f.indexOf(String(rows[jw][C.fid])) >= 0) return { ok: false, err: 'watered', p: me };
+      var nowW = Date.now(), target = -1;
+      fi.f.forEach(function (c, k) { if (target < 0 && c && cropLeft_(c, nowW) > 0) target = k; });
+      if (target < 0) return { ok: false, err: 'nocrop', p: me };
+      fi.f[target].b = num_(fi.f[target].b) + WATER_BONUS;
+      mi.wd.f.push(String(rows[jw][C.fid]));
+      var wk = RES_KEYS[Math.floor(Math.random() * RES_KEYS.length)];
+      r[RES[wk].col] = num_(r[RES[wk].col]) + 1;
+      r[C.isle] = JSON.stringify(mi);
+      rows[jw][C.isle] = JSON.stringify(fi); touched[jw] = 1;
+      res.got = { k: wk, n: 1 };
+      res.island = islePub_(rows[jw], false, mi);
 
     /* ----- 好友 ----- */
     } else if (a === 'friends') {
@@ -409,28 +473,31 @@ function visitors_(isle) {
    三份名單一起算好，在 Google 快取放 60 秒，期間不用重讀整張玩家表。 */
 var TOP_TTL = 60;
 function topLists_() {
-  var cache = CacheService.getScriptCache(), hit = cache.get('top3');
+  var cache = CacheService.getScriptCache(), hit = cache.get('top4');
   if (hit) return JSON.parse(hit);
   var rows = rows_(players_()), out = {};
-  [['coin', C.bal], ['res', C.tres], ['dia', C.tdia]].forEach(function (kc) {
+  var scoreOf = {};
+  rows.forEach(function (r, x) { scoreOf[x] = isleScore_(isleOf_(r)); });
+  [['coin', C.bal], ['res', C.tres], ['dia', C.tdia], ['isle', -1]].forEach(function (kc) {
     var k = kc[0], col = kc[1];
+    var val = function (r) { return col < 0 ? scoreOf[rows.indexOf(r)] : num_(r[col]); };
     out[k] = rows
-      .filter(function (r) { return r[C.nick] && r[C.admin] !== '是' && (k === 'coin' || num_(r[col]) > 0); })
-      .sort(function (x, y) { return num_(y[col]) - num_(x[col]); })
+      .filter(function (r) { return r[C.nick] && r[C.admin] !== '是' && (k === 'coin' || val(r) > 0); })
+      .sort(function (x, y) { return val(y) - val(x); })
       .slice(0, 20)
       .map(function (r) {
-        var o = { c: String(r[C.code]).toUpperCase(), nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: num_(r[col]), bal: num_(r[C.bal]) };
+        var o = { c: String(r[C.code]).toUpperCase(), nick: plain_(r[C.nick]), av: plain_(r[C.av]), v: val(r), bal: num_(r[C.bal]) };
         if (k === 'res') o.bag = bag_(r);
         return o;
       });
   });
-  try { cache.put('top3', JSON.stringify(out), TOP_TTL); } catch (e) {}
+  try { cache.put('top4', JSON.stringify(out), TOP_TTL); } catch (e) {}
   return out;
 }
 function top_(q) {
   var lists = topLists_(), code = String(q.code || '').toUpperCase();
   function pub(list) { return list.map(function (o) { var x = {}; for (var k in o) if (k !== 'c') x[k] = o[k]; x.me = !!code && o.c === code; return x; }); }
-  if (q.k === 'all') return { ok: true, all: { coin: pub(lists.coin), res: pub(lists.res), dia: pub(lists.dia) } };
+  if (q.k === 'all') return { ok: true, all: { coin: pub(lists.coin), res: pub(lists.res), dia: pub(lists.dia), isle: pub(lists.isle || []) } };
   var k = q.k === 'res' || q.k === 'dia' ? q.k : 'coin';
   return { ok: true, k: k, top: pub(lists[k]) };
 }
@@ -464,6 +531,119 @@ function islesPub_(st, r) {
     o[k] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[k] || 0, max: GATHER_MAX };
   });
   return o;
+}
+
+/* ---------- 我的小島 ---------- */
+function isleOf_(r) {
+  var o = {};
+  try { o = JSON.parse(plain_(r[C.isle]) || '{}') || {}; } catch (e) { o = {}; }
+  o.h = num_(o.h); o.fields = num_(o.fields);
+  o.f = Array.isArray(o.f) ? o.f : [];
+  while (o.f.length < o.fields) o.f.push(null);
+  o.deco = Array.isArray(o.deco) ? o.deco.filter(function (d) { return DECO[d]; }) : [];
+  o.pets = Array.isArray(o.pets) ? o.pets : [];
+  o.veg = o.veg || {};
+  Object.keys(VEG).forEach(function (k) { o.veg[k] = num_(o.veg[k]); });
+  o.wd = o.wd && o.wd.f ? o.wd : { d: 0, f: [] };
+  return o;
+}
+function isleScore_(o) {
+  var s = o.h * 10;
+  o.deco.forEach(function (d) { s += DECO[d].pts; });
+  o.pets.forEach(function (p) { s += num_(p.aff); });
+  return s;
+}
+function cropLeft_(c, now) { return Math.max(0, num_(c.t) + VEG[c.v].hours * HOUR - num_(c.b) - now); }
+function fullNow_(p, now) { return Math.max(0, Math.min(100, Number(p.full) - HUNGER_PER_DAY * (now - num_(p.ft)) / DAY_MS)); }
+function petLv_(p) { return 1 + Math.floor(num_(p.aff) / 10); }
+function hasCost_(r, cost) { for (var k in cost) if (num_(r[BAG_COL[k]]) < cost[k]) return false; return true; }
+function payCost_(r, cost) { for (var k in cost) r[BAG_COL[k]] = num_(r[BAG_COL[k]]) - cost[k]; }
+var COST_NAME = { fruit: '水果', iron: '鐵礦', wood: '木材', stone: '石頭', dia: '鑽石' };
+function costText_(cost) { return Object.keys(cost).map(function (k) { return COST_NAME[k] + '×' + cost[k]; }).join(' '); }
+function islePub_(r, mine, viewer) {
+  var o = isleOf_(r), now = Date.now(), wd = viewer && viewer.wd && viewer.wd.d === day_() ? viewer.wd.f : [];
+  var out = {
+    nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
+    h: o.h, fields: o.fields, deco: o.deco, score: isleScore_(o),
+    f: o.f.map(function (c) { return c && VEG[c.v] ? { v: c.v, left: cropLeft_(c, now), total: VEG[c.v].hours * HOUR } : null; }),
+    pets: o.pets.map(function (p) {
+      return { id: p.id, k: p.k, n: p.n, full: Math.round(fullNow_(p, now)), aff: num_(p.aff), lv: petLv_(p), patted: num_(p.pd) === day_() };
+    })
+  };
+  if (mine) { out.veg = o.veg; out.rules = { house: HOUSE, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+  else out.watered = wd.indexOf(out.fid) >= 0;
+  return out;
+}
+/* 小島上的動作：回傳 { err } 或 { add, gift, got, log } */
+function isleAct_(a, q, r, me) {
+  var o = isleOf_(r), now = Date.now(), out = {};
+  if (a === 'build') {
+    var kind = String(q.k || ''), cost, label;
+    if (kind === 'house') {
+      if (o.h >= 3) return { err: 'maxed' };
+      cost = HOUSE[o.h + 1]; label = '小屋 Lv' + (o.h + 1);
+    } else if (kind === 'field') {
+      if (o.fields >= FIELD.length) return { err: 'maxed' };
+      cost = FIELD[o.fields]; label = '菜田 第 ' + (o.fields + 1) + ' 塊';
+    } else if (DECO[kind]) {
+      if (o.deco.indexOf(kind) >= 0) return { err: 'maxed' };
+      cost = DECO[kind].cost; label = DECO[kind].name;
+    } else return { err: 'bad' };
+    if (!hasCost_(r, cost)) return { err: 'few' };
+    payCost_(r, cost);
+    if (kind === 'house') o.h++;
+    else if (kind === 'field') { o.fields++; o.f.push(null); }
+    else o.deco.push(kind);
+    out.log = ['蓋', label + '（' + costText_(cost) + '）'];
+  } else if (a === 'plant') {
+    var fi = num_(q.i), v = String(q.v || '');
+    if (!VEG[v] || fi >= o.fields) return { err: 'bad' };
+    if (o.f[fi]) return { err: 'busy' };
+    if (num_(r[C.fruit]) < VEG[v].seed) return { err: 'few' };
+    r[C.fruit] = num_(r[C.fruit]) - VEG[v].seed;
+    o.f[fi] = { v: v, t: now, b: 0 };
+  } else if (a === 'harvest') {
+    var hi = num_(q.i), c = o.f[hi];
+    if (!c || !VEG[c.v]) return { err: 'bad' };
+    if (cropLeft_(c, now) > 0) return { err: 'notyet' };
+    o.veg[c.v] += VEG[c.v].n; out.got = { k: c.v, n: VEG[c.v].n };
+    o.f[hi] = null;
+    out.log = ['收成', VEG[c.v].name + '×' + VEG[c.v].n];
+  } else if (a === 'adopt') {
+    var an = ANIMALS[String(q.k || '')], name = cleanNick_(q.name).slice(0, 8);
+    if (!an) return { err: 'bad' };
+    if (o.h < 1) return { err: 'nohouse' };
+    if (o.pets.length >= o.h) return { err: 'petmax' };
+    if (name.length < 1) name = an.name;
+    if (!me.admin) {
+      if (num_(r[C.bal]) < an.cost) return { err: 'nocoin' };
+      r[C.bal] = num_(r[C.bal]) - an.cost;
+    }
+    o.pets.push({ id: 'P' + now.toString(36).toUpperCase(), k: String(q.k), n: text_(name, 8), full: 80, ft: now, aff: 0, pd: 0 });
+    out.log = ['領養', an.name + '「' + name + '」' + (me.admin ? '（管理員免費）' : '（' + an.cost + ' 金幣）')];
+  } else if (a === 'feed' || a === 'pat') {
+    var pet = null;
+    o.pets.forEach(function (p) { if (p.id === String(q.id || '')) pet = p; });
+    if (!pet) return { err: 'bad' };
+    var full = fullNow_(pet, now);
+    if (a === 'feed') {
+      var food = String(q.food || ''), plus;
+      if (full >= 100) return { err: 'petfull' };
+      if (food === 'fruit') { if (num_(r[C.fruit]) < 1) return { err: 'few' }; r[C.fruit] = num_(r[C.fruit]) - 1; plus = FRUIT_FOOD; }
+      else if (VEG[food]) { if (o.veg[food] < 1) return { err: 'few' }; o.veg[food]--; plus = VEG[food].food; }
+      else return { err: 'bad' };
+      pet.full = Math.min(100, full + plus); pet.ft = now;
+    } else {
+      if (num_(pet.pd) === day_()) return { err: 'patted' };
+      pet.pd = day_(); pet.aff = num_(pet.aff) + 1;
+      if (full >= 50) {
+        if (Math.random() < 0.1) { out.add = 1; out.gift = { k: 'coin', n: 1 }; }
+        else { var gk = RES_KEYS[Math.floor(Math.random() * RES_KEYS.length)]; r[RES[gk].col] = num_(r[RES[gk].col]) + 1; out.gift = { k: gk, n: 1 }; }
+      }
+    }
+  }
+  r[C.isle] = JSON.stringify(o);
+  return out;
 }
 
 /* ---------- 好友 ---------- */

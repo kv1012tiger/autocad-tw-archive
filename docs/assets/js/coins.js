@@ -25,7 +25,7 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
-    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     save(); emit({ t: 'sync' });
   }
 
@@ -52,7 +52,10 @@
     notfriend: '要先互加好友才行', gifted: '今天已經送過這位好友了，明天再送', few: '數量不夠喔',
     trademax: '今天的兌換次數用完了，明天再來', notemax: '今天的悄悄話已經用完了，明天再聊',
     msgshort: '留言至少要 2 個字', msgmax: '今天的留言次數用完了，明天再來', admin: '只有站長可以這樣做',
-    tired: '今天在這座島採夠了，明天再來', empty: '這座島今天的物資被採光了，明天會再長出來'
+    tired: '今天在這座島採夠了，明天再來', empty: '這座島今天的物資被採光了，明天會再長出來',
+    maxed: '已經蓋到最高級了', busy: '這塊田已經種了東西', notyet: '還沒長好喔，再等等', nohouse: '要先蓋小屋才能領養寵物',
+    petmax: '小屋住滿了，升級小屋就能多養一隻', nocoin: '金幣不夠喔', petfull: '牠已經吃得飽飽的了', patted: '今天已經摸過牠了',
+    watered: '今天已經幫他澆過水了', nocrop: '他的田裡現在沒有在長的菜'
   };
   function errText(j) {
     if (!j) return ERR.bad;
@@ -308,8 +311,8 @@
   }, true);
 
   /* ---------- 排行榜 ---------- */
-  var TABS = [['coin', '🪙 金幣'], ['res', '🧺 物資'], ['dia', '💎 鑽石']];
-  var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依累計撿到的鑽石排名' };
+  var TABS = [['coin', '🪙 金幣'], ['res', '🧺 物資'], ['dia', '💎 鑽石'], ['isle', '🏝️ 島主']];
+  var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依累計撿到的鑽石排名', isle: '島主分＝小屋等級×10＋裝飾＋寵物親密度' };
   /* 排行榜快取：三頁一次拿回來，存在這台裝置；打開時先顯示，再背景更新 */
   var TKEY = 'cw-top', TOPC = null, topReq = null;
   try { TOPC = JSON.parse(localStorage.getItem(TKEY) || 'null'); } catch (e) { TOPC = null; }
@@ -345,9 +348,9 @@
         function paint(k) {
           var rows = TOPC && TOPC.all && TOPC.all[k];
           if (!rows) { body.innerHTML = '<p>載入中…</p>'; return; }
-          if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
+          if (!rows.length) { body.innerHTML = '<p>' + (k === 'coin' ? '還沒有人上榜，你來當第一名！' : k === 'isle' ? '還沒有人蓋小島，去我的小島蓋一間小屋吧！' : '還沒有人上榜，去物資島採集吧！') + '</p>'; return; }
           body.innerHTML = '<ol class="cw-lb">' + rows.map(function (r, i) {
-            var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : '🪙 ' + r.v;
+            var v = k === 'res' ? '🧺 ' + r.v : k === 'dia' ? '💎 ' + r.v : k === 'isle' ? '🏝️ ' + r.v : '🪙 ' + r.v;
             return '<li class="' + (r.nick === P.nick ? 'me' : '') + '"><span class="r">' + (['🥇', '🥈', '🥉'][i] || (i + 1)) + '</span><span class="a">' + av(r) + '</span><span class="n">' + esc(r.nick) +
               (k === 'res' ? '<span class="s">' + bagLine(r.bag) + '</span>' : '') + '</span><span class="c">' + v + '</span></li>';
           }).join('') + '</ol>';
@@ -404,10 +407,12 @@
           var h = '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
             RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
             '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
+            '<small style="margin-top:6px">🥕 ' + ((P.veg || {}).carrot || 0) + '　🥬 ' + ((P.veg || {}).cabbage || 0) + '　🎃 ' + ((P.veg || {}).pumpkin || 0) + '（菜園收成，用來餵寵物）</small>' +
             '<small>累計採集 ' + (P.tres || 0) + ' 個物資、撿到 ' + (P.tdia || 0) + ' 顆鑽石（排行榜用累計數字）。去地圖上的果園島、礦山島、森林島、採石島採集。</small></div>';
           h += '<div class="cw-sec"><h4>🏪 兌換所<small style="display:inline;margin-left:6px">今天還能換 ' + left + ' 次</small></h4><div class="cw-trade">' +
             RES_KEYS.map(function (k) { return '<button type="button" data-trade="' + k + '"' + (left && (b[k] || 0) >= 10 ? '' : ' disabled') + '>10 ' + RES[k][0] + ' → 1 🪙</button>'; }).join('') +
-            '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + ' style="grid-column:1/-1">1 💎 → 5 🪙</button></div></div>';
+            '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + '>1 💎 → 5 🪙</button>' +
+            '<button type="button" data-trade="pumpkin"' + (left && ((P.veg || {}).pumpkin || 0) >= 5 ? '' : ' disabled') + '>5 🎃 → 1 🪙</button></div></div>';
           h += '<div class="cw-sec"><h4>🪪 我的旅人編號</h4><div class="cw-fid"><b>#' + esc(P.fid || '……') + '</b>' + (P.fid ? '<button class="cw-mini" type="button" data-copyfid>複製</button>' : '') + '</div>' +
             '<small>把旅人編號給朋友，對方在這裡輸入就能互加好友。登島碼是你的鑰匙，不要給別人。</small>' +
             '<div class="cw-add"><input class="cw-in" maxlength="6" placeholder="輸入好友的旅人編號" autocapitalize="characters" data-fidin><button class="cw-mini p" type="button" data-fadd>加好友</button></div><div class="cw-err" data-ferr></div></div>';
@@ -425,6 +430,7 @@
             return '<div><div class="h"><i>' + av(f) + '</i><b>' + esc(f.nick) + '</b><small style="margin:0">#' + esc(f.fid) + '</small></div>' +
               '<div class="d">🪙 ' + f.bal + '　' + bagLine(f.bag) + '　💎 ' + f.dia + (f.seen ? '・最近上島 ' + esc(f.seen) : '') + '</div>' +
               '<div class="k">' + (f.gifted ? '<span class="cw-mini" style="opacity:.6;cursor:default">🎁 今天送過了</span>' : '<button class="cw-mini" type="button" data-op="gift" data-f="' + esc(f.fid) + '">🎁 送禮</button>') +
+              (window.ISLE_VISIT ? '<button class="cw-mini" type="button" data-visit="' + esc(f.fid) + '">🏝️ 參觀</button>' : '') +
               '<button class="cw-mini" type="button" data-op="note" data-f="' + esc(f.fid) + '">✉️ 悄悄話</button><button class="cw-mini" type="button" data-fdel="' + esc(f.fid) + '" data-n="' + esc(f.nick) + '">移除</button></div>' +
               (o === 'gift' ? '<div class="k" style="margin-top:6px">' + RES_KEYS.map(function (k) { return '<button class="cw-mini p" type="button" data-gift="' + k + '" data-f="' + esc(f.fid) + '"' + ((P.bag || {})[k] ? '' : ' disabled') + '>' + RES[k][0] + ' 送 1 個</button>'; }).join('') + '</div><small>每天可以送每位好友 1 個物資（從你的背包扣）。</small>' : '') +
               (o === 'note' ? '<textarea class="cw-ta" maxlength="100" placeholder="寫給 ' + esc(f.nick) + ' 的悄悄話（100 字內）" data-nt="' + esc(f.fid) + '"></textarea><button class="cw-mini p" type="button" data-send="' + esc(f.fid) + '">送出</button>' : '') +
@@ -448,7 +454,8 @@
               if (!j.ok) return fail(j);
               toast('🏪 換到 ' + j.add + ' 枚金幣！'); paint();
             }).catch(function () { netFail(); paint(); });
-          } else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製旅人編號 #' + P.fid);
+          } else if (d.visit) { close(); window.ISLE_VISIT(d.visit); }
+          else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製旅人編號 #' + P.fid);
           else if (d.fadd != null) {
             var inp = ov.querySelector('[data-fidin]'), v = inp.value.replace(/[^0-9a-z]/gi, '').toUpperCase(), fe = ov.querySelector('[data-ferr]');
             if (v.length !== 5) { fe.textContent = '旅人編號是 5 個字'; return; }

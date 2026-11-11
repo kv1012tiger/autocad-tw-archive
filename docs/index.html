@@ -865,6 +865,60 @@ body{overflow:hidden;background:#1581bd}
 @media (max-width:520px){.gm{flex-direction:column}.gm-img{width:100%;height:auto;aspect-ratio:16/10}}
 .reader.game .reader-bar{border-bottom-color:#38bdf8}
 .reader.game iframe{background:#0a1f35}
+/* 我的小島 */
+.mi-scene{position:relative;height:250px;margin:12px 0 6px;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,#1f7fb0,#0b4f78 70%)}
+.mi-land{position:absolute;left:6%;right:6%;top:14%;bottom:8%;border-radius:48% 52% 46% 54%/56% 50% 50% 44%;background:radial-gradient(ellipse at 45% 40%,#9be36b,#4f9a2e 75%);box-shadow:0 0 0 10px #f2d79a,0 0 0 18px rgba(166,242,232,.45)}
+.mi-house{position:absolute;left:30%;top:16%;transform:translateX(-50%);text-align:center;line-height:1}
+.mi-house span{display:block;font-size:58px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35))}
+.mi-house.lv0 span{font-size:40px;opacity:.85}.mi-house.lv3 span{font-size:72px}
+.mi-house em{display:inline-block;margin-top:2px;padding:1px 8px;border-radius:8px;font-style:normal;font-size:12px;font-weight:800;color:#1f3d12;background:rgba(255,255,255,.85)}
+.mi-fields{position:absolute;left:50%;top:22%;display:flex;gap:6px}
+.mi-plot{display:grid;place-items:center;width:44px;height:36px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.mi-plot b{font-size:24px;line-height:1;animation:miGrow 2.4s ease-in-out infinite}
+.mi-plot.ready{box-shadow:0 0 0 2px #ffd166,0 0 14px #ffd166}
+@keyframes miGrow{50%{transform:translateY(-3px) rotate(4deg)}}
+.mi-deco{position:absolute;font-size:34px;line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
+.mi-pet{position:absolute;left:10%;line-height:1;animation:pwMv var(--t) linear var(--d) infinite}
+.mi-pet i{display:block;font-style:normal;animation:ppFlip var(--t) steps(1) var(--d) infinite}
+.mi-pet em{position:absolute;left:50%;top:-15px;transform:translateX(-50%);font-style:normal;font-size:11px;font-weight:800;white-space:nowrap;color:#1f3d12;background:rgba(255,255,255,.85);padding:0 6px;border-radius:7px}
+.mi-empty{position:absolute;left:12%;right:12%;bottom:12%;margin:0;padding:6px 10px;border-radius:12px;background:rgba(0,0,0,.35);color:#fff;font-size:14px;text-align:center}
+.mi-note{margin:6px 0 8px;font-size:14px;color:var(--muted)}
+.mi-farm{display:grid;gap:8px}
+.mi-fd{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)}
+.mi-fd>b{display:block;margin-bottom:6px}
+.mi-fd .bar,.mi-full .bar{height:9px;border-radius:6px;background:rgba(255,255,255,.14);overflow:hidden}
+.mi-fd .bar i{display:block;height:100%;background:linear-gradient(90deg,#86efac,#22c55e)}
+.mi-fd small{display:block;margin-top:4px;color:var(--muted);font-size:13px}
+.mi-seeds{display:flex;flex-wrap:wrap;gap:6px}
+.mi-seeds .mb-b small{display:block;font-size:11.5px;font-weight:400;opacity:.8}
+.mb-b[disabled]{opacity:.4;cursor:default}
+.mi-pets{display:grid;gap:10px}
+.mi-pc{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)}
+.mi-pe{flex:none;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;font-size:40px;background:radial-gradient(circle at 50% 40%,rgba(251,113,133,.3),rgba(255,255,255,.04));cursor:pointer;animation:rsBob 2.6s ease-in-out infinite}
+.mi-pb{min-width:0;flex:1}.mi-pb b{font-size:17px}.mi-pb small{display:block;color:var(--muted);font-size:13px}
+.mi-pc>div>b{font-size:17px}.mi-pc>div>small{display:block;color:var(--muted);font-size:13px}
+.mi-full{margin:6px 0}.mi-full span{font-size:12.5px;color:var(--muted)}.mi-full .bar i{display:block;height:100%;border-radius:6px}
+.mi-act{display:flex;flex-wrap:wrap;gap:6px}
+.mi-build{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.mi-bd{display:flex;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,209,102,.3)}
+.mi-bd.done{opacity:.6;border-style:dashed}
+.mi-be{flex:none;font-size:34px;line-height:1.1}
+.mi-bd b{display:block}.mi-bd small{display:block;color:var(--muted);font-size:12.5px}
+.mi-cost{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.mi-c{padding:1px 8px;border-radius:999px;font-size:12.5px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.5)}
+.mi-c.short{background:rgba(248,113,113,.15);border-color:rgba(248,113,113,.6);color:#fecaca}
+@keyframes rsBob{50%{transform:translateY(-6px)}}
+/* 寵物島 */
+.pt-cap{margin:12px 0;padding:10px 14px;border-radius:14px;background:rgba(251,113,133,.12);border:1.5px solid rgba(251,113,133,.45);font-size:15px}
+.pt-cap b{color:var(--gold)}
+.pt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.pt-c{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 10px;border-radius:18px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.15);text-align:center}
+.pt-c.rare{border-color:rgba(250,204,21,.7);background:radial-gradient(circle at 50% 20%,rgba(250,204,21,.18),rgba(255,255,255,.04))}
+.pt-e{font-size:52px;line-height:1;animation:rsBob 2.4s ease-in-out infinite}
+.pt-c b{font-size:16px}.pt-c b em{margin-left:4px;padding:0 6px;border-radius:999px;font-style:normal;font-size:11px;background:#facc15;color:#3a2a00}
+.pt-p{font-weight:900;color:var(--gold)}
+.pt-in{width:100%;box-sizing:border-box;padding:7px 10px;border-radius:10px;border:1.5px solid #ffd166;background:rgba(3,30,44,.7);color:#fff;font-size:15px;text-align:center}
+@media (prefers-reduced-motion:reduce){.mi-pet,.mi-pet i,.mi-plot b,.mi-pe,.pt-e{animation:none}}
 /* 蘋果爸小島：毛孩散步草地 */
 .pet-walk{position:relative;height:250px;margin:4px 0 12px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#9ade72,#64b843);border:2px solid rgba(255,255,255,.3)}
 .pet-walk::before,.pet-walk::after{content:"";position:absolute;left:4%;right:4%;height:14px;border-radius:7px;background:#efdca2;opacity:.85}
@@ -1036,7 +1090,7 @@ body{overflow:hidden;background:#1581bd}
   <div class="card chest-box mission-box">
     <div class="chest-ico">🎯</div>
     <h3 id="missionT">探險任務</h3>
-    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島第 2 天 4 枚，第 3 天起每天 5 枚</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🧺 到 🍎果園島、⛏️礦山島、🌲森林島、🪨採石島採集物資，運氣好還能撿到 💎 鑽石；物資可以到 🎒 背包的兌換所換金幣</li><li>📮 到留言碼頭留言給蘋果爸；在 🎒 背包用旅人編號加好友、送禮、傳悄悄話</li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣、物資、鑽石排行榜</li></ol>
+    <ol class="gift-steps"><li>📅 每天登島送 <b>3 枚</b> 🪙，連續登島第 2 天 4 枚，第 3 天起每天 5 枚</li><li>📖 在小島爬文：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）</li><li>⏱️ 在島上每待 5 分鐘送 1 枚（每天最多 3 枚）</li><li>💬 翻開一座問答島的 3 張問答卡，拿 1 枚</li><li>📦 下載文章附件或下載連結，每次扣 <b>1 枚</b></li><li>🧺 到 🍎果園島、⛏️礦山島、🌲森林島、🪨採石島採集物資，運氣好還能撿到 💎 鑽石；物資可以到 🎒 背包的兌換所換金幣</li><li>🏝️ 登島後你有自己的小島：用物資蓋小屋、菜園、裝飾；到 🐾 寵物島花金幣領養寵物，種菜餵牠、每天摸摸，牠會送你禮物</li><li>📮 到留言碼頭留言給蘋果爸；在 🎒 背包用旅人編號加好友、送禮、傳悄悄話</li><li>🎁 累積拿滿 5 枚，送你 <b>提示詞禮物包</b>；按上方 🏆 看金幣、物資、鑽石排行榜</li></ol>
     <div class="row2"><button class="btn btn-primary" type="button" id="missionGo">🪙 知道了，開始探險</button></div>
     <label class="ms-off"><input type="checkbox" id="missionOff"> 今天不再顯示</label>
   </div>
@@ -1172,6 +1226,9 @@ var GAMES=[
 SP.splice(2,0,MSG_SPOT);
 [6,11,17,22].forEach(function(at,k){SP.splice(Math.min(at,SP.length),0,RESI[k])});
 SP.splice(9,0,GAME_SPOT);
+var MINE_SPOT={k:'mine',e:'🏝️',name:'我的小島',sub:'蓋房子・種菜・養寵物',c:'#fde047',g:['#bef264','#4d7c0f'],dc:['🏠','🥕','🌻'],res:[['🐔','w'],['🐑','w'],['🦋','f']]};
+var PET_SPOT={k:'pets',e:'🐾',name:'寵物島',sub:'領養狗狗・貓貓・動物',c:'#fb7185',g:['#fda4af','#9f1239'],dc:['🦴','🧶','💕'],res:[['🐶','w'],['🐱','w'],['🦜','f']]};
+SP.splice(1,0,MINE_SPOT);SP.splice(13,0,PET_SPOT);
 SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
 SP.push({k:'dock',e:'⛵',name:'報名碼頭',sub:'場次・費用・報名方式',c:'#ff8a2a',g:['#ffc27a','#b8611f'],dc:['⚓','🏮','🧭'],res:[['🦀','w'],['🐢','w'],['🐦','f']]});
 SP.forEach(function(s,i){s.si=i});
@@ -1405,7 +1462,9 @@ function isleSVG(s){
   var X=s.st||{},sand=X.sand||['#b98a52','#d9b678','#f6e2ac'],dirt=X.dirt||'#7a5630';
   if(s.st){land=X.land;deep=X.deep;tree=X.tree;leaf=X.leaf}
   if(s.k==='game'){land='#60a5fa';deep='#1e40af';tree='#1e3a8a';leaf='#93c5fd'}
-  var glow=X.glow||(s.k==='game'?'#38bdf8':'');
+  if(s.k==='pets'){land='#f9a8d4';deep='#be185d';tree='#9d174d';leaf='#fbcfe8'}
+  if(s.k==='mine'){land='#bef264';deep='#4d7c0f';tree='#3f6212';leaf='#d9f99d'}
+  var glow=X.glow||(s.k==='game'?'#38bdf8':s.k==='pets'?'#fb7185':s.k==='mine'?'#fde047':'');
   var o='<svg class="isl" viewBox="-14 -12 168 124" aria-hidden="true">'+
     (s.k==='search'?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="#e9d5ff" opacity=".3"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="#e9d5ff" stroke-width="2.2" stroke-dasharray="1.5 6" stroke-linecap="round"/>':'')+
     (glow?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="'+glow+'" opacity=".22"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="'+glow+'" stroke-width="2.4" stroke-dasharray="1.5 5" stroke-linecap="round"/>':'')+
@@ -1423,6 +1482,8 @@ function isleSVG(s){
   if(s.k==='search'){I.push({y:40,h:tent(110,40)});I.push({y:38,h:tent(30,38)})}
   if(s.k==='res')resProps(s.rk,I);
   if(s.k==='game')gameProps(I);
+  if(s.k==='mine'){I.push({y:40,h:isoHut(100,40,9,'#e76f51')});I.push({y:44,h:isoHut(40,44,7,'#2a9d8f')});I.push({y:50,h:'<rect x="60" y="46" width="22" height="8" rx="2" fill="#7a4a22"/><path d="M63 48v4M68 48v4M73 48v4M78 48v4" stroke="#4ade80" stroke-width="2"/>'})}
+  if(s.k==='pets'){I.push({y:42,h:isoHut(98,42,9,'#fb7185')});I.push({y:46,h:'<path d="M38 46c-4-6 4-10 7-5 3-5 11-1 7 5l-7 6z" fill="#f43f5e" stroke="#9f1239" stroke-width=".7"/>'})}
   if(s.k==='msg'){I.push({y:44,h:mailbox(114,44)});I.push({y:40,h:mailbox(26,40)})}
   I.sort(function(p,q){return p.y-q.y}).forEach(function(x){o+=x.h});
   return o+'</svg>';
@@ -1443,7 +1504,7 @@ SP.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';
   var isl=s.k==='isle',frm=s.k==='forum',num=isl||frm;
   var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 點我搜尋全部文章':s.sub;
-  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:s.k==='game'?225:235;
+  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:s.k==='game'?225:s.k==='mine'?230:s.k==='pets'?220:235;
   if(s.major)s.base=Math.round(s.base*1.4);
   b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(s.k==='search'?' oracle':'')+(isl?' qai':'')+(frm?' fi':'')+(s.major?' major':'');
   b.style.setProperty('--c',s.c);
@@ -1487,7 +1548,7 @@ function drawIslets(W,H,f,edge){
 var G={};
 function layout(){
   document.documentElement.style.setProperty('--hud',document.querySelector('.hud').offsetHeight+'px');
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:8,rows=port?8:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?4:9,rows=port?9:4,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -1726,7 +1787,7 @@ function route(){
   if(t){if(SCN!==t)showScene(t);if(m[2]!=null&&+m[2]<SCN.huts.length)openPanel('hut',+m[2]);return}
   hideScene();
   if((m=h.match(/^qa-(\d+)$/))&&ISLES[+m[1]]){openPanel('isle',+m[1]);placeBoat(ISLES[+m[1]].si,true)}
-  else if(h==='home'||h==='castle'||h==='search'||h==='dock'||h==='msg'||h==='game'){openPanel(h);placeBoat(spotIdx(h),true)}
+  else if(h==='home'||h==='castle'||h==='search'||h==='dock'||h==='msg'||h==='game'||h==='mine'||h==='pets'){openPanel(h);placeBoat(spotIdx(h),true)}
   else if((m=h.match(/^res-(\d)$/))&&RESI[+m[1]]){openPanel('res',+m[1]);placeBoat(RESI[+m[1]].si,true)}
 }
 window.addEventListener('hashchange',route);
@@ -2193,6 +2254,160 @@ pBody.addEventListener('click',function(e){
   var t=e.target.closest('[data-play]');if(!t||V.t!=='game')return;
   openGame(+t.dataset.play);
 });
+/* ---------- 我的小島：蓋房子、種菜、養寵物；也可以參觀好友的小島 ---------- */
+var ANI={hamster:['🐹','倉鼠',10],rabbit:['🐰','兔兔',15],turtle:['🐢','烏龜',15],dog:['🐶','狗狗',20],cat:['🐱','貓貓',20],parrot:['🦜','鸚鵡',25],fox:['🦊','狐狸',40,1],panda:['🐼','熊貓',60,1]};
+var ANI_KEYS=['hamster','rabbit','turtle','dog','cat','parrot','fox','panda'];
+var VEGI={carrot:['🥕','胡蘿蔔',1,'4 小時',2,20],cabbage:['🥬','高麗菜',2,'8 小時',3,35],pumpkin:['🎃','南瓜',3,'24 小時',2,60]};
+var VEG_KEYS=['carrot','cabbage','pumpkin'];
+var DECOI={tree:['🌳','果樹',5],fountain:['⛲','噴水池',10],tower:['🗼','瞭望塔',20]};
+var HOUSEI=['🚧','🛖','🏠','🏡'];
+var COSTI={fruit:'🍎',iron:'🔩',wood:'🪵',stone:'🪨',dia:'💎'};
+var PET_TITLE=['新朋友','好朋友','家人','最佳拍檔','靈魂伴侶'];
+var MI={data:null,fid:null,at:0,seq:0,timer:0,adopt:null};
+function petTitle(lv){return PET_TITLE[Math.min(PET_TITLE.length,lv)-1]}
+function hm(ms){var m=Math.ceil(ms/60000),h=Math.floor(m/60);m%=60;return h?h+' 小時'+(m?' '+m+' 分':''):m+' 分鐘'}
+function costHTML(cost){var w=COINS.get(),b=w.bag||{};return Object.keys(cost).map(function(k){var have=k==='dia'?(w.dia||0):(b[k]||0);return '<span class="mi-c'+(have<cost[k]?' short':'')+'">'+COSTI[k]+' '+cost[k]+'</span>'}).join('')}
+function costOK(cost){var w=COINS.get(),b=w.bag||{};for(var k in cost){var have=k==='dia'?(w.dia||0):(b[k]||0);if(have<cost[k])return false}return true}
+function renderMine(fid){
+  MI.fid=fid||null;MI.data=null;clearInterval(MI.timer);
+  var w=COINS.get();
+  pBody.innerHTML='<div class="ph" style="--c:#fde047"><span class="ph-e">🏝️</span><div><div class="p-kicker">'+(fid?'FRIEND ISLAND・參觀好友':'MY ISLAND・我的小島')+'</div><h3 id="pTitle">'+(fid?'好友的小島':(w.nick?esc(w.nick)+' 的小島':'我的小島'))+'</h3><p id="miSub">'+(fid?'看看好友蓋了什麼，順手幫忙澆水':'用採集到的物資蓋房子、種菜、養寵物')+'</p></div></div><div id="miBox"><p class="s-count">登上小島中…</p></div>';
+  $('pStep').textContent=fid?'🏝️ 參觀好友小島':'🏝️ 我的小島';
+  footSimple('← 回地圖',fid?'🏝️ 回我的小島':'🐾 寵物島 →');
+  if(!w.code){$('miBox').innerHTML='<div class="mb-login"><p>取個暱稱，就能擁有自己的小島。</p><button class="btn btn-primary btn-sm" type="button" data-mjoin2>🏝️ 取暱稱・登島</button></div>';return}
+  loadMine();
+  MI.timer=setInterval(function(){if(V.t!=='mine'){clearInterval(MI.timer);return}paintMine()},30000);
+}
+function loadMine(){
+  var my=++MI.seq;
+  COINS.api(MI.fid?{a:'island',fid:MI.fid}:{a:'island'}).then(function(j){
+    if(my!==MI.seq||V.t!=='mine')return;
+    if(!j.ok){$('miBox').innerHTML='<p class="s-count">⚠️ '+esc(COINS.errText(j))+'</p>';return}
+    MI.data=j.island;MI.at=Date.now();paintMine();
+  }).catch(function(){if(my===MI.seq&&$('miBox'))$('miBox').innerHTML='<p class="s-count">⚠️ 暫時連不上小島，請稍後再試</p>'});
+}
+function cropView(c){
+  var left=Math.max(0,c.left-(Date.now()-MI.at)),p=1-left/c.total,v=VEGI[c.v];
+  return {left:left,p:p,e:left<=0?v[0]:p<.34?'🌱':'🌿',ready:left<=0};
+}
+function sceneHTML(d){
+  var o='<div class="mi-scene"><div class="mi-land"></div>';
+  o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
+  o+='<div class="mi-fields">'+d.f.map(function(c){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"><b>'+cv.e+'</b></i>'}).join('')+'</div>';
+  var dp={tree:[12,28],fountain:[74,64],tower:[84,18]};
+  d.deco.forEach(function(k){o+='<span class="mi-deco" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%">'+DECOI[k][0]+'</span>'});
+  o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" style="top:'+(58+i*11)+'%;--t:'+(9+i*3)+'s;--d:-'+(i*2.7)+'s;font-size:'+(26+Math.min(4,p.lv-1)*4)+'px"><i>'+a[0]+'</i><em>'+esc(p.n)+'</em></span>'}).join('');
+  if(!d.h&&!d.fields&&!d.deco.length&&!d.pets.length)o+='<p class="mi-empty">'+(d.mine?'這座島還是一片空地，先用 🪵 木材和 🪨 石頭蓋一間小屋吧！':'這座島還是一片空地')+'</p>';
+  return o+'</div>';
+}
+function paintMine(){
+  var d=MI.data,box=$('miBox');if(!d||!box)return;
+  $('pTitle').textContent=d.nick+' 的小島';
+  $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
+  var o=sceneHTML(d);
+  if(!d.mine){
+    var growing=d.f.some(function(c){return c&&cropView(c).left>0});
+    o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
+      (d.watered?'<button class="btn btn-ghost btn-sm" type="button" disabled>💧 今天已經澆過水了</button>':growing?'<button class="btn btn-primary btn-sm" type="button" data-mwater>💧 幫 '+esc(d.nick)+' 澆水</button>':'<button class="btn btn-ghost btn-sm" type="button" disabled>他的田裡現在沒有在長的菜</button>')+'</div>';
+    if(d.pets.length)o+='<div class="p-sec"><h4>🐾 '+esc(d.nick)+' 的寵物</h4><div class="mi-pets">'+d.pets.map(function(p){var a=ANI[p.k]||['🐾',''];return '<div class="mi-pc"><span class="mi-pe">'+a[0]+'</span><div><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'</small></div></div>'}).join('')+'</div></div>';
+    box.innerHTML=o;return;
+  }
+  var R=d.rules,w=COINS.get(),fruit=(w.bag||{}).fruit||0;
+  /* 菜園 */
+  o+='<div class="p-sec"><h4>🥕 菜園</h4>';
+  if(!d.fields)o+='<p class="mi-note">還沒有菜田，到下面「建造」蓋第一塊田（🪵 5・🪨 5）。</p>';
+  o+='<div class="mi-farm">'+d.f.map(function(c,i){
+    if(!c)return '<div class="mi-fd"><b>第 '+(i+1)+' 塊田・空的</b><div class="mi-seeds">'+VEG_KEYS.map(function(k){var v=VEGI[k];return '<button class="mb-b" type="button" data-plant="'+k+'" data-i="'+i+'"'+(fruit<v[2]?' disabled':'')+'>'+v[0]+' 種'+v[1]+'<small>🍎'+v[2]+'・'+v[3]+'</small></button>'}).join('')+'</div></div>';
+    var cv=cropView(c),v=VEGI[c.v];
+    return '<div class="mi-fd"><b>第 '+(i+1)+' 塊田・'+v[0]+' '+v[1]+'</b>'+(cv.ready?'<button class="btn btn-primary btn-sm" type="button" data-harvest="'+i+'">🧺 收成 '+v[0]+'×'+v[4]+'</button>':'<div class="bar"><i style="width:'+(cv.p*100).toFixed(0)+'%"></i></div><small>還要 '+hm(cv.left)+'</small>')+'</div>';
+  }).join('')+'</div>';
+  o+='<p class="mi-note">蔬菜庫存：'+VEG_KEYS.map(function(k){return VEGI[k][0]+' '+(d.veg[k]||0)}).join('　')+'・種子用 🍎 水果換（你有 '+fruit+' 個）・5 顆 🎃 可在 🎒 兌換所換 1 枚金幣</p></div>';
+  /* 寵物 */
+  o+='<div class="p-sec"><h4>🐾 我的寵物（'+d.pets.length+' / '+d.h+'）</h4>';
+  if(!d.pets.length)o+='<p class="mi-note">'+(d.h?'小屋可以養 '+d.h+' 隻寵物，':'先蓋小屋，')+'到寵物島領養一隻吧！</p><button class="btn btn-primary btn-sm" type="button" data-open="pets">🐾 去寵物島</button>';
+  o+='<div class="mi-pets">'+d.pets.map(function(p){
+    var a=ANI[p.k]||['🐾',''];
+    return '<div class="mi-pc"><span class="mi-pe" data-pat="'+esc(p.id)+'">'+a[0]+'</span><div class="mi-pb"><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'・親密度 '+p.aff+'</small>'+
+      '<div class="mi-full"><span>飽足度 '+p.full+'</span><div class="bar"><i style="width:'+p.full+'%;background:'+(p.full>=50?'#4ade80':p.full>=20?'#facc15':'#f87171')+'"></i></div></div>'+
+      '<div class="mi-act"><button class="mb-b" type="button" data-pat="'+esc(p.id)+'"'+(p.patted?' disabled':'')+'>'+(p.patted?'✋ 今天摸過了':'✋ 摸摸')+'</button>'+
+      VEG_KEYS.map(function(k){return '<button class="mb-b" type="button" data-feed="'+k+'" data-id="'+esc(p.id)+'"'+((d.veg[k]||0)<1||p.full>=100?' disabled':'')+'>'+VEGI[k][0]+' '+(d.veg[k]||0)+'</button>'}).join('')+
+      '<button class="mb-b" type="button" data-feed="fruit" data-id="'+esc(p.id)+'"'+(fruit<1||p.full>=100?' disabled':'')+'>🍎 '+fruit+'</button></div></div></div>';
+  }).join('')+'</div>';
+  if(d.pets.length)o+='<p class="mi-note">飽足度每天掉 25。餵食：🥕 +20、🥬 +35、🎃 +60、🍎 +10。每天摸摸親密度 +1，飽足度 50 以上時牠會送你禮物。</p>';
+  o+='</div>';
+  /* 建造 */
+  var B=[];
+  B.push(d.h<3?{k:'house',e:HOUSEI[d.h+1],n:'小屋 Lv'+(d.h+1),t:'可以養 '+(d.h+1)+' 隻寵物',cost:R.house[d.h+1]}:{e:'🏡',n:'小屋 Lv3',t:'已經蓋到最高級',done:1});
+  B.push(d.fields<R.field.length?{k:'field',e:'🟫',n:'菜田 第 '+(d.fields+1)+' 塊',t:'可以多種一種菜',cost:R.field[d.fields]}:{e:'🟫',n:'菜田 3 塊',t:'菜田已經蓋滿了',done:1});
+  ['tree','fountain','tower'].forEach(function(k){var x=R.deco[k];B.push(d.deco.indexOf(k)>=0?{e:DECOI[k][0],n:x.name,t:'已經蓋好・島主分 +'+x.pts,done:1}:{k:k,e:DECOI[k][0],n:x.name,t:'裝飾・島主分 +'+x.pts,cost:x.cost})});
+  o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
+    return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div><button class="btn btn-primary btn-sm" type="button" data-build="'+b.k+'"'+(costOK(b.cost)?'':' disabled')+'>🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
+  box.innerHTML=o;
+}
+function mineAct(q,btn,okFn){
+  if(btn){btn.disabled=true}
+  COINS.api(q).then(function(j){
+    if(!j.ok){toast('⚠️ '+COINS.errText(j));if(btn)btn.disabled=false;return}
+    if(j.island){MI.data=j.island;MI.at=Date.now()}
+    if(okFn)okFn(j);
+    if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
+  }).catch(function(){toast('⚠️ 暫時連不上小島，請稍後再試');if(btn)btn.disabled=false});
+}
+function fxAt(el,em){if(!el)return;var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,em)}
+var GIFT_I={coin:['🪙','金幣'],fruit:['🍎','水果'],iron:['🔩','鐵礦'],wood:['🪵','木材'],stone:['🪨','石頭']};
+pBody.addEventListener('click',function(e){
+  var t=e.target.closest('button,[data-pat]');if(!t||V.t!=='mine')return;
+  var d=t.dataset;
+  if(d.mjoin2!=null){COINS.need(function(){renderMine(null)});return}
+  if(d.build){mineAct({a:'build',k:d.build},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 蓋好了！')});return}
+  if(d.plant){mineAct({a:'plant',i:+d.i,v:d.plant},t,function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[d.plant][1]+'，'+VEGI[d.plant][3]+'後收成')});return}
+  if(d.harvest!=null){mineAct({a:'harvest',i:+d.harvest},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
+  if(d.feed){mineAct({a:'feed',id:d.id,food:d.feed},t,function(){fxAt(t,['😋','💕',d.feed==='fruit'?'🍎':VEGI[d.feed][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
+  if(d.pat){mineAct({a:'pat',id:d.pat},t,function(j){fxAt(t,['💕','💖','✨']);var p=MI.data.pets.filter(function(x){return x.id===d.pat})[0],k=p?(ANI[p.k]||[])[1]:'';playSfx(p&&p.k==='cat'?'cat':'dog');
+    if(j.gift){var g=GIFT_I[j.gift.k]||['🎁',''];setTimeout(function(){fxAt(t,[g[0],g[0],'🎁','✨'])},350);toast('💕 '+(p?p.n:'寵物')+' 送你 '+g[0]+' '+g[1]+' ×1！')}else toast('💕 親密度 +1'+(p&&p.full<50?'（餵飽一點，牠就會送你禮物）':''))});return}
+  if(d.mwater!=null){mineAct({a:'water',fid:MI.fid},t,function(j){var g=GIFT_I[j.got.k]||['🎁',''];fxAt(t,['💧','💧','🌱',g[0]]);playSfx('flip');toast('💧 澆好水了！你拿到 '+g[0]+' '+g[1]+' ×1')});return}
+});
+window.ISLE_VISIT=function(fid){MI.visitFid=fid;openPanel('mine',1);placeBoat(MINE_SPOT.si)};
+
+/* ---------- 寵物島：領養狗狗、貓貓和其他動物 ---------- */
+function renderPets(){
+  var w=COINS.get();
+  pBody.innerHTML='<div class="ph" style="--c:#fb7185"><span class="ph-e">🐾</span><div><div class="p-kicker">PET ISLAND・寵物島</div><h3 id="pTitle">寵物島</h3><p>花金幣領養一隻寵物，帶回你的小島一起生活</p></div></div>'+
+    '<div class="pt-cap" id="ptCap">'+(w.code?'看看你的小屋還有沒有空位…':'取個暱稱、蓋好小屋，就能領養寵物。')+'</div>'+
+    '<div class="pt-grid" id="ptGrid"></div>'+
+    '<div class="p-sec"><h4>領養須知</h4><ul class="notes"><li>要先在 🏝️ 我的小島蓋小屋：小屋 Lv1 可以養 1 隻，Lv2 養 2 隻，Lv3 養 3 隻。</li><li>領養要付金幣，還可以幫牠取名字（8 個字以內）。</li><li>寵物飽足度每天掉 25，用菜園種的菜或水果餵牠；每天摸摸親密度 +1，親密度每 10 點升一級。</li><li>飽足度 50 以上時摸摸，寵物會送你 1 個物資，偶爾送 1 枚金幣。餓了不會跑掉，只是不開心、不送禮。</li></ul></div>';
+  $('pStep').textContent='🐾 寵物島';
+  footSimple('← 回地圖','🏝️ 我的小島 →');
+  MI.adopt=null;paintPets();
+  if(w.code){var my=++MI.seq;COINS.api({a:'island'}).then(function(j){if(my===MI.seq&&j.ok){MI.data=j.island;MI.at=Date.now();if(V.t==='pets')paintPets()}}).catch(function(){})}
+}
+function paintPets(){
+  var g=$('ptGrid'),cap=$('ptCap');if(!g)return;
+  var w=COINS.get(),d=MI.data&&MI.data.mine?MI.data:null,room=d?d.h-d.pets.length:0;
+  if(w.code&&d)cap.innerHTML=d.h?'🏠 你的小屋 Lv'+d.h+' 可以養 <b>'+d.h+'</b> 隻，已經有 <b>'+d.pets.length+'</b> 隻'+(room>0?'，還可以領養 '+room+' 隻！':'；升級小屋就能多養一隻。')+'・你有 🪙 <b>'+w.bal+'</b> 枚'+(w.admin?'（管理員免費）':''):'🚧 你還沒有小屋，先到 <button class="mb-b" type="button" data-open="mine">🏝️ 我的小島</button> 用 🪵 10・🪨 5 蓋一間。';
+  g.innerHTML=ANI_KEYS.map(function(k){
+    var a=ANI[k],ad=MI.adopt===k,can=w.code&&d&&room>0&&(w.admin||w.bal>=a[2]);
+    return '<div class="pt-c'+(a[3]?' rare':'')+'"><span class="pt-e">'+a[0]+'</span><b>'+a[1]+(a[3]?'<em>稀有</em>':'')+'</b><span class="pt-p">🪙 '+a[2]+'</span>'+
+      (ad?'<input class="pt-in" maxlength="8" placeholder="幫牠取名字" id="ptName"><button class="btn btn-primary btn-sm" type="button" data-adopt="'+k+'">確定領養</button><button class="mb-b" type="button" data-acancel>取消</button>'
+        :'<button class="btn '+(can?'btn-primary':'btn-ghost')+' btn-sm" type="button" data-pick="'+k+'">🏡 領養</button>')+'</div>';
+  }).join('');
+  var inp=$('ptName');if(inp)inp.focus();
+}
+pBody.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t||V.t!=='pets')return;
+  var d=t.dataset,w=COINS.get();
+  if(d.pick){
+    if(!w.code){COINS.need(function(){renderPets()});return}
+    var md=MI.data;if(!md){toast('小島資料載入中，稍等一下');return}
+    var a=ANI[d.pick];
+    if(!md.h){toast('🚧 要先在我的小島蓋小屋，才能領養寵物');return}
+    if(md.pets.length>=md.h){toast('🏠 小屋住滿了，升級小屋就能多養一隻');return}
+    if(!w.admin&&w.bal<a[2]){toast('🪙 金幣不夠，領養'+a[1]+'要 '+a[2]+' 枚（你有 '+w.bal+' 枚）');return}
+    MI.adopt=d.pick;paintPets();return}
+  if(d.acancel!=null){MI.adopt=null;paintPets();return}
+  if(d.adopt){var nm=($('ptName')||{}).value||'',a2=ANI[d.adopt];
+    mineAct({a:'adopt',k:d.adopt,name:nm.trim()},t,function(){MI.adopt=null;fxAt(t,[a2[0],'💕','🎉','✨']);playSfx('chest');toast('🎉 歡迎 '+(nm.trim()||a2[1])+' 加入你的小島！')});return}
+});
 var SEARCH_KW=['圖塊','LISP','出圖','標註','圖層','3D','外掛','配置','文字','數量','手稿','線上課程'];
 /* 全文搜尋：文章索引 assets/search.json 第一次打開搜尋才載入 */
 var ART=null,artLoading=null,FORUM_BY={};FORUM.forEach(function(s){FORUM_BY[s.id]=s});
@@ -2311,14 +2526,14 @@ function applySync(code){
 }
 function actsHTML(){
   var s=null,h='',title='';
-  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock'||V.t==='msg'||V.t==='game')s=SP[spotIdx(V.t)];else if(V.t==='res')s=RESI[V.i];else if(V.t==='session')s=SP[spotIdx('dock')];
+  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock'||V.t==='msg'||V.t==='game'||V.t==='pets'||(V.t==='mine'&&!V.i))s=SP[spotIdx(V.t)];else if(V.t==='res')s=RESI[V.i];else if(V.t==='session')s=SP[spotIdx('dock')];
   if(V.t==='hut'&&SCN){h=spotHash(SCN)+'/'+V.i;title=SCN.name+'・'+SCN.huts[V.i].name}
   else if(s){h=spotHash(s);title=s.name}
   if(!h)return '';
   return '<button class="act" type="button" data-share="'+esc(h)+'" data-title="'+esc(title)+'">🔗<span class="tx"> 分享</span></button>'+(s?'<button class="act" type="button" id="pFavBtn" data-fav="'+s.si+'"></button>':'');
 }
 function render(dir){
-  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();
+  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();else if(V.t==='mine')renderMine(V.i===1?MI.visitFid:null);else if(V.t==='pets')renderPets();
   else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
@@ -2326,7 +2541,7 @@ function render(dir){
 }
 function openPanel(t,i,dir){
   V={t:t,i:i||0};render(dir);
-  var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='dock'?['dock','報名碼頭']:t==='msg'?['msg','留言碼頭']:t==='game'?['game','遊戲島']:t==='res'?['res-'+RESI[V.i].rk,RESI[V.i].name]:t==='search'?['search','占卜島']:null;
+  var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='dock'?['dock','報名碼頭']:t==='msg'?['msg','留言碼頭']:t==='game'?['game','遊戲島']:t==='pets'?['pets','寵物島']:t==='res'?['res-'+RESI[V.i].rk,RESI[V.i].name]:t==='search'?['search','占卜島']:null;
   if(vk){var ph=pBody.querySelector('.ph,.home-top');if(ph){var vd=document.createElement('div');ph.parentNode.insertBefore(vd,ph.nextSibling);COINS.visit(vk[0],vk[1],vd)}}
   if(!panel.classList.contains('open')){
     opener=document.activeElement;
@@ -2337,7 +2552,7 @@ function openPanel(t,i,dir){
 }
 function closePanel(){
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
-  if(/^#(qa-\d+|res-\d|home|castle|search|dock|msg|game)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  if(/^#(qa-\d+|res-\d|home|castle|search|dock|msg|game|mine|pets)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
@@ -2357,6 +2572,8 @@ pNext.addEventListener('click',function(){
   else if(V.t==='res'){openPanel('res',(V.i+1)%RESI.length);placeBoat(RESI[V.i].si)}
   else if(V.t==='msg')openPanel('home');
   else if(V.t==='game'){openPanel('res',0);placeBoat(RESI[0].si)}
+  else if(V.t==='mine'){if(V.i===1)openPanel('mine',0);else{openPanel('pets');placeBoat(PET_SPOT.si)}}
+  else if(V.t==='pets'){openPanel('mine',0);placeBoat(MINE_SPOT.si)}
   else if(V.t==='session')closePanel();
   else if(V.t==='search')randomArt();
   if(V.t==='castle'||V.t==='home'||V.t==='dock')placeBoat(spotIdx(V.t));
@@ -2516,7 +2733,7 @@ var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
 var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
 if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
 else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
-else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg'||HASH==='game')HASH_SP=spotIdx(HASH);
+else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg'||HASH==='game'||HASH==='mine'||HASH==='pets')HASH_SP=spotIdx(HASH);
 else if((hm=HASH.match(/^res-(\d)$/))&&RESI[+hm[1]])HASH_SP=RESI[+hm[1]].si;
 if(HASH_SP>=0)seen=true;
 if(seen)intro.hidden=true;
