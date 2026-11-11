@@ -17,9 +17,9 @@ var OWNER = [{ nick: 'Tiger&蘋果爸', admin: true }, { nick: '蘋果爸', admi
 var RESERVED = /蘋果爸|管理員|站長|autocad\s*顧問|admin/i;
 
 var P_HEAD = ['登島碼', '暱稱', '目前金幣', '累計金幣', '連續登島天數', '最後登島日', '第一次登島', '最後上線',
-  '下載次數', '最近下載', '管理員', '今日', '今日在線金幣', '今日爬文金幣', '今日問答金幣'];
+  '下載次數', '最近下載', '管理員', '今日', '今日在線金幣', '今日爬文金幣', '今日問答金幣', '已拿金幣的問答島'];
 var C = { code: 0, nick: 1, bal: 2, earned: 3, streak: 4, last: 5, first: 6, seen: 7, dls: 8, recent: 9, admin: 10,
-  day: 11, onl: 12, rd: 13, qa: 14 };
+  day: 11, onl: 12, rd: 13, qa: 14, qaDone: 15 };
 var D_HEAD = ['時間', '暱稱', '登島碼', '文章', '文章網址', '檔案', '下載後剩餘金幣', '備註'];
 var V_HEAD = ['時間', '暱稱', '登島碼', '小島代號', '小島', '日期', '管理員'];
 var DAILY = 3;      // 第 1 天 3 枚、第 2 天 4 枚
@@ -80,11 +80,12 @@ function newCode_(rows) {
 }
 function newRow_(code, nick, admin, init) {
   var now = new Date();
-  return [code, text_(nick, 12), init, init, 0, 0, now, now, 0, '', admin ? '是' : '', day_(), 0, 0, 0];
+  return [code, text_(nick, 12), init, init, 0, 0, now, now, 0, '', admin ? '是' : '', day_(), 0, 0, 0, ''];
 }
 function profile_(r) {
   return { code: String(r[C.code]), nick: String(r[C.nick]).replace(/^'/, ''), bal: num_(r[C.bal]), earned: num_(r[C.earned]),
-    streak: num_(r[C.streak]), admin: r[C.admin] === '是' };
+    streak: num_(r[C.streak]), admin: r[C.admin] === '是',
+    qa: String(r[C.qaDone] || '').replace(/^'/, '').split(',').filter(String) };
 }
 function resetDay_(r) {
   var t = day_();
@@ -146,6 +147,14 @@ function handle_(q) {
       var k = String(q.k || '');
       var col = KIND_COL[k];
       if (col == null) return { ok: false, err: 'bad' };
+      if (k === 'qa') {
+        // 每座問答島每個帳號只能拿一次（不論用哪台裝置）
+        var key = String(q.key || '').replace(/[^0-9a-z_-]/gi, '').slice(0, 12);
+        var doneList = String(r[C.qaDone] || '').replace(/^'/, '').split(',').filter(String);
+        if (!key || doneList.indexOf(key) >= 0) return { ok: true, add: 0, p: me };
+        doneList.push(key);
+        r[C.qaDone] = doneList.join(',');
+      }
       if (num_(r[col]) < CAP[k]) { r[col] = num_(r[col]) + 1; res.add = 1; }
     } else if (a === 'dl') {
       var note = '';
