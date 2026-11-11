@@ -25,12 +25,12 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
-    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann', 'dr', 'drMax', 'qs', 'qCoin'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     save(); emit({ t: 'sync' });
   }
 
   /* ---------- 呼叫試算表（長文字用 POST） ---------- */
-  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, visall: 1, friends: 1, anns: 1, voyage: 1 };
+  var READ_ONLY = { me: 1, login: 1, island: 1, isles: 1, top: 1, msgs: 1, visitors: 1, visall: 1, friends: 1, anns: 1, voyage: 1, drops: 1, isl: 1 };
   function call(o, post, retried) {
     var req = post ? fetch(API, { method: 'POST', body: JSON.stringify(o), cache: 'no-store' })
       : fetch(API + '?q=' + encodeURIComponent(JSON.stringify(o)), { cache: 'no-store' });
@@ -61,7 +61,7 @@
     tired: '今天在這座島採夠了，明天再來', empty: '這座島今天的物資被採光了，明天會再長出來',
     maxed: '已經蓋到最高級了', busy: '這塊田已經種了東西', notyet: '還沒長好喔，再等等', nohouse: '要先蓋小屋才能領養寵物',
     petmax: '小屋住滿了，升級小屋就能多養一隻', nocoin: '金幣不夠喔', petfull: '牠已經吃得飽飽的了', patted: '今天已經摸過牠了',
-    watered: '今天已經幫他澆過水了', nocrop: '他的田裡現在沒有在長的菜', closed: '這座島的主人沒有開放參觀', annshort: '公告內容至少要 2 個字'
+    watered: '今天已經幫他澆過水了', nocrop: '他的田裡現在沒有在長的菜', closed: '這座島的主人沒有開放參觀', nodrop: '這個寶物已經被海浪沖走了', got: '你已經領過了', dropmax: '今天撿到的寶物夠多了，明天再來', notyet: '這個任務還沒完成喔', annshort: '公告內容至少要 2 個字'
   };
   function errText(j) {
     if (!j) return ERR.bad;
@@ -169,6 +169,8 @@
     '.cw-note{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.07);font-size:14px;line-height:1.5}.cw-note small{display:inline;margin:0;font-size:12px}' +
     '.cw-dot{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:999px;background:#ff5e62;color:#fff;font:800 12px/18px sans-serif;text-align:center}' +
     '.cw-ta{width:100%;box-sizing:border-box;min-height:70px;margin:6px 0 2px;padding:8px 10px;border-radius:12px;border:1.5px solid #ffd166;background:#06344a;color:#fff;font:15px/1.5 "Noto Sans TC",sans-serif;resize:vertical}' +
+    '.cw-q{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.1);text-align:left}.cw-q:first-of-type{border-top:0}' +
+    '.cw-q i{font-style:normal;font-size:22px}.cw-q span{flex:1;font-size:15px;line-height:1.5}.cw-q em{font-style:normal;font-size:13px;color:#b9d8e4;white-space:nowrap}.cw-q.got span{opacity:.55;text-decoration:line-through}' +
     '.ann{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,209,102,.3);text-align:left}' +
     '.ann.new{border-color:#ffd166;background:rgba(255,209,102,.12)}' +
     '.ann h4{margin:0 0 2px;font-size:17px}.ann h4 em{margin-left:6px;padding:0 7px;border-radius:999px;font-style:normal;font-size:11px;background:#ff5e62;color:#fff}' +
@@ -427,9 +429,19 @@
       function (ov, close) {
         var box = ov.querySelector('[data-box]'), FR = null, INBOX = null, open = {};
         ov.querySelector('[data-x]').addEventListener('click', close);
+        function questHTML() {
+          var qs = P.qs || [];
+          if (!qs.length) return '';
+          var left = qs.filter(function (x) { return !x.got; }).length;
+          return '<div class="cw-sec"><h4>📋 今日任務<small style="display:inline;margin-left:6px">完成一個領 ' + (P.qCoin || 1) + ' 🪙・還有 ' + left + ' 個</small></h4>' +
+            qs.map(function (q) {
+              return '<div class="cw-q' + (q.got ? ' got' : '') + '"><i>' + q.e + '</i><span>' + esc(q.t) + '</span>' +
+                (q.got ? '<em>✅ 已領</em>' : q.ok ? '<button class="cw-mini p" type="button" data-qclaim="' + esc(q.id) + '">領 ' + (P.qCoin || 1) + ' 🪙</button>' : '<em>進行中</em>') + '</div>';
+            }).join('') + '<small>每天 0 點換新的任務。去地圖上走走、採集、留言、拜訪，就會慢慢完成。</small></div>';
+        }
         function paint() {
           var b = P.bag || {}, left = Math.max(0, (P.tradeMax || 3) - (P.trades || 0));
-          var h = '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
+          var h = questHTML() + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
             RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
             '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
             '<small style="margin-top:6px">🥕 ' + ((P.veg || {}).carrot || 0) + '　🥬 ' + ((P.veg || {}).cabbage || 0) + '　🎃 ' + ((P.veg || {}).pumpkin || 0) + '（菜園收成，用來餵寵物）</small>' +
@@ -473,7 +485,13 @@
         ov.addEventListener('click', function (e) {
           var t = e.target.closest('button'); if (!t || !box.contains(t)) return;
           var d = t.dataset;
-          if (d.trade) {
+          if (d.qclaim) {
+            busy(t);
+            api({ a: 'qclaim', id: d.qclaim }).then(function (j) {
+              if (!j.ok) return fail(j);
+              toast('📋 任務完成！領到 ' + (j.add || 1) + ' 枚金幣'); paint();
+            }).catch(function () { netFail(); paint(); });
+          } else if (d.trade) {
             busy(t);
             api({ a: 'trade', k: d.trade }).then(function (j) {
               if (!j.ok) return fail(j);
@@ -512,7 +530,7 @@
           } else if (d.inbox != null) { busy(t); loadInbox(); }
         });
         paint();
-        api({ a: 'friends' }).then(function (j) { FR = (j && j.friends) || []; paint(); if (focus === 'friends') { var s = ov.querySelectorAll('.cw-sec')[3]; if (s) s.scrollIntoView(); } }).catch(function () { FR = []; paint(); });
+        api({ a: 'friends' }).then(function (j) { FR = (j && j.friends) || []; paint(); if (focus === 'friends') { var s = ov.querySelectorAll('.cw-sec')[P.qs && P.qs.length ? 4 : 3]; if (s) s.scrollIntoView(); } }).catch(function () { FR = []; paint(); });
         if (P.unread) loadInbox();
       }, false, 'wide');
   }

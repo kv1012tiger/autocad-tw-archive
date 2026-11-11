@@ -765,6 +765,21 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .spot.tpend .tbadge{display:grid}
 @media (max-width:420px){.tr-ball{width:96px;height:96px;font-size:38px}.tc.m{width:100px;height:166px}.td-hero{flex-direction:column;align-items:center;text-align:center}}
 @media (prefers-reduced-motion:reduce){.tc-in{transition:none}.tr-ball{animation:none}}
+/* ===== 地圖標記：問答島還沒領的金幣、資源島可採集、漂流寶物 ===== */
+.spot .badge{display:none}
+.spot.qai:not(.done) .badge{display:grid;animation:bob 1.8s ease-in-out infinite}
+.spot.done .badge{display:none}
+.spot.qai.done .cnt::after{content:" ✅"}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.spot .rbadge{position:absolute;left:6%;top:2%;z-index:4;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:21px;box-shadow:0 0 0 3px rgba(4,46,64,.85),0 0 14px rgba(255,255,255,.7);animation:bob 1.6s ease-in-out infinite;pointer-events:none}
+.spot .rbadge[hidden]{display:none}
+.spot .dbadge{position:absolute;left:50%;top:-9%;z-index:6;width:46px;height:46px;margin-left:-23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8c4,#ffd166 60%,#f59e0b);display:grid;place-items:center;font-size:26px;cursor:pointer;box-shadow:0 0 0 3px rgba(4,46,64,.9),0 0 20px rgba(255,209,102,.95);animation:dropbob 1.4s ease-in-out infinite}
+.spot .dbadge.dd{background:radial-gradient(circle at 35% 30%,#f0fbff,#7dd3fc 60%,#0284c7);box-shadow:0 0 0 3px rgba(4,46,64,.9),0 0 22px rgba(125,211,252,.98)}
+.spot .dbadge::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px dashed rgba(255,255,255,.7);animation:spin 5s linear infinite;pointer-events:none}
+.spot .dbadge[hidden]{display:none}
+@keyframes dropbob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.08)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spot .dbadge,.spot .rbadge,.spot.qai:not(.done) .badge,.spot .dbadge::after{animation:none}}
 /* 清單收藏、搜尋結果 */
 .card.il.fav b::after{content:" ⭐"}
 .s-h{margin:18px 0 10px;font-size:19px}
@@ -1251,6 +1266,9 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
         <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
         <li>🎁 累積拿滿 5 枚，送你「提示詞禮物包」。</li>
+        <li>✨ 地圖上的島嶼會隨機浮出發亮的 <b>🪙 金幣</b>或 <b>💎 鑽石</b>（每 15 分鐘換一批），點一下就能撿；每天最多撿 4 枚金幣、1 顆鑽石。</li>
+        <li>📋 <b>🎒 背包</b>最上面有「今日任務」，每天 3 個，完成一個領 1 枚金幣。</li>
+        <li>🪙 問答島上有閃亮的金幣，表示這座島的金幣還沒領；🍎⛏️🪵🪨 資源島冒出符號，表示現在可以採集。</li>
         <li>🏪 物資、鑽石、南瓜都能在 🎒 背包的兌換所換金幣。</li>
         <li>🔑 登島碼是你的帳號鑰匙，請記下來、不要給別人；忘記了用 LINE 官方帳號問蘋果爸。</li>
       </ul></section>
@@ -2078,7 +2096,7 @@ function refresh(){
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🪙 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
   $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇';
-  tdPaint();
+  tdPaint();dropPaint();resPaint();
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
 
@@ -2848,6 +2866,78 @@ pBody.addEventListener('click',function(e){
   if(d.tback!=null){TR_C=-1;renderDict();return}
   if(d.tfilter){TR_F=d.tfilter;renderDict()}
 });
+/* ---------- 地圖上的標記：漂流寶物（隨機金幣、鑽石）、資源島現在可以採集、問答島還沒領的金幣 ---------- */
+var KEYSP={};SP.forEach(function(s){KEYSP[spotHash(s)]=s});
+var DR={slot:0,left:0,t:0,map:{},timer:0,busy:false};
+function drLoad(){
+  clearTimeout(DR.timer);
+  return COINS.call({a:'drops'}).then(function(j){
+    if(!j||!j.ok)throw new Error('drops');
+    DR.slot=j.slot;DR.t=Date.now();DR.left=j.left;DR.map={};(j.list||[]).forEach(function(x){DR.map[x.k]=x.t});
+    dropPaint();
+    DR.timer=setTimeout(drNext,Math.max(5000,Math.min(j.left+1500,16*60*1000)));
+  }).catch(function(){DR.timer=setTimeout(drNext,60000)});
+}
+function drNext(){if(document.hidden){DR.timer=setTimeout(drNext,30000);return}drLoad()}
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&DR.t&&Date.now()-DR.t>DR.left)drLoad()});
+function dropPaint(){
+  if(!DR)return;
+  var w=COINS.get(),mine=(w.dr&&w.dr.k)||[],mx=w.drMax||null;
+  Object.keys(DR.map).concat(Object.keys(KEYSP)).forEach(function(k,i,arr){
+    if(arr.indexOf(k)!==i)return;
+    var s=KEYSP[k];if(!s||!s.el)return;
+    var t=DR.map[k],show=!!t&&mine.indexOf(k)<0;
+    if(show&&w.dr&&mx){if(t==='c'&&w.dr.c>=mx.c)show=false;if(t==='d'&&w.dr.g>=mx.g)show=false}
+    var b=s.el.querySelector('.dbadge');
+    if(!b){if(!show)return;b=document.createElement('span');b.className='dbadge';b.setAttribute('role','button');b.dataset.dk=k;s.el.appendChild(b)}
+    b.hidden=!show;
+    if(show){b.classList.toggle('dd',t==='d');b.textContent=t==='d'?'💎':'🪙';b.setAttribute('aria-label',t==='d'?'撿起漂流的鑽石':'撿起漂流的金幣')}
+  });
+}
+function claimDrop(k,el){
+  if(DR.busy)return;
+  var w=COINS.get();
+  if(!w.code){COINS.need(function(){claimDrop(k,el)});return}
+  var t=DR.map[k];if(!t){drLoad();return}
+  var rc=el.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
+  DR.busy=true;
+  COINS.api({a:'drop',k:k,s:DR.slot}).then(function(j){
+    DR.busy=false;
+    if(!j.ok){toast('⚠️ '+COINS.errText(j));if(j.err==='nodrop')drLoad();else dropPaint();return}
+    burst(cx,cy,t==='d'?['💎','✨','💎','⭐']:['🪙','✨','🪙','⭐']);playSfx(t==='d'?'chest':'candy');
+    toast(t==='d'?'💎 撿到 1 顆漂流鑽石！':'🪙 撿到 1 枚漂流金幣！');
+    dropPaint();
+  }).catch(function(){DR.busy=false;toast('⚠️ 暫時連不上，請稍後再試')});
+}
+$('spots').addEventListener('click',function(e){
+  var b=e.target.closest('.dbadge');if(!b)return;
+  e.stopPropagation();e.preventDefault();claimDrop(b.dataset.dk,b);
+},true);
+/* 資源島：現在可以採集（今天還有存量、我今天沒採滿、距離上次採集過了 30 秒）就浮出資源符號 */
+var RSV={t:0,left:null,timer:0,tm:0};
+function resLoad(){
+  clearTimeout(RSV.timer);
+  COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;RSV.t=Date.now();resPaint()}}).catch(function(){}).then(function(){
+    RSV.timer=setTimeout(function(){if(document.hidden)RSV.timer=setTimeout(resLoad,60000);else resLoad()},45000);
+  });
+}
+function resReady(rk){
+  var w=COINS.get(),left=RSV.left&&RSV.left[rk];
+  if(left!=null&&left<=0)return false;
+  if(w.code){if(((w.today||{})[rk]||0)>=5)return false;if(w.gLast&&Date.now()<w.gLast+30000)return false}
+  return true;
+}
+function resPaint(){
+  if(!RSV)return;
+  RESI.forEach(function(s){
+    if(!s.el)return;
+    var b=s.el.querySelector('.rbadge');
+    if(!b){b=document.createElement('span');b.className='rbadge';b.textContent=s.e;b.setAttribute('aria-hidden','true');s.el.appendChild(b)}
+    b.hidden=!resReady(s.rk);
+  });
+  clearTimeout(RSV.tm);
+  var w=COINS.get();if(w.code&&w.gLast&&Date.now()<w.gLast+30000)RSV.tm=setTimeout(resPaint,w.gLast+30000-Date.now()+250);
+}
 function footSimple(a,b){pFoot.hidden=false;pDots.hidden=true;pPrev.textContent=a;pNext.textContent=b}
 function renderFav(){
   var list=SP.filter(isFav);
@@ -3038,7 +3128,7 @@ $('annBtn').addEventListener('click',function(){if(window.COINS&&COINS.ann)COINS
 /* 背包紅點（未讀悄悄話）、物資島背包、站長的待回覆留言 */
 var pendAsked=false;
 function socialPaint(w){
-  var d=$('bagDot');d.hidden=!(w.code&&w.unread);d.textContent=w.unread||'';
+  var d=$('bagDot'),qn=(w.qs||[]).filter(function(x){return x.ok&&!x.got}).length,bn=(w.unread||0)+qn;d.hidden=!(w.code&&bn);d.textContent=bn||'';
   if(V.t==='res')resBag();
   if(V.t==='msg'&&!$('mbText')&&w.code)msgForm();
   if(w.admin&&!pendAsked){pendAsked=true;COINS.call({a:'msgs',code:w.code}).then(function(j){if(j&&j.pending){markPending(j.pending);toast('📮 有 '+j.pending+' 則留言還沒回覆')}}).catch(function(){})}
@@ -3258,7 +3348,9 @@ window.addEventListener('beforeunload',function(e){
   e.preventDefault();e.returnValue='';
 });
 if(window.IntersectionObserver&&MSG_SPOT&&MSG_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))msgPrefetch()},{rootMargin:'300px'}).observe(MSG_SPOT.el);
+window.ISLAND_KEYS=SP.map(spotHash); /* 每座島的代號（後台寶物用） */
 setInterval(tdPaint,60000);
+setTimeout(function(){drLoad();resLoad()},1500);
 setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
