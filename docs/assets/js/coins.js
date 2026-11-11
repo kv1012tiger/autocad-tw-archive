@@ -201,6 +201,7 @@
   var EXT = /\.(zip|rar|7z|dwg|dxf|dwt|pdf|lsp|vlx|fas|arx|dvb|exe|msi|ctb|stb|pat|shx|ttf)(\?|#|$)/i;
   function isDownload(a) {
     if (!a || !a.getAttribute('href')) return false;
+    if (/\/courses\/t\d+\//.test(location.pathname)) return false; // 光碟課程島：課程資源下載不扣金幣
     if (a.classList.contains('dl-item') || a.classList.contains('dl-btn') || a.hasAttribute('download')) return true;
     if (!a.closest('.content')) return false;
     return HOST.test(a.href) || EXT.test(a.href.split('?')[0]);

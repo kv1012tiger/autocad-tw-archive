@@ -144,3 +144,4 @@ footer.site-footer .license{margin-top:6px;font-size:13.5px}
 .content a.dl-btn{color:#3a1a08;text-decoration:none}
 .content a.dl-btn.alt{color:#fff}
 .content a.dl-item{color:inherit;text-decoration:none}
+.content .paid-note{margin:6px 0 14px;padding:10px 14px;border-radius:12px;background:rgba(255,209,102,.12);border:1.5px solid rgba(255,209,102,.55);color:#ffe2a8;font-size:17px;font-weight:700}
