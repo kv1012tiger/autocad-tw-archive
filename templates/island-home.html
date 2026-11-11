@@ -1400,6 +1400,8 @@ function showScene(s){
   scene.style.setProperty('--c',s.c);document.documentElement.style.setProperty('--sc',s.c);
   favBtn($('sceneFav'),s);sceneHud(true);
   scene.hidden=false;drawScene();scene.scrollTop=0;placeBoat(s.si,true);
+  var sv=$('sceneVis');if(!sv){sv=document.createElement('div');sv.id='sceneVis';sv.style.cssText='max-width:1100px;margin:10px auto 0;padding:0 12px';land.parentNode.insertBefore(sv,land)}
+  sv.innerHTML='<div></div>';COINS.visit('isle-'+s.id,s.name,sv.firstChild);
 }
 function hideScene(){if(!SCN)return;SCN=null;scene.hidden=true;land.innerHTML='';sceneHud(false)}
 /* 島上時：回大海、島名、分享、收藏併進最上面那一列 */
@@ -1752,6 +1754,8 @@ function render(dir){
 }
 function openPanel(t,i,dir){
   V={t:t,i:i||0};render(dir);
+  var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='search'?['search','占卜島']:null;
+  if(vk){var ph=pBody.querySelector('.ph,.home-top');if(ph){var vd=document.createElement('div');ph.parentNode.insertBefore(vd,ph.nextSibling);COINS.visit(vk[0],vk[1],vd)}}
   if(!panel.classList.contains('open')){
     opener=document.activeElement;
     panel.classList.add('open');backdrop.classList.add('open');panel.setAttribute('aria-hidden','false');document.documentElement.classList.add('lock');
@@ -1789,7 +1793,7 @@ function flip(card){
   if(!ST.c[n]&&flippedIn(n)>=need(n)){
     ST.c[n]=1;save();
     var rc=card.getBoundingClientRect();burst(rc.left+rc.width/2,rc.top+rc.height/2,['🪙','💎','💰','✨']);
-    playSfx('candy');COINS.add(1,'拿到「'+ISLES[n].name+'」的金幣');
+    playSfx('candy');COINS.earn('qa','拿到「'+ISLES[n].name+'」的金幣');
     var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');
   }
   if(V.t==='isle'){var pg=$('prog');if(pg)pg.outerHTML=progHTML(V.i);pDots.innerHTML=ISLES.map(function(x,k){return '<i class="'+(k===V.i?'on':'')+(ST.c[k]?' v':'')+'"></i>'}).join('')}
