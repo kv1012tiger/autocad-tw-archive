@@ -353,7 +353,7 @@
 
   /* ---------- 排行榜 ---------- */
   var TABS = [['coin', '🪙 金幣'], ['res', '🧺 物資'], ['dia', '💎 鑽石'], ['isle', '🏝️ 島主']];
-  var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依累計撿到的鑽石排名', isle: '島主分＝小屋等級×10＋裝飾＋寵物親密度' };
+  var TAB_NOTE = { coin: '依目前金幣排名', res: '依累計採集的物資排名（兌換、送禮不會掉名次）', dia: '依「累計撿到」的鑽石排名（花掉、換掉的也算；你現在手上有幾顆看下面）', isle: '島主分＝小屋等級×10＋裝飾＋寵物親密度' };
   /* 排行榜快取：三頁一次拿回來，存在這台裝置；打開時先顯示，再背景更新 */
   var TKEY = 'cw-top', TOPC = null, topReq = null;
   try { TOPC = JSON.parse(localStorage.getItem(TKEY) || 'null'); } catch (e) { TOPC = null; }
@@ -369,6 +369,7 @@
     return topReq;
   }
   function openLabel() { return P.open === false ? '🔒 小島只給好友看' : '🔓 小島開放參觀'; }
+  function bagTotal() { var b = P.bag || {}; return RES_KEYS.reduce(function (a, k) { return a + (b[k] || 0); }, 0); }
   function bagLine(b) { return RES_KEYS.map(function (k) { return RES[k][0] + ' ' + ((b && b[k]) || 0); }).join('　'); }
   function board(tab) {
     if (!P.code) { welcome(function (ok) { if (ok) board(tab); }); return; }
@@ -377,7 +378,7 @@
       '<small class="cw-nn" style="display:block;margin:-6px 0 8px;color:#ffd166;font-weight:700"></small>' +
       '<div class="cw-tabs">' + TABS.map(function (t) { return '<button type="button" data-tab="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div>' +
       '<small class="cw-tn" style="margin-top:4px"></small><div class="cw-body"><p>載入中…</p></div>' +
-      '<div class="cw-me">' + av(P) + ' 你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '<br>🪙 <b>' + P.bal + '</b>・🧺 ' + (P.tres || 0) + '・💎 ' + (P.tdia || 0) + '・連續登島 ' + (P.streak || 0) + ' 天<br>' +
+      '<div class="cw-me">' + av(P) + ' 你是 <b>' + esc(P.nick) + '</b>' + (P.admin ? '（管理員，不列入排行）' : '') + '<br>現有：🪙 <b>' + P.bal + '</b>・🧺 ' + bagTotal() + '・💎 ' + (P.dia || 0) + '・連續登島 ' + (P.streak || 0) + ' 天<br>排行榜累計：🧺 ' + (P.tres || 0) + ' 個物資・💎 ' + (P.tdia || 0) + ' 顆鑽石<br>' +
       '<button class="cw-link" type="button" data-bag>🎒 背包與好友</button>・<button class="cw-link" type="button" data-av>換頭像</button>・<button class="cw-link" type="button" data-open>' + openLabel() + '</button>・<button class="cw-link" type="button" data-code>看登島碼</button>・<button class="cw-link" type="button" data-nick>改暱稱</button>・<button class="cw-link" type="button" data-sw>換帳號</button></div>' +
       '<div class="cw-row"><button class="cw-b p" type="button" data-x>關閉</button></div>',
       function (ov, close) {
