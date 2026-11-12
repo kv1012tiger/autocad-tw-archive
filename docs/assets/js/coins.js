@@ -25,7 +25,7 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
-    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann', 'dr', 'drMax', 'qs', 'qCoin', 'ship', 'cd'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann', 'dr', 'drMax', 'qs', 'qCoin', 'ship', 'cd', 'pg'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     if (p.cd !== undefined) P.cdT = Date.now();
     save(); emit({ t: 'sync' });
   }
@@ -55,6 +55,7 @@
   var ERR = {
     short: '暱稱至少要 2 個字', taken: '這個暱稱已經有人用了，換一個吧', reserved: '這個暱稱保留給站長，換一個吧',
     nocode: '找不到這組登島碼，請再確認一次',
+    pgnot: '累積拿滿 5 枚金幣才能領提示詞禮物包',
     building: '這項還在施工中，等蓋好才能再蓋', owned: '這艘船你已經有了', notown: '你還沒有這艘船', nocoin: '金幣不夠喔',
     noinv: '封測期間要有邀請碼才能登島，請向蘋果爸索取一組', badinv: '邀請碼不正確，請再確認一次（英文字母和數字）', invfull: '這組邀請碼名額已滿（每組限 2 位），請向蘋果爸索取新的一組', bad: '資料有誤，請重新整理後再試',
     nofid: '找不到這個海島編號，請再確認一次', self: '這是你自己的海島編號喔', fmax: '好友最多 50 位',
@@ -470,7 +471,7 @@
         }
         function paint() {
           var b = P.bag || {}, left = Math.max(0, (P.tradeMax || 3) - (P.trades || 0));
-          var h = questHTML() + (P.earned >= 5 ? '<div class="cw-sec"><h4>🎁 提示詞禮物包</h4><small style="margin-bottom:8px">累積拿滿 5 枚金幣，送你的禮物。</small><button class="cw-b p" type="button" data-gift>🎁 打開禮物包</button></div>' : '') + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
+          var h = questHTML() + (P.earned >= 5 ? '<div class="cw-sec"><h4>🎁 提示詞禮物包</h4><small style="margin-bottom:8px">累積拿滿 5 枚金幣就能領；<b>領取要花 5 枚金幣</b>，領一次之後可以免費重複查看。</small><button class="cw-b p" type="button" data-gift>🎁 領取禮物包（5 枚金幣）</button></div>' : '') + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
             RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
             '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
             '<small style="margin-top:6px">🥕 ' + ((P.veg || {}).carrot || 0) + '　🥬 ' + ((P.veg || {}).cabbage || 0) + '　🎃 ' + ((P.veg || {}).pumpkin || 0) + '（菜園收成，用來餵寵物）</small>' +

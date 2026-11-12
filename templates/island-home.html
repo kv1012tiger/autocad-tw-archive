@@ -6,7 +6,7 @@
 <title>論壇資源島｜蘋果爸的 AutoCAD 教學大島群</title>
 <meta name="description" content="蘋果爸的 AutoCAD 教學大島群：12 座論壇教學島、9 座 AI 問答島，還有蘋果爸小島與AI課程城堡，邊玩邊學。">
 <meta property="og:title" content="論壇資源島｜蘋果爸的 AutoCAD 教學大島群">
-<meta property="og:description" content="點一座島開始探險，翻開問答卡拿金幣，拿到 5 枚送你提示詞禮物包。">
+<meta property="og:description" content="點一座島開始探險，翻開問答卡拿金幣，累積 5 枚就能花 5 枚金幣兌換提示詞禮物包。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kv1012tiger.github.io/autocad-tw-island/">
 <meta property="og:image" content="https://kv1012tiger.github.io/autocad-tw-island/assets/og-sea.jpg">
@@ -1177,8 +1177,8 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
   <div class="wrap">
     <span class="eyebrow">Forum Resource Islands</span>
     <h1><span class="grad-fire">論壇</span> <span class="grad">資源島</span></h1>
-    <p class="lead">蘋果爸的 AutoCAD 教學大島群。開船到論壇島，走進島上的主題小屋讀文章；到問答島翻開 3 張問答卡就拿到 1 枚金幣，拿到 5 枚就送你「🎁 提示詞禮物包」！</p>
-    <p class="howto"><b>🪙 怎麼拿金幣？</b> ① 點一座問答島　② 翻開 3 張問答卡　③ 拿到 1 枚金幣。<br>拿滿 <b>5 枚</b>，送你 <b>🎁 提示詞禮物包</b>：教你做出自己的資源島，主題與風格自己設定。</p>
+    <p class="lead">蘋果爸的 AutoCAD 教學大島群。開船到論壇島，走進島上的主題小屋讀文章；到問答島翻開 3 張問答卡就拿到 1 枚金幣，累積拿到 5 枚，就能花 5 枚金幣兌換「🎁 提示詞禮物包」！</p>
+    <p class="howto"><b>🪙 怎麼拿金幣？</b> ① 點一座問答島　② 翻開 3 張問答卡　③ 拿到 1 枚金幣。<br>累積拿滿 <b>5 枚</b>，就能花 <b>5 枚金幣</b>兌換 <b>🎁 提示詞禮物包</b>（在背包裡領取）：教你做出自己的資源島，主題與風格自己設定。</p>
     <div class="quest-log"><button class="qbtn hot" type="button" id="giftBtn" hidden>🎁 提示詞禮物包</button></div>
     <div class="stats"><span><b id="stF">12</b>座論壇島</span><span><b id="stI">9</b>座問答島</span><span><b id="stQ">0</b>則學員提問</span><span><b>6</b>隻毛孩陪你逛</span></div>
   </div>
@@ -1297,7 +1297,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>⏱️ <b>在線</b>：在島上每待 5 分鐘送 1 枚（每天最多 3 枚）。</li>
         <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
         <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
-        <li>🎁 累積拿滿 5 枚，送你「提示詞禮物包」。</li>
+        <li>🎁 累積拿滿 5 枚，可以到背包<b>花 5 枚金幣</b>領「提示詞禮物包」（領一次，之後免費重複查看）。</li>
         <li>✨ 地圖上的島嶼會隨機浮出發亮的 <b>🪙 金幣</b>或 <b>💎 鑽石</b>（每 15 分鐘換一批），點一下就能撿；每天最多撿 4 枚金幣、2 顆鑽石。</li>
         <li>📋 <b>🎒 背包</b>最上面有「今日任務」，每天 3 個，完成一個領 1 枚金幣。</li>
         <li>🪙 問答島上有閃亮的金幣，表示這座島的金幣還沒領；🍎⛏️🪵🪨 資源島冒出符號，表示現在可以採集。</li>
@@ -2149,7 +2149,7 @@ function refresh(){
     var nx=!done&&!nextSet;if(nx)nextSet=true;s.el.classList.toggle('next',nx);
     s.li.classList.toggle('done',done);s.li.querySelector('.st').textContent=done?'🪙 已拿到':'翻開 '+flippedIn(i)+'/'+need(i);
   });
-  $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，送你一份 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 提示詞禮物包送你了！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇';
+  $('guideTxt').textContent=candyCount()===ISLES.length?'太厲害了！所有問答島的金幣都拿到了，可以到背包花 5 枚金幣領 🎁 提示詞禮物包！':gf?'你有 '+n+' 枚金幣，🎁 可以到背包花 5 枚金幣領提示詞禮物包！爬文、翻問答卡還能再賺！':n?'你有 '+n+' 枚金幣 🪙，爬文、翻問答卡還能再賺，下載資源每次 1 枚。':'嗨！我是蘋果爸。點下面的 ⛵ 展開選單，或直接點一座島出發吧 👇';
   tdPaint();dropPaint();resPaint();
 }
 $('stQ').textContent=TOTAL;$('stI').textContent=ISLES.length;$('stF').textContent=FORUM.length;
@@ -2364,7 +2364,7 @@ pBody.addEventListener('click',function(e){
 function redrawMsg(id){var m=MB.list.filter(function(x){return x.id===id})[0],el=pBody.querySelector('.mb[data-mid="'+id+'"]');if(m&&el)el.outerHTML=msgHTML(m)}
 
 /* ---------- 物資島：連續點擊採集（每座島手感、音效、特效不同），每天隨機總量、偶爾撿到鑽石 ---------- */
-var RS={st:null,until:0,timer:0,seq:0,round:null,busy:false,cd:{}};
+var RS={st:null,until:0,timer:0,seq:0,round:null,busy:false,cd:{},nx:{}};
 /* 這座島還要等幾秒才能再採：後台回報的冷卻（每座島 30～120 秒不同）加上這次剛採的 */
 function cdLeft(R){
   var w=COINS.get(),sec=w.cd&&w.cd[R.id],a=sec!=null?(w.cdT||0)+sec*1000:0,b=RS.cd[R.id]||0;
@@ -2392,7 +2392,7 @@ function renderRes(n){
   footSimple('← 回地圖','');
   resBag();resStock();
   var my=++RS.seq,w=COINS.get();
-  (w.code?COINS.api({a:'isles'}):COINS.call({a:'isles'})).then(function(j){if(my===RS.seq&&j&&j.isles){RS.st=j.isles;resStock()}}).catch(function(){if(my===RS.seq&&$('rsStock'))$('rsStock').textContent='⚠️ 暫時連不上物資島，請稍後再試'});
+  (w.code?COINS.api({a:'isles',isle:R.id}):COINS.call({a:'isles'})).then(function(j){if(j&&j.nx!=null&&j.nxi)RS.nx[j.nxi]=j.nx;if(my===RS.seq&&j&&j.isles){RS.st=j.isles;resStock()}}).catch(function(){if(my===RS.seq&&$('rsStock'))$('rsStock').textContent='⚠️ 暫時連不上物資島，請稍後再試'});
 }
 function resBag(){
   var el=$('rsBag'),w=COINS.get(),b=w.bag||{};if(!el)return;
@@ -2483,8 +2483,30 @@ function rsDone(){
   var R=RESI[V.i],obj=$('rsObj');rsCancel();RS.busy=true;
   var tb=$('rsTimerBox');if(tb)tb.classList.remove('on');
   rsAnim($('rsArt'),'fin-'+R.rk);
+  var nx=RS.nx[R.id],sx=RS.st&&RS.st[R.id];
+  if(nx>0&&!cdLeft(R)&&sx&&sx.left>0&&sx.mine<sx.max){
+    /* 即時結算：下一次的數量是後台事先抽好的，連點一完成就馬上拿到、馬上顯示；後台在背景確認（鑽石等結果稍後補上） */
+    var w0=COINS.get(),fast={k:R.rk,n:Math.min(nx,sx.left),dia:0},rc0=obj.getBoundingClientRect(),cx0=rc0.left+rc0.width/2,cy0=rc0.top+rc0.height/2;
+    RS.nx[R.id]=0;RS.busy=false;
+    if(w0.bag)w0.bag[R.rk]=(w0.bag[R.rk]||0)+fast.n;
+    sx.left-=fast.n;sx.mine++;
+    RS.cd[R.id]=Date.now()+R.gap*1000;resPaint();rsReset();
+    for(var q=0;q<10;q++){var a0=Math.random()*Math.PI*2,d0=60+Math.random()*90;rsPart(cx0,cy0,R.fin[q%R.fin.length],Math.cos(a0)*d0,Math.sin(a0)*d0-40,22)}
+    rsSound('win');rsGain(R,fast,cx0,cy0);resStock();
+    COINS.api({a:'gather',isle:R.id}).then(function(j){
+      if(j.nx!=null&&j.nxi)RS.nx[j.nxi]=j.nx;
+      if(j.isles)RS.st=j.isles;
+      if(!j.ok){if(j.err==='cool')RS.cd[R.id]=Date.now()+j.wait*1000;toast('⚠️ 剛才那次採集沒有成功：'+COINS.errText(j));resBag();resStock();return}
+      var gs=j.got||{};
+      if(gs.dia){rsSound('dia');rsGain(R,{k:R.rk,n:0,dia:gs.dia},cx0,cy0)}
+      if(gs.n!==fast.n)toast('📦 實際採到 '+gs.n+' 個（島上剩的不夠了）');
+      resBag();resStock();
+    }).catch(function(){toast('⚠️ 網路不穩，剛才那次採集可能沒有記上，請重新整理確認');resBag();resStock()});
+    return;
+  }
   $('rsCnt').innerHTML='✨ '+esc(R.act)+'中…';
   COINS.api({a:'gather',isle:R.id}).then(function(j){
+    if(j.nx!=null&&j.nxi)RS.nx[j.nxi]=j.nx;
     RS.busy=false;if(j.isles)RS.st=j.isles;
     if(V.t!=='res'||RESI[V.i]!==R){return}
     rsReset();
@@ -2500,7 +2522,7 @@ function rsDone(){
 /* 得到的物資：跳出「+2 🍎」，小圖示一個一個飛進下面的背包 */
 function rsGain(R,g,cx,cy){
   var lab=document.createElement('div');lab.className='rs-plus'+(g.dia?' dia':'');
-  lab.innerHTML='+'+g.n+' '+R.it+(g.dia?'<br>💎 +'+g.dia+' 鑽石！':'');
+  lab.innerHTML=(g.n?'+'+g.n+' '+R.it:'')+(g.dia?(g.n?'<br>':'')+'💎 +'+g.dia+' 鑽石！':'');
   lab.style.left=cx+'px';lab.style.top=cy+'px';fx.appendChild(lab);setTimeout(function(){lab.remove()},1900);
   var icons=[];for(var i=0;i<g.n;i++)icons.push([R.it,R.rk]);for(i=0;i<g.dia;i++)icons.push(['💎','dia']);
   icons.forEach(function(ic,k){
@@ -2513,7 +2535,7 @@ function rsGain(R,g,cx,cy){
       setTimeout(function(){e.remove();resBag();var t2=document.querySelector('#rsBag [data-k="'+ic[1]+'"]');if(t2)rsAnim(t2,'bump');if(!reduce&&SFX_ON)tone(1200+k*90,0,.08,'sine',.06)},760);
     },250+k*160);
   });
-  toast(g.dia?'💎 哇！撿到 '+g.dia+' 顆鑽石，還有 '+R.it+' +'+g.n+' '+R.item:R.it+' +'+g.n+' '+R.item+'！');
+  toast(g.dia?(g.n?'💎 哇！撿到 '+g.dia+' 顆鑽石，還有 '+R.it+' +'+g.n+' '+R.item:'💎 哇！剛才還撿到 '+g.dia+' 顆鑽石！'):R.it+' +'+g.n+' '+R.item+'！');
 }
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button');if(!t||V.t!=='res')return;
@@ -3395,12 +3417,25 @@ function socialPaint(w){
 }
 COINS.on(function(ev,w){socialPaint(w)});
 socialPaint(COINS.get());
-COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
+COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(function(){toast('🎁 累積拿滿 5 枚了！到背包花 5 枚金幣，就能領「提示詞禮物包」')},1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
-COINS.giftOpen=function(){openChest()};
+/* 領提示詞禮物包要花 5 枚金幣：先問清楚再扣，領過一次之後可以免費重複看 */
+function giftAsk(){
+  var w=COINS.get();
+  if(!w.code){COINS.need(function(){});return}
+  if(w.pg){openChest();return}
+  if((w.earned||0)<5){toast('🎁 累積拿滿 5 枚金幣，才能領提示詞禮物包');return}
+  if((w.bal||0)<5){toast('🎁 領提示詞禮物包要花 5 枚金幣，你現在有 '+(w.bal||0)+' 枚，再賺 '+(5-(w.bal||0))+' 枚就能領');return}
+  if(!confirm('🎁 領取「提示詞禮物包」要花 5 枚金幣'+'\n'+'（你現在有 '+w.bal+' 枚，領完剩 '+(w.bal-5)+' 枚）。'+'\n'+'領一次之後，可以免費重複查看。'+'\n\n'+'要領取嗎？'))return;
+  COINS.api({a:'pgclaim'}).then(function(j){
+    if(!j.ok){toast('⚠️ '+COINS.errText(j));return}
+    toast('🎁 已花 5 枚金幣，禮物包打開囉！');openChest();
+  }).catch(function(){toast('⚠️ 暫時連不上，請稍後再試')});
+}
+COINS.giftOpen=giftAsk;
 function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scrollTop=0;playSfx('chest');burst(innerWidth/2,innerHeight/2,['🪙','💰','💎','⭐','🎉','🐚']);$('giftCopy').focus({preventScroll:true})}
 $('chestClose').addEventListener('click',function(){$('chest').hidden=true});
-$('giftBtn').addEventListener('click',openChest);
+$('giftBtn').addEventListener('click',giftAsk);
 $('giftCopy').addEventListener('click',function(){copyText($('giftPre').textContent,'已複製提示詞，去貼給 AI 吧！')});
 $('giftDl').addEventListener('click',function(){try{var b=new Blob(['\ufeff'+$('giftPre').textContent],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='論壇資源島提示詞.txt';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);toast('⬇️ 已下載提示詞')}catch(e){copyText($('giftPre').textContent,'無法下載，已改成複製提示詞')}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('mission').hidden)closeMission();else if(!$('chest').hidden)$('chest').hidden=true;else if(panel.classList.contains('open'))closePanel()}});

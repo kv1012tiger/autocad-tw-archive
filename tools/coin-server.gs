@@ -71,6 +71,7 @@ var SHIPS = [{ name: '小木帆船', cost: 0 }, { name: '彩旗帆船', cost: 8 
 var BUY_COST = 1, BUY_N = 6;        // 1 枚金幣買 6 個物資（賣出是 10 個換 1 枚，所以不能無限賺）
 var SWAP_FROM = 3, SWAP_TO = 2;     // 3 個甲物資換 2 個乙物資（剛開始互相交換很容易）
 var DIA_BUY = 20;                   // 20 枚金幣買 1 顆鑽石（賣出是 1 顆換 10 枚，所以買賣不能賺差價）
+var PG_COST = 5;                    // 領「提示詞禮物包」要花 5 枚金幣（領一次，之後免費重複查看；累積拿滿 5 枚才開放）
 var XCHG_MAX = 20;                  // 一次最多換 20 份
 var READ_DIA_P = 0.06;             // 隱藏優惠：每看一篇不同文章有 6% 機率撿到 1 顆鑽石（不限篇數）
 var READ_DIA_DAY = 5;               // 為了防止程式亂刷，每人每天最多從爬文撿 5 顆（網頁上不公開）
@@ -283,7 +284,7 @@ function profile_(r) {
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
     trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
-    veg: io.veg, score: isleScore_(io), ship: io.ship,
+    veg: io.veg, score: isleScore_(io), ship: io.ship, pg: !!io.pg,
     cd: (function () { var m = {}, nw = Date.now(); Object.keys(io.cd).forEach(function (k) { m[k] = Math.ceil((io.cd[k] - nw) / 1000); }); return m; })(),
     open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是',
     dr: io.dr && io.dr.d === pd && Array.isArray(io.dr.k)
@@ -437,6 +438,13 @@ function handle_(q) {
     /* ----- 物資島 ----- */
     } else if (a === 'isles') {
       res.isles = islesPub_(isles_(), r);
+      var nxi = ISL_MAP[String(q.isle || '')];
+      if (nxi) {
+        var nio = isleOf_(r);
+        if (!nio.nx) nio.nx = {};
+        if (!nio.nx[nxi.id]) { nio.nx[nxi.id] = rollN_(nxi); r[C.isle] = JSON.stringify(nio); }
+        res.nx = nio.nx[nxi.id]; res.nxi = nxi.id;
+      }
     } else if (a === 'gather') {
       var rk = String(q.isle || '');
       if (ISL_LEGACY[rk]) rk = ISL_LEGACY[rk];
@@ -450,7 +458,9 @@ function handle_(q) {
       if ((tc[rk] || 0) >= GATHER_MAX) return { ok: false, err: 'tired', p: me };
       var st = isles_(), isl = st.map[rk], left = isl.total - isl.taken;
       if (left <= 0) return { ok: false, err: 'empty', p: me, isles: islesPub_(st, r) };
-      var got = Math.min(left, il.lo + Math.floor(Math.random() * (il.hi - il.lo + 1))), from = isl.taken;
+      if (!gio.nx) gio.nx = {};
+      var want = num_(gio.nx[rk]) >= il.lo && num_(gio.nx[rk]) <= il.hi ? num_(gio.nx[rk]) : rollN_(il);
+      var got = Math.min(left, want), from = isl.taken;
       isl.taken += got;
       var dia = 0;
       isl.dias.forEach(function (pos) { if (pos > from && pos <= isl.taken) dia++; });
@@ -462,11 +472,13 @@ function handle_(q) {
       r[C.gToday] = countsStr_(tc);
       r[C.gLast] = now;
       gio.cd[rk] = now + il.gap * 1000;
+      gio.nx[rk] = rollN_(il); // 下一次的數量先抽好
       r[C.isle] = JSON.stringify(gio);
       r[RES[il.t].col] = num_(r[RES[il.t].col]) + got;
       r[C.tres] = num_(r[C.tres]) + got;
       if (dia) { r[C.dia] = num_(r[C.dia]) + dia; r[C.tdia] = num_(r[C.tdia]) + dia; }
       res.got = { k: il.t, n: got, dia: dia, isle: rk };
+      res.nx = gio.nx[rk]; res.nxi = rk;
       res.isles = islesPub_(st, r);
     /* ----- 商店島：買船、換船、金幣換物資 ----- */
     } else if (a === 'buyship' || a === 'useship') {
@@ -487,6 +499,18 @@ function handle_(q) {
         so.ship.cur = sid;
       }
       r[C.isle] = JSON.stringify(so);
+    } else if (a === 'pgclaim') {
+      var po = isleOf_(r);
+      if (!po.pg) {
+        if (num_(r[C.earned]) < 5) return { ok: false, err: 'pgnot', p: me };
+        if (!me.admin) {
+          if (num_(r[C.bal]) < PG_COST) return { ok: false, err: 'nocoin', p: me };
+          r[C.bal] = num_(r[C.bal]) - PG_COST;
+        }
+        po.pg = 1; r[C.isle] = JSON.stringify(po);
+        sheet_('小島紀錄', L_HEAD).appendRow([new Date(), r[C.nick], r[C.code], '領禮物包', '提示詞禮物包' + (me.admin ? '（管理員免費）' : '（' + PG_COST + ' 金幣）')]);
+      }
+      res.pg = 1;
     } else if (a === 'readres') {
       // 隱藏優惠：看文章有機率掉鑽石。結果由「帳號＋日期＋文章」算出來（同一篇看再多次結果都一樣），只記中獎的文章，不用存整份已讀清單
       var rkey = String(q.key || '').replace(/[^0-9a-z_\/-]/gi, '').slice(0, 40);
@@ -818,6 +842,8 @@ function top_(q) {
 }
 
 /* ---------- 物資島：每天第一次有人來時重抽總量與鑽石位置 ---------- */
+/* 下一次採集會拿到幾個：先抽好、存在玩家的小島資料裡，網頁一進物資島就拿到，連點完成時馬上顯示，不用等後台回覆（後台再照這個數字結算） */
+function rollN_(il) { return il.lo + Math.floor(Math.random() * (il.hi - il.lo + 1)); }
 function isles_() {
   var sh = sheet_('物資島', R_HEAD), t = day_(), n = sh.getLastRow() - 1;
   var vals = n > 0 ? sh.getRange(2, 1, n, R_HEAD.length).getValues() : [];
