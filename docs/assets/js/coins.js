@@ -216,8 +216,9 @@
         '<input class="cw-in" maxlength="12" placeholder="例如：圖塊小達人">' +
         '<input class="cw-in inv" style="margin-top:8px" maxlength="20" placeholder="🎟 邀請碼（封測期間需要）" autocapitalize="characters" autocomplete="off" value="' + esc(savedInv()) + '"><div class="cw-err"></div>' +
         '<div class="cw-row"><button class="cw-b p" type="button" data-ok>確定</button></div>' +
+        '<small style="display:block;margin-top:8px">🎟 還沒有邀請碼？封測期間要有邀請碼才能登島，請到 <a href="https://www.facebook.com/autocad.tw" target="_blank" rel="noopener">AutoCAD 粉絲團</a> 的貼文留言「我想上島」索取。</small>' +
         '<p style="margin-top:10px">已經有登島碼？<button class="cw-link" type="button" data-sw>輸入登島碼</button></p>' +
-        '<p><button class="cw-link" type="button" data-x>先逛逛，之後再取</button></p>' +
+        '<p><button class="cw-link" type="button" data-x>👀 我是訪客，先逛逛（可看地圖、讀全部文章）</button></p>' +
         '<small>請不要填真實姓名、電話或 Email。暱稱、金幣與下載紀錄會存到蘋果爸的統計表。</small>';
     }
     function loginHTML() {
