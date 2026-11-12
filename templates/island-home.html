@@ -1086,6 +1086,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .sh-swap{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .sh-swap select{padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.1);color:inherit;border:1px solid rgba(255,255,255,.25);font-size:15px}
 .sh-swap option{color:#111}
+.mi-deco.bld{font-size:36px;opacity:.9}.mi-plot.bld{background:repeating-linear-gradient(45deg,#facc15 0 6px,#1f2937 6px 12px)}
 .mi-house em{white-space:nowrap}.mi-house em b{font-weight:800}
 .mi-top{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
 .mi-vis{display:flex;flex-wrap:wrap;gap:8px}
@@ -1288,7 +1289,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
         <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
         <li>🎁 累積拿滿 5 枚，送你「提示詞禮物包」。</li>
-        <li>✨ 地圖上的島嶼會隨機浮出發亮的 <b>🪙 金幣</b>或 <b>💎 鑽石</b>（每 15 分鐘換一批），點一下就能撿；每天最多撿 4 枚金幣、1 顆鑽石。</li>
+        <li>✨ 地圖上的島嶼會隨機浮出發亮的 <b>🪙 金幣</b>或 <b>💎 鑽石</b>（每 15 分鐘換一批），點一下就能撿；每天最多撿 4 枚金幣、2 顆鑽石。</li>
         <li>📋 <b>🎒 背包</b>最上面有「今日任務」，每天 3 個，完成一個領 1 枚金幣。</li>
         <li>🪙 問答島上有閃亮的金幣，表示這座島的金幣還沒領；🍎⛏️🪵🪨 資源島冒出符號，表示現在可以採集。</li>
         <li>🏪 物資、鑽石、南瓜都能在 🎒 背包的兌換所換金幣。</li>
@@ -1298,12 +1299,12 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>地圖上散佈著 <b>20 座物資島</b>（🍎 果園、⛏️ 礦山、🌲 森林、🪨 採石各 5 座），要自己到地圖上找；<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
         <li>每座島每天的總量隨機 60～160 份，大家一起採，採光了要等明天重新長出來。</li>
         <li>每人每座島每天最多採 <b>5 次</b>；<b>每座島的數量和冷卻都不一樣</b>：每次採 1～8 個不等，採完要等 30～120 秒才能再採同一座島。</li>
-        <li>💎 每座島每天隨機藏 0～1 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
-        <li>🏪 兌換所：10 個同種物資換 1 枚 🪙；1 顆 💎 換 5 枚；5 顆 🎃 換 1 枚；每天最多換 3 次。<br>🏪 <b>商店島</b>：用金幣買物資（1 枚 🪙 = 4 個）、物資互換（8 換 4）、15 枚 🪙 買 1 顆 💎，還能買 5 艘不同的船。</li>
+        <li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
+        <li>🏪 兌換所：10 個同種物資換 1 枚 🪙；1 顆 💎 換 10 枚；5 顆 🎃 換 1 枚；每天最多換 3 次。<br>🏪 <b>商店島</b>：用金幣買物資（1 枚 🪙 = 6 個）、物資互換（3 換 2）、20 枚 🪙 買 1 顆 💎，還能買 5 艘不同的船。</li>
         <li>🔊 打開上方喇叭，點擊會有音效和特效。</li>
       </ul></section>
       <section class="hp" data-p="2" hidden><ul>
-        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵5 🪨3；Lv2 🪵10 🪨8 🔩3；Lv3 🪵20 🪨15 🔩8 💎1。<b>蓋小屋要施工</b>：Lv1 1 分鐘、Lv2 5 分鐘、Lv3 15 分鐘，蓋好才升級。小屋等級就是可以養的寵物數。</li>
+        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵5 🪨3；Lv2 🪵10 🪨8 🔩3；Lv3 🪵20 🪨15 🔩8 💎1。<b>蓋東西都要施工</b>：小屋 Lv1 1 分、Lv2 5 分、Lv3 15 分；菜田 1／2／4 分；果樹 2 分、噴水池 5 分、瞭望塔 10 分。資源一開始就扣，蓋好才算數，不同的東西可以同時蓋。小屋等級就是可以養的寵物數。</li>
         <li>🟫 菜田最多 3 塊（🪵5 🪨5／🪵10 🪨10／🪵20 🪨15 🔩5）。裝飾：🌳 果樹、⛲ 噴水池、🗼 瞭望塔各一座，島主分 +5／+10／+20。</li>
         <li>🌱 <b>種菜</b>：用 🍎 水果換種子，照真實時間長大——🥕 4 小時、🥬 8 小時、🎃 24 小時；熟了要自己收成，放著不會壞。</li>
         <li>🏆 島主分＝小屋等級×10＋裝飾分＋寵物親密度，會上「島主」排行榜。</li>
@@ -2375,7 +2376,7 @@ function renderRes(n){
       (SFX_ON?'':'<button class="rs-snd" type="button" id="rsSnd">🔇 打開音效更好玩</button>')+
     '</div>'+
     '<div class="p-sec"><h4>我的背包</h4><div class="rs-bag" id="rsBag"></div><div class="row2"><button class="btn btn-ghost btn-sm" type="button" data-rbag>🎒 背包・兌換所・好友</button><button class="btn btn-ghost btn-sm" type="button" data-rrank>🏆 物資排行榜</button></div></div>'+
-    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li><li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～1 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 5 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
+    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li><li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 10 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
   $('pStep').textContent=R.e+' 物資島';
   footSimple('← 回地圖','');
   resBag();resStock();
@@ -2572,14 +2573,14 @@ function paintShop(){
     return '<div class="sh-ship'+(cur?' cur':'')+'"><div class="sh-pv">'+shipSVG(i)+'</div><b>'+esc(SHIPN[i][0])+'</b><small>'+esc(SHIPN[i][1])+'</small>'+
       (cur?'<span class="sh-tag">✅ 使用中</span>':own?'<button class="btn btn-ghost btn-sm" type="button" data-useship="'+i+'">換乘這艘</button>':'<button class="btn btn-primary btn-sm'+((w.bal||0)<c?' need':'')+'" type="button" data-buyship="'+i+'">🪙 '+c+' 買下</button>')+'</div>';
   }).join('')+'</div><p class="mi-note">買下後就能隨時換乘，地圖上航行的就是你選的那艘船。</p></div>';
-  o+='<div class="p-sec"><h4>🪙 金幣買東西</h4><div class="mi-seeds">'+RTYPE.map(function(x){return '<button class="mb-b" type="button" data-xbuy="'+x.rk+'"'+((w.bal||0)<1?' disabled':'')+'>🪙1 → '+x.it+'×4<small>'+x.item+'</small></button>'}).join('')+
-    '<button class="mb-b" type="button" data-xbuy="dia"'+((w.bal||0)<15?' disabled':'')+'>🪙15 → 💎1<small>鑽石</small></button></div></div>';
+  o+='<div class="p-sec"><h4>🪙 金幣買東西</h4><div class="mi-seeds">'+RTYPE.map(function(x){return '<button class="mb-b" type="button" data-xbuy="'+x.rk+'"'+((w.bal||0)<1?' disabled':'')+'>🪙1 → '+x.it+'×6<small>'+x.item+'</small></button>'}).join('')+
+    '<button class="mb-b" type="button" data-xbuy="dia"'+((w.bal||0)<20?' disabled':'')+'>🪙20 → 💎1<small>鑽石</small></button></div></div>';
   var opt=RTYPE.map(function(x){return '<option value="'+x.rk+'">'+x.it+' '+x.item+'</option>'}).join('');
-  o+='<div class="p-sec"><h4>🔁 物資互換</h4><div class="sh-swap">8 個 <select id="shFrom">'+opt+'</select> 換 4 個 <select id="shTo">'+opt.replace('value="fruit"','value="fruit"')+'</select> <button class="btn btn-primary btn-sm" type="button" data-xswap>換</button></div></div>';
+  o+='<div class="p-sec"><h4>🔁 物資互換</h4><div class="sh-swap">3 個 <select id="shFrom">'+opt+'</select> 換 2 個 <select id="shTo">'+opt.replace('value="fruit"','value="fruit"')+'</select> <button class="btn btn-primary btn-sm" type="button" data-xswap>換</button></div></div>';
   var left=Math.max(0,(w.tradeMax||3)-(w.trades||0));
-  o+='<div class="p-sec"><h4>💎 賣出換金幣</h4><div class="mi-seeds"><button class="mb-b" type="button" data-sell="dia"'+((w.dia||0)<1||!left?' disabled':'')+'>💎1 → 🪙5<small>鑽石</small></button>'+
+  o+='<div class="p-sec"><h4>💎 賣出換金幣</h4><div class="mi-seeds"><button class="mb-b" type="button" data-sell="dia"'+((w.dia||0)<1||!left?' disabled':'')+'>💎1 → 🪙10<small>鑽石</small></button>'+
     RTYPE.map(function(x){return '<button class="mb-b" type="button" data-sell="'+x.rk+'"'+((b[x.rk]||0)<10||!left?' disabled':'')+'>'+x.it+'×10 → 🪙1<small>'+x.item+'</small></button>'}).join('')+'</div>'+
-    '<p class="mi-note">賣出每天最多 '+(w.tradeMax||3)+' 次（今天還剩 '+left+' 次）。買東西和互換不限次數。買 1 枚金幣只能換 4 個物資，賣出要 10 個才換 1 枚，所以不能無限賺。</p></div>';
+    '<p class="mi-note">賣出每天最多 '+(w.tradeMax||3)+' 次（今天還剩 '+left+' 次）。買東西和互換不限次數。買 1 枚金幣只能換 6 個物資，賣出要 10 個才換 1 枚，所以不能無限賺。</p></div>';
   box.innerHTML=o;
   var f=$('shFrom'),t=$('shTo');if(f&&t){f.value='fruit';t.value='wood'}
 }
@@ -2637,14 +2638,19 @@ var COSTI={fruit:'🍎',iron:'🔩',wood:'🪵',stone:'🪨',dia:'💎'};
 var PET_TITLE=['新朋友','好朋友','家人','最佳拍檔','靈魂伴侶'];
 var MI={data:null,fid:null,at:0,seq:0,timer:0,hbT:0,adopt:null};
 function petTitle(lv){return PET_TITLE[Math.min(PET_TITLE.length,lv)-1]}
-function hbLeft(d){return d&&d.hb?Math.max(0,d.hb.left-(Date.now()-MI.at)):0}
-function hbText(d){var s=Math.ceil(hbLeft(d)/1000),m=Math.floor(s/60);s%=60;return m+':'+(s<10?'0':'')+s}
-/* 小屋施工倒數：每秒更新數字；時間到就重新讀一次小島（後台會把小屋升級） */
+function bLeft(d,k){var ms=k==='house'?(d.hb?d.hb.left:0):(d.bb&&d.bb[k]!=null?d.bb[k]:0);return Math.max(0,ms-(Date.now()-MI.at))}
+function bText(d,k){var s=Math.ceil(bLeft(d,k)/1000),m=Math.floor(s/60);s%=60;return m+':'+(s<10?'0':'')+s}
+function bAny(d){return !!(d&&(d.hb||Object.keys(d.bb||{}).length))}
+function hbLeft(d){return bLeft(d,'house')}
+function hbText(d){return bText(d,'house')}
+function bmin(ms){return Math.max(1,Math.round(ms/60000))}
+/* 施工倒數（小屋、菜田、裝飾）：每秒更新數字；任何一項時間到就重新讀一次小島（後台會把它蓋好） */
 function hbTick(){
   if(V.t!=='mine'){clearInterval(MI.hbT);return}
-  var d=MI.data;if(!d||!d.hb)return;
-  var t=hbText(d);document.querySelectorAll('.mi-hbt').forEach(function(e){e.textContent=t});
-  if(hbLeft(d)<=0&&!MI.hbLoad){MI.hbLoad=1;loadMine(true);setTimeout(function(){MI.hbLoad=0},4000)}
+  var d=MI.data;if(!d||!bAny(d))return;
+  var done=false;
+  document.querySelectorAll('.mi-hbt').forEach(function(e){var k=e.getAttribute('data-k')||'house';e.textContent=bText(d,k);if(bLeft(d,k)<=0)done=true});
+  if(done&&!MI.hbLoad){MI.hbLoad=1;loadMine(true);setTimeout(function(){MI.hbLoad=0},4000)}
 }
 function leftText(ms){var m=Math.ceil(ms/60000),h=Math.floor(m/60);m%=60;return h?h+' 小時'+(m?' '+m+' 分':''):m+' 分鐘'}
 function costHTML(cost){var w=COINS.get(),b=w.bag||{};return Object.keys(cost).map(function(k){var have=k==='dia'?(w.dia||0):(b[k]||0);return '<span class="mi-c'+(have<cost[k]?' short':'')+'">'+COSTI[k]+' '+cost[k]+'</span>'}).join('')}
@@ -2696,10 +2702,11 @@ function sceneHTML(d){
   if(t>=1)o+='<span class="mi-sc" style="left:20%;top:80%;font-size:20px">🌼</span><span class="mi-sc" style="left:58%;top:82%;font-size:18px">🌿</span>';
   if(t>=2)o+='<span class="mi-sc" style="left:40%;top:76%;font-size:22px">🌸</span><span class="mi-sc" style="left:87%;top:62%;font-size:26px">🪨</span>';
   if(t>=3)o+='<span class="mi-sc" style="left:89%;top:38%;font-size:40px">🌴</span><span class="mi-sc" style="left:28%;top:86%;font-size:20px">🌷</span><span class="mi-sc" style="left:4%;top:62%;font-size:34px">🌴</span>';
-  o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.hb?'🔨 Lv'+d.hb.t+' <b class="mi-hbt">'+hbText(d)+'</b>':d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
-  o+='<div class="mi-fields">'+d.f.map(function(c){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"><b>'+cv.e+'</b></i>'}).join('')+'</div>';
+  o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.hb?'🔨 Lv'+d.hb.t+' <b class="mi-hbt" data-k="house">'+hbText(d)+'</b>':d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
+  o+='<div class="mi-fields">'+d.f.map(function(c){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"><b>'+cv.e+'</b></i>'}).join('')+(d.bb&&d.bb.field!=null?'<i class="mi-plot bld"><b>🚧</b></i>':'')+'</div>';
   var dp={tree:[14,58],fountain:[64,58],tower:[70,20]};
   d.deco.forEach(function(k){o+='<span class="mi-deco" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%">'+DECOI[k][0]+'</span>'});
+  Object.keys(d.bb||{}).forEach(function(k){if(dp[k])o+='<span class="mi-deco bld" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%">🚧</span>'});
   o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" data-pid="'+esc((MI.fid||'me')+':'+(p.id||('i'+i)))+'" style="font-size:'+(32+Math.min(4,p.lv-1)*4)+'px"><i><u>'+a[0]+'</u></i><em>'+esc(p.n)+'</em></span>'}).join('');
   if(!d.h&&!d.fields&&!d.deco.length&&!d.pets.length)o+='<p class="mi-empty">'+(d.mine?'這座島還是一片空地，先用 🪵 木材和 🪨 石頭蓋一間小屋吧！':'這座島還是一片空地')+'</p>';
   return o+'</div>';
@@ -2796,9 +2803,10 @@ function paintMine(){
   o+='</div>';
   /* 建造 */
   var B=[];
-  B.push(d.hb?{e:'🚧',n:'小屋 Lv'+d.hb.t+' 施工中',t:'還要 <b class="mi-hbt">'+hbText(d)+'</b> 才會完工',done:1}:d.h<3?{k:'house',e:HOUSEI[d.h+1],n:'小屋 Lv'+(d.h+1),t:'可以養 '+(d.h+1)+' 隻寵物・施工要 '+Math.round(((R.houseMs||[0,60000,300000,900000])[d.h+1])/60000)+' 分鐘',cost:R.house[d.h+1]}:{e:'🏡',n:'小屋 Lv3',t:'已經蓋到最高級',done:1});
-  B.push(d.fields<R.field.length?{k:'field',e:'🟫',n:'菜田 第 '+(d.fields+1)+' 塊',t:'可以多種一種菜',cost:R.field[d.fields]}:{e:'🟫',n:'菜田 3 塊',t:'菜田已經蓋滿了',done:1});
-  ['tree','fountain','tower'].forEach(function(k){var x=R.deco[k];B.push(d.deco.indexOf(k)>=0?{e:DECOI[k][0],n:x.name,t:'已經蓋好・島主分 +'+x.pts,done:1}:{k:k,e:DECOI[k][0],n:x.name,t:'裝飾・島主分 +'+x.pts,cost:x.cost})});
+  B.push(d.hb?{e:'🚧',n:'小屋 Lv'+d.hb.t+' 施工中',t:'還要 <b class="mi-hbt" data-k="house">'+hbText(d)+'</b> 才會完工',done:1}:d.h<3?{k:'house',e:HOUSEI[d.h+1],n:'小屋 Lv'+(d.h+1),t:'可以養 '+(d.h+1)+' 隻寵物・施工要 '+Math.round(((R.houseMs||[0,60000,300000,900000])[d.h+1])/60000)+' 分鐘',cost:R.house[d.h+1]}:{e:'🏡',n:'小屋 Lv3',t:'已經蓋到最高級',done:1});
+  var FMS=R.fieldMs||[60000,120000,240000],DMS=R.decoMs||{tree:120000,fountain:300000,tower:600000};
+  B.push(d.bb&&d.bb.field!=null?{e:'🚧',n:'菜田 第 '+(d.fields+1)+' 塊 施工中',t:'還要 <b class="mi-hbt" data-k="field">'+bText(d,'field')+'</b> 才會完工',done:1}:d.fields<R.field.length?{k:'field',e:'🟫',n:'菜田 第 '+(d.fields+1)+' 塊',t:'可以多種一種菜・施工要 '+bmin(FMS[d.fields])+' 分鐘',cost:R.field[d.fields]}:{e:'🟫',n:'菜田 3 塊',t:'菜田已經蓋滿了',done:1});
+  ['tree','fountain','tower'].forEach(function(k){var x=R.deco[k];B.push(d.deco.indexOf(k)>=0?{e:DECOI[k][0],n:x.name,t:'已經蓋好・島主分 +'+x.pts,done:1}:d.bb&&d.bb[k]!=null?{e:'🚧',n:x.name+' 施工中',t:'還要 <b class="mi-hbt" data-k="'+k+'">'+bText(d,k)+'</b> 才會完工',done:1}:{k:k,e:DECOI[k][0],n:x.name,t:'裝飾・島主分 +'+x.pts+'・施工要 '+bmin(DMS[k])+' 分鐘',cost:x.cost})});
   o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
     return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div>'+(costOK(b.cost)?'':'<div class="mi-miss">還缺：'+missText(missOf(b.cost))+'</div>')+'<button class="btn btn-primary btn-sm'+(costOK(b.cost)?'':' need')+'" type="button" data-build="'+b.k+'">🔨 建造</button>':'')+'</div></div>'}).join('')+'</div></div>';
   o+='<div class="p-sec"><h4>👣 最近訪客</h4>'+(d.vis&&d.vis.length?'<div class="mi-vis">'+d.vis.map(function(v){return '<span class="mi-v"><i>'+esc(v.a||'🙂')+'</i>'+esc(v.n)+'<small>'+ago(v.t)+'</small></span>'}).join('')+'</div>':'<p class="mi-note">還沒有人來拜訪。開放參觀後，別人就能航向你的島。</p>')+'</div>';

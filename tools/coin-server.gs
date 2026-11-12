@@ -63,20 +63,22 @@ var ISL_MAP = {};
 ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
 var ISL_LEGACY = { fruit: 'r0', iron: 'r1', wood: 'r2', stone: 'r3' }; // 舊版網頁送的是種類名稱
 var HOUSE_MS = [0, 60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000]; // 蓋小屋／升級要花的時間：Lv1 1 分、Lv2 5 分、Lv3 15 分
+var FIELD_MS = [60 * 1000, 2 * 60 * 1000, 4 * 60 * 1000];      // 菜田第 1／2／3 塊：1、2、4 分鐘
+var DECO_MS = { tree: 2 * 60 * 1000, fountain: 5 * 60 * 1000, tower: 10 * 60 * 1000 }; // 果樹 2 分、噴水池 5 分、瞭望塔 10 分
 /* 商店島：船（0 號免費）、金幣換物資 */
 var SHIPS = [{ name: '小木帆船', cost: 0 }, { name: '彩旗帆船', cost: 8 }, { name: '海盜大帆船', cost: 25 },
   { name: '商賈雙桅船', cost: 60 }, { name: '皇家旗艦', cost: 120 }, { name: '鑽石龍船', cost: 250 }];
-var BUY_COST = 1, BUY_N = 4;        // 1 枚金幣買 4 個物資（賣出是 10 個換 1 枚，所以不能無限賺）
-var SWAP_FROM = 8, SWAP_TO = 4;     // 8 個甲物資換 4 個乙物資
-var DIA_BUY = 15;                   // 15 枚金幣買 1 顆鑽石（賣出是 1 顆換 5 枚）
+var BUY_COST = 1, BUY_N = 6;        // 1 枚金幣買 6 個物資（賣出是 10 個換 1 枚，所以不能無限賺）
+var SWAP_FROM = 3, SWAP_TO = 2;     // 3 個甲物資換 2 個乙物資（剛開始互相交換很容易）
+var DIA_BUY = 20;                   // 20 枚金幣買 1 顆鑽石（賣出是 1 顆換 10 枚，所以買賣不能賺差價）
 var XCHG_MAX = 20;                  // 一次最多換 20 份
 var STOCK_MIN = 60, STOCK_MAX = 160; // 每座物資島每天的總量（隨機）
 var GATHER_N = [2, 6];               // 每次採集拿到幾個（2～6，原本是 1～3，加倍）
-var DIA_MAX = 1;                     // 每座物資島每天藏 0～1 顆鑽石（隨機；島變 20 座，所以從 2 降成 1）
+var DIA_MAX = 2;                     // 每座物資島每天藏 0～2 顆鑽石（隨機，平均 1 顆；機會比之前高）
 var GATHER_MAX = 5;                  // 每人每座島每天最多採 5 次
 var GATHER_GAP = 1000;               // 任兩次採集至少隔 1 秒（防連點）；每座島另有自己的冷卻（30～120 秒）
 var TRADE_RATE = 10;                 // 10 個同種物資換 1 枚金幣
-var DIA_RATE = 5;                    // 1 顆鑽石換 5 枚金幣
+var DIA_RATE = 10;                    // 1 顆鑽石換 5 枚金幣
 var TRADE_MAX = 3;                   // 每天最多兌換 3 次
 var FRIEND_MAX = 50;
 var A_HEAD = ['編號', '時間', '標題', '內容', '發布者', '修改時間', '狀態'];
@@ -111,8 +113,8 @@ var NOTE_LEN = 100, NOTE_DAY = 20;
 var DROP_SLOT = 15 * 60 * 1000;   // 每 15 分鐘換一批
 var DROP_GRACE = 90 * 1000;       // 換批後 90 秒內，上一批還可以撿（網路慢的緩衝）
 var DROP_COINS = 3;               // 每批有幾座島出現金幣
-var DROP_DIA_CHANCE = 0.25;       // 每批另外有一座島出現鑽石的機率
-var DROP_COIN_DAY = 4, DROP_DIA_DAY = 1;   // 每人每天最多撿幾枚金幣、幾顆鑽石
+var DROP_DIA_CHANCE = 0.5;        // 每批另外有一座島出現鑽石的機率
+var DROP_COIN_DAY = 4, DROP_DIA_DAY = 2;   // 每人每天最多撿幾枚金幣、幾顆鑽石
 var DROP_SALT = 'isle-drop-v1';
 var QUEST_N = 3, QUEST_COIN = 1;  // 每天 3 個任務，每個 1 枚金幣
 /* 網站地圖上每座島的代號（和網頁的 ISLAND_KEYS 一致；新增島嶼時要一起加） */
@@ -844,6 +846,14 @@ function isleOf_(r) {
   try { o = JSON.parse(plain_(r[C.isle]) || '{}') || {}; } catch (e) { o = {}; }
   o.h = num_(o.h); o.fields = num_(o.fields);
   o.f = Array.isArray(o.f) ? o.f : [];
+  var nowB = Date.now(), bb = {};
+  if (o.bb) Object.keys(o.bb).forEach(function (k) {
+    var e = num_(o.bb[k] && o.bb[k].e);
+    if (e > nowB) { bb[k] = { e: e }; return; }                 // 還在施工
+    if (k === 'field') { o.fields++; }                          // 菜田完工
+    else if (DECO[k]) { o.deco = Array.isArray(o.deco) ? o.deco : []; if (o.deco.indexOf(k) < 0) o.deco.push(k); }
+  });
+  o.bb = bb;
   while (o.f.length < o.fields) o.f.push(null);
   o.deco = Array.isArray(o.deco) ? o.deco.filter(function (d) { return DECO[d]; }) : [];
   o.pets = Array.isArray(o.pets) ? o.pets : [];
@@ -894,13 +904,14 @@ function islePub_(r, mine, viewer) {
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
     h: o.h, fields: o.fields, deco: o.deco, score: isleScore_(o),
+    bb: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = Math.max(0, o.bb[k].e - now); }); return m; })(),
     hb: o.hb ? { t: num_(o.hb.t), left: Math.max(0, num_(o.hb.e) - now), total: HOUSE_MS[num_(o.hb.t)] || 0 } : null,
     f: o.f.map(function (c) { return c && VEG[c.v] ? { v: c.v, left: cropLeft_(c, now), total: VEG[c.v].hours * HOUR } : null; }),
     pets: o.pets.map(function (p) {
       return { id: p.id, k: p.k, n: p.n, full: Math.round(fullNow_(p, now)), aff: num_(p.aff), lv: petLv_(p), patted: num_(p.pd) === day_() };
     })
   };
-  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, fieldMs: FIELD_MS, decoMs: DECO_MS, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
   else out.watered = wd.indexOf(out.fid) >= 0;
   return out;
 }
@@ -914,17 +925,19 @@ function isleAct_(a, q, r, me) {
       if (o.h >= 3) return { err: 'maxed' };
       cost = HOUSE[o.h + 1]; label = '小屋 Lv' + (o.h + 1) + '（施工 ' + Math.round(HOUSE_MS[o.h + 1] / 60000) + ' 分鐘）';
     } else if (kind === 'field') {
+      if (o.bb.field) return { err: 'building' };
       if (o.fields >= FIELD.length) return { err: 'maxed' };
-      cost = FIELD[o.fields]; label = '菜田 第 ' + (o.fields + 1) + ' 塊';
+      cost = FIELD[o.fields]; label = '菜田 第 ' + (o.fields + 1) + ' 塊（施工 ' + Math.round(FIELD_MS[o.fields] / 60000) + ' 分鐘）';
     } else if (DECO[kind]) {
       if (o.deco.indexOf(kind) >= 0) return { err: 'maxed' };
-      cost = DECO[kind].cost; label = DECO[kind].name;
+      if (o.bb[kind]) return { err: 'building' };
+      cost = DECO[kind].cost; label = DECO[kind].name + '（施工 ' + Math.round(DECO_MS[kind] / 60000) + ' 分鐘）';
     } else return { err: 'bad' };
     if (!hasCost_(r, cost)) return { err: 'few', miss: missCost_(r, cost) }; // 一併告訴網頁還缺什麼
     payCost_(r, cost);
     if (kind === 'house') o.hb = { t: o.h + 1, e: now + HOUSE_MS[o.h + 1] };
-    else if (kind === 'field') { o.fields++; o.f.push(null); }
-    else o.deco.push(kind);
+    else if (kind === 'field') o.bb.field = { e: now + FIELD_MS[o.fields] };
+    else o.bb[kind] = { e: now + DECO_MS[kind] };
     out.log = ['蓋', label + '（' + costText_(cost) + '）'];
   } else if (a === 'plant') {
     var fi = num_(q.i), v = String(q.v || '');

@@ -55,7 +55,7 @@
   var ERR = {
     short: '暱稱至少要 2 個字', taken: '這個暱稱已經有人用了，換一個吧', reserved: '這個暱稱保留給站長，換一個吧',
     nocode: '找不到這組登島碼，請再確認一次',
-    building: '小屋還在施工中，等蓋好才能再升級', owned: '這艘船你已經有了', notown: '你還沒有這艘船', nocoin: '金幣不夠喔',
+    building: '這項還在施工中，等蓋好才能再蓋', owned: '這艘船你已經有了', notown: '你還沒有這艘船', nocoin: '金幣不夠喔',
     noinv: '封測期間要有邀請碼才能登島，請向蘋果爸索取一組', badinv: '邀請碼不正確，請再確認一次（英文字母和數字）', invfull: '這組邀請碼名額已滿（每組限 2 位），請向蘋果爸索取新的一組', bad: '資料有誤，請重新整理後再試',
     nofid: '找不到這個海島編號，請再確認一次', self: '這是你自己的海島編號喔', fmax: '好友最多 50 位',
     notfriend: '要先互加好友才行', gifted: '今天已經送過這位好友了，明天再送', few: '數量不夠喔',
@@ -470,7 +470,7 @@
             '<small>累計採集 ' + (P.tres || 0) + ' 個物資、撿到 ' + (P.tdia || 0) + ' 顆鑽石（排行榜用累計數字）。去地圖上的果園島、礦山島、森林島、採石島採集。</small></div>';
           h += '<div class="cw-sec"><h4>🏪 兌換所<small style="display:inline;margin-left:6px">今天還能換 ' + left + ' 次</small></h4><div class="cw-trade">' +
             RES_KEYS.map(function (k) { return '<button type="button" data-trade="' + k + '"' + (left && (b[k] || 0) >= 10 ? '' : ' disabled') + '>10 ' + RES[k][0] + ' → 1 🪙</button>'; }).join('') +
-            '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + '>1 💎 → 5 🪙</button>' +
+            '<button type="button" data-trade="dia"' + (left && (P.dia || 0) >= 1 ? '' : ' disabled') + '>1 💎 → 10 🪙</button>' +
             '<button type="button" data-trade="pumpkin"' + (left && ((P.veg || {}).pumpkin || 0) >= 5 ? '' : ' disabled') + '>5 🎃 → 1 🪙</button></div></div>';
           h += '<div class="cw-sec"><h4>🪪 我的海島編號</h4><div class="cw-fid"><b>#' + esc(P.fid || '……') + '</b>' + (P.fid ? '<button class="cw-mini" type="button" data-copyfid>複製</button>' : '') + '</div>' +
             '<small>把海島編號給朋友，對方在這裡輸入就能互加好友。登島碼是你的鑰匙，不要給別人。</small>' +
