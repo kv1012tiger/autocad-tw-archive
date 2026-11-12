@@ -1025,7 +1025,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-house{position:absolute;left:27%;top:19%;transform:translateX(-50%);text-align:center;line-height:1}
 .mi-house span{display:block;font-size:80px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35))}
 .mi-house.lv0 span{font-size:54px;opacity:.85}.mi-house.lv3 span{font-size:104px}
-.mi-house em{display:inline-block;margin-top:2px;padding:1px 8px;border-radius:8px;font-style:normal;font-size:12px;font-weight:800;color:#1f3d12;background:rgba(255,255,255,.85)}
+.mi-house em{position:relative;z-index:3;display:inline-block;margin-top:6px;padding:1px 8px;border-radius:8px;font-style:normal;font-size:12px;font-weight:800;color:#1f3d12;background:rgba(255,255,255,.85)}
 .mi-fields{position:absolute;left:47%;top:38%;display:flex;gap:6px}
 .mi-plot{display:grid;place-items:center;width:46px;height:40px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
 .mi-plot b{font-size:27px;line-height:1;animation:miGrow 2.4s ease-in-out infinite}
@@ -1109,6 +1109,8 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .gm-reward{margin:12px 0 6px;padding:10px 12px;border-radius:14px;background:rgba(255,209,102,.14);border:1.5px solid rgba(255,209,102,.55);font-size:14px;line-height:1.6}
 .mi-lv{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);padding:0 6px;border-radius:999px;background:#0ea5e9;color:#fff;font:900 11px/1.5 "Noto Sans TC",sans-serif;font-style:normal;white-space:nowrap;box-shadow:0 0 0 2px rgba(4,46,64,.8)}
 .mi-lv.l3{background:#f59e0b}
+.mi-deco[data-pick]{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mi-deco[data-pick]::before{content:'';position:absolute;inset:-14px}
 .mi-fr{position:absolute;right:-8px;top:-10px;font-size:20px;line-height:1;animation:bob 1.4s ease-in-out infinite;font-style:normal}
 .mi-fr b{position:absolute;right:-4px;bottom:-6px;min-width:16px;padding:0 3px;border-radius:99px;background:#ef4444;color:#fff;font:900 11px/16px "Noto Sans TC",sans-serif;text-align:center}
 .mi-orch{display:grid;gap:8px}
@@ -2921,7 +2923,7 @@ function sceneHTML(d){
   d.deco.forEach(function(k){if(!dp[k])return;var lv=Math.min(3,dl[k]||1);o+='<span class="mi-deco" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%;font-size:'+(44+(lv-1)*9)+'px">'+DECOI[k][0]+'<em class="mi-lv l'+lv+'">Lv'+lv+'</em></span>'});
   (d.trees||[]).forEach(function(t,i){
     var v=treeView(t,d),pp=TREE_POS[i%TREE_POS.length];
-    o+='<span class="mi-deco" style="left:'+pp[0]+'%;top:'+pp[1]+'%;font-size:'+(v.st===0?26:v.st===1?36:46)+'px">'+(v.st===0?'🌱':'🌳')+(v.ripe>0?'<i class="mi-fr">🍎<b>'+v.ripe+'</b></i>':'')+'</span>';
+    o+='<span class="mi-deco"'+(v.ripe>0&&d.mine?' data-pick role="button" aria-label="摘果子"':'')+' style="left:'+pp[0]+'%;top:'+pp[1]+'%;font-size:'+(v.st===0?26:v.st===1?36:46)+'px">'+(v.st===0?'🌱':'🌳')+(v.ripe>0?'<i class="mi-fr">🍎<b>'+v.ripe+'</b></i>':'')+'</span>';
   });
   Object.keys(d.bb||{}).forEach(function(k){var pp=k==='tree'?TREE_POS[(d.trees||[]).length%TREE_POS.length]:dp[k];if(pp)o+='<span class="mi-deco bld" style="left:'+pp[0]+'%;top:'+pp[1]+'%">🚧</span>'});
   o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" data-pid="'+esc((MI.fid||'me')+':'+(p.id||('i'+i)))+'" style="font-size:'+(32+Math.min(4,p.lv-1)*4)+'px"><i><u>'+a[0]+'</u></i><em>'+esc(p.n)+'</em></span>'}).join('');
@@ -3102,7 +3104,7 @@ function buildFast(kind,t){
 function fxAt(el,em){if(!el)return;var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,em)}
 var GIFT_I={coin:['🪙','金幣'],fruit:['🍎','水果'],iron:['🔩','鐵礦'],wood:['🪵','木材'],stone:['🪨','石頭']};
 pBody.addEventListener('click',function(e){
-  var t=e.target.closest('button,[data-pat]');if(!t||V.t!=='mine')return;
+  var t=e.target.closest('button,[data-pat],[data-pick]');if(!t||V.t!=='mine')return;
   var d=t.dataset;
   if(d.mjoin2!=null){COINS.need(function(){renderMine(null)});return}
   if(d.voyage!=null){openPanel('voyage');return}
