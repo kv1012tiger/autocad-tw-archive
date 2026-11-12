@@ -777,7 +777,15 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .spot .rbadge{position:absolute;left:6%;top:2%;z-index:4;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:21px;box-shadow:0 0 0 3px rgba(4,46,64,.85),0 0 14px rgba(255,255,255,.7);animation:bob 1.6s ease-in-out infinite;pointer-events:none}
 .spot .rbadge[hidden]{display:none}
-.spot.rz{opacity:.6;filter:saturate(.5)}
+.spot .rlv{position:absolute;left:4%;top:calc(2% + 38px);z-index:4;padding:1px 8px;border-radius:999px;font:900 12px/1.5 "Noto Sans TC",sans-serif;color:#fff;white-space:nowrap;pointer-events:none;box-shadow:0 0 0 2px rgba(4,46,64,.85)}
+.spot .rlv[hidden]{display:none}
+.rs-lv{margin:6px 0 2px;padding:5px 10px;border-radius:12px;font:800 13px/1.5 "Noto Sans TC",sans-serif;color:#fff;text-align:center}
+.rs-lv.l0{background:#d97706}
+.rs-lv.l1{background:#0284c7}
+.rs-lv.l2{background:#15803d}
+.spot .rlv.l0{background:#f59e0b}
+.spot .rlv.l1{background:#0ea5e9}
+.spot .rlv.l2{background:#16a34a;box-shadow:0 0 0 2px rgba(4,46,64,.85),0 0 12px #86efac}
 .spot .nbadge{position:absolute;left:0;right:0;top:-8%;margin:0 auto;width:max-content;z-index:6;padding:5px 12px;border-radius:999px;background:#ef4444;color:#fff;font-weight:900;font-size:15px;line-height:1.2;box-shadow:0 0 0 3px rgba(255,255,255,.92),0 6px 16px rgba(239,68,68,.65);animation:nbob 1.3s ease-in-out infinite;white-space:nowrap;pointer-events:none}
 .spot .nbadge[hidden]{display:none}
 @keyframes nbob{50%{transform:translateY(-5px)}}
@@ -1327,7 +1335,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>🔑 登島碼是你的帳號鑰匙，請記下來、不要給別人；忘記了用 LINE 官方帳號問蘋果爸。</li>
       </ul></section>
       <section class="hp" data-p="1" hidden><ul>
-        <li>地圖上散佈著 <b>20 座物資島</b>：16 座一般物資島（🍎 果園、⛏️ 礦山、🌲 森林、🪨 採石各 4 座），另外 <b>4 座 🪙 金礦島</b>（挖了直接領金幣，很稀有：每座每天全島只有 6～10 枚、每人每座只能挖 1 次）；它們分散在地圖各處，要自己去找。物資不是一直都有，<b>每 20 分鐘會隨機換一批</b>，島上有徽章（🍎⛏️🌲🪨🪙）才採得到，沒有徽章的島正在休息；<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
+        <li>地圖上散佈著 <b>20 座物資島</b>：16 座一般物資島（🍎 果園、⛏️ 礦山、🌲 森林、🪨 採石各 4 座），另外 <b>4 座 🪙 金礦島</b>（挖了直接領金幣：每座每天全島 14～24 枚、每人每座最多挖 2 次）；它們分散在地圖各處，要自己去找。每座島<b>每 10 分鐘會隨機換一批「資源多寡」</b>，島上的小標籤會告訴你現在是「豐富」（拿得多）、「普通」還是「稀少」（拿得少），看到「豐富」就趕快去；<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
         <li>每座島每天的總量隨機 60～160 份，大家一起採，採光了要等明天重新長出來。</li>
         <li>每人每座島每天最多採 <b>5 次</b>；<b>每座島的數量和冷卻都不一樣</b>：每次採 1～8 個不等，採完要等 30～120 秒才能再採同一座島。</li>
         <li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
@@ -2423,7 +2431,7 @@ function renderRes(n){
       (SFX_ON?'':'<button class="rs-snd" type="button" id="rsSnd">🔇 打開音效更好玩</button>')+
     '</div>'+
     '<div class="p-sec"><h4>我的背包</h4><div class="rs-bag" id="rsBag"></div><div class="row2"><button class="btn btn-ghost btn-sm" type="button" data-rbag>🎒 背包・兌換所・好友</button><button class="btn btn-ghost btn-sm" type="button" data-rrank>🏆 物資排行榜</button></div></div>'+
-    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li>'+(R.rk==='gold'?'<li>🪙 金礦島很稀有：每座每天全島只有 6～10 枚金幣，大家一起搶，挖光了要等明天。</li><li>每人每座金礦每天只能挖 1 次（每次 '+R.lo+'～'+R.hi+' 枚金幣）；4 座金礦分散在地圖各處，還要碰上它「長出金礦」的時段。</li><li>金礦裡沒有鑽石，挖到的金幣直接加進你的錢包。</li><li>⏰ 資源是隨機長出來的：每 20 分鐘換一批，這座島有的時候有、有的時候在休息；地圖上有徽章的島才採得到。</li>':'<li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>⏰ 資源是隨機長出來的：每 20 分鐘換一批，這座島有的時候有、有的時候在休息；地圖上有徽章的島才採得到。</li>')+'<li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 10 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
+    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li>'+(R.rk==='gold'?'<li>🪙 金礦島：每座每天全島有 14～24 枚金幣，大家一起搶，挖光了要等明天。</li><li>每人每座金礦每天最多挖 2 次（每次 '+R.lo+'～'+R.hi+' 枚，資源「豐富」時最多 3 枚、「稀少」時只有 1 枚）；4 座金礦分散在地圖各處。</li><li>金礦裡沒有鑽石，挖到的金幣直接加進你的錢包。</li><li>🍀 每 10 分鐘隨機換一批資源多寡：「豐富」拿得多、「普通」照平常、「稀少」拿得少。島上的小標籤和這頁上方都看得到，挑豐富的島去採最划算。</li>':'<li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🍀 每 10 分鐘隨機換一批資源多寡：「豐富」拿得多、「普通」照平常、「稀少」拿得少。島上的小標籤和這頁上方都看得到，挑豐富的島去採最划算。</li>')+'<li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 10 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
   $('pStep').textContent=R.e+' 物資島';
   footSimple('← 回地圖','');
   resBag();resStock();
@@ -2440,19 +2448,19 @@ function resBag(){
 /* 現在能不能採：回傳原因文字，可以採就回傳空字串 */
 function setSt(st){
   RS.st=st;RS.stT=Date.now();
-  if(RSV){RSV.op=RSV.op||{};for(var k in st)if(st[k]&&st[k].on!=null)RSV.op[k]=[st[k].on,st[k].w];RSV.t=Date.now();resPaint()}
+  if(RSV){RSV.op=RSV.op||{};for(var k in st)if(st[k]&&st[k].lv!=null)RSV.op[k]=[st[k].lv,st[k].w];RSV.t=Date.now();resPaint()}
 }
-/* 這座島現在有沒有資源：回傳 null（還不知道，當作有）或 {on,ms}；on=false 時 ms 是還要等多久才可能出現 */
-function opOf(R){
+var LVN=['稀少','普通','豐富'];
+/* 這座島這一輪的資源多寡：回傳 null（還不知道）或 {lv:0稀少/1普通/2豐富, ms:還有多久換批} */
+function lvOf(R){
   var x=RS.st&&RS.st[R.id],t=RS.stT,o=RSV&&RSV.op&&RSV.op[R.id];
-  if(x&&x.on!=null&&t){var left=x.w-(Date.now()-t);if(left>0)return {on:!!x.on,ms:left}}
-  if(o&&RSV.t){var l2=o[1]-(Date.now()-RSV.t);if(l2>0)return {on:!!o[0],ms:l2}}
+  if(x&&x.lv!=null&&t){var left=x.w-(Date.now()-t);if(left>0)return {lv:x.lv,ms:left}}
+  if(o&&RSV.t){var l2=o[1]-(Date.now()-RSV.t);if(l2>0)return {lv:o[0],ms:l2}}
   return null;
 }
 function rsBlock(){
-  var R=RESI[V.i],x=RS.st&&RS.st[R.id],cool=cdLeft(R),op=opOf(R);
+  var R=RESI[V.i],x=RS.st&&RS.st[R.id],cool=cdLeft(R);
   if(RS.busy)return '採集中…';
-  if(op&&!op.on)return '😴 這座島現在沒有資源，約 '+Math.max(1,Math.ceil(op.ms/60000))+' 分鐘後可能長出來（資源每 20 分鐘隨機換一批，到地圖上找有徽章的島吧）';
   if(cool)return '⏳ 這座島要休息 '+cool+' 秒後才能再'+R.act;
   if(x&&x.left<=0)return '今天被採光了，明天再來（到地圖上找別座物資島吧）';
   if(x&&x.mine>=x.max)return '今天在這裡採夠了，明天再來（到地圖上找別座物資島吧）';
@@ -2464,6 +2472,7 @@ function resStock(){
   var x=RS.st&&RS.st[R.id];
   if(x){var pct=x.total?x.left/x.total*100:0;
     el.innerHTML='今天還剩 <b>'+x.left+'</b> / '+x.total+' 份'+esc(R.item)+'<div class="bar"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
+      (function(){var lv=lvOf(R);return lv?'<div class="rs-lv l'+lv.lv+'">'+['🥀','🌿','🍀'][lv.lv]+' 這一輪資源「'+LVN[lv.lv]+'」・'+['每次拿得比較少','每次拿平常的量','每次拿得比平常多'][lv.lv]+'・約 '+Math.max(1,Math.ceil(lv.ms/60000))+' 分鐘後換下一批</div>':''})()+
       '<small>你今天在這裡採了 '+x.mine+' / '+x.max+' 次'+(x.found?'・今天已有 '+x.found+' 顆 💎 被撿走':'・聽說島上藏著鑽石…')+'</small>'}
   var why=rsBlock();
   obj.classList.toggle('off',!!why);
@@ -3338,12 +3347,9 @@ function resLoad(){
 function resReady(s){
   var w=COINS.get(),left=RSV.left&&RSV.left[s.id];
   if(left!=null&&left<=0)return false;
-  var o=RSV.op&&RSV.op[s.id];
-  if(o&&RSV.t&&Date.now()-RSV.t<o[1]&&!o[0])return false;   /* 這一輪沒有資源 */
-  if(w.code){if(((w.today||{})[s.id]||0)>=(s.rk==='gold'?1:5))return false;if(cdLeft(s)>0)return false}
+  if(w.code){if(((w.today||{})[s.id]||0)>=(s.rk==='gold'?2:5))return false;if(cdLeft(s)>0)return false}
   return true;
 }
-function resClosed(s){var o=RSV.op&&RSV.op[s.id];return !!(o&&RSV.t&&Date.now()-RSV.t<o[1]&&!o[0])}
 function resPaint(){
   if(!RSV)return;
   RESI.forEach(function(s){
@@ -3351,7 +3357,9 @@ function resPaint(){
     var b=s.el.querySelector('.rbadge');
     if(!b){b=document.createElement('span');b.className='rbadge';b.textContent=s.e;b.setAttribute('aria-hidden','true');s.el.appendChild(b)}
     b.hidden=!resReady(s);
-    s.el.classList.toggle('rz',resClosed(s));
+    var lv=lvOf(s),t=s.el.querySelector('.rlv');
+    if(!t){t=document.createElement('span');t.setAttribute('aria-hidden','true');s.el.appendChild(t)}
+    t.className='rlv l'+(lv?lv.lv:1);t.textContent=lv?LVN[lv.lv]:'';t.hidden=!lv||b.hidden;
   });
   /* 有島的「這一輪」時間到了，就重新問一次後台哪些島長出資源 */
   clearTimeout(RSV.tm2);
