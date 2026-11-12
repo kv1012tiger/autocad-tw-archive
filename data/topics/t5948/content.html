@@ -1,0 +1,17 @@
+<p>關於動態圖塊的運用，由於工作中常常會使用到H型鋼，之前有開發過LISP圖塊程式，但是H型鋼有很多尺寸常常要查表(輸入尺寸有點麻煩)...</p>
+<p>記得AutoCAD 2010版本有 參數式設計結合圖塊表格 新功能，剛好可以滿足我的需要，在此特別與各位朋友分享製作步驟(使用預設功能無須程式基礎)，有興趣的朋友也可以試試看~</p>
+<div class="section-title">步驟：</div>
+<p>一、使用bedit指令建立圖塊，再繪製H型鋼輪廓線。</p>
+<p>二、加入參數式約束條件(幾何約束、約束參數)，進行圖塊測試。</p>
+<p>三、新增圖塊性質表(並輸入H型鋼尺寸)。</p>
+<p>四、將Excel表格複製貼到AutoCAD表格，進行圖塊測試。</p>
+<p>五、插入 H型鋼圖塊，標註尺寸後進行圖塊測試。</p>
+<p>六、使用WBLOCK製作 H型鋼動態圖塊。</p>
+<p>七、將 H型鋼動態圖塊 加入工具選項板。</p>
+<p>八、完成標準作業，日後即可透過工具選項板快速插入 H型鋼動態圖塊。</p>
+<div class="section-title">影片展示：</div>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/_VvGJWZBMeM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p>※F1說明：</p>
+<p>您僅可以在圖塊編輯器中使用 BTABLE 指令。指定位置點之後，會顯示「圖塊性質表」對話方塊。位置點決定掣點和表格圖示在圖塊定義中的位置。掣點位置決定掣點在圖塊參考中顯示的位置，並根據圖塊性質表的內容顯示關聯式功能表。可包括在圖塊性質表中的性質類型包括舊式參數、參數約束、使用者參數和屬性。加入參數表的舊式動作參數無法加入圖塊性質表。</p>
+<p>表格中的每一列均定義圖塊參考的一個不同變化，且可透過參數表掣點進行存取。</p>
+<p>如果已在圖塊編輯器中建立圖塊表格，則輸入 BTABLE 指令會直接顯示「圖塊性質表」對話方塊 (請參閱 BLOOKUPTABLE 指令)。</p>

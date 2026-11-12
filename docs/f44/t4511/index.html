@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoLISP 與 Visual LISP 概述 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">💻 AutoLISP 與 Visual LISP 概述</h1>
+    <p class="topic-tagline">以前剛開始學 AutoLISP 時候，記得都是使用 Windows 記事本 …</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2009-10-30</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>以前剛開始學 AutoLISP 時候，記得都是使用 Windows 記事本 來編輯攥寫，但是非常的辛苦，因為 括弧及雙引線 等語法都要成雙成對，而且還有一些函數、運算子、字串、整數及實數常常傻傻分不清楚，正因為 記事本 的環境為白底黑字，所以除非很清楚程式語法構架，但是老手也會常常找不到哪裡缺一個括弧。</p>
+<p><b>使用 記事本 開啟 LISP檔案:</b></p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>在這裡跟各位分享另一個 編輯攥寫 AutoLISP 的環境 [Visual LISP]，使用這個軟體工具可以快速隨寫隨測，我覺得最棒的地方是預設內定使用文字顏色來區分所有的 函數、運算子、字串、整數及實數等等，所以對於初學LISP的朋友算是一大福音，再也不會被搞混囉，而且還可以幫你整理編排程式碼以及立即載入作用中的視窗。</p>
+<p><b>VLISP指令:</b></p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p><b>「VLISP指令」顯示 Visual LISP 互動式開發環境。</b></p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p><b>使用 Visual LISP 開啟 LISP檔案:</b></p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>以下程式碼是我上第一堂課學會使用 polar函數，polar函數可以求某點的指定角度和指定距離處的點，所以我試著使用它來畫出H型鋼的斷面尺寸，有興趣的朋友可以試看看，但是寫的不是很工整也請多多包含啦!!</p>
+<p>代碼:</p>
+<p>(defun C:RHSTEEL ()</p>
+<p>(SETVAR &quot;CMDECHO&quot; 0)</p>
+<p>(SETQ OLDOSMODE (GETVAR &quot;OSMODE&quot;))</p>
+<p>(SETVAR &quot;OSMODE&quot; 0)</p>
+<p>(setq P1 (getpoint &quot;\n基準點&quot;)</p>
+<p>H (GETREAL &quot;\nH=&quot;)</p>
+<p>W (GETREAL &quot;W=&quot;)</p>
+<p>t1 (GETREAL &quot;t1=&quot;)</p>
+<p>t2 (GETREAL &quot;t2=&quot;)</p>
+<p>)</p>
+<p>(setq P2 (polar P1 0 W)</p>
+<p>P3 (POLAR p2 (* pi 0.5) t2)</p>
+<p>P4 (POLAR p3 pi (- (* W 0.5)(* t1 0.5)))</p>
+<p>P5 (POLAR p4 (* pi 0.5) (- (* H 1)(* t2 2)))</p>
+<p>P6 (POLAR p5 0 (- (* W 0.5)(* t1 0.5)))</p>
+<p>P7 (POLAR p6 (* pi 0.5) t2)</p>
+<p>P8 (POLAR p7 PI W)</p>
+<p>P9 (POLAR p8 (* pi 1.5) t2)</p>
+<p>P10 (POLAR p9 0 (- (* W 0.5)(* t1 0.5)))</p>
+<p>P11 (POLAR p10 (* pi 1.5) (- (* H 1)(* t2 2)))</p>
+<p>P12 (POLAR p11 pi (- (* W 0.5)(* t1 0.5)))</p>
+<p>A1 (POLAR P11 PI t1)</p>
+<p>A2 (POLAR P11 (* PI 0.5) t2)</p>
+<p>A3 (POLAR P10 PI t1)</p>
+<p>A4 (POLAR P10 (* PI 1.5) t2)</p>
+<p>A5 (POLAR P4 0 t1)</p>
+<p>A6 (POLAR P4 (* PI 0.5) t2)</p>
+<p>A7 (POLAR P5 0 t1)</p>
+<p>A8 (POLAR P5 (* PI 1.5) t2)</p>
+<p>)</p>
+<p>(command &quot;OSMODE&quot; &quot;0&quot;)</p>
+<p>(command &quot;Pline&quot; P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 &quot;c&quot;)</p>
+<p>(command &quot;ZOOM&quot; P1 P7)</p>
+<p>(command &quot;FILLET&quot; &quot;R&quot; &quot;13&quot; &quot;FILLET&quot; A1 A2 &quot;FILLET&quot; A3 A4 &quot;FILLET&quot; A5 A6 &quot;FILLET&quot; A7 A8 &quot;FILLET&quot; &quot;R&quot; &quot;0&quot;)</p>
+<p>(command &quot;ZOOM&quot; &quot;P&quot;)</p>
+<p>(SETVAR &quot;OSMODE&quot; OLDOSMODE)</p>
+<p>(PRIN1)</p>
+<p>)</p>
+<p>PS:相關函數說明可以自行參考書籍或是F1使用者說明，也可以參考 明經通道 的說明(簡體版)。</p>
+<p>另外也可以把LISP作成工具列，或是掛在工具選項板中，當然指令式輸入或功能表都可以，這要看您個人的使用需求而定~</p>
+<p><b>影音範例展示:</b>(記得打開喇叭)</p>
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/oYpycdDx9QQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<p><a href="https://www.youtube.com/watch?v=oYpycdDx9QQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=oYpycdDx9QQ</a></p>
+<p><b>說明:</b></p>
+<div class="section-title">什麼是 AutoLISP ?</div>
+<p>AutoLISP 是一種功能完備的解譯式程式語言，您可使用它呼叫 AutoCAD 指令、系統變數和對話方塊。AutoLISP 基於 LISP 程式設計語言，這種語言簡單易學且功能非常強大。因為 AutoCAD 具有內建 LISP 解譯器，所以您可以在指令行中輸入 AutoLISP 程式碼，也可以從外部檔案載入 AutoLISP 程式碼。</p>
+<div class="section-title">什麼是 Visual LISP ?</div>
+<p>Visual LISP (VLISP) 是一種旨在加速 AutoLISP 程式開發的軟體工具。提供可提昇生產力的整合式開發環境 (IDE) (包括編譯器、除錯器以及其他開發工具)，因而增強了 AutoLISP 功能。使用 Visual LISP 時，您可以在「指令」提示下輸入程式碼作實驗，就可以立即看到結果。 這使 AutoLISP 成為一種易於驗證的簡單語言，而不論您的程式設計經驗如何。</p>
+<div class="section-title">「記事本」概觀</div>
+<p>[記事本] 是基本的文字編輯器，可用以建立簡單的文件。[記事本] 一般多用於檢視或編輯文字 (.txt) 檔案，但許多使用者會發現 [記事本] 在建立網頁方面，也非常地簡單好用。</p>
+<div class="section-title">《評論》 LISP是什麼語言？</div>
+<p><a href="http://tw.knowledge.yahoo.com/question/article?qid=1706122002871" target="_blank" rel="noopener">http://tw.knowledge.yahoo.com/question/article?qid=1706122002871</a></p>
+<p>參考引用資料:</p>
+<p>AutoCAD 2010 使用者說明</p>
+<p>補上翔虹吳老師的網站分享：</p>
+<p>AutoLISP的關鍵、基本結構及語法</p>
+<p><a href="http://www.autocad.com.tw/lisp_2.htm" target="_blank" rel="noopener">http://www.autocad.com.tw/lisp_2.htm</a></p>
+<p>快速分類瀏覽AutoLISP功能函數(一)</p>
+<p><a href="http://www.autocad.com.tw/lisp_3.htm" target="_blank" rel="noopener">http://www.autocad.com.tw/lisp_3.htm</a></p>
+<p>快速分類瀏覽AutoLISP功能函數(二)</p>
+<p><a href="http://www.autocad.com.tw/lisp_4.htm" target="_blank" rel="noopener">http://www.autocad.com.tw/lisp_4.htm</a></p>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t3943/index.html">← AutoCAD + CorelDRAW</a>
+    <a class="btn-ghost" href="../t4575/index.html">AutoCAD的繪圖順序 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t4511-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>

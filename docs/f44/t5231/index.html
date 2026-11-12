@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>清除註冊程式(R) CleanupRegapp | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">💻 清除註冊程式(R) CleanupRegapp</h1>
+    <p class="topic-tagline">AutoCAD發展了20幾個版本，而產生DWG格式的軟體也有很多，所以因為版…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2010-01-12</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<p>AutoCAD發展了20幾個版本，而產生DWG格式的軟體也有很多，所以因為版本及軟體交錯使用，使得DWG圖形檔中常常會內含一些錯誤訊息， <b>過多註冊程式</b> 就是典型問題的其中一種，通常在高階版本原廠都會提供解決方案，而舊的版本也是可以解決 過多的註冊程式問題，像這類的圖面有可能隱藏錯誤訊息而導致圖面損毀，或者在檔案使用中連結了太多的 註冊程式 才會使檔案異常的放大，一般可使用 -PURGE 指令行 方式 選用 註冊程式(R)後，即可刪除過多的註冊程式。</p>
+<p>這個註冊程式問題跟上一個介紹的主題 <a href="https://www.autocad-tw.com/forum-f44/topic-t4977.htm" target="_blank" rel="noopener">清除比例清單CleanupScales</a> 一樣，原廠也有釋出免費修復程式(CleanupRegapp.exe)，此程式適用於 AutoCAD 2008 及 AutoCAD 2009 二個版本，建議你趕快處理 註冊程式造成檔案異常放大問題，才不會惡性循環造成所有檔案都會異常變大，進而造成開圖(改圖)時產生lag情況。</p>
+<div class="section-title">原廠下載修復程式◆</div>
+<p><a href="http://knowledge.autodesk.com/support/autocad/troubleshooting/caas/sfdcarticles/sfdcarticles/How-to-install-the-Regapp-ID-Cleanup-Utility-for-AutoCAD.html" target="_blank" rel="noopener">http://knowledge.autodesk.com/support/autocad/troubleshooting/caas/sfdcarticles/sfdcarticles/How-to-install-the-Regapp-ID-Cleanup-Utility-for-AutoCAD.html</a></p>
+<div class="section-title">安裝說明◆</div>
+<p>1.根據您的操作系統（32位或64位），下載適合的自解壓縮可執行文件。</p>
+<img src="images/01.jpg" alt="" loading="lazy">
+<p>2.將解壓縮到文件 CleanupRegapp.exe，CleanupRegappRes.dll，CleanupRegapp.html 複製後，再貼到您的 AutoCAD 安裝目錄。</p>
+<img src="images/02.jpg" alt="" loading="lazy">
+<p>3.建立 CleanupRegapp.exe 捷徑(建議放到您的桌面)。</p>
+<img src="images/03.jpg" alt="" loading="lazy">
+<p>4.請記得更名方便日後辨識及使用。</p>
+<p>&gt;&gt;&gt;</p>
+<p>注意：此程式適用於 AutoCAD 2008 及 AutoCAD 2009 二個版本。</p>
+<div class="section-title">使用說明◆</div>
+<p>1.可以選擇資料夾或圖檔二個方式，選用的資料夾中所有圖檔的 註冊程式(R) 會全部清除。</p>
+<img src="images/04.jpg" alt="" loading="lazy">
+<p>2.清除完畢後會出現以下訊息。</p>
+<img src="images/05.jpg" alt="" loading="lazy">
+<p>△未處理的檔案大小</p>
+<img src="images/06.jpg" alt="" loading="lazy">
+<p>△已處理的檔案大小</p>
+<img src="images/07.jpg" alt="" loading="lazy">
+<p>範例檔中：刪除了163880 個已註冊的應用程式，DWG圖檔由原先的 2749kb 刪除註冊程式後檔案縮小為 78kb。</p>
+<p>有興趣的朋友可以使用您的圖檔來測試，也可以下載我所提供的範例檔，單一圖檔可以先使用 指令行 來操作，當您有大量的圖檔則可以使用原廠提供的程式來清除註冊程式。</p>
+<p><b>範例檔：</b></p>
+<p><b>*單一圖檔 指令行 操作步驟：</b></p>
+<p>代碼:</p>
+<p>指令: -PURGE</p>
+<p>請輸入要清除的未使用物件的類型</p>
+<p>[圖塊(B)/標註型式(D)/圖層(LA)/線型(LT)/材料(MA)/出圖型式(P)/形狀(SH)/文字型式(ST)/複線型式(M)/表格型式(T)/視覺型式</p>
+<p>(V)/註冊程式(R)/全部(A)]: R</p>
+<p>輸入要清除的名稱 &lt;*&gt;: N</p>
+<p>確認每一個要清除的名稱？[是(Y)/否(N)] &lt;Y&gt;:</p>
+<p>正在刪除已註冊的應用程式「DIAM\M+00000?IRE」。</p>
+<p>.</p>
+<p>.</p>
+<p>正在刪除已註冊的應用程式「MATI\M+00000?E」。</p>
+<p>正在刪除已註冊的應用程式「DIAM\M+00000甬RE」。</p>
+<p>163880 個已註冊的應用程式被刪除。</p>
+<p><b>-PURGE指令補充：</b></p>
+<p>-PURGE指令 所清除的 註冊程式(R) 就是指 ObjectARX 應用程式，當開啟包含自訂物件的圖面時，會應要求載入來源應用程式。而如果找不到就會問你是否 顯示代理圖形。</p>
+<p>AutoCAD 2008 的 多重引線 新功能就是 ObjectARX 應用程式，當使用 AutoCAD 2006 開啟含有 多重引線 的圖面時，會有以下 3 種情況，預設值為 顯示代理圖形。</p>
+<div class="section-title">不顯示代理圖形：指定不在圖面中顯示自訂物件。</div>
+<div class="section-title">顯示代理圖形：指定在圖面中顯示自訂物件。</div>
+<div class="section-title">顯示代理邊界框：指定在圖面中顯示方塊取代自訂物件。</div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t4892/index.html">← 查看AutoCAD圖檔格式</a>
+    <a class="btn-ghost" href="../t5948/index.html">動態圖塊-圖塊表格運用 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t5231-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js"></script>
+</body>
+</html>
