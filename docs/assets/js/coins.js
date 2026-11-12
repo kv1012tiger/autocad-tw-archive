@@ -625,7 +625,8 @@
   }
 
   /* ---------- 公告：站長發布，大家登島時收到通知 ---------- */
-  var ANN = { list: [], max: 0 }, ANN_KEY = 'cw-ann-seen';
+  var ANN = { list: [], max: 0 }, ANN_KEY = 'cw-ann-seen', ANN_CACHE = 'cw-ann-cache';
+  try { var ac = JSON.parse(localStorage.getItem(ANN_CACHE) || 'null'); if (ac && Array.isArray(ac.list)) { ANN.list = ac.list; ANN.max = ac.max || 0; } } catch (e) {} // 上次的公告先放著，點開馬上看得到
   function annSeen() {
     var s = P.code ? (+P.annSeen || 0) : 0;
     try { s = Math.max(s, +localStorage.getItem(ANN_KEY) || 0); } catch (e) {}
@@ -637,7 +638,10 @@
     var n = annUnread().length; d.hidden = !n; d.textContent = n;
   }
   function annLoad() {
-    return call({ a: 'anns' }).then(function (j) { if (j && j.ok) { ANN.list = j.list || []; ANN.max = j.max || 0; annDot(); } return ANN; });
+    return call({ a: 'anns' }).then(function (j) {
+      if (j && j.ok) { ANN.list = j.list || []; ANN.max = j.max || 0; annDot(); try { localStorage.setItem(ANN_CACHE, JSON.stringify({ list: ANN.list, max: ANN.max })); } catch (e) {} }
+      return ANN;
+    });
   }
   function annMark() {
     try { localStorage.setItem(ANN_KEY, String(ANN.max)); } catch (e) {}
@@ -651,7 +655,7 @@
   function annShow(popup) {
     var seen = annSeen(), list = popup ? annUnread().slice(0, 5) : ANN.list, canPost = !!(P.code && P.ann);
     if (!popup && list.length) annMark(); // 打開公告清單就算看過
-    modal('<div class="cw-ic">📢</div><h3>' + (popup ? '站長公告' : '公告') + '</h3><div class="ann-list">' +
+    return modal('<div class="cw-ic">📢</div><h3>' + (popup ? '站長公告' : '公告') + '</h3><div class="ann-list">' +
       (list.length ? list.map(function (a) { return annItem(a, a.id > seen, canPost && !popup); }).join('') : '<p>目前沒有公告。</p>') + '</div>' +
       (canPost && !popup ? '<div class="cw-row"><button class="cw-b" type="button" data-anew>＋ 新增公告</button></div>' : '') +
       '<div class="cw-row"><button class="cw-b p" type="button" data-x>' + (popup ? '知道了' : '關閉') + '</button>' + (popup && ANN.list.length > list.length ? '<button class="cw-b" type="button" data-aall>看全部公告</button>' : '') + '</div>',
@@ -695,7 +699,15 @@
         setTimeout(function () { ti.focus(); }, 60);
       }, true, 'wide');
   }
-  function annOpen() { annLoad().then(function () { annShow(false); }).catch(function () { toast('⚠️ 暫時連不上公告，請稍後再試'); }); }
+  /* 點公告：先用上次存的內容馬上打開，背景再更新；有新內容就重畫（不用空等網路） */
+  function annOpen() {
+    var had = ANN.list.length > 0 || ANN.max > 0, before = JSON.stringify(ANN.list), close = null;
+    if (had) close = annShow(false);
+    annLoad().then(function () {
+      if (!had) { annShow(false); return; }
+      if (JSON.stringify(ANN.list) !== before && close && document.querySelector('.cw-ov .ann-list')) { close(); annShow(false); }
+    }).catch(function () { if (!had) toast('⚠️ 暫時連不上公告，請稍後再試'); });
+  }
   function whenIdle(fn, tries) {
     tries = tries || 0;
     if (document.querySelector('#mission:not([hidden]),#intro:not([hidden]),.cw-ov') && tries < 120) { setTimeout(function () { whenIdle(fn, tries + 1); }, 1000); return; }
