@@ -1162,6 +1162,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
   <button class="qtog" type="button" id="questTog" aria-label="展開選單" aria-expanded="false"><i>⛵</i>選單</button>
   <button class="qfold" type="button" id="questFold" aria-label="收起選單">⌄</button>
   <button class="qbtn hot" type="button" id="startBtn"><i>⛵</i>探險</button>
+  <button class="qbtn" type="button" data-open="mine"><i>🏝️</i>我的小島</button>
   <button class="qbtn" type="button" id="randBtn"><i>🎲</i>隨機</button>
   <button class="qbtn" type="button" id="searchBtn2"><i>🔮</i>搜尋</button>
   <button class="qbtn" type="button" data-open="castle"><i>🏰</i>城堡</button>
@@ -3386,7 +3387,7 @@ pBody.addEventListener('click',function(e){
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-open]');if(!t)return;
   var k=t.dataset.open;$('chest').hidden=true;
-  if(panel.classList.contains('open'))openPanel(k);else visit(spotIdx(k));
+  if(panel.classList.contains('open')){openPanel(k);if(k==='mine'||k==='pets')placeBoat(spotIdx(k))}else visit(spotIdx(k));
 });
 function randomQ(){
   var keys=Object.keys(QA),r=keys[Math.floor(Math.random()*keys.length)],n=ISLE_OF[r];
