@@ -608,7 +608,11 @@ html:not(.hud-full) .hud:not(.mini) .hfold{display:block}
 .guide-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 body.dock-open .guide-float{bottom:calc(96px + env(safe-area-inset-bottom))}
 .htog{display:flex;align-items:center;gap:6px;position:relative;padding:7px 12px;border-radius:999px;border:1.5px solid rgba(255,209,102,.6);background:rgba(3,42,60,.9);color:var(--gold);font-weight:900;font-size:16px;box-shadow:0 4px 14px rgba(0,30,50,.45);white-space:nowrap}
-.htog i{font-style:normal;font-size:12px;opacity:.8}
+.htog .gear{font-size:20px;line-height:1;display:inline-block;animation:gearTurn 2.2s ease-in-out 1.5s 2}
+.htog .htl{color:#fff;font-size:15px}
+.htog .hc{padding-left:8px;border-left:1px solid rgba(255,209,102,.45);font-size:15px}
+@keyframes gearTurn{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.htog .gear{animation:none}}
 .htog.bump{animation:bump .6s cubic-bezier(.3,1.6,.5,1)}
 .hb-dot.p{min-width:0;width:13px;height:13px;padding:0;top:-3px;right:-2px}
 .hud:not(.mini) .htog{display:none}
@@ -773,6 +777,10 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .spot .rbadge{position:absolute;left:6%;top:2%;z-index:4;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:21px;box-shadow:0 0 0 3px rgba(4,46,64,.85),0 0 14px rgba(255,255,255,.7);animation:bob 1.6s ease-in-out infinite;pointer-events:none}
 .spot .rbadge[hidden]{display:none}
+.spot .nbadge{position:absolute;left:0;right:0;top:-8%;margin:0 auto;width:max-content;z-index:6;padding:5px 12px;border-radius:999px;background:#ef4444;color:#fff;font-weight:900;font-size:15px;line-height:1.2;box-shadow:0 0 0 3px rgba(255,255,255,.92),0 6px 16px rgba(239,68,68,.65);animation:nbob 1.3s ease-in-out infinite;white-space:nowrap;pointer-events:none}
+.spot .nbadge[hidden]{display:none}
+@keyframes nbob{50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.spot .nbadge{animation:none}}
 .spot .dbadge{position:absolute;left:50%;top:-9%;z-index:6;width:46px;height:46px;margin-left:-23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8c4,#ffd166 60%,#f59e0b);display:grid;place-items:center;font-size:26px;cursor:pointer;box-shadow:0 0 0 3px rgba(4,46,64,.9),0 0 20px rgba(255,209,102,.95);animation:dropbob 1.4s ease-in-out infinite}
 .spot .dbadge.dd{background:radial-gradient(circle at 35% 30%,#f0fbff,#7dd3fc 60%,#0284c7);box-shadow:0 0 0 3px rgba(4,46,64,.9),0 0 22px rgba(125,211,252,.98)}
 .spot .dbadge::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px dashed rgba(255,255,255,.7);animation:spin 5s linear infinite;pointer-events:none}
@@ -1124,7 +1132,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 <div class="deco" aria-hidden="true"><div class="moon"></div><span class="bat">🦜</span><span class="bat b2">🦜</span></div>
 
 <header class="hud mini" id="hud">
-  <button class="htog" id="hudTog" type="button" aria-label="展開選單" aria-expanded="false">🪙 <b id="htogN">0</b><i>▾</i><span class="hb-dot p" id="htogDot" hidden></span></button>
+  <button class="htog" id="hudTog" type="button" aria-label="展開選單" aria-expanded="false"><span class="gear" aria-hidden="true">⚙️</span><span class="htl">選單</span><span class="hc">🪙 <b id="htogN">0</b></span><span class="hb-dot p" id="htogDot" hidden></span></button>
   <a class="logo" href="#"><span>🏝️</span>論壇資源島</a>
   <div class="scene-bar" id="sceneBar"><button class="btn btn-primary btn-sm" id="sceneBack" type="button" aria-label="回大海">⛵<span class="tx"> 回大海</span></button><div class="scene-t"><b id="sceneName"></b><small id="sceneSub"></small></div><div class="acts"><button class="act" id="sceneShare" type="button" aria-label="分享這座島">🔗<span class="tx"> 分享</span></button><button class="act" id="sceneFav" type="button" aria-label="收藏這座島"></button></div></div>
   <button class="candy" id="candyBtn" type="button" aria-label="金幣收集進度">🪙 <b id="candyN">0</b></button>
@@ -2264,6 +2272,7 @@ function renderCastle(){
 /* ---------- 留言碼頭：大家留言，站長回覆（回覆後可再編輯）；網址自動變成連結 ---------- */
 var MB={page:1,list:[],edit:null,seq:0};
 function renderMsg(){
+  if(MSGA.cur!=null){msgSeenSet(MSGA.cur);msgPaint(false)}
   pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
     '<p class="s-count" id="mbOn" style="margin:2px 0 8px;font-weight:700">🟢 現在 … 位在線</p><div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
   if(COINS.stats)COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
@@ -2334,7 +2343,7 @@ pBody.addEventListener('click',function(e){
     COINS.api({a:'msg',text:v},true).then(function(j){
       t.disabled=false;t.textContent='📮 送出留言';
       if(!j.ok){toast('⚠️ '+COINS.errText(j));return}
-      ta.value='';$('mbCnt').textContent='0 / 300';toast('📮 留言送出了，蘋果爸看到會回覆你！');playSfx('candy');loadMsgs(MB.page=1,1);
+      ta.value='';$('mbCnt').textContent='0 / 300';toast('📮 留言送出了，蘋果爸看到會回覆你！');playSfx('candy');if(MSGA.cur!=null){MSGA.cur+=1;msgSeenSet(MSGA.cur)}loadMsgs(MB.page=1,1);
     }).catch(function(){t.disabled=false;t.textContent='📮 送出留言';toast('⚠️ 暫時連不上，請稍後再試')});
     return;
   }
@@ -3148,9 +3157,26 @@ $('spots').addEventListener('click',function(e){
 },true);
 /* 資源島：現在可以採集（今天還有存量、我今天沒採滿、這座島的冷卻已過）就浮出資源符號 */
 var RSV={t:0,left:null,timer:0,tm:0};
+/* 留言碼頭有新留言：地圖上那座島浮出紅色「💬 新留言」，點一下就進去看；進留言碼頭就算看過 */
+var MSGA={cur:null,toasted:-1};
+function msgSeenGet(){try{var v=localStorage.getItem('aikb-msg-seen');return v==null?0:(+v||0)}catch(e){return 0}}
+function msgSeenSet(n){try{localStorage.setItem('aikb-msg-seen',String(n))}catch(e){}}
+function msgPaint(on){
+  var s=MSG_SPOT&&MSG_SPOT.el;if(!s)return;
+  var b=s.querySelector('.nbadge');
+  if(!b){b=document.createElement('span');b.className='nbadge';b.textContent='💬 新留言';b.setAttribute('aria-hidden','true');s.appendChild(b)}
+  b.hidden=!on;
+}
+function msgNote(ma){
+  MSGA.cur=ma;var seen=msgSeenGet();
+  if(ma<seen){seen=ma;msgSeenSet(ma)}
+  if(V&&V.t==='msg'&&panel.classList.contains('open')){seen=ma;msgSeenSet(ma)}
+  msgPaint(ma>seen);
+  if(ma>seen&&MSGA.toasted!==ma){MSGA.toasted=ma;toast('📮 留言碼頭有新留言，到地圖上點紅色「新留言」去看看')}
+}
 function resLoad(){
   clearTimeout(RSV.timer);
-  COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;RSV.t=Date.now();resPaint()}}).catch(function(){}).then(function(){
+  COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;RSV.t=Date.now();resPaint()}if(j&&j.ok&&j.ma!=null)msgNote(j.ma)}).catch(function(){}).then(function(){
     RSV.timer=setTimeout(function(){if(document.hidden)RSV.timer=setTimeout(resLoad,60000);else resLoad()},45000);
   });
 }

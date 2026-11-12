@@ -842,6 +842,19 @@ function isles_() {
   return { sh: sh, map: map };
 }
 /* 地圖上顯示「資源島現在有沒有東西可採」用的輕量版：只讀、不重抽、快取 20 秒（有人採集就清掉） */
+/* 留言碼頭的「動態數」：公開的留言數＋站長回覆數（隱藏／刪除的不算），網頁用它判斷有沒有新留言可以通知。依留言版本快取 6 小時 */
+function msgAct_() {
+  var k = 'mact:' + ver_('msgs'), hit = cget_(k);
+  if (hit !== null && hit !== undefined) return hit;
+  var sh = sheet_('留言板', M_HEAD), n = sh.getLastRow() - 1, act = 0;
+  if (n > 0) sh.getRange(2, 1, n, M_HEAD.length).getValues().forEach(function (v) {
+    var st = String(v[9]);
+    if (!v[0] || st === '刪除' || st === '隱藏') return;
+    act++; if (v[6]) act++;
+  });
+  cput_(k, act, 21600);
+  return act;
+}
 function islLite_() {
   var hit = cget_('isl2');
   if (hit) return hit;
@@ -851,7 +864,7 @@ function islLite_() {
     var k = String(v[0]);
     if (ISL_MAP[k] && Number(v[2]) === t) left[k] = Math.max(0, num_(v[3]) - num_(v[4]));
   });
-  var out = { ok: true, left: left };
+  var out = { ok: true, left: left, ma: msgAct_() };
   cput_('isl2', out, 20);
   return out;
 }
