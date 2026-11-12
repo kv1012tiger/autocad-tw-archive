@@ -57,11 +57,24 @@ var RES = {
   stone: { name: '採石島', item: '石頭', col: C.stone }
 };
 var RES_KEYS = ['fruit', 'iron', 'wood', 'stone'];
+/* 20 座物資島：[代號, 種類, 名稱, 再採間隔秒, 每次最少, 每次最多]（網頁 templates/island-home.html 有同一份，要一起改） */
+var ISL = [['r0','fruit','果園島',100,3,5],['r1','iron','礦山島',90,3,6],['r2','wood','森林島',80,3,7],['r3','stone','採石島',70,2,4],['r4','fruit','蘋果灣',80,3,6],['r5','iron','鐵砧島',60,2,6],['r6','wood','松林島',30,1,3],['r7','stone','石灰岩',30,1,4],['r8','fruit','橘子島',40,1,5],['r9','iron','紅岩礦坑',70,2,4],['r10','wood','楓葉林',110,4,7],['r11','stone','花崗岩島',110,4,8],['r12','fruit','香蕉岸',120,4,6],['r13','iron','黑曜礦脈',50,2,5],['r14','wood','竹林灣',50,2,6],['r15','stone','大理石岸',100,3,5],['r16','fruit','葡萄谷',40,1,4],['r17','iron','熔爐島',120,4,8],['r18','wood','神木島',60,2,4],['r19','stone','礫石灘',90,3,6]].map(function (a) { return { id: a[0], t: a[1], name: a[2], gap: a[3], lo: a[4], hi: a[5] }; });
+var ISL_MAP = {};
+ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
+var ISL_LEGACY = { fruit: 'r0', iron: 'r1', wood: 'r2', stone: 'r3' }; // 舊版網頁送的是種類名稱
+var HOUSE_MS = [0, 60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000]; // 蓋小屋／升級要花的時間：Lv1 1 分、Lv2 5 分、Lv3 15 分
+/* 商店島：船（0 號免費）、金幣換物資 */
+var SHIPS = [{ name: '小木帆船', cost: 0 }, { name: '彩旗帆船', cost: 8 }, { name: '海盜大帆船', cost: 25 },
+  { name: '商賈雙桅船', cost: 60 }, { name: '皇家旗艦', cost: 120 }, { name: '鑽石龍船', cost: 250 }];
+var BUY_COST = 1, BUY_N = 4;        // 1 枚金幣買 4 個物資（賣出是 10 個換 1 枚，所以不能無限賺）
+var SWAP_FROM = 8, SWAP_TO = 4;     // 8 個甲物資換 4 個乙物資
+var DIA_BUY = 15;                   // 15 枚金幣買 1 顆鑽石（賣出是 1 顆換 5 枚）
+var XCHG_MAX = 20;                  // 一次最多換 20 份
 var STOCK_MIN = 60, STOCK_MAX = 160; // 每座物資島每天的總量（隨機）
 var GATHER_N = [2, 6];               // 每次採集拿到幾個（2～6，原本是 1～3，加倍）
-var DIA_MAX = 2;                     // 每座物資島每天藏 0～2 顆鑽石（隨機）
+var DIA_MAX = 1;                     // 每座物資島每天藏 0～1 顆鑽石（隨機；島變 20 座，所以從 2 降成 1）
 var GATHER_MAX = 5;                  // 每人每座島每天最多採 5 次
-var GATHER_GAP = 5 * 1000;           // 兩次採集至少隔 5 秒
+var GATHER_GAP = 1000;               // 任兩次採集至少隔 1 秒（防連點）；每座島另有自己的冷卻（30～120 秒）
 var TRADE_RATE = 10;                 // 10 個同種物資換 1 枚金幣
 var DIA_RATE = 5;                    // 1 顆鑽石換 5 枚金幣
 var TRADE_MAX = 3;                   // 每天最多兌換 3 次
@@ -109,7 +122,8 @@ var DROP_SPOTS = [
   'qa-3', 'pets', 'res-1', 'isle-cad3d', 'qa-4', 'isle-f44',
   'qa-5', 'isle-videos', 'res-2', 'qa-6', 'isle-advanced', 'qa-7',
   'isle-courses', 'res-3', 'qa-8', 'isle-realtime', 'isle-announce', 'isle-career',
-  'isle-plugins', 'castle', 'dock'
+  'isle-plugins', 'castle', 'dock', 'shop',
+  'res-4', 'res-5', 'res-6', 'res-7', 'res-8', 'res-9', 'res-10', 'res-11', 'res-12', 'res-13', 'res-14', 'res-15', 'res-16', 'res-17', 'res-18', 'res-19'
 ];
 function hash_(str) {
   var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
@@ -258,7 +272,8 @@ function profile_(r) {
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
     trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
-    veg: io.veg, score: isleScore_(io),
+    veg: io.veg, score: isleScore_(io), ship: io.ship,
+    cd: (function () { var m = {}, nw = Date.now(); Object.keys(io.cd).forEach(function (k) { m[k] = Math.ceil((io.cd[k] - nw) / 1000); }); return m; })(),
     open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是',
     dr: io.dr && io.dr.d === pd && Array.isArray(io.dr.k)
       ? { c: num_(io.dr.c), g: num_(io.dr.g), k: io.dr.k.filter(function (x) { return x.split(':')[0] === cur; }).map(function (x) { return x.split(':')[1]; }) }
@@ -413,29 +428,68 @@ function handle_(q) {
       res.isles = islesPub_(isles_(), r);
     } else if (a === 'gather') {
       var rk = String(q.isle || '');
-      if (!RES[rk]) return { ok: false, err: 'bad' };
+      if (ISL_LEGACY[rk]) rk = ISL_LEGACY[rk];
+      var il = ISL_MAP[rk];
+      if (!il) return { ok: false, err: 'bad' };
       var now = Date.now(), wait = num_(r[C.gLast]) + GATHER_GAP - now;
       if (wait > 0) return { ok: false, err: 'cool', wait: Math.ceil(wait / 1000), p: me };
+      var gio = isleOf_(r), ready = num_(gio.cd[rk]);
+      if (ready > now) return { ok: false, err: 'cool', wait: Math.ceil((ready - now) / 1000), p: me };
       var tc = counts_(r[C.gToday]);
       if ((tc[rk] || 0) >= GATHER_MAX) return { ok: false, err: 'tired', p: me };
       var st = isles_(), isl = st.map[rk], left = isl.total - isl.taken;
       if (left <= 0) return { ok: false, err: 'empty', p: me, isles: islesPub_(st, r) };
-      var got = Math.min(left, GATHER_N[0] + Math.floor(Math.random() * (GATHER_N[1] - GATHER_N[0] + 1))), from = isl.taken;
+      var got = Math.min(left, il.lo + Math.floor(Math.random() * (il.hi - il.lo + 1))), from = isl.taken;
       isl.taken += got;
       var dia = 0;
       isl.dias.forEach(function (pos) { if (pos > from && pos <= isl.taken) dia++; });
       if (dia) isl.found += dia;
       st.sh.getRange(isl.row, 5).setValue(isl.taken);
       if (dia) st.sh.getRange(isl.row, 7).setValue(isl.found);
-      cdel_('isl');
+      cdel_('isl2');
       tc[rk] = (tc[rk] || 0) + 1;
       r[C.gToday] = countsStr_(tc);
       r[C.gLast] = now;
-      r[RES[rk].col] = num_(r[RES[rk].col]) + got;
+      gio.cd[rk] = now + il.gap * 1000;
+      r[C.isle] = JSON.stringify(gio);
+      r[RES[il.t].col] = num_(r[RES[il.t].col]) + got;
       r[C.tres] = num_(r[C.tres]) + got;
       if (dia) { r[C.dia] = num_(r[C.dia]) + dia; r[C.tdia] = num_(r[C.tdia]) + dia; }
-      res.got = { k: rk, n: got, dia: dia };
+      res.got = { k: il.t, n: got, dia: dia, isle: rk };
       res.isles = islesPub_(st, r);
+    /* ----- 商店島：買船、換船、金幣換物資 ----- */
+    } else if (a === 'buyship' || a === 'useship') {
+      var sid = Math.floor(num_(q.k)), sp = SHIPS[sid];
+      if (!sp) return { ok: false, err: 'bad', p: me };
+      var so = isleOf_(r);
+      if (a === 'buyship') {
+        if (so.ship.own.indexOf(sid) >= 0) return { ok: false, err: 'owned', p: me };
+        if (!me.admin) {
+          if (num_(r[C.bal]) < sp.cost) return { ok: false, err: 'nocoin', p: me };
+          r[C.bal] = num_(r[C.bal]) - sp.cost;
+        }
+        so.ship.own.push(sid); so.ship.own.sort(function (x, y) { return x - y; });
+        so.ship.cur = sid;
+        sheet_('小島紀錄', L_HEAD).appendRow([new Date(), r[C.nick], r[C.code], '買船', sp.name + '（' + sp.cost + ' 金幣）']);
+      } else {
+        if (so.ship.own.indexOf(sid) < 0) return { ok: false, err: 'notown', p: me };
+        so.ship.cur = sid;
+      }
+      r[C.isle] = JSON.stringify(so);
+    } else if (a === 'xbuy') {
+      var xk = String(q.k || ''), xn = Math.max(1, Math.min(XCHG_MAX, Math.floor(num_(q.n) || 1)));
+      var xcost = (xk === 'dia' ? DIA_BUY : BUY_COST) * xn;
+      if (xk !== 'dia' && !RES[xk]) return { ok: false, err: 'bad', p: me };
+      if (num_(r[C.bal]) < xcost) return { ok: false, err: 'nocoin', p: me };
+      r[C.bal] = num_(r[C.bal]) - xcost;
+      if (xk === 'dia') r[C.dia] = num_(r[C.dia]) + xn;
+      else r[RES[xk].col] = num_(r[RES[xk].col]) + BUY_N * xn;
+    } else if (a === 'xswap') {
+      var sf = String(q.f || ''), st2 = String(q.t || ''), sn = Math.max(1, Math.min(XCHG_MAX, Math.floor(num_(q.n) || 1)));
+      if (!RES[sf] || !RES[st2] || sf === st2) return { ok: false, err: 'bad', p: me };
+      if (num_(r[RES[sf].col]) < SWAP_FROM * sn) return { ok: false, err: 'few', p: me };
+      r[RES[sf].col] = num_(r[RES[sf].col]) - SWAP_FROM * sn;
+      r[RES[st2].col] = num_(r[RES[st2].col]) + SWAP_TO * sn;
     } else if (a === 'trade') {
       var tk = String(q.k || '');
       if (num_(r[C.trades]) >= TRADE_MAX) return { ok: false, err: 'trademax', p: me };
@@ -741,43 +795,45 @@ function top_(q) {
 function isles_() {
   var sh = sheet_('物資島', R_HEAD), t = day_(), n = sh.getLastRow() - 1;
   var vals = n > 0 ? sh.getRange(2, 1, n, R_HEAD.length).getValues() : [];
-  var map = {};
-  RES_KEYS.forEach(function (k) {
-    var idx = -1;
-    for (var x = 0; x < vals.length; x++) if (String(vals[x][0]) === k) idx = x;
-    var v = idx >= 0 ? vals[idx] : null;
+  var byId = {};
+  vals.forEach(function (v) { byId[String(v[0])] = v; });
+  var map = {}, rows = [], dirty = false;
+  ISL.forEach(function (il, i) {
+    var v = byId[il.id];
     if (!v || Number(v[2]) !== t) {
       var total = STOCK_MIN + Math.floor(Math.random() * (STOCK_MAX - STOCK_MIN + 1));
       var nd = Math.floor(Math.random() * (DIA_MAX + 1)), pos = [];
       while (pos.length < nd) { var p = 1 + Math.floor(Math.random() * total); if (pos.indexOf(p) < 0) pos.push(p); }
-      v = [k, RES[k].name, t, total, 0, "'" + pos.sort(function (a, b) { return a - b; }).join(','), 0];
-      if (idx < 0) { sh.appendRow(v); idx = sh.getLastRow() - 2; vals.push(v); }
-      else sh.getRange(idx + 2, 1, 1, R_HEAD.length).setValues([v]);
-    }
-    map[k] = { row: idx + 2, total: num_(v[3]), taken: num_(v[4]),
+      v = [il.id, il.name, t, total, 0, "'" + pos.sort(function (x, y) { return x - y; }).join(','), 0];
+      dirty = true;
+    } else v = [v[0], v[1], v[2], v[3], v[4], "'" + String(v[5]).replace(/^'/, ''), v[6]];
+    rows.push(v);
+    map[il.id] = { row: i + 2, total: num_(v[3]), taken: num_(v[4]),
       dias: plain_(v[5]).split(',').filter(String).map(Number), found: num_(v[6]) };
   });
+  var ordered = vals.length >= ISL.length && ISL.every(function (il, i) { return String(vals[i][0]) === il.id; });
+  if (dirty || !ordered) sh.getRange(2, 1, rows.length, R_HEAD.length).setValues(rows); // 一次寫完 20 列（比一列一列寫快很多）
   return { sh: sh, map: map };
 }
 /* 地圖上顯示「資源島現在有沒有東西可採」用的輕量版：只讀、不重抽、快取 20 秒（有人採集就清掉） */
 function islLite_() {
-  var hit = cget_('isl');
+  var hit = cget_('isl2');
   if (hit) return hit;
   var sh = sheet_('物資島', R_HEAD), n = sh.getLastRow() - 1, t = day_(), left = {};
-  RES_KEYS.forEach(function (k) { left[k] = 1; }); // 今天還沒人來過 → 當作還有
+  ISL.forEach(function (il) { left[il.id] = 1; }); // 今天還沒人來過 → 當作還有
   (n > 0 ? sh.getRange(2, 1, n, R_HEAD.length).getValues() : []).forEach(function (v) {
     var k = String(v[0]);
-    if (RES[k] && Number(v[2]) === t) left[k] = Math.max(0, num_(v[3]) - num_(v[4]));
+    if (ISL_MAP[k] && Number(v[2]) === t) left[k] = Math.max(0, num_(v[3]) - num_(v[4]));
   });
   var out = { ok: true, left: left };
-  cput_('isl', out, 20);
+  cput_('isl2', out, 20);
   return out;
 }
 function islesPub_(st, r) {
   var o = {}, tc = r ? counts_(r[C.gToday]) : {};
-  RES_KEYS.forEach(function (k) {
-    var m = st.map[k];
-    o[k] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[k] || 0, max: GATHER_MAX };
+  ISL.forEach(function (il) {
+    var m = st.map[il.id];
+    o[il.id] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[il.id] || 0, max: GATHER_MAX };
   });
   return o;
 }
@@ -795,6 +851,15 @@ function isleOf_(r) {
   Object.keys(VEG).forEach(function (k) { o.veg[k] = num_(o.veg[k]); });
   o.wd = o.wd && o.wd.f ? o.wd : { d: 0, f: [] };
   o.vis = Array.isArray(o.vis) ? o.vis : [];
+  var nowI = Date.now();
+  if (o.hb && num_(o.hb.e) <= nowI) { o.h = Math.max(o.h, num_(o.hb.t)); o.hb = null; } // 施工時間到了，小屋完工
+  if (!o.hb) o.hb = null;
+  o.ship = o.ship && Array.isArray(o.ship.own) ? o.ship : { cur: 0, own: [0] };
+  if (o.ship.own.indexOf(0) < 0) o.ship.own.unshift(0);
+  if (o.ship.own.indexOf(o.ship.cur) < 0) o.ship.cur = 0;
+  var cd = {};
+  if (o.cd) Object.keys(o.cd).forEach(function (k) { if (ISL_MAP[k] && num_(o.cd[k]) > nowI) cd[k] = num_(o.cd[k]); });
+  o.cd = cd;
   return o;
 }
 function isleScore_(o) {
@@ -829,12 +894,13 @@ function islePub_(r, mine, viewer) {
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
     h: o.h, fields: o.fields, deco: o.deco, score: isleScore_(o),
+    hb: o.hb ? { t: num_(o.hb.t), left: Math.max(0, num_(o.hb.e) - now), total: HOUSE_MS[num_(o.hb.t)] || 0 } : null,
     f: o.f.map(function (c) { return c && VEG[c.v] ? { v: c.v, left: cropLeft_(c, now), total: VEG[c.v].hours * HOUR } : null; }),
     pets: o.pets.map(function (p) {
       return { id: p.id, k: p.k, n: p.n, full: Math.round(fullNow_(p, now)), aff: num_(p.aff), lv: petLv_(p), patted: num_(p.pd) === day_() };
     })
   };
-  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
   else out.watered = wd.indexOf(out.fid) >= 0;
   return out;
 }
@@ -844,8 +910,9 @@ function isleAct_(a, q, r, me) {
   if (a === 'build') {
     var kind = String(q.k || ''), cost, label;
     if (kind === 'house') {
+      if (o.hb) return { err: 'building' };
       if (o.h >= 3) return { err: 'maxed' };
-      cost = HOUSE[o.h + 1]; label = '小屋 Lv' + (o.h + 1);
+      cost = HOUSE[o.h + 1]; label = '小屋 Lv' + (o.h + 1) + '（施工 ' + Math.round(HOUSE_MS[o.h + 1] / 60000) + ' 分鐘）';
     } else if (kind === 'field') {
       if (o.fields >= FIELD.length) return { err: 'maxed' };
       cost = FIELD[o.fields]; label = '菜田 第 ' + (o.fields + 1) + ' 塊';
@@ -855,7 +922,7 @@ function isleAct_(a, q, r, me) {
     } else return { err: 'bad' };
     if (!hasCost_(r, cost)) return { err: 'few', miss: missCost_(r, cost) }; // 一併告訴網頁還缺什麼
     payCost_(r, cost);
-    if (kind === 'house') o.h++;
+    if (kind === 'house') o.hb = { t: o.h + 1, e: now + HOUSE_MS[o.h + 1] };
     else if (kind === 'field') { o.fields++; o.f.push(null); }
     else o.deco.push(kind);
     out.log = ['蓋', label + '（' + costText_(cost) + '）'];
