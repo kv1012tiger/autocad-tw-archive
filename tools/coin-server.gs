@@ -72,7 +72,8 @@ var BUY_COST = 1, BUY_N = 6;        // 1 枚金幣買 6 個物資（賣出是 10
 var SWAP_FROM = 3, SWAP_TO = 2;     // 3 個甲物資換 2 個乙物資（剛開始互相交換很容易）
 var DIA_BUY = 20;                   // 20 枚金幣買 1 顆鑽石（賣出是 1 顆換 10 枚，所以買賣不能賺差價）
 var XCHG_MAX = 20;                  // 一次最多換 20 份
-var READ_RES_MAX = 30;              // 爬文送物資：每天最多算 30 篇不同文章；第 1–10 篇每篇 1 個、11–20 篇 2 個、21–30 篇 3 個，第 15、30 篇再送 1 顆鑽石
+var READ_DIA_P = 0.06;             // 隱藏優惠：每看一篇不同文章有 6% 機率撿到 1 顆鑽石（不限篇數）
+var READ_DIA_DAY = 5;               // 為了防止程式亂刷，每人每天最多從爬文撿 5 顆（網頁上不公開）
 var ONLINE_WIN = 6 * 60 * 1000;     // 6 分鐘內有動作就算在線（網頁開著會每 5 分鐘自動回報一次）
 var STOCK_MIN = 60, STOCK_MAX = 160; // 每座物資島每天的總量（隨機）
 var GATHER_N = [2, 6];               // 每次採集拿到幾個（2～6，原本是 1～3，加倍）
@@ -487,20 +488,16 @@ function handle_(q) {
       }
       r[C.isle] = JSON.stringify(so);
     } else if (a === 'readres') {
+      // 隱藏優惠：看文章有機率掉鑽石。結果由「帳號＋日期＋文章」算出來（同一篇看再多次結果都一樣），只記中獎的文章，不用存整份已讀清單
       var rkey = String(q.key || '').replace(/[^0-9a-z_\/-]/gi, '').slice(0, 40);
-      if (!rkey) return { ok: false, err: 'bad', p: me };
+      if (!/^[a-z0-9]+\/t\d{1,6}$/.test(rkey)) return { ok: false, err: 'bad', p: me };
       var ro = isleOf_(r), rtd = day_();
-      if (!ro.rr || ro.rr.d !== rtd || !Array.isArray(ro.rr.ids)) ro.rr = { d: rtd, ids: [] };
-      if (ro.rr.ids.indexOf(rkey) >= 0) res.read = { n: ro.rr.ids.length, max: READ_RES_MAX, again: 1 };
-      else if (ro.rr.ids.length >= READ_RES_MAX) res.read = { n: ro.rr.ids.length, max: READ_RES_MAX, full: 1 };
-      else {
-        var ridx = ro.rr.ids.length;
-        ro.rr.ids.push(rkey);
-        var rtk = RES_KEYS[Math.floor(Math.random() * RES_KEYS.length)], ramt = 1 + Math.floor(ridx / 10);
-        var rdia = (ridx + 1 === 15 || ridx + 1 === 30) ? 1 : 0;
-        r[RES[rtk].col] = num_(r[RES[rtk].col]) + ramt;
-        if (rdia) r[C.dia] = num_(r[C.dia]) + 1;
-        res.got = { k: rtk, n: ramt, dia: rdia, read: ro.rr.ids.length, max: READ_RES_MAX };
+      if (!ro.rr || ro.rr.d !== rtd || !Array.isArray(ro.rr.won)) ro.rr = { d: rtd, won: [] };
+      var roll = hash_(String(r[C.code]) + '|' + rtd + '|' + rkey + '|rd') / 4294967296;
+      if (roll < READ_DIA_P && ro.rr.won.indexOf(rkey) < 0 && ro.rr.won.length < READ_DIA_DAY) {
+        ro.rr.won.push(rkey);
+        r[C.dia] = num_(r[C.dia]) + 1;
+        res.got = { dia: 1, k: 'dia', n: 0 };
       }
       r[C.isle] = JSON.stringify(ro);
     } else if (a === 'xbuy') {
