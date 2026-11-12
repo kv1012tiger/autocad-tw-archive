@@ -1096,6 +1096,15 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .sh-swap option{color:#111}
 .mi-deco.bld{font-size:36px;opacity:.9}.mi-plot.bld{background:repeating-linear-gradient(45deg,#facc15 0 6px,#1f2937 6px 12px)}
 #pNext[hidden],#pPrev[hidden]{display:none!important}
+.mi-wip{margin:8px 0 6px;padding:10px 12px 12px;border-radius:16px;background:rgba(250,204,21,.13);border:1.5px solid rgba(250,204,21,.55)}
+.mi-wip h4{margin:0 0 6px;font-size:16px;color:#fde047}
+.mi-wip .wr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin:6px 0}
+.mi-wip .wn{font-weight:800;font-size:15.5px}
+.mi-wip .mi-hbt{font-size:21px;color:#fde047;font-variant-numeric:tabular-nums}
+.mi-wip .wbar{grid-column:1/-1;height:9px;border-radius:6px;background:rgba(255,255,255,.16);overflow:hidden}
+.mi-wip .wbar i{display:block;height:100%;background:linear-gradient(90deg,#facc15,#fb923c);transition:width .9s linear}
+.spot .cbadge{position:absolute;left:0;right:0;top:-8%;margin:0 auto;width:max-content;z-index:6;padding:5px 12px;border-radius:999px;background:#f59e0b;color:#1f1300;font-weight:900;font-size:15px;line-height:1.2;box-shadow:0 0 0 3px rgba(255,255,255,.92),0 6px 16px rgba(245,158,11,.6);white-space:nowrap;pointer-events:none;font-variant-numeric:tabular-nums}
+.spot .cbadge[hidden]{display:none}
 .mi-house em{white-space:nowrap}.mi-house em b{font-weight:800}
 .mi-top{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
 .mi-vis{display:flex;flex-wrap:wrap;gap:8px}
@@ -2675,6 +2684,20 @@ function petTitle(lv){return PET_TITLE[Math.min(PET_TITLE.length,lv)-1]}
 function bLeft(d,k){var ms=k==='house'?(d.hb?d.hb.left:0):(d.bb&&d.bb[k]!=null?d.bb[k]:0);return Math.max(0,ms-(Date.now()-MI.at))}
 function bText(d,k){var s=Math.ceil(bLeft(d,k)/1000),m=Math.floor(s/60);s%=60;return m+':'+(s<10?'0':'')+s}
 function bAny(d){return !!(d&&(d.hb||Object.keys(d.bb||{}).length))}
+/* 施工中面板：列出每一項施工的倒數與進度條（放在小島畫面正下方，一眼就看到） */
+function wipHTML(d){
+  if(!bAny(d))return '';
+  var R=d.rules||{},FM=R.fieldMs||[60000,120000,240000],DM=R.decoMs||{tree:120000,fountain:300000,tower:600000},rows=[];
+  if(d.hb)rows.push(['house','🏠','小屋 Lv'+d.hb.t,d.hb.total||(R.houseMs||[0,60000,300000,900000])[d.hb.t]]);
+  Object.keys(d.bb||{}).forEach(function(k){
+    if(k==='field')rows.push([k,'🟫','菜田 第 '+(d.fields+1)+' 塊',FM[d.fields]||60000]);
+    else if(DECOI[k])rows.push([k,DECOI[k][0],DECOI[k][1],DM[k]||120000]);
+  });
+  return '<div class="mi-wip"><h4>🚧 施工中・完工倒數</h4>'+rows.map(function(r){
+    var pct=Math.max(0,Math.min(100,(1-bLeft(d,r[0])/r[3])*100));
+    return '<div class="wr"><span class="wn">'+r[1]+' '+esc(r[2])+'</span><b class="mi-hbt" data-k="'+r[0]+'">'+bText(d,r[0])+'</b><div class="wbar"><i class="mi-wb" data-k="'+r[0]+'" data-t="'+r[3]+'" style="width:'+pct.toFixed(1)+'%"></i></div></div>';
+  }).join('')+'</div>';
+}
 function hbLeft(d){return bLeft(d,'house')}
 function hbText(d){return bText(d,'house')}
 function bmin(ms){return Math.max(1,Math.round(ms/60000))}
@@ -2684,6 +2707,7 @@ function hbTick(){
   var d=MI.data;if(!d||!bAny(d))return;
   var done=false;
   document.querySelectorAll('.mi-hbt').forEach(function(e){var k=e.getAttribute('data-k')||'house';e.textContent=bText(d,k);if(bLeft(d,k)<=0)done=true});
+  document.querySelectorAll('.mi-wb').forEach(function(e){var k=e.getAttribute('data-k'),t=+e.getAttribute('data-t')||1;e.style.width=Math.max(0,Math.min(100,(1-bLeft(d,k)/t)*100)).toFixed(1)+'%'});
   if(done&&!MI.hbLoad){MI.hbLoad=1;loadMine(true);setTimeout(function(){MI.hbLoad=0},4000)}
 }
 function leftText(ms){var m=Math.ceil(ms/60000),h=Math.floor(m/60);m%=60;return h?h+' 小時'+(m?' '+m+' 分':''):m+' 分鐘'}
@@ -2709,7 +2733,14 @@ function renderMine(fid){
 /* 我的小島快取：存在這台裝置，打開時先顯示上次的，背景再更新（登入小島不用空等） */
 var MIC_KEY='aikb-isle';
 function miCacheGet(){var w=COINS.get();if(!w.code)return null;try{var o=JSON.parse(localStorage.getItem(MIC_KEY)||'null');return o&&o.c===w.code&&o.d&&o.d.mine?o:null}catch(e){return null}}
-function miCachePut(d){var w=COINS.get();if(!w.code||!d||!d.mine)return;try{localStorage.setItem(MIC_KEY,JSON.stringify({c:w.code,t:Date.now(),d:d}))}catch(e){}}
+function miCachePut(d){
+  var w=COINS.get();if(!w.code||!d||!d.mine)return;
+  try{
+    var c=JSON.parse(JSON.stringify(d));
+    if(d===MI.data&&MI.at){var off=Date.now()-MI.at;if(c.hb)c.hb.left=Math.max(0,c.hb.left-off);if(c.bb)Object.keys(c.bb).forEach(function(k){c.bb[k]=Math.max(0,c.bb[k]-off)})} /* 施工剩餘時間統一成「存的這一刻」 */
+    localStorage.setItem(MIC_KEY,JSON.stringify({c:w.code,t:Date.now(),d:c}));
+  }catch(e){}
+}
 function minePrefetch(){
   var w=COINS.get();if(!w.code||MI.busy)return;
   var c=miCacheGet();if(c&&Date.now()-c.t<120000)return;
@@ -2802,7 +2833,7 @@ function paintMine(){
   var d=MI.data,box=$('miBox');if(!d||!box)return;
   $('pTitle').textContent=d.nick+' 的小島';
   $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
-  var o=sceneHTML(d);
+  var o=sceneHTML(d)+wipHTML(d);
   if(d.mine){var lt=landTier(d);if(lt<3)o+='<p class="mi-note">🌱 你的島會長大：多蓋小屋、菜田和裝飾，陸地就會越來越大（現在是「'+TIERN[lt]+'」）。</p>'}
   if(d.mine)o+=mineTop(d);
   if(!d.mine){
@@ -2890,7 +2921,7 @@ function buildFast(kind,t){
   if(kind==='house')dd.hb={t:dd.h+1,left:ms+off,total:ms};
   else{dd.bb=dd.bb||{};dd.bb[kind]=ms+off}
   toast('🔨 開始施工！'+(ms>=60000?'約 '+Math.round(ms/60000)+' 分鐘後完工':''));
-  paintMine();
+  paintMine();miCachePut(MI.data);
   MI.busy=true;
   COINS.api({a:'build',k:kind}).then(function(j){
     MI.busy=false;
@@ -3690,6 +3721,22 @@ window.ISLAND_KEYS=SP.map(spotHash); /* 每座島的代號（後台寶物用） 
 setInterval(tdPaint,60000);
 setTimeout(function(){drLoad();resLoad()},1500);
 setTimeout(minePrefetch,4000);
+/* 地圖上「我的小島」顯示施工倒數：不用進島就看得到還要多久 */
+var MAPB={fin:false};
+function mapBuild(){
+  var s=MINE_SPOT&&MINE_SPOT.el;if(!s)return;
+  var c=null;try{c=miCacheGet()}catch(e){}
+  var left=[],now=Date.now();
+  if(c&&c.d){var off=now-c.t;if(c.d.hb)left.push(c.d.hb.left-off);Object.keys(c.d.bb||{}).forEach(function(k){left.push(c.d.bb[k]-off)})}
+  var act=left.filter(function(x){return x>0}),b=s.querySelector('.cbadge');
+  if(!act.length){if(b)b.hidden=true;if(left.length&&!MAPB.fin){MAPB.fin=true;toast('🏝️ 你的小島有東西蓋好了！');setTimeout(function(){minePrefetchForce()},800)}return}
+  MAPB.fin=false;
+  if(!b){b=document.createElement('span');b.className='cbadge';b.setAttribute('aria-hidden','true');s.appendChild(b)}
+  var m=Math.min.apply(null,act),sec=Math.ceil(m/1000),mm=Math.floor(sec/60),ss=sec%60;
+  b.textContent='🔨 '+mm+':'+(ss<10?'0':'')+ss;b.hidden=false;
+}
+function minePrefetchForce(){var w=COINS.get();if(!w.code)return;COINS.api({a:'island'}).then(function(j){if(j&&j.ok&&j.island)miCachePut(j.island)}).catch(function(){})}
+setInterval(mapBuild,1000);
 if(window.IntersectionObserver&&MINE_SPOT&&MINE_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))minePrefetch()},{rootMargin:'300px'}).observe(MINE_SPOT.el);
 setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
 layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
