@@ -44,6 +44,8 @@ var N_HEAD = ['時間', '寄件海島編號', '寄件暱稱', '收件海島編�
 var DAILY = 3;      // 第 1 天 3 枚、第 2 天 4 枚
 var DAILY_MAX = 5;  // 第 3 天起每天固定 5 枚
 var CAP = { online: 3, read: 6, qa: 9 };
+/* 打遊戲送金幣：遊戲（autocad-game 兩款）結束時由網頁回報分數。分數 ≥ 門檻各 1／2／3 枚；每款每天最多 GAME_DAY 枚；同一款至少隔 GAME_GAP 才再算 */
+var GAME_KEYS = { quick: 1, runner: 1 }, GAME_T = [150, 500, 1000], GAME_DAY = 8, GAME_GAP = 20 * 1000;
 var KIND_COL = { online: C.onl, read: C.rd, qa: C.qa };
 var ALPHA = '23456789ABCDFGHJKMNPQRSTUVWXYZ';
 
@@ -126,6 +128,27 @@ var DECO = {
   fountain: { name: '噴水池', cost: { stone: 10, iron: 5 }, pts: 10 },
   tower: { name: '瞭望塔', cost: { wood: 15, iron: 10, dia: 1 }, pts: 20 }
 };
+/* 果樹可以種很多棵：會自己長大（幼苗 → 小樹 → 結果樹），結果樹每隔一段時間長出水果，累積最多 TREE_CAP 顆，要自己去摘 */
+var TREE_MAX = 6, TREE_GROW = [5 * 60 * 1000, 20 * 60 * 1000], TREE_EVERY = 20 * 60 * 1000, TREE_CAP = 3;
+function treeCost_(n) { return { fruit: 6 + 2 * n, wood: 3 + n }; }   // 第 1 棵 🍎6 🪵3，之後每多一棵貴一點
+/* 噴水池、瞭望塔可以升級到 Lv3：[null, Lv1, Lv2, Lv3]（Lv1 = 原本的蓋法）；施工時間 = DECO_MS × LV_MULT */
+var UPC = {
+  fountain: [null, { stone: 10, iron: 5 }, { stone: 20, iron: 10, wood: 8 }, { stone: 35, iron: 18, dia: 1 }],
+  tower: [null, { wood: 15, iron: 10, dia: 1 }, { wood: 30, iron: 18, stone: 12, dia: 1 }, { wood: 50, iron: 30, stone: 25, dia: 2 }]
+};
+var FT_PTS = { fountain: [0, 10, 20, 35], tower: [0, 20, 40, 70] };
+var LV_MULT = [1, 1.6, 3];
+function decoMs_(kind, tgt) { return kind === 'tree' ? DECO_MS.tree : Math.round(DECO_MS[kind] * LV_MULT[tgt - 1]); }
+function treeStage_(t, now) { var age = now - num_(t.p); return age < TREE_GROW[0] ? 0 : age < TREE_GROW[1] ? 1 : 2; }
+function treeFrom_(t) { return Math.max(num_(t.lp), num_(t.p) + TREE_GROW[1]); }
+function treeRipe_(t, now) { return treeStage_(t, now) < 2 ? 0 : Math.min(TREE_CAP, Math.max(0, Math.floor((now - treeFrom_(t)) / TREE_EVERY))); }
+/* 距離下一個變化（長大一階或下一顆水果）還要多久；已經滿了就回 0 */
+function treeNext_(t, now) {
+  var st = treeStage_(t, now);
+  if (st < 2) return num_(t.p) + TREE_GROW[st] - now;
+  var ripe = treeRipe_(t, now);
+  return ripe >= TREE_CAP ? 0 : treeFrom_(t) + (ripe + 1) * TREE_EVERY - now;
+}
 var VEG = {
   carrot: { name: '胡蘿蔔', seed: 1, hours: 4, n: 2, food: 20 },
   cabbage: { name: '高麗菜', seed: 2, hours: 8, n: 3, food: 35 },
@@ -426,6 +449,19 @@ function handle_(q) {
         r[C.qaDone] = doneList.join(',');
       }
       if (num_(r[col]) < CAP[k]) { r[col] = num_(r[col]) + 1; res.add = 1; }
+    } else if (a === 'gameplay') {
+      var gk = String(q.game || ''), gsc = Math.floor(num_(q.score));
+      if (!GAME_KEYS[gk] || gsc < 0 || gsc > 1000000) return { ok: false, err: 'bad', p: me };
+      var gx = isleOf_(r), gnow = Date.now(), gtd = day_();
+      if (!gx.gm || gx.gm.d !== gtd) gx.gm = { d: gtd, quick: 0, runner: 0, t: {} };
+      if (!gx.gm.t) gx.gm.t = {};
+      var gcoin = gsc >= GAME_T[2] ? 3 : gsc >= GAME_T[1] ? 2 : gsc >= GAME_T[0] ? 1 : 0;
+      if (gnow - num_(gx.gm.t[gk]) < GAME_GAP) gcoin = 0;      // 連著亂送太快不算
+      gcoin = Math.max(0, Math.min(gcoin, GAME_DAY - num_(gx.gm[gk])));
+      gx.gm.t[gk] = gnow; gx.gm[gk] = num_(gx.gm[gk]) + gcoin;
+      r[C.isle] = JSON.stringify(gx);
+      if (gcoin) res.add = gcoin;
+      res.game = { got: gcoin, left: GAME_DAY - gx.gm[gk], day: GAME_DAY, t: GAME_T };
     } else if (a === 'dl') {
       var note = '';
       if (me.admin) note = '管理員免扣';
@@ -622,7 +658,7 @@ function handle_(q) {
     } else if (a === 'setopen') {
       r[C.open] = q.o ? '' : '否';
       res.island = islePub_(r, true);
-    } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'adopt' || a === 'feed' || a === 'pat') {
+    } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'pick' || a === 'adopt' || a === 'feed' || a === 'pat') {
       var out = isleAct_(a, q, r, me);
       if (out.err) return { ok: false, err: out.err, miss: out.miss, p: me };
       if (out.add) res.add = out.add;
@@ -965,16 +1001,24 @@ function isleOf_(r) {
   try { o = JSON.parse(plain_(r[C.isle]) || '{}') || {}; } catch (e) { o = {}; }
   o.h = num_(o.h); o.fields = num_(o.fields);
   o.f = Array.isArray(o.f) ? o.f : [];
+  o.dl = o.dl && typeof o.dl === 'object' ? o.dl : {};
+  o.trees = Array.isArray(o.trees) ? o.trees : [];
   var nowB = Date.now(), bb = {};
   if (o.bb) Object.keys(o.bb).forEach(function (k) {
     var e = num_(o.bb[k] && o.bb[k].e);
-    if (e > nowB) { bb[k] = { e: e }; return; }                 // 還在施工
+    if (e > nowB) { bb[k] = { e: e, t: num_(o.bb[k].t) }; return; } // 還在施工
     if (k === 'field') { o.fields++; }                          // 菜田完工
-    else if (DECO[k]) { o.deco = Array.isArray(o.deco) ? o.deco : []; if (o.deco.indexOf(k) < 0) o.deco.push(k); }
+    else if (k === 'tree') { if (o.trees.length < TREE_MAX) o.trees.push({ p: e, lp: e }); }   // 果樹蓋好：從完工那一刻開始長
+    else if (DECO[k]) { o.deco = Array.isArray(o.deco) ? o.deco : []; if (o.deco.indexOf(k) < 0) o.deco.push(k); o.dl[k] = Math.max(num_(o.dl[k]), num_(o.bb[k].t) || 1); }
   });
   o.bb = bb;
   while (o.f.length < o.fields) o.f.push(null);
   o.deco = Array.isArray(o.deco) ? o.deco.filter(function (d) { return DECO[d]; }) : [];
+  if (o.deco.indexOf('tree') >= 0) { // 舊版的單棵果樹 → 變成已經長大的結果樹
+    if (!o.trees.length) o.trees.push({ p: 1, lp: 1 });
+    o.deco = o.deco.filter(function (d) { return d !== 'tree'; });
+  }
+  o.deco.forEach(function (d) { if (!num_(o.dl[d])) o.dl[d] = 1; });
   o.pets = Array.isArray(o.pets) ? o.pets : [];
   o.veg = o.veg || {};
   Object.keys(VEG).forEach(function (k) { o.veg[k] = num_(o.veg[k]); });
@@ -994,7 +1038,9 @@ function isleOf_(r) {
 }
 function isleScore_(o) {
   var s = o.h * 10;
-  o.deco.forEach(function (d) { s += DECO[d].pts; });
+  var nowS = Date.now();
+  o.deco.forEach(function (d) { s += (FT_PTS[d] || [0, DECO[d].pts])[Math.min(3, num_(o.dl[d]) || 1)]; });
+  o.trees.forEach(function (t) { s += [3, 5, 8][treeStage_(t, nowS)]; });
   o.pets.forEach(function (p) { s += num_(p.aff); });
   return s;
 }
@@ -1023,7 +1069,9 @@ function islePub_(r, mine, viewer) {
   var o = isleOf_(r), now = Date.now(), wd = viewer && viewer.wd && viewer.wd.d === day_() ? viewer.wd.f : [];
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
-    h: o.h, fields: o.fields, deco: o.deco, score: isleScore_(o),
+    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o),
+    trees: o.trees.map(function (t) { return { st: treeStage_(t, now), ripe: treeRipe_(t, now), nx: Math.max(0, treeNext_(t, now)) }; }),
+    bt: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = num_(o.bb[k].t); }); return m; })(),
     ships: o.ship.own.map(function (id) { return { k: id, n: plain_(o.ship.names[id]) || SHIPS[id].name, d: SHIPS[id].name }; }), shipCur: o.ship.cur,
     bb: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = Math.max(0, o.bb[k].e - now); }); return m; })(),
     hb: o.hb ? { t: num_(o.hb.t), left: Math.max(0, num_(o.hb.e) - now), total: HOUSE_MS[num_(o.hb.t)] || 0 } : null,
@@ -1032,7 +1080,8 @@ function islePub_(r, mine, viewer) {
       return { id: p.id, k: p.k, n: p.n, full: Math.round(fullNow_(p, now)), aff: num_(p.aff), lv: petLv_(p), patted: num_(p.pd) === day_() };
     })
   };
-  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, fieldMs: FIELD_MS, decoMs: DECO_MS, field: FIELD, deco: DECO, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+  if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, fieldMs: FIELD_MS, decoMs: DECO_MS, field: FIELD, deco: DECO,
+    up: UPC, upPts: FT_PTS, upMult: LV_MULT, treeMax: TREE_MAX, treeCost: Array.apply(null, Array(TREE_MAX)).map(function (x, n) { return treeCost_(n); }), treeGrow: TREE_GROW, treeEvery: TREE_EVERY, treeCap: TREE_CAP, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
   else out.watered = wd.indexOf(out.fid) >= 0;
   return out;
 }
@@ -1040,7 +1089,7 @@ function islePub_(r, mine, viewer) {
 function isleAct_(a, q, r, me) {
   var o = isleOf_(r), now = Date.now(), out = {};
   if (a === 'build') {
-    var kind = String(q.k || ''), cost, label;
+    var kind = String(q.k || ''), cost, label, tgt = 0;
     if (kind === 'house') {
       if (o.hb) return { err: 'building' };
       if (o.h >= 3) return { err: 'maxed' };
@@ -1050,15 +1099,22 @@ function isleAct_(a, q, r, me) {
       if (o.fields >= FIELD.length) return { err: 'maxed' };
       cost = FIELD[o.fields]; label = '菜田 第 ' + (o.fields + 1) + ' 塊（施工 ' + Math.round(FIELD_MS[o.fields] / 60000) + ' 分鐘）';
     } else if (DECO[kind]) {
-      if (o.deco.indexOf(kind) >= 0) return { err: 'maxed' };
       if (o.bb[kind]) return { err: 'building' };
-      cost = DECO[kind].cost; label = DECO[kind].name + '（施工 ' + Math.round(DECO_MS[kind] / 60000) + ' 分鐘）';
+      if (kind === 'tree') {
+        if (o.trees.length >= TREE_MAX) return { err: 'maxed' };
+        tgt = 0; cost = treeCost_(o.trees.length); label = '果樹 第 ' + (o.trees.length + 1) + ' 棵（施工 ' + Math.round(DECO_MS.tree / 60000) + ' 分鐘）';
+      } else {
+        var curLv = num_(o.dl[kind]) || (o.deco.indexOf(kind) >= 0 ? 1 : 0);
+        if (curLv >= 3) return { err: 'maxed' };
+        tgt = curLv + 1; cost = UPC[kind][tgt];
+        label = DECO[kind].name + ' Lv' + tgt + '（施工 ' + Math.round(decoMs_(kind, tgt) / 60000) + ' 分鐘）';
+      }
     } else return { err: 'bad' };
     if (!hasCost_(r, cost)) return { err: 'few', miss: missCost_(r, cost) }; // 一併告訴網頁還缺什麼
     payCost_(r, cost);
     if (kind === 'house') o.hb = { t: o.h + 1, e: now + HOUSE_MS[o.h + 1] };
     else if (kind === 'field') o.bb.field = { e: now + FIELD_MS[o.fields] };
-    else o.bb[kind] = { e: now + DECO_MS[kind] };
+    else o.bb[kind] = { e: now + decoMs_(kind, tgt), t: tgt };
     out.log = ['蓋', label + '（' + costText_(cost) + '）'];
   } else if (a === 'plant') {
     var fi = num_(q.i), v = String(q.v || '');
@@ -1074,6 +1130,15 @@ function isleAct_(a, q, r, me) {
     o.veg[c.v] += VEG[c.v].n; out.got = { k: c.v, n: VEG[c.v].n };
     o.f[hi] = null;
     out.log = ['收成', VEG[c.v].name + '×' + VEG[c.v].n];
+  } else if (a === 'pick') {
+    var tot = 0;
+    o.trees.forEach(function (t) {
+      var n = treeRipe_(t, now);
+      if (n > 0) { tot += n; t.lp = n >= TREE_CAP ? now : treeFrom_(t) + n * TREE_EVERY; }   // 沒摘滿的零頭時間保留
+    });
+    if (tot < 1) return { err: 'notyet' };
+    r[C.fruit] = num_(r[C.fruit]) + tot; out.got = { k: 'fruit', n: tot };
+    out.log = ['摘果', '果樹 🍎×' + tot];
   } else if (a === 'adopt') {
     var an = ANIMALS[String(q.k || '')], name = cleanNick_(q.name).slice(0, 8);
     if (!an) return { err: 'bad' };
