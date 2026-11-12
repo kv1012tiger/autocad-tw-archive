@@ -2860,6 +2860,22 @@ function mineAct(q,btn,okFn){
     if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
   }).catch(function(){end();toast('⚠️ 暫時連不上小島，請稍後再試');if(btn)btn.disabled=false});
 }
+var VEG_H={carrot:4,cabbage:8,pumpkin:24};
+/* 種菜、收成、餵食、摸寵物：畫面先更新、特效馬上出現，後台在背景確認（有差異就以後台為準；失敗會還原） */
+function fastAct(q,btn,local,fx,post){
+  if(!MI.data||MI.busy||MI.fid){mineAct(q,btn,function(j){if(fx)fx();if(post)post(j)});return}
+  local(MI.data,COINS.get());
+  if(fx)fx();
+  paintMine();
+  MI.busy=true;
+  COINS.api(q).then(function(j){
+    MI.busy=false;
+    if(!j.ok){toast('⚠️ 這次動作沒有成功：'+COINS.errText(j));loadMine();return}
+    if(j.island){var fr=MI.data&&MI.data.friend;MI.data=j.island;if(MI.data.friend==null&&fr!=null)MI.data.friend=fr;MI.at=Date.now();if(!MI.fid)miCachePut(j.island)}
+    if(post)post(j);
+    if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
+  }).catch(function(){MI.busy=false;toast('⚠️ 網路不穩，剛才的動作可能沒有記上，請重新整理確認');loadMine()});
+}
 /* 點建造：材料與施工倒數馬上更新（網頁先算、先顯示），後台在背景確認；失敗就還原成後台的狀態 */
 function buildFast(kind,t){
   var dd=MI.data,R=dd&&dd.rules,cost=buildCost(kind);
@@ -2894,11 +2910,13 @@ pBody.addEventListener('click',function(e){
   if(d.maddfriend!=null){t.disabled=true;COINS.api({a:'fadd',fid:MI.fid}).then(function(j){if(!j.ok){toast('⚠️ '+COINS.errText(j));t.disabled=false;return}toast('👥 和 '+j.added.nick+' 成為好友了！');if(MI.data)MI.data.friend=true;if(V.t==='mine')paintMine()}).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});return}
   if(d.build){var bc=buildCost(d.build);if(bc&&!costOK(bc)){toast('⚠️ 材料不夠，還缺 '+missText(missOf(bc)));t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');return}
     buildFast(d.build,t);return}
-  if(d.plant){mineAct({a:'plant',i:+d.i,v:d.plant},t,function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[d.plant][1]+'，'+VEGI[d.plant][3]+'後收成')});return}
-  if(d.harvest!=null){mineAct({a:'harvest',i:+d.harvest},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
-  if(d.feed){mineAct({a:'feed',id:d.id,food:d.feed},t,function(){fxAt(t,['😋','💕',d.feed==='fruit'?'🍎':VEGI[d.feed][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
-  if(d.pat){mineAct({a:'pat',id:d.pat},t,function(j){fxAt(t,['💕','💖','✨']);var p=MI.data.pets.filter(function(x){return x.id===d.pat})[0],k=p?(ANI[p.k]||[])[1]:'';playSfx(p&&p.k==='cat'?'cat':'dog');
-    if(j.gift){var g=GIFT_I[j.gift.k]||['🎁',''];setTimeout(function(){fxAt(t,[g[0],g[0],'🎁','✨'])},350);toast('💕 '+(p?p.n:'寵物')+' 送你 '+g[0]+' '+g[1]+' ×1！')}else toast('💕 親密度 +1'+(p&&p.full<50?'（餵飽一點，牠就會送你禮物）':''))});return}
+  if(d.plant){var pv=d.plant,pi=+d.i;fastAct({a:'plant',i:pi,v:pv},t,function(dd,w){var H=VEG_H[pv]*3600000;dd.f[pi]={v:pv,left:H+(Date.now()-MI.at),total:H};if(w.bag)w.bag.fruit=Math.max(0,(w.bag.fruit||0)-VEGI[pv][2])},function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[pv][1]+'，'+VEGI[pv][3]+'後收成')});return}
+  if(d.harvest!=null){var hi=+d.harvest,hc=MI.data&&MI.data.f[hi],hv=hc&&VEGI[hc.v];if(!hv){mineAct({a:'harvest',i:hi},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
+    fastAct({a:'harvest',i:hi},t,function(dd){dd.veg[hc.v]=(dd.veg[hc.v]||0)+hv[4];dd.f[hi]=null},function(){fxAt(t,[hv[0],hv[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+hv[0]+' '+hv[1]+' ×'+hv[4])});return}
+  if(d.feed){var fd=d.feed,fid=d.id;fastAct({a:'feed',id:fid,food:fd},t,function(dd,w){var pp=dd.pets.filter(function(x){return x.id===fid})[0],plus=fd==='fruit'?10:VEGI[fd][5];if(pp)pp.full=Math.min(100,pp.full+plus);if(fd==='fruit'){if(w.bag)w.bag.fruit=Math.max(0,(w.bag.fruit||0)-1)}else dd.veg[fd]=Math.max(0,(dd.veg[fd]||0)-1)},function(){fxAt(t,['😋','💕',fd==='fruit'?'🍎':VEGI[fd][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
+  if(d.pat){var pid=d.pat,pp0=MI.data&&MI.data.pets.filter(function(x){return x.id===pid})[0],pk=pp0&&(ANI[pp0.k]||[])[1];
+    fastAct({a:'pat',id:pid},t,function(dd){var q=dd.pets.filter(function(x){return x.id===pid})[0];if(q){q.patted=true;q.aff=(q.aff||0)+1;q.lv=1+Math.floor(q.aff/10)}},function(){fxAt(t,['💕','💖','✨']);playSfx(pp0&&pp0.k==='cat'?'cat':'dog');toast('💕 親密度 +1'+(pp0&&pp0.full<50?'（餵飽一點，牠就會送你禮物）':''))},function(j){
+      if(j.gift){var g=GIFT_I[j.gift.k]||['🎁',''];setTimeout(function(){fxAt($('miBox')||t,[g[0],g[0],'🎁','✨'])},100);toast('💕 '+(pp0?pp0.n:'寵物')+' 送你 '+g[0]+' '+g[1]+' ×1！')}});return}
   if(d.mwater!=null){mineAct({a:'water',fid:MI.fid},t,function(j){var g=GIFT_I[j.got.k]||['🎁',''];fxAt(t,['💧','💧','🌱',g[0]]);playSfx('flip');toast('💧 澆好水了！你拿到 '+g[0]+' '+g[1]+' ×1')});return}
 });
 window.ISLE_VISIT=function(fid,nick){MI.visitFid=fid;MI.sailNick=nick||'';openPanel('sail',0);placeBoat(MINE_SPOT.si)};
