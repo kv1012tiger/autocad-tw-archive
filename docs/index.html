@@ -1524,7 +1524,7 @@ var RESI=ISLT.map(function(a,i){
   o.n=i;o.id=a[0];o.name=a[2];o.gap=a[3];o.lo=a[4];o.hi=a[5];o.sub=a[1]==='gold'?'每 '+a[3]+' 秒・'+a[4]+'～'+a[5]+' 枚金幣':'每 '+a[3]+' 秒・'+a[4]+'～'+a[5]+' 個';
   return o;
 });
-var SHOP_SPOT={k:'shop',e:'🏪',name:'商店島',sub:'買船・金幣換物資・鑽石換金幣',c:'#fbbf24',g:['#fde68a','#b45309'],dc:['🪙','💎','⚓'],res:[['🦜','f'],['🐒','w'],['🦀','w']]};
+var SHOP_SPOT={k:'shop',e:'🏪',name:'商店島',sub:'買船・金幣換物資・鑽石換金幣',c:'#fb923c',g:['#fed7aa','#c2410c'],st:{land:'#fdba74',deep:'#c2410c',tree:'#15803d',leaf:'#86efac',sand:['#9a3412','#ea580c','#fed7aa'],dirt:'#7c2d12',n:4,glow:'#fb923c'},dc:['🪙','💎','⚓'],res:[['🦜','f'],['🐒','w'],['🦀','w']]};
 SP.splice(2,0,MSG_SPOT);
 /* 物資島與商店島：均勻「分散」插進島群（每個人看到的位置都一樣，要自己到地圖上找）。
    順序刻意排過：同種類不會相鄰、4 座金礦彼此隔得很遠，商店島在中間；位置再用固定種子微調一點點 */
@@ -1752,10 +1752,21 @@ function pineSVG(x,y,r,dark,light){
     [[1,1.05],[.78,1.6],[.55,2.1]].map(function(t,k){return '<path d="M'+f(x-r*t[0])+' '+f(y-r*(.45+k*.55))+'L'+f(x)+' '+f(y-r*(t[1]+.9))+'L'+f(x+r*t[0])+' '+f(y-r*(.45+k*.55))+'Z" fill="'+(k===2?light:k?mix(dark,light,.45):dark)+'"/>'}).join('');
 }
 function shopProps(I){
-  var st=function(x,y,c1,c2){return '<rect x="'+(x-9)+'" y="'+(y-4)+'" width="18" height="10" rx="1" fill="#8a5a2b" stroke="#4a2a12" stroke-width=".7"/><path d="M'+(x-11)+' '+(y-4)+'l2-9h18l2 9z" fill="'+c1+'" stroke="#4a2a12" stroke-width=".7"/><path d="M'+(x-7)+' '+(y-4)+'l1-9M'+(x-1)+' '+(y-4)+'v-9M'+(x+5)+' '+(y-4)+'l-1-9" stroke="'+c2+'" stroke-width="3.2"/><circle cx="'+(x-3)+'" cy="'+(y+1)+'" r="1.8" fill="#ffd166"/><circle cx="'+(x+3)+'" cy="'+(y+1)+'" r="1.8" fill="#5ee7ff"/>'};
-  I.push({y:42,h:st(98,42,'#ef4444','#fff')});
-  I.push({y:44,h:st(40,44,'#3b82f6','#fff')});
-  I.push({y:52,h:'<ellipse cx="70" cy="54" rx="9" ry="2.6" fill="#0a3a1e" opacity=".3"/><path d="M62 52h16v-6a8 8 0 0 0-16 0z" fill="#ffd166" stroke="#a16207" stroke-width=".8"/><circle cx="70" cy="44" r="3" fill="#fde047" stroke="#a16207" stroke-width=".6"/><path d="M82 52l6-14 6 14z" fill="#5ee7ff" stroke="#0e7490" stroke-width=".7"/>'});
+  var i,st=function(x,y,c1,c2){return '<rect x="'+(x-9)+'" y="'+(y-4)+'" width="18" height="10" rx="1" fill="#8a5a2b" stroke="#4a2a12" stroke-width=".7"/><path d="M'+(x-11)+' '+(y-4)+'l2-9h18l2 9z" fill="'+c1+'" stroke="#4a2a12" stroke-width=".7"/><path d="M'+(x-7)+' '+(y-4)+'l1-9M'+(x-1)+' '+(y-4)+'v-9M'+(x+5)+' '+(y-4)+'l-1-9" stroke="'+c2+'" stroke-width="3.2"/><circle cx="'+(x-3)+'" cy="'+(y+1)+'" r="1.8" fill="#ffd166"/><circle cx="'+(x+3)+'" cy="'+(y+1)+'" r="1.8" fill="#5ee7ff"/>'};
+  /* 彩旗串 */
+  var fl='',cols=['#ef4444','#facc15','#38bdf8','#a855f7','#22c55e','#fb923c'];
+  for(i=0;i<9;i++){var t=i/8,x=26+t*88,y=22+t*(1-t)*4*9;fl+='<path d="M'+(x-3.6).toFixed(1)+' '+y.toFixed(1)+'h7.2l-3.6 7z" fill="'+cols[i%6]+'" stroke="#4a2a12" stroke-width=".4"/>'}
+  I.push({y:16,h:'<path d="M26 22Q70 40 114 22" fill="none" stroke="#4a2a12" stroke-width=".9"/>'+fl});
+  /* 中間的大帳篷：紅白條紋屋頂、小旗子 */
+  var tent='<ellipse cx="70" cy="51" rx="19" ry="3.6" fill="#0a3a1e" opacity=".3"/><rect x="56" y="35" width="28" height="15" fill="#fff7ed" stroke="#7c2d12" stroke-width=".8"/>';
+  for(i=0;i<6;i++){var x0=53+i*(34/6),x1=53+(i+1)*(34/6);tent+='<path d="M'+x0.toFixed(1)+' 35L'+(70+(x0-70)*.16).toFixed(1)+' 20L'+(70+(x1-70)*.16).toFixed(1)+' 20L'+x1.toFixed(1)+' 35Z" fill="'+(i%2?'#ffffff':'#ef4444')+'" stroke="#7c2d12" stroke-width=".5"/>'}
+  tent+='<rect x="65" y="39" width="10" height="11" rx="1" fill="#7c2d12"/><circle cx="73" cy="45" r=".9" fill="#fde047"/><path d="M70 20v-8" stroke="#4a2a12" stroke-width="1"/><path d="M70 12l10 3-10 3z" fill="#facc15" stroke="#a16207" stroke-width=".5"/>';
+  I.push({y:50,h:tent});
+  I.push({y:46,h:st(104,46,'#3b82f6','#fff')});
+  I.push({y:48,h:st(36,48,'#a855f7','#fff')});
+  /* 前面的寶箱和金幣 */
+  I.push({y:58,h:'<ellipse cx="70" cy="62" rx="11" ry="2.6" fill="#0a3a1e" opacity=".3"/><rect x="62" y="53" width="16" height="9" rx="1.6" fill="#b45309" stroke="#4a2a12" stroke-width=".7"/><path d="M62 56.5h16" stroke="#4a2a12" stroke-width=".7"/><rect x="68.6" y="55.6" width="2.8" height="3.2" rx=".5" fill="#fde047"/><circle cx="66" cy="52" r="1.9" fill="#facc15" stroke="#a16207" stroke-width=".4"/><circle cx="70" cy="51" r="2" fill="#fde047" stroke="#a16207" stroke-width=".4"/><circle cx="74" cy="52" r="1.9" fill="#facc15" stroke="#a16207" stroke-width=".4"/>'});
+  I.push({y:56,h:'<path d="M110 60l5-12 5 12z" fill="#5ee7ff" stroke="#0e7490" stroke-width=".7"/><path d="M114 56l2-3 2 3z" fill="#e0fbff"/>'});
 }
 function gameProps(I){
   I.push({y:44,h:'<rect x="96" y="22" width="18" height="22" rx="2" fill="#1e293b" stroke="#0f172a" stroke-width=".8"/><rect x="99" y="25" width="12" height="8" rx="1" fill="#38bdf8"/><path d="M101 29h3M106 27v4" stroke="#fff" stroke-width="1"/><circle cx="102" cy="38" r="1.6" fill="#f43f5e"/><circle cx="108" cy="38" r="1.6" fill="#facc15"/>'});
@@ -1788,8 +1799,7 @@ function isleSVG(s){
   if(s.k==='game'){land='#60a5fa';deep='#1e40af';tree='#1e3a8a';leaf='#93c5fd'}
   if(s.k==='pets'){land='#f9a8d4';deep='#be185d';tree='#9d174d';leaf='#fbcfe8'}
   if(s.k==='mine'){land='#bef264';deep='#4d7c0f';tree='#3f6212';leaf='#d9f99d'}
-  if(s.k==='shop'){land='#fde68a';deep='#b45309';tree='#92400e';leaf='#fcd34d'}
-  var glow=X.glow||(s.k==='game'?'#38bdf8':s.k==='pets'?'#fb7185':s.k==='mine'?'#fde047':s.k==='shop'?'#fbbf24':'');
+  var glow=X.glow||(s.k==='game'?'#38bdf8':s.k==='pets'?'#fb7185':s.k==='mine'?'#fde047':s.k==='shop'?'#fb923c':'');
   var o='<svg class="isl" viewBox="-14 -12 168 124" aria-hidden="true">'+
     (s.k==='search'?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="#e9d5ff" opacity=".3"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="#e9d5ff" stroke-width="2.2" stroke-dasharray="1.5 6" stroke-linecap="round"/>':'')+
     (glow?'<path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="'+glow+'" opacity=".22"/><path d="'+blob(70,cy+8,rx,ry,1.33,sd)+'" fill="none" stroke="'+glow+'" stroke-width="2.4" stroke-dasharray="1.5 5" stroke-linecap="round"/>':'')+
@@ -1830,7 +1840,7 @@ SP.forEach(function(s,i){
   var b=document.createElement('button');b.type='button';
   var isl=s.k==='isle',frm=s.k==='forum',num=isl||frm;
   var cnt=isl?'💬 AI 問答・'+s.rows.length+' 則':frm?'📖 '+s.total+' 篇教學・'+(s.subs.length+1)+' 間小屋':s.k==='search'?'🔍 搜尋文章・🃏 抽塔羅牌':s.sub;
-  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:s.k==='game'?225:s.k==='mine'?230:s.k==='pets'?220:s.k==='shop'?235:235;
+  s.base=frm?220+9*Math.min(s.subs.length+1,10):isl?205:s.k==='home'?255:s.k==='search'?285:s.k==='res'?195:s.k==='msg'?215:s.k==='game'?225:s.k==='mine'?230:s.k==='pets'?320:s.k==='shop'?340:235;
   if(s.major)s.base=Math.round(s.base*1.4);
   b.className='spot'+(num?'':' sp')+(s.k==='home'?' home':'')+(s.k==='search'?' oracle':'')+(isl?' qai':'')+(frm?' fi':'')+(s.major?' major':'');
   b.style.setProperty('--c',s.c);
@@ -2710,7 +2720,7 @@ function boatSet(){
 /* ---------- 商店島：買船、金幣換物資、鑽石換金幣 ---------- */
 var SH={busy:false};
 function renderShop(){
-  pBody.innerHTML='<div class="ph" style="--c:#fbbf24"><span class="ph-e">🏪</span><div><div class="p-kicker">SHOP ISLAND・商店島</div><h3 id="pTitle">商店島</h3><p>買自己的船、用金幣換物資、鑽石換金幣</p></div></div><div id="shBox"></div>';
+  pBody.innerHTML='<div class="ph" style="--c:#fb923c"><span class="ph-e">🏪</span><div><div class="p-kicker">SHOP ISLAND・商店島</div><h3 id="pTitle">商店島</h3><p>買自己的船、用金幣換物資、鑽石換金幣</p></div></div><div id="shBox"></div>';
   $('pStep').textContent='🏪 商店島';
   footSimple('← 回地圖','');
   paintShop();
