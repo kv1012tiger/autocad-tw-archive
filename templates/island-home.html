@@ -1323,7 +1323,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
     <div class="help-body" id="helpBody">
       <section class="hp" data-p="0"><ul>
         <li>📅 <b>每天登島</b>送 3 枚 🪙；連續第 2 天 4 枚，第 3 天起每天 5 枚。同一帳號一天只算一次，換手機也一樣。</li>
-        <li>📖 <b>爬文</b>：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）。</li>
+        <li>📖 <b>爬文</b>：每看 2 篇不同文章，有 7 成機率再送 1 枚（每天最多 6 枚）。</li>
         <li>⏱️ <b>在線</b>：在島上每待 5 分鐘送 1 枚（每天最多 3 枚）。</li>
         <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
         <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
@@ -1335,7 +1335,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>🔑 登島碼是你的帳號鑰匙，請記下來、不要給別人；忘記了用 LINE 官方帳號問蘋果爸。</li>
       </ul></section>
       <section class="hp" data-p="1" hidden><ul>
-        <li>地圖上散佈著 <b>20 座物資島</b>：16 座一般物資島（🍎 果園、⛏️ 礦山、🌲 森林、🪨 採石各 4 座），另外 <b>4 座 🪙 金礦島</b>（挖了直接領金幣：每座每天全島 14～24 枚、每人每座最多挖 2 次）；它們分散在地圖各處，要自己去找。每座島<b>每 10 分鐘會隨機換一批「資源多寡」</b>，島上的小標籤會告訴你現在是「豐富」（拿得多）、「普通」還是「稀少」（拿得少），看到「豐富」就趕快去；<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
+        <li>地圖上散佈著 <b>20 座物資島</b>：16 座一般物資島（🍎 果園、⛏️ 礦山、🌲 森林、🪨 採石各 4 座），另外 <b>4 座 🪙 金礦島</b>（挖了直接領金幣：每座每天全島 14～24 枚、每人每座最多挖 2 次）；它們分散在地圖各處，要自己去找。每座島<b>每 1～3 分鐘會隨機換一批資源多寡</b>，島上的 <b>★</b> 越多代表現在資源越多（★★★ 拿最多、★ 拿最少），看到 ★★★ 就趕快去；<b>6 秒內連續點擊</b>物件（8～10 下）就能採集，太慢不扣次數。</li>
         <li>每座島每天的總量隨機 60～160 份，大家一起採，採光了要等明天重新長出來。</li>
         <li>每人每座島每天最多採 <b>5 次</b>；<b>每座島的數量和冷卻都不一樣</b>：每次採 1～8 個不等，採完要等 30～120 秒才能再採同一座島。</li>
         <li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li>
@@ -2431,7 +2431,7 @@ function renderRes(n){
       (SFX_ON?'':'<button class="rs-snd" type="button" id="rsSnd">🔇 打開音效更好玩</button>')+
     '</div>'+
     '<div class="p-sec"><h4>我的背包</h4><div class="rs-bag" id="rsBag"></div><div class="row2"><button class="btn btn-ghost btn-sm" type="button" data-rbag>🎒 背包・兌換所・好友</button><button class="btn btn-ghost btn-sm" type="button" data-rrank>🏆 物資排行榜</button></div></div>'+
-    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li>'+(R.rk==='gold'?'<li>🪙 金礦島：每座每天全島有 14～24 枚金幣，大家一起搶，挖光了要等明天。</li><li>每人每座金礦每天最多挖 2 次（每次 '+R.lo+'～'+R.hi+' 枚，資源「豐富」時最多 3 枚、「稀少」時只有 1 枚）；4 座金礦分散在地圖各處。</li><li>金礦裡沒有鑽石，挖到的金幣直接加進你的錢包。</li><li>🍀 每 10 分鐘隨機換一批資源多寡：「豐富」拿得多、「普通」照平常、「稀少」拿得少。島上的小標籤和這頁上方都看得到，挑豐富的島去採最划算。</li>':'<li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>🍀 每 10 分鐘隨機換一批資源多寡：「豐富」拿得多、「普通」照平常、「稀少」拿得少。島上的小標籤和這頁上方都看得到，挑豐富的島去採最划算。</li>')+'<li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 10 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
+    '<div class="p-sec"><h4>物資島規則</h4><ul class="notes"><li>6 秒內連續點 '+R.taps+' 下就能'+esc(R.act)+'，太慢會失敗，不扣次數。</li>'+(R.rk==='gold'?'<li>🪙 金礦島：每座每天全島有 14～24 枚金幣，大家一起搶，挖光了要等明天。</li><li>每人每座金礦每天最多挖 2 次（每次 '+R.lo+'～'+R.hi+' 枚，★★★ 時最多 3 枚、★ 時只有 1 枚）；4 座金礦分散在地圖各處。</li><li>金礦裡沒有鑽石，挖到的金幣直接加進你的錢包。</li><li>⭐ 每 1～3 分鐘隨機換一批資源多寡：★★★ 拿得多、★★ 照平常、★ 拿得少。島上的星星和這頁上方都看得到，挑 ★★★ 的島去採最划算。</li>':'<li>每座物資島每天的總量隨機（60～160 份），大家一起採，採光了就要等明天重新長出來。</li><li>每人每座島每天最多採 5 次；這座島每次 '+R.lo+'～'+R.hi+' 個，採完要等 '+R.gap+' 秒才能再採（每座島的秒數和數量都不一樣，30～120 秒）。</li><li>💎 每座島每天隨機藏 0～2 顆鑽石，採集時有機會撿到，被撿走就沒了。</li><li>⭐ 每 1～3 分鐘隨機換一批資源多寡：★★★ 拿得多、★★ 照平常、★ 拿得少。島上的星星和這頁上方都看得到，挑 ★★★ 的島去採最划算。</li>')+'<li>🏪 兌換所：10 個同種物資換 1 枚金幣、1 顆鑽石換 10 枚金幣，每天最多換 3 次。</li><li>🏆 物資排行榜看累計採集量，兌換和送禮不會掉名次。</li></ul></div>';
   $('pStep').textContent=R.e+' 物資島';
   footSimple('← 回地圖','');
   resBag();resStock();
@@ -2446,17 +2446,46 @@ function resBag(){
   el.innerHTML=w.code?RTYPE.map(function(x){return '<span data-k="'+x.rk+'">'+x.it+' <b>'+bagVal(x.rk)+'</b> '+x.item+'</span>'}).join('')+'<span data-k="dia">💎 <b>'+bagVal('dia')+'</b> 鑽石</span><span data-k="gold">🪙 <b>'+bagVal('gold')+'</b> 金幣</span>':'<span>取個暱稱就能開始採集，物資會存進你的背包。</span>';
 }
 /* 現在能不能採：回傳原因文字，可以採就回傳空字串 */
-function setSt(st){
-  RS.st=st;RS.stT=Date.now();
-  if(RSV){RSV.op=RSV.op||{};for(var k in st)if(st[k]&&st[k].lv!=null)RSV.op[k]=[st[k].lv,st[k].w];RSV.t=Date.now();resPaint()}
+function setSt(st){RS.st=st;RS.stT=Date.now()}
+var LVN=['稀少','普通','豐富'],STARS=['★','★★','★★★'];
+/* 後台抽好的「底數」換成這一輪實際數量（和後台 islScale_ 同一套算法） */
+function scaleN(R,base,lv){
+  var n=lv===0?Math.max(1,Math.round(base*.5)):lv===2?Math.round(base*1.6):base;
+  if(R.rk==='gold')n=lv===0?1:lv===2?base+1:base;
+  return Math.max(1,n);
 }
-var LVN=['稀少','普通','豐富'];
-/* 這座島這一輪的資源多寡：回傳 null（還不知道）或 {lv:0稀少/1普通/2豐富, ms:還有多久換批} */
-function lvOf(R){
-  var x=RS.st&&RS.st[R.id],t=RS.stT,o=RSV&&RSV.op&&RSV.op[R.id];
-  if(x&&x.lv!=null&&t){var left=x.w-(Date.now()-t);if(left>0)return {lv:x.lv,ms:left}}
-  if(o&&RSV.t){var l2=o[1]-(Date.now()-RSV.t);if(l2>0)return {lv:o[0],ms:l2}}
-  return null;
+function nextN(R){var b=RS.nx[R.id];if(!(b>0))return 0;return scaleN(R,b,lvOf(R).lv)}
+/* 登入後一次抽好 20 座島的下一次數量，之後進哪座島、連點完成都能馬上結算 */
+function resPre(){
+  var w=COINS.get();if(!w.code||RS.preBusy||Date.now()-(RS.preT||0)<240000)return;
+  RS.preBusy=true;
+  COINS.api({a:'isles',isle:'*'}).then(function(j){
+    RS.preBusy=false;if(!j||!j.ok)return;RS.preT=Date.now();
+    if(j.nxall)for(var k in j.nxall)if(!(RS.nx[k]>0))RS.nx[k]=j.nxall[k];
+    if(j.isles)setSt(j.isles);
+  }).catch(function(){RS.preBusy=false});
+}
+/* 這座島這一輪的資源多寡：網頁自己算（和後台 tools/coin-server.gs 的 islLv_ 同一套：每座島每天從 UTC 0 點起依序抽「長度 1～3 分鐘、豐富度」），
+   不用問後台、不會慢。回傳 {lv:0稀少/1普通/2豐富, ms:還有多久換批} */
+function hashS(str){
+  var h1=0xdeadbeef,h2=0x41c6ce57;
+  for(var i=0;i<str.length;i++){var ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return (h1^h2)>>>0;
+}
+function rngS(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+var LVC={};
+function lvOf(R,now){
+  now=now||Date.now();
+  var c=LVC[R.id];if(c&&now>=c.s&&now<c.e)return {lv:c.lv,ms:c.e-now};
+  var DAY=86400000,day=Math.floor(now/DAY),base=day*DAY,off=now-base,r=rngS(hashS('isl-seg-v1|'+R.id+'|'+day)),t=0;
+  for(var k=0;k<2000;k++){
+    var len=(1+Math.floor(r()*3))*60000,lr=r();
+    if(off<t+len){var lv=R.rk==='gold'?(lr<.5?0:lr<.85?1:2):(lr<.3?0:lr<.75?1:2);LVC[R.id]={s:base+t,e:base+t+len,lv:lv};return {lv:lv,ms:base+t+len-now}}
+    t+=len;
+  }
+  return {lv:1,ms:60000};
 }
 function rsBlock(){
   var R=RESI[V.i],x=RS.st&&RS.st[R.id],cool=cdLeft(R);
@@ -2466,18 +2495,25 @@ function rsBlock(){
   if(x&&x.mine>=x.max)return '今天在這裡採夠了，明天再來（到地圖上找別座物資島吧）';
   return '';
 }
+function lvTick(){
+  clearTimeout(RS.lvT);if(V.t!=='res'){return}
+  var R=RESI[V.i],e=$('rsLv');
+  if(e){var lv=lvOf(R);e.className='rs-lv l'+lv.lv;e.title=LVN[lv.lv];e.innerHTML=STARS[lv.lv]+' <small>⏱ '+Math.ceil(lv.ms/1000)+' 秒後換批</small>'}
+  RS.lvT=setTimeout(lvTick,1000);
+}
 function resStock(){
   if(V.t!=='res')return;
   var R=RESI[V.i],el=$('rsStock'),cnt=$('rsCnt'),obj=$('rsObj');if(!el)return;
   var x=RS.st&&RS.st[R.id];
   if(x){var pct=x.total?x.left/x.total*100:0;
     el.innerHTML='今天還剩 <b>'+x.left+'</b> / '+x.total+' 份'+esc(R.item)+'<div class="bar"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
-      (function(){var lv=lvOf(R);return lv?'<div class="rs-lv l'+lv.lv+'">'+['🥀','🌿','🍀'][lv.lv]+' 這一輪資源「'+LVN[lv.lv]+'」・'+['每次拿得比較少','每次拿平常的量','每次拿得比平常多'][lv.lv]+'・約 '+Math.max(1,Math.ceil(lv.ms/60000))+' 分鐘後換下一批</div>':''})()+
+      (function(){var lv=lvOf(R);return lv?'<div class="rs-lv l'+lv.lv+'" id="rsLv" title="'+LVN[lv.lv]+'">'+STARS[lv.lv]+' <small>⏱ '+Math.ceil(lv.ms/1000)+' 秒後換批</small></div>':''})()+
       '<small>你今天在這裡採了 '+x.mine+' / '+x.max+' 次'+(x.found?'・今天已有 '+x.found+' 顆 💎 被撿走':'・聽說島上藏著鑽石…')+'</small>'}
   var why=rsBlock();
   obj.classList.toggle('off',!!why);
   if(!RS.round)cnt.innerHTML=why?esc(why):'👆 <b>6 秒內連點 '+R.taps+' 下</b>'+esc(R.art==='🌳'?'搖果樹':R.act)+'！';
   clearTimeout(RS.timer);if(why&&cdLeft(R)>0)RS.timer=setTimeout(resStock,1000);
+  lvTick();
 }
 /* 每座島的打擊音：越點越高，像在連擊 */
 function rsSound(kind,k){
@@ -2543,23 +2579,31 @@ function rsDone(){
   var R=RESI[V.i],obj=$('rsObj');rsCancel();RS.busy=true;
   var tb=$('rsTimerBox');if(tb)tb.classList.remove('on');
   rsAnim($('rsArt'),'fin-'+R.rk);
-  var nx=RS.nx[R.id],sx=RS.st&&RS.st[R.id];
-  if(nx>0&&!cdLeft(R)&&sx&&sx.left>0&&sx.mine<sx.max){
-    /* 即時結算：下一次的數量是後台事先抽好的，連點一完成就馬上拿到、馬上顯示；後台在背景確認（鑽石等結果稍後補上） */
-    var w0=COINS.get(),fast={k:R.rk,n:Math.min(nx,sx.left),dia:0},rc0=obj.getBoundingClientRect(),cx0=rc0.left+rc0.width/2,cy0=rc0.top+rc0.height/2;
+  var nx=nextN(R),sx=RS.st&&RS.st[R.id],guess=nx<=0;
+  if(guess)nx=scaleN(R,R.lo+Math.floor(Math.random()*(R.hi-R.lo+1)),lvOf(R).lv);   /* 後台還沒回報下一次數量時，先用估的，連點一完成照樣馬上顯示，稍後對帳 */
+  if(!cdLeft(R)&&(!sx||(sx.left>0&&sx.mine<sx.max))){
+    /* 即時結算：下一次的數量是後台事先抽好的（或先估），連點一完成就馬上拿到、馬上顯示；後台在背景確認（鑽石等結果稍後補上） */
+    var w0=COINS.get(),fast={k:R.rk,n:sx?Math.min(nx,sx.left):nx,dia:0},rc0=obj.getBoundingClientRect(),cx0=rc0.left+rc0.width/2,cy0=rc0.top+rc0.height/2;
     RS.nx[R.id]=0;RS.busy=false;
     if(R.rk==='gold')w0.bal=(w0.bal||0)+fast.n;else if(w0.bag)w0.bag[R.rk]=(w0.bag[R.rk]||0)+fast.n;
-    sx.left-=fast.n;sx.mine++;
+    if(sx){sx.left-=fast.n;sx.mine++}
     RS.cd[R.id]=Date.now()+R.gap*1000;resPaint();rsReset();
     for(var q=0;q<10;q++){var a0=Math.random()*Math.PI*2,d0=60+Math.random()*90;rsPart(cx0,cy0,R.fin[q%R.fin.length],Math.cos(a0)*d0,Math.sin(a0)*d0-40,22)}
     rsSound('win');rsGain(R,fast,cx0,cy0);resStock();
     COINS.api({a:'gather',isle:R.id}).then(function(j){
       if(j.nx!=null&&j.nxi)RS.nx[j.nxi]=j.nx;
       if(j.isles)setSt(j.isles);
-      if(!j.ok){if(j.err==='cool')RS.cd[R.id]=Date.now()+j.wait*1000;toast('⚠️ 剛才那次採集沒有成功：'+COINS.errText(j));resBag();resStock();return}
+      if(!j.ok){
+        /* 沒成功：把剛才先加上去的退回來，再提醒 */
+        if(!j.p){var w1=COINS.get();if(R.rk==='gold')w1.bal=Math.max(0,(w1.bal||0)-fast.n);else if(w1.bag)w1.bag[R.rk]=Math.max(0,(w1.bag[R.rk]||0)-fast.n)}   /* 後台有回帳戶（j.p）時已經是正確的數字了 */
+        if(j.err==='cool')RS.cd[R.id]=Date.now()+j.wait*1000;toast('⚠️ 剛才那次採集沒有成功：'+COINS.errText(j));resBag();resStock();return}
       var gs=j.got||{};
       if(gs.dia){rsSound('dia');rsGain(R,{k:R.rk,n:0,dia:gs.dia},cx0,cy0)}
-      if(gs.n!==fast.n)toast('📦 實際採到 '+gs.n+' 個（島上剩的不夠了）');
+      if(gs.n!==fast.n){
+        /* 和先顯示的數字不同：以後台為準（估的就不吵人） */
+        /* 成功的回應一定帶 j.p，帳戶已經被後台的數字蓋過，不用再補 */
+        if(!guess)toast('📦 實際採到 '+gs.n+' 個（島上剩的不夠了）');
+      }
       resBag();resStock();
     }).catch(function(){toast('⚠️ 網路不穩，剛才那次採集可能沒有記上，請重新整理確認');resBag();resStock()});
     return;
@@ -3340,7 +3384,7 @@ function msgNote(ma){
 }
 function resLoad(){
   clearTimeout(RSV.timer);
-  COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;if(j.op)RSV.op=j.op;RSV.t=Date.now();resPaint()}if(j&&j.ok&&j.ma!=null)msgNote(j.ma)}).catch(function(){}).then(function(){
+  COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;if(j.op)RSV.op=j.op;RSV.t=Date.now();resPaint()}if(j&&j.ok&&j.ma!=null)msgNote(j.ma);resPre()}).catch(function(){}).then(function(){
     RSV.timer=setTimeout(function(){if(document.hidden)RSV.timer=setTimeout(resLoad,60000);else resLoad()},45000);
   });
 }
@@ -3359,12 +3403,12 @@ function resPaint(){
     b.hidden=!resReady(s);
     var lv=lvOf(s),t=s.el.querySelector('.rlv');
     if(!t){t=document.createElement('span');t.setAttribute('aria-hidden','true');s.el.appendChild(t)}
-    t.className='rlv l'+(lv?lv.lv:1);t.textContent=lv?LVN[lv.lv]:'';t.hidden=!lv||b.hidden;
+    t.className='rlv l'+lv.lv;t.textContent=STARS[lv.lv];t.hidden=b.hidden;
   });
-  /* 有島的「這一輪」時間到了，就重新問一次後台哪些島長出資源 */
+  /* 每座島的「這一輪」1～3 分鐘一換：到時間就在網頁上自己重畫星星（不用問後台） */
   clearTimeout(RSV.tm2);
-  var m2=0;if(RSV.op&&RSV.t)RESI.forEach(function(s){var o=RSV.op[s.id];if(!o)return;var l=o[1]-(Date.now()-RSV.t);if(l>0&&(!m2||l<m2))m2=l});
-  if(m2)RSV.tm2=setTimeout(resLoad,Math.min(m2,3600000)+1500);
+  var m2=0;RESI.forEach(function(s){var l=lvOf(s).ms;if(l>0&&(!m2||l<m2))m2=l});
+  RSV.tm2=setTimeout(resPaint,Math.max(2000,m2+200));
   clearTimeout(RSV.tm);
   var mn=0;RESI.forEach(function(s){var c=cdLeft(s);if(c>0&&(!mn||c<mn))mn=c});if(mn)RSV.tm=setTimeout(resPaint,mn*1000+250);
 }
@@ -3564,7 +3608,7 @@ function socialPaint(w){
   if(V.t==='msg'&&!$('mbText')&&w.code)msgForm();
   if(w.admin&&!pendAsked){pendAsked=true;COINS.call({a:'msgs',code:w.code}).then(function(j){if(j&&j.pending){markPending(j.pending);toast('📮 有 '+j.pending+' 則留言還沒回覆')}}).catch(function(){})}
 }
-COINS.on(function(ev,w){socialPaint(w)});
+COINS.on(function(ev,w){socialPaint(w);resPre()});
 socialPaint(COINS.get());
 COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(function(){toast('🎁 累積拿滿 5 枚了！到背包花 5 枚金幣，就能領「提示詞禮物包」')},1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});

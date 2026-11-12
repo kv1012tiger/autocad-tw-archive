@@ -43,7 +43,7 @@ var R_HEAD = ['代號', '物資島', '日期', '今日總量', '已採集', '鑽
 var N_HEAD = ['時間', '寄件海島編號', '寄件暱稱', '收件海島編號', '收件暱稱', '內容'];
 var DAILY = 3;      // 第 1 天 3 枚、第 2 天 4 枚
 var DAILY_MAX = 5;  // 第 3 天起每天固定 5 枚
-var CAP = { online: 3, read: 3, qa: 9 };
+var CAP = { online: 3, read: 6, qa: 9 };
 var KIND_COL = { online: C.onl, read: C.rd, qa: C.qa };
 var ALPHA = '23456789ABCDFGHJKMNPQRSTUVWXYZ';
 
@@ -63,21 +63,26 @@ var ISL_MAP = {};
 ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
 /* 金礦島（t:'gold'）：採集拿的是金幣，不是物資。全島每天只有 GOLD_STOCK 枚（大家搶），每人每座每天最多採 GOLD_MAX 次，不會藏鑽石 */
 var GOLD_STOCK_MIN = 14, GOLD_STOCK_MAX = 24, GOLD_MAX = 2;
-/* 物資島每 10 分鐘「隨機換一批」：每座島每一輪的資源多寡不同（0 稀少／1 普通／2 豐富），島永遠都能採，只是這一輪拿得多或少。
-   全站所有人看到的一樣（用島代號＋輪次當種子）。稀少 ≈ 一半數量、豐富 ≈ 1.6 倍（金礦：稀少 1、豐富 2） */
-var ISL_SLOT = 10 * 60 * 1000;
+/* 物資島「隨機換一批」：每座島每一輪的資源多寡不同（0 稀少／1 普通／2 豐富），島永遠都能採，只是這一輪拿得多或少。
+   每一輪長度也隨機：1、2 或 3 分鐘（每座島、每天各自抽一串，全站所有人看到的一樣；網頁用同一套算法自己算，不用再問後台）。
+   稀少 ≈ 一半數量、豐富 ≈ 1.6 倍（金礦：稀少 1、普通 1～2、豐富 2～3） */
 var ISL_SCHED = true; // false = 全部「普通」（測試用）
-function islLvAt_(il, slot) {
-  var r = rng_(hash_('isl-lv-v1|' + il.id + '|' + slot))();
+function islLvFromR_(il, r) {
   if (il.t === 'gold') return r < 0.5 ? 0 : r < 0.85 ? 1 : 2;
   return r < 0.3 ? 0 : r < 0.75 ? 1 : 2;
 }
-/* 回傳 { lv: 這一輪的豐富度, w: 還要幾毫秒換下一批 } */
+/* 回傳 { lv: 這一輪的豐富度, w: 還要幾毫秒換下一批 }；從當天（UTC）0 點開始依序抽「長度 1～3 分鐘、豐富度」 */
 function islLv_(il, now) {
   now = now || Date.now();
-  if (!ISL_SCHED) return { lv: 1, w: ISL_SLOT };
-  var s = Math.floor(now / ISL_SLOT);
-  return { lv: islLvAt_(il, s), w: (s + 1) * ISL_SLOT - now };
+  if (!ISL_SCHED) return { lv: 1, w: 60000 };
+  var DAYMS = 86400000, day = Math.floor(now / DAYMS), off = now - day * DAYMS;
+  var r = rng_(hash_('isl-seg-v1|' + il.id + '|' + day)), t = 0;
+  for (var k = 0; k < 2000; k++) {
+    var len = (1 + Math.floor(r() * 3)) * 60000, lvr = r();
+    if (off < t + len) return { lv: islLvFromR_(il, lvr), w: t + len - off };
+    t += len;
+  }
+  return { lv: 1, w: 60000 };
 }
 /* 依豐富度把「底數」（原本 lo～hi 抽出來的數字）換成這一輪實際數量 */
 function islScale_(il, base, lv) {
@@ -467,7 +472,13 @@ function handle_(q) {
         var nio = isleOf_(r);
         if (!nio.nx) nio.nx = {};
         if (!nio.nx[nxi.id]) { nio.nx[nxi.id] = rollN_(nxi); r[C.isle] = JSON.stringify(nio); }
-        res.nx = islScale_(nxi, nio.nx[nxi.id], islLv_(nxi).lv); res.nxi = nxi.id;
+        res.nx = nio.nx[nxi.id]; res.nxi = nxi.id;   // 回傳「底數」，網頁再依這一輪的豐富度換算（換批時不用重抓）
+      } else if (String(q.isle) === '*') {
+        // 登入後一次把 20 座島下一次的底數全抽好，進哪座島都能馬上結算（不用等後台）
+        var aio = isleOf_(r), dirtyN = false; if (!aio.nx) aio.nx = {};
+        res.nxall = {};
+        ISL.forEach(function (x) { if (!aio.nx[x.id]) { aio.nx[x.id] = rollN_(x); dirtyN = true; } res.nxall[x.id] = aio.nx[x.id]; });
+        if (dirtyN) r[C.isle] = JSON.stringify(aio);
       }
     } else if (a === 'gather') {
       var rk = String(q.isle || '');
@@ -506,7 +517,7 @@ function handle_(q) {
         if (dia) { r[C.dia] = num_(r[C.dia]) + dia; r[C.tdia] = num_(r[C.tdia]) + dia; }
       }
       res.got = { k: il.t, n: got, dia: dia, isle: rk };
-      res.nx = islScale_(il, gio.nx[rk], islLv_(il, now).lv); res.nxi = rk;
+      res.nx = gio.nx[rk]; res.nxi = rk;
       res.isles = islesPub_(st, r);
     /* ----- 商店島：買船、換船、金幣換物資 ----- */
     } else if (a === 'buyship' || a === 'useship') {
