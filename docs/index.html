@@ -2860,6 +2860,29 @@ function mineAct(q,btn,okFn){
     if(V.t==='mine')paintMine();else if(V.t==='pets')paintPets();
   }).catch(function(){end();toast('⚠️ 暫時連不上小島，請稍後再試');if(btn)btn.disabled=false});
 }
+/* 點建造：材料與施工倒數馬上更新（網頁先算、先顯示），後台在背景確認；失敗就還原成後台的狀態 */
+function buildFast(kind,t){
+  var dd=MI.data,R=dd&&dd.rules,cost=buildCost(kind);
+  if(!dd||!R||!cost||MI.busy){mineAct({a:'build',k:kind},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 開始施工！')});return}
+  var w=COINS.get(),ms,off=Date.now()-MI.at;
+  if(kind==='house'){ms=(R.houseMs||[0,60000,300000,900000])[dd.h+1]}
+  else if(kind==='field'){ms=(R.fieldMs||[60000,120000,240000])[dd.fields]}
+  else{ms=(R.decoMs||{tree:120000,fountain:300000,tower:600000})[kind]}
+  if(ms==null){mineAct({a:'build',k:kind},t,function(){toast('🔨 開始施工！')});return}
+  fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');
+  for(var k in cost){if(k==='dia')w.dia=Math.max(0,(w.dia||0)-cost[k]);else if(w.bag)w.bag[k]=Math.max(0,(w.bag[k]||0)-cost[k])}
+  if(kind==='house')dd.hb={t:dd.h+1,left:ms+off,total:ms};
+  else{dd.bb=dd.bb||{};dd.bb[kind]=ms+off}
+  toast('🔨 開始施工！'+(ms>=60000?'約 '+Math.round(ms/60000)+' 分鐘後完工':''));
+  paintMine();
+  MI.busy=true;
+  COINS.api({a:'build',k:kind}).then(function(j){
+    MI.busy=false;
+    if(!j.ok){toast('⚠️ 這次建造沒有成功：'+COINS.errText(j));loadMine();return}
+    if(j.island){var fr=MI.data&&MI.data.friend;MI.data=j.island;if(MI.data.friend==null&&fr!=null)MI.data.friend=fr;MI.at=Date.now();if(!MI.fid)miCachePut(j.island)}
+    if(V.t==='mine')paintMine();
+  }).catch(function(){MI.busy=false;toast('⚠️ 網路不穩，剛才的建造可能沒有記上，請重新整理確認');loadMine()});
+}
 function fxAt(el,em){if(!el)return;var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,em)}
 var GIFT_I={coin:['🪙','金幣'],fruit:['🍎','水果'],iron:['🔩','鐵礦'],wood:['🪵','木材'],stone:['🪨','石頭']};
 pBody.addEventListener('click',function(e){
@@ -2870,7 +2893,7 @@ pBody.addEventListener('click',function(e){
   if(d.setopen!=null){mineAct({a:'setopen',o:+d.setopen},t,function(){toast(+d.setopen?'🔓 已開放別人參觀你的小島':'🔒 現在只有好友能參觀你的小島')});return}
   if(d.maddfriend!=null){t.disabled=true;COINS.api({a:'fadd',fid:MI.fid}).then(function(j){if(!j.ok){toast('⚠️ '+COINS.errText(j));t.disabled=false;return}toast('👥 和 '+j.added.nick+' 成為好友了！');if(MI.data)MI.data.friend=true;if(V.t==='mine')paintMine()}).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});return}
   if(d.build){var bc=buildCost(d.build);if(bc&&!costOK(bc)){toast('⚠️ 材料不夠，還缺 '+missText(missOf(bc)));t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');return}
-    mineAct({a:'build',k:d.build},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 蓋好了！')});return}
+    buildFast(d.build,t);return}
   if(d.plant){mineAct({a:'plant',i:+d.i,v:d.plant},t,function(){fxAt(t,['🌱','💧','✨']);playSfx('flip');toast('🌱 種下'+VEGI[d.plant][1]+'，'+VEGI[d.plant][3]+'後收成')});return}
   if(d.harvest!=null){mineAct({a:'harvest',i:+d.harvest},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
   if(d.feed){mineAct({a:'feed',id:d.id,food:d.feed},t,function(){fxAt(t,['😋','💕',d.feed==='fruit'?'🍎':VEGI[d.feed][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
