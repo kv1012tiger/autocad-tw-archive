@@ -58,9 +58,11 @@ var RES = {
 };
 var RES_KEYS = ['fruit', 'iron', 'wood', 'stone'];
 /* 20 座物資島：[代號, 種類, 名稱, 再採間隔秒, 每次最少, 每次最多]（網頁 templates/island-home.html 有同一份，要一起改） */
-var ISL = [['r0','fruit','果園島',100,3,5],['r1','iron','礦山島',90,3,6],['r2','wood','森林島',80,3,7],['r3','stone','採石島',70,2,4],['r4','fruit','蘋果灣',80,3,6],['r5','iron','鐵砧島',60,2,6],['r6','wood','松林島',30,1,3],['r7','stone','石灰岩',30,1,4],['r8','fruit','橘子島',40,1,5],['r9','iron','紅岩礦坑',70,2,4],['r10','wood','楓葉林',110,4,7],['r11','stone','花崗岩島',110,4,8],['r12','fruit','香蕉岸',120,4,6],['r13','iron','黑曜礦脈',50,2,5],['r14','wood','竹林灣',50,2,6],['r15','stone','大理石岸',100,3,5],['r16','fruit','葡萄谷',40,1,4],['r17','iron','熔爐島',120,4,8],['r18','wood','神木島',60,2,4],['r19','stone','礫石灘',90,3,6]].map(function (a) { return { id: a[0], t: a[1], name: a[2], gap: a[3], lo: a[4], hi: a[5] }; });
+var ISL = [['r0','fruit','果園島',100,3,5],['r1','iron','礦山島',90,3,6],['r2','wood','森林島',80,3,7],['r3','stone','採石島',70,2,4],['r4','fruit','蘋果灣',80,3,6],['r5','iron','鐵砧島',60,2,6],['r6','wood','松林島',30,1,3],['r7','stone','石灰岩',30,1,4],['r8','fruit','橘子島',40,1,5],['r9','iron','紅岩礦坑',70,2,4],['r10','gold','金礦島',110,1,2],['r11','gold','金沙灣',110,1,2],['r12','gold','黃金谷',120,1,2],['r13','iron','黑曜礦脈',50,2,5],['r14','wood','竹林灣',50,2,6],['r15','stone','大理石岸',100,3,5],['r16','fruit','葡萄谷',40,1,4],['r17','gold','淘金河',120,1,2],['r18','wood','神木島',60,2,4],['r19','stone','礫石灘',90,3,6]].map(function (a) { return { id: a[0], t: a[1], name: a[2], gap: a[3], lo: a[4], hi: a[5] }; });
 var ISL_MAP = {};
 ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
+/* 金礦島（t:'gold'）：採集拿的是金幣，不是物資。全島每天只有 GOLD_STOCK 枚（大家搶），每人每座每天最多採 GOLD_MAX 次，不會藏鑽石 */
+var GOLD_STOCK_MIN = 20, GOLD_STOCK_MAX = 40, GOLD_MAX = 3;
 var ISL_LEGACY = { fruit: 'r0', iron: 'r1', wood: 'r2', stone: 'r3' }; // 舊版網頁送的是種類名稱
 var HOUSE_MS = [0, 60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000]; // 蓋小屋／升級要花的時間：Lv1 1 分、Lv2 5 分、Lv3 15 分
 var FIELD_MS = [60 * 1000, 2 * 60 * 1000, 4 * 60 * 1000];      // 菜田第 1／2／3 塊：1、2、4 分鐘
@@ -455,7 +457,7 @@ function handle_(q) {
       var gio = isleOf_(r), ready = num_(gio.cd[rk]);
       if (ready > now) return { ok: false, err: 'cool', wait: Math.ceil((ready - now) / 1000), p: me };
       var tc = counts_(r[C.gToday]);
-      if ((tc[rk] || 0) >= GATHER_MAX) return { ok: false, err: 'tired', p: me };
+      if ((tc[rk] || 0) >= (il.t === 'gold' ? GOLD_MAX : GATHER_MAX)) return { ok: false, err: 'tired', p: me };
       var st = isles_(), isl = st.map[rk], left = isl.total - isl.taken;
       if (left <= 0) return { ok: false, err: 'empty', p: me, isles: islesPub_(st, r) };
       if (!gio.nx) gio.nx = {};
@@ -474,9 +476,12 @@ function handle_(q) {
       gio.cd[rk] = now + il.gap * 1000;
       gio.nx[rk] = rollN_(il); // 下一次的數量先抽好
       r[C.isle] = JSON.stringify(gio);
-      r[RES[il.t].col] = num_(r[RES[il.t].col]) + got;
-      r[C.tres] = num_(r[C.tres]) + got;
-      if (dia) { r[C.dia] = num_(r[C.dia]) + dia; r[C.tdia] = num_(r[C.tdia]) + dia; }
+      if (il.t === 'gold') res.add = got; // 金礦：直接拿金幣（尾端會一起加進累計金幣）
+      else {
+        r[RES[il.t].col] = num_(r[RES[il.t].col]) + got;
+        r[C.tres] = num_(r[C.tres]) + got;
+        if (dia) { r[C.dia] = num_(r[C.dia]) + dia; r[C.tdia] = num_(r[C.tdia]) + dia; }
+      }
       res.got = { k: il.t, n: got, dia: dia, isle: rk };
       res.nx = gio.nx[rk]; res.nxi = rk;
       res.isles = islesPub_(st, r);
@@ -493,6 +498,8 @@ function handle_(q) {
         }
         so.ship.own.push(sid); so.ship.own.sort(function (x, y) { return x - y; });
         so.ship.cur = sid;
+        var snm = cleanNick_(q.name).slice(0, 8);
+        if (snm.length >= 1) so.ship.names[sid] = text_(snm, 8);
         sheet_('小島紀錄', L_HEAD).appendRow([new Date(), r[C.nick], r[C.code], '買船', sp.name + '（' + sp.cost + ' 金幣）']);
       } else {
         if (so.ship.own.indexOf(sid) < 0) return { ok: false, err: 'notown', p: me };
@@ -524,6 +531,12 @@ function handle_(q) {
         res.got = { dia: 1, k: 'dia', n: 0 };
       }
       r[C.isle] = JSON.stringify(ro);
+    } else if (a === 'shipname') {
+      var nid = Math.floor(num_(q.k)), no = isleOf_(r);
+      if (!SHIPS[nid] || no.ship.own.indexOf(nid) < 0) return { ok: false, err: 'notown', p: me };
+      var nn = cleanNick_(q.name).slice(0, 8);
+      if (nn.length >= 1) no.ship.names[nid] = text_(nn, 8); else delete no.ship.names[nid];
+      r[C.isle] = JSON.stringify(no);
     } else if (a === 'xbuy') {
       var xk = String(q.k || ''), xn = Math.max(1, Math.min(XCHG_MAX, Math.floor(num_(q.n) || 1)));
       var xcost = (xk === 'dia' ? DIA_BUY : BUY_COST) * xn;
@@ -853,8 +866,9 @@ function isles_() {
   ISL.forEach(function (il, i) {
     var v = byId[il.id];
     if (!v || Number(v[2]) !== t) {
-      var total = STOCK_MIN + Math.floor(Math.random() * (STOCK_MAX - STOCK_MIN + 1));
-      var nd = Math.floor(Math.random() * (DIA_MAX + 1)), pos = [];
+      var gold = il.t === 'gold';
+      var total = gold ? GOLD_STOCK_MIN + Math.floor(Math.random() * (GOLD_STOCK_MAX - GOLD_STOCK_MIN + 1)) : STOCK_MIN + Math.floor(Math.random() * (STOCK_MAX - STOCK_MIN + 1));
+      var nd = gold ? 0 : Math.floor(Math.random() * (DIA_MAX + 1)), pos = [];
       while (pos.length < nd) { var p = 1 + Math.floor(Math.random() * total); if (pos.indexOf(p) < 0) pos.push(p); }
       v = [il.id, il.name, t, total, 0, "'" + pos.sort(function (x, y) { return x - y; }).join(','), 0];
       dirty = true;
@@ -898,7 +912,7 @@ function islesPub_(st, r) {
   var o = {}, tc = r ? counts_(r[C.gToday]) : {};
   ISL.forEach(function (il) {
     var m = st.map[il.id];
-    o[il.id] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[il.id] || 0, max: GATHER_MAX };
+    o[il.id] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[il.id] || 0, max: il.t === 'gold' ? GOLD_MAX : GATHER_MAX };
   });
   return o;
 }
@@ -929,6 +943,7 @@ function isleOf_(r) {
   if (!o.hb) o.hb = null;
   o.ship = o.ship && Array.isArray(o.ship.own) ? o.ship : { cur: 0, own: [0] };
   if (o.ship.own.indexOf(0) < 0) o.ship.own.unshift(0);
+  if (!o.ship.names || typeof o.ship.names !== 'object') o.ship.names = {}; // 每艘船可以自己取名字
   if (o.ship.own.indexOf(o.ship.cur) < 0) o.ship.cur = 0;
   var cd = {};
   if (o.cd) Object.keys(o.cd).forEach(function (k) { if (ISL_MAP[k] && num_(o.cd[k]) > nowI) cd[k] = num_(o.cd[k]); });
@@ -967,6 +982,7 @@ function islePub_(r, mine, viewer) {
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
     h: o.h, fields: o.fields, deco: o.deco, score: isleScore_(o),
+    ships: o.ship.own.map(function (id) { return { k: id, n: plain_(o.ship.names[id]) || SHIPS[id].name, d: SHIPS[id].name }; }), shipCur: o.ship.cur,
     bb: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = Math.max(0, o.bb[k].e - now); }); return m; })(),
     hb: o.hb ? { t: num_(o.hb.t), left: Math.max(0, num_(o.hb.e) - now), total: HOUSE_MS[num_(o.hb.t)] || 0 } : null,
     f: o.f.map(function (c) { return c && VEG[c.v] ? { v: c.v, left: cropLeft_(c, now), total: VEG[c.v].hours * HOUR } : null; }),
