@@ -1284,7 +1284,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
     <div class="help-body" id="helpBody">
       <section class="hp" data-p="0"><ul>
         <li>📅 <b>每天登島</b>送 3 枚 🪙；連續第 2 天 4 枚，第 3 天起每天 5 枚。同一帳號一天只算一次，換手機也一樣。</li>
-        <li>📖 <b>爬文</b>：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）。</li>
+        <li>📖 <b>爬文</b>：每看 3 篇不同文章，有一半機率再送 1 枚（每天最多 3 枚）。<br>還有 <b>物資獎勵</b>：每看一篇不同文章就送一份隨機物資（🍎🔩🪵🪨），看越多每份越多：第 1～10 篇每次 1 個、第 11～20 篇 2 個、第 21～30 篇 3 個，第 15 和 30 篇再送 💎 1 顆（每天最多算 30 篇）。</li>
         <li>⏱️ <b>在線</b>：在島上每待 5 分鐘送 1 枚（每天最多 3 枚）。</li>
         <li>💬 <b>問答島</b>：翻開一座島的 3 張問答卡，拿 1 枚（每座島每個帳號一次）。</li>
         <li>📦 <b>下載</b>文章附件或下載連結，每次扣 1 枚；光碟課程島的課程資源不扣。</li>
@@ -2264,7 +2264,8 @@ function renderCastle(){
 var MB={page:1,list:[],edit:null,seq:0};
 function renderMsg(){
   pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
-    '<div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
+    '<p class="s-count" id="mbOn" style="margin:2px 0 8px;font-weight:700">🟢 現在 … 位在線</p><div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
+  COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
   $('pStep').textContent='📮 留言碼頭';
   footSimple('← 回地圖','🏡 蘋果爸小島 →');
   msgForm();loadMsgs(MB.page=1);
