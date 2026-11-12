@@ -62,7 +62,21 @@ var ISL = [['r0','fruit','果園島',100,3,5],['r1','iron','礦山島',90,3,6],[
 var ISL_MAP = {};
 ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
 /* 金礦島（t:'gold'）：採集拿的是金幣，不是物資。全島每天只有 GOLD_STOCK 枚（大家搶），每人每座每天最多採 GOLD_MAX 次，不會藏鑽石 */
-var GOLD_STOCK_MIN = 20, GOLD_STOCK_MAX = 40, GOLD_MAX = 3;
+var GOLD_STOCK_MIN = 6, GOLD_STOCK_MAX = 10, GOLD_MAX = 1;
+/* 物資島不是一直都有：每 20 分鐘一輪，每座島每一輪「隨機」決定有沒有資源（一般島約 45%、金礦約 20%），
+   全站所有人看到的一樣（用島代號＋輪次當種子）。換輪後 90 秒內還能收尾（網路慢的緩衝） */
+var ISL_SLOT = 20 * 60 * 1000, ISL_GRACE = 90 * 1000, ISL_P = 0.45, ISL_P_GOLD = 0.2;
+function islOpenAt_(il, slot) { return rng_(hash_('isl-open-v1|' + il.id + '|' + slot))() < (il.t === 'gold' ? ISL_P_GOLD : ISL_P); }
+/* 回傳 { on: 現在有沒有, w: 這個狀態還會持續多少毫秒（最多往後看 24 小時）, g: 在寬限期內（剛結束 90 秒內）仍可採 } */
+var ISL_SCHED = true; // false = 全部常開（測試用）
+function islOpen_(il, now) {
+  now = now || Date.now();
+  if (!ISL_SCHED) return { on: true, w: 24 * 3600 * 1000, g: false };
+  var s = Math.floor(now / ISL_SLOT), on = islOpenAt_(il, s), k = 1;
+  while (k <= 72 && islOpenAt_(il, s + k) === on) k++;
+  var g = !on && now % ISL_SLOT < ISL_GRACE && islOpenAt_(il, s - 1);
+  return { on: on, w: (s + k) * ISL_SLOT - now, g: g };
+}
 var ISL_LEGACY = { fruit: 'r0', iron: 'r1', wood: 'r2', stone: 'r3' }; // 舊版網頁送的是種類名稱
 var HOUSE_MS = [0, 60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000]; // 蓋小屋／升級要花的時間：Lv1 1 分、Lv2 5 分、Lv3 15 分
 var FIELD_MS = [60 * 1000, 2 * 60 * 1000, 4 * 60 * 1000];      // 菜田第 1／2／3 塊：1、2、4 分鐘
@@ -454,6 +468,8 @@ function handle_(q) {
       if (!il) return { ok: false, err: 'bad' };
       var now = Date.now(), wait = num_(r[C.gLast]) + GATHER_GAP - now;
       if (wait > 0) return { ok: false, err: 'cool', wait: Math.ceil(wait / 1000), p: me };
+      var op = islOpen_(il, now);
+      if (!op.on && !op.g) return { ok: false, err: 'closed', wait: Math.ceil(op.w / 1000), p: me, isles: islesPub_(isles_(), r) };
       var gio = isleOf_(r), ready = num_(gio.cd[rk]);
       if (ready > now) return { ok: false, err: 'cool', wait: Math.ceil((ready - now) / 1000), p: me };
       var tc = counts_(r[C.gToday]);
@@ -865,8 +881,9 @@ function isles_() {
   var map = {}, rows = [], dirty = false;
   ISL.forEach(function (il, i) {
     var v = byId[il.id];
+    var gold = il.t === 'gold';
+    if (v && Number(v[2]) === t && gold && num_(v[3]) > GOLD_STOCK_MAX) { v = v.slice(); v[3] = GOLD_STOCK_MAX; dirty = true; } // 金礦縮量：今天舊的大數字壓回上限
     if (!v || Number(v[2]) !== t) {
-      var gold = il.t === 'gold';
       var total = gold ? GOLD_STOCK_MIN + Math.floor(Math.random() * (GOLD_STOCK_MAX - GOLD_STOCK_MIN + 1)) : STOCK_MIN + Math.floor(Math.random() * (STOCK_MAX - STOCK_MIN + 1));
       var nd = gold ? 0 : Math.floor(Math.random() * (DIA_MAX + 1)), pos = [];
       while (pos.length < nd) { var p = 1 + Math.floor(Math.random() * total); if (pos.indexOf(p) < 0) pos.push(p); }
@@ -897,7 +914,7 @@ function msgAct_() {
 }
 function islLite_() {
   var hit = cget_('isl2');
-  if (hit) return hit;
+  if (hit) return withOpen_(hit);
   var sh = sheet_('物資島', R_HEAD), n = sh.getLastRow() - 1, t = day_(), left = {};
   ISL.forEach(function (il) { left[il.id] = 1; }); // 今天還沒人來過 → 當作還有
   (n > 0 ? sh.getRange(2, 1, n, R_HEAD.length).getValues() : []).forEach(function (v) {
@@ -906,13 +923,20 @@ function islLite_() {
   });
   var out = { ok: true, left: left, ma: msgAct_() };
   cput_('isl2', out, 20);
-  return out;
+  return withOpen_(out);
+}
+/* 地圖用：每座島現在有沒有資源 op[id] = [1/0, 這個狀態還剩幾毫秒]（每次現算，不進快取） */
+function withOpen_(o) {
+  var op = {};
+  ISL.forEach(function (il) { var x = islOpen_(il); op[il.id] = [x.on ? 1 : 0, x.w]; });
+  return { ok: o.ok, left: o.left, ma: o.ma, op: op };
 }
 function islesPub_(st, r) {
   var o = {}, tc = r ? counts_(r[C.gToday]) : {};
   ISL.forEach(function (il) {
     var m = st.map[il.id];
-    o[il.id] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[il.id] || 0, max: il.t === 'gold' ? GOLD_MAX : GATHER_MAX };
+    var op = islOpen_(il);
+    o[il.id] = { total: m.total, left: Math.max(0, m.total - m.taken), found: m.found, mine: tc[il.id] || 0, max: il.t === 'gold' ? GOLD_MAX : GATHER_MAX, on: op.on ? 1 : 0, w: op.w };
   });
   return o;
 }
