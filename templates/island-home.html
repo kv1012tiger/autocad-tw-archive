@@ -2142,7 +2142,7 @@ function favListPaint(){
   SP.forEach(function(s){if(s.li)s.li.classList.toggle('fav',isFav(s))});
 }
 function refresh(){
-  var CW=COINS.get(),n=CW.bal;var gf=CW.earned>=5;$('candyN').textContent=n+(gf?' 🎁':'');$('candyBtn').classList.toggle('gift',gf);$('giftBtn').hidden=!gf;
+  var CW=COINS.get(),n=CW.bal;var gf=CW.earned>=5;$('candyN').textContent=n;$('giftBtn').hidden=!gf;
   var nextSet=false;
   ISLES.forEach(function(s,i){
     var done=!!ST.c[i];s.el.classList.toggle('done',done);
@@ -3380,7 +3380,7 @@ $('startBtn').addEventListener('click',function(){
 function openSearch(){openPanel('search');setTimeout(function(){var i=$('qIn');if(i)i.focus({preventScroll:true})},380)}
 $('searchBtn').addEventListener('click',openSearch);
 $('searchBtn2').addEventListener('click',openSearch);
-$('candyBtn').addEventListener('click',function(){if(COINS.get().earned>=5){openChest();return}openLog()});
+$('candyBtn').addEventListener('click',function(){openLog()});
 $('boardBtn').addEventListener('click',function(){COINS.board()});
 $('bagBtn').addEventListener('click',function(){COINS.bag()});
 $('missionBtn').addEventListener('click',function(){showMission(true)});
@@ -3397,6 +3397,7 @@ COINS.on(function(ev,w){socialPaint(w)});
 socialPaint(COINS.get());
 COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(openChest,1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
+COINS.giftOpen=function(){openChest()};
 function openChest(){$('chest').hidden=false;$('chest').firstElementChild.scrollTop=0;playSfx('chest');burst(innerWidth/2,innerHeight/2,['🪙','💰','💎','⭐','🎉','🐚']);$('giftCopy').focus({preventScroll:true})}
 $('chestClose').addEventListener('click',function(){$('chest').hidden=true});
 $('giftBtn').addEventListener('click',openChest);

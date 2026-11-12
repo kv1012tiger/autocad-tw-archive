@@ -470,7 +470,7 @@
         }
         function paint() {
           var b = P.bag || {}, left = Math.max(0, (P.tradeMax || 3) - (P.trades || 0));
-          var h = questHTML() + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
+          var h = questHTML() + (P.earned >= 5 ? '<div class="cw-sec"><h4>🎁 提示詞禮物包</h4><small style="margin-bottom:8px">累積拿滿 5 枚金幣，送你的禮物。</small><button class="cw-b p" type="button" data-gift>🎁 打開禮物包</button></div>' : '') + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
             RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
             '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
             '<small style="margin-top:6px">🥕 ' + ((P.veg || {}).carrot || 0) + '　🥬 ' + ((P.veg || {}).cabbage || 0) + '　🎃 ' + ((P.veg || {}).pumpkin || 0) + '（菜園收成，用來餵寵物）</small>' +
@@ -527,6 +527,7 @@
               toast('🏪 換到 ' + j.add + ' 枚金幣！'); paint();
             }).catch(function () { netFail(); paint(); });
           } else if (d.visit) { close(); window.ISLE_VISIT(d.visit); }
+          else if (d.gift != null) { close(); if (window.COINS && window.COINS.giftOpen) window.COINS.giftOpen(); }
           else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製海島編號 #' + P.fid);
           else if (d.fadd != null) {
             var inp = ov.querySelector('[data-fidin]'), v = inp.value.replace(/[^0-9a-z]/gi, '').toUpperCase(), fe = ov.querySelector('[data-ferr]');
