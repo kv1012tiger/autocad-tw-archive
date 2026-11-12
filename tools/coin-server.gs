@@ -64,7 +64,7 @@ var ISL = [['r0','fruit','果園島',100,3,5],['r1','iron','礦山島',90,3,6],[
 var ISL_MAP = {};
 ISL.forEach(function (x) { ISL_MAP[x.id] = x; });
 /* 金礦島（t:'gold'）：採集拿的是金幣，不是物資。全島每天只有 GOLD_STOCK 枚（大家搶），每人每座每天最多採 GOLD_MAX 次，不會藏鑽石 */
-var GOLD_STOCK_MIN = 14, GOLD_STOCK_MAX = 24, GOLD_MAX = 2;
+var GOLD_STOCK_MIN = 15, GOLD_STOCK_MAX = 15, GOLD_MAX = 2;   // 每座金礦每天全島固定 15 枚
 /* 物資島「隨機換一批」：每座島每一輪的資源多寡不同（0 稀少／1 普通／2 豐富），島永遠都能採，只是這一輪拿得多或少。
    每一輪長度也隨機：1、2 或 3 分鐘（每座島、每天各自抽一串，全站所有人看到的一樣；網頁用同一套算法自己算，不用再問後台）。
    稀少 ≈ 一半數量、豐富 ≈ 1.6 倍（金礦：稀少 1、普通 1～2、豐富 2～3） */
@@ -936,7 +936,7 @@ function isles_() {
   ISL.forEach(function (il, i) {
     var v = byId[il.id];
     var gold = il.t === 'gold';
-    if (v && Number(v[2]) === t && gold && (num_(v[3]) > GOLD_STOCK_MAX || num_(v[4]) > GOLD_STOCK_MAX)) { v = v.slice(); v[3] = GOLD_STOCK_MIN + Math.floor(Math.random() * (GOLD_STOCK_MAX - GOLD_STOCK_MIN + 1)); v[4] = 0; dirty = true; } // 舊制度留下的大數字：今天重新給一份金礦存量
+    if (v && Number(v[2]) === t && gold && (num_(v[3]) !== GOLD_STOCK_MAX || num_(v[4]) > GOLD_STOCK_MAX)) { v = v.slice(); v[3] = GOLD_STOCK_MAX; v[4] = Math.min(num_(v[4]), GOLD_STOCK_MAX); dirty = true; } // 調整過總量：今天的金礦也改成現在的數字（已被採走的照算）
     if (!v || Number(v[2]) !== t) {
       var total = gold ? GOLD_STOCK_MIN + Math.floor(Math.random() * (GOLD_STOCK_MAX - GOLD_STOCK_MIN + 1)) : STOCK_MIN + Math.floor(Math.random() * (STOCK_MAX - STOCK_MIN + 1));
       var nd = gold ? 0 : Math.floor(Math.random() * (DIA_MAX + 1)), pos = [];
