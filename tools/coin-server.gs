@@ -183,18 +183,24 @@ function questSync_(r) {
 
 /* ---------- 工作表 ---------- */
 var SHEETS_ = {};
+var SS_ = null;
+function ss_() { return SS_ || (SS_ = SpreadsheetApp.getActive()); }
 function sheet_(name, head) {
   if (SHEETS_[name]) return SHEETS_[name]; // 同一次執行只檢查一次標題列，省下重複讀取
-  var ss = SpreadsheetApp.getActive();
-  var sh = ss.getSheetByName(name);
+  var sh = ss_().getSheetByName(name);
+  var hk = 'hdr:' + name + ':' + hash_(head.join('|')); // 標題列檢查過就記 6 小時（標題改版時 hash 會變，會重新檢查）
   if (!sh) {
-    sh = ss.insertSheet(name);
+    sh = ss_().insertSheet(name);
     if (name === '玩家' || name === '邀請碼') sh.getRange('A:A').setNumberFormat('@'); // 登島碼、邀請碼一律當文字
+    cdel_(hk);
   }
-  var cur = sh.getRange(1, 1, 1, head.length).getValues()[0];
-  if (cur.join('|') !== head.join('|')) {
-    sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#ffe8a3');
-    sh.setFrozenRows(1);
+  if (!cget_(hk)) {
+    var cur = sh.getRange(1, 1, 1, head.length).getValues()[0];
+    if (cur.join('|') !== head.join('|')) {
+      sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#ffe8a3');
+      sh.setFrozenRows(1);
+    }
+    cput_(hk, 1, 21600);
   }
   SHEETS_[name] = sh;
   return sh;
