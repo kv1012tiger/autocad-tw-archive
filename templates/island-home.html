@@ -2265,7 +2265,7 @@ var MB={page:1,list:[],edit:null,seq:0};
 function renderMsg(){
   pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
     '<p class="s-count" id="mbOn" style="margin:2px 0 8px;font-weight:700">🟢 現在 … 位在線</p><div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
-  COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
+  if(COINS.stats)COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
   $('pStep').textContent='📮 留言碼頭';
   footSimple('← 回地圖','🏡 蘋果爸小島 →');
   msgForm();loadMsgs(MB.page=1);

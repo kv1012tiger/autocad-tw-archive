@@ -1347,8 +1347,8 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 <div id="fx" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/js/pets.js"></script>
-<script src="assets/js/coins.js"></script>
+<script src="assets/js/pets.js?v=6aafb7b3"></script>
+<script src="assets/js/coins.js?v=ecdc2803"></script>
 <script>
 (function(){
 'use strict';
@@ -2265,7 +2265,7 @@ var MB={page:1,list:[],edit:null,seq:0};
 function renderMsg(){
   pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
     '<p class="s-count" id="mbOn" style="margin:2px 0 8px;font-weight:700">🟢 現在 … 位在線</p><div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
-  COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
+  if(COINS.stats)COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
   $('pStep').textContent='📮 留言碼頭';
   footSimple('← 回地圖','🏡 蘋果爸小島 →');
   msgForm();loadMsgs(MB.page=1);
@@ -3606,6 +3606,6 @@ layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showG
 })();
 </script>
 <script>window.FS_BTN_ONLY_TOUCH=true</script><!-- 手機只有按 ⛶ 才進全螢幕（避免每次開啟都跳出 Chrome 的退出全螢幕提示） -->
-<script src="assets/js/fullscreen.js"></script>
+<script src="assets/js/fullscreen.js?v=5126e713"></script>
 </body>
 </html>

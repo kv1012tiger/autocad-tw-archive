@@ -80,6 +80,18 @@ $nav_next
 """)
 
 
+
+def bust(page):
+    """給 assets/js 的腳本加上內容雜湊版本號，改版後瀏覽器一定會抓新檔（避免新網頁配到舊腳本）"""
+    import hashlib
+
+    def sub(m):
+        f = DOCS / "assets" / "js" / m.group(2)
+        v = hashlib.md5(f.read_bytes()).hexdigest()[:8] if f.exists() else "0"
+        return m.group(1) + m.group(2) + "?v=" + v + '"'
+
+    return re.sub(r'(src="(?:\.\./\.\./)?assets/js/)([\w-]+\.js)"', sub, page)
+
 def load_json(p: Path):
     return json.loads(p.read_text(encoding="utf-8"))
 
@@ -178,7 +190,7 @@ def write_home(boards, by_board):
     if template.count(FORUM_MARKER) != 1:
         raise SystemExit(f"{FORUM_MARKER} must appear exactly once in {HOME_TEMPLATE}")
     data = json.dumps(forum, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    (DOCS / "index.html").write_text(template.replace(FORUM_MARKER, data), encoding="utf-8", newline="\n")
+    (DOCS / "index.html").write_text(bust(template.replace(FORUM_MARKER, data)), encoding="utf-8", newline="\n")
 
 
 def write_topics(board, topics, site_name):
@@ -250,7 +262,7 @@ def write_topics(board, topics, site_name):
             g2=board["g"][1],
             residents=residents_html(board["res"]),
         )
-        (topic_dir / "index.html").write_text(page, encoding="utf-8", newline="\n")
+        (topic_dir / "index.html").write_text(bust(page), encoding="utf-8", newline="\n")
 
 
 def main():
