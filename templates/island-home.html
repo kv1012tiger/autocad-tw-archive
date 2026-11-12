@@ -2374,7 +2374,7 @@ pBody.addEventListener('click',function(e){
 function redrawMsg(id){var m=MB.list.filter(function(x){return x.id===id})[0],el=pBody.querySelector('.mb[data-mid="'+id+'"]');if(m&&el)el.outerHTML=msgHTML(m)}
 
 /* ---------- 物資島：連續點擊採集（每座島手感、音效、特效不同），每天隨機總量、偶爾撿到鑽石 ---------- */
-var RS={st:null,until:0,timer:0,seq:0,round:null,busy:false,cd:{},nx:{}};
+var RS={st:null,until:0,timer:0,seq:0,round:null,busy:false,cd:{},nx:{},shown:{}};
 /* 這座島還要等幾秒才能再採：後台回報的冷卻（每座島 30～120 秒不同）加上這次剛採的 */
 function cdLeft(R){
   var w=COINS.get(),sec=w.cd&&w.cd[R.id],a=sec!=null?(w.cdT||0)+sec*1000:0,b=RS.cd[R.id]||0;
@@ -2404,9 +2404,12 @@ function renderRes(n){
   var my=++RS.seq,w=COINS.get();
   (w.code?COINS.api({a:'isles',isle:R.id}):COINS.call({a:'isles'})).then(function(j){if(j&&j.nx!=null&&j.nxi)RS.nx[j.nxi]=j.nx;if(my===RS.seq&&j&&j.isles){RS.st=j.isles;resStock()}}).catch(function(){if(my===RS.seq&&$('rsStock'))$('rsStock').textContent='⚠️ 暫時連不上物資島，請稍後再試'});
 }
+/* 背包數字：得到物資時先顯示舊的數字，小圖示一個一個飛進來再 +1（5→6→7→8），不要一下子跳到最後 */
+function bagVal(k){var w=COINS.get();if(RS.shown[k]!=null)return RS.shown[k];return k==='dia'?(w.dia||0):((w.bag||{})[k]||0)}
+function bagReal(k){var w=COINS.get();return k==='dia'?(w.dia||0):((w.bag||{})[k]||0)}
 function resBag(){
-  var el=$('rsBag'),w=COINS.get(),b=w.bag||{};if(!el)return;
-  el.innerHTML=w.code?RTYPE.map(function(x){return '<span data-k="'+x.rk+'">'+x.it+' <b>'+(b[x.rk]||0)+'</b> '+x.item+'</span>'}).join('')+'<span data-k="dia">💎 <b>'+(w.dia||0)+'</b> 鑽石</span>':'<span>取個暱稱就能開始採集，物資會存進你的背包。</span>';
+  var el=$('rsBag'),w=COINS.get();if(!el)return;
+  el.innerHTML=w.code?RTYPE.map(function(x){return '<span data-k="'+x.rk+'">'+x.it+' <b>'+bagVal(x.rk)+'</b> '+x.item+'</span>'}).join('')+'<span data-k="dia">💎 <b>'+bagVal('dia')+'</b> 鑽石</span>':'<span>取個暱稱就能開始採集，物資會存進你的背包。</span>';
 }
 /* 現在能不能採：回傳原因文字，可以採就回傳空字串 */
 function rsBlock(){
@@ -2535,6 +2538,9 @@ function rsGain(R,g,cx,cy){
   lab.innerHTML=(g.n?'+'+g.n+' '+R.it:'')+(g.dia?(g.n?'<br>':'')+'💎 +'+g.dia+' 鑽石！':'');
   lab.style.left=cx+'px';lab.style.top=cy+'px';fx.appendChild(lab);setTimeout(function(){lab.remove()},1900);
   var icons=[];for(var i=0;i<g.n;i++)icons.push([R.it,R.rk]);for(i=0;i<g.dia;i++)icons.push(['💎','dia']);
+  if(g.n)RS.shown[R.rk]=Math.max(0,bagReal(R.rk)-g.n-(RS.shown[R.rk]!=null?0:0));
+  if(g.dia)RS.shown.dia=Math.max(0,bagReal('dia')-g.dia);
+  resBag();
   icons.forEach(function(ic,k){
     setTimeout(function(){
       var tgt=document.querySelector('#rsBag [data-k="'+ic[1]+'"]'),tr=tgt?tgt.getBoundingClientRect():null;
@@ -2542,7 +2548,7 @@ function rsGain(R,g,cx,cy){
       e.style.left=cx+'px';e.style.top=cy+'px';fx.appendChild(e);
       var dx=tr&&tr.width?tr.left+18-cx:0,dy=tr&&tr.width?tr.top+tr.height/2-cy:220;
       requestAnimationFrame(function(){requestAnimationFrame(function(){e.style.transform='translate('+dx.toFixed(0)+'px,'+dy.toFixed(0)+'px) scale(.6)';e.style.opacity='.2'})});
-      setTimeout(function(){e.remove();resBag();var t2=document.querySelector('#rsBag [data-k="'+ic[1]+'"]');if(t2)rsAnim(t2,'bump');if(!reduce&&SFX_ON)tone(1200+k*90,0,.08,'sine',.06)},760);
+      setTimeout(function(){e.remove();var kk=ic[1];if(RS.shown[kk]!=null){RS.shown[kk]+=1;if(RS.shown[kk]>=bagReal(kk))delete RS.shown[kk]}resBag();var t2=document.querySelector('#rsBag [data-k="'+ic[1]+'"]');if(t2)rsAnim(t2,'bump');if(!reduce&&SFX_ON)tone(1200+k*90,0,.08,'sine',.06)},760);
     },250+k*160);
   });
   toast(g.dia?(g.n?'💎 哇！撿到 '+g.dia+' 顆鑽石，還有 '+R.it+' +'+g.n+' '+R.item:'💎 哇！剛才還撿到 '+g.dia+' 顆鑽石！'):R.it+' +'+g.n+' '+R.item+'！');
