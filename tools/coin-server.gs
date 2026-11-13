@@ -121,24 +121,24 @@ var ANN_TITLE = 40, ANN_LEN = 500, ANN_KEEP = 20, VISIT_KEEP = 10, VISIT_GAP = 1
 /* ---------- 我的小島：蓋房子、種菜、養寵物 ---------- */
 var L_HEAD = ['時間', '暱稱', '登島碼', '動作', '內容'];
 var HOUR = 3600 * 1000, DAY_MS = 24 * HOUR;
-var HOUSE = [null, { wood: 5, stone: 3 }, { wood: 10, stone: 8, iron: 3 }, { wood: 20, stone: 15, iron: 8, dia: 1 },
-  { wood: 30, stone: 20, iron: 10, dia: 2 }, { wood: 45, stone: 30, iron: 15, dia: 2 },
-  { wood: 65, stone: 45, iron: 22, dia: 3 }, { wood: 90, stone: 60, iron: 30, dia: 3 },
-  { wood: 120, stone: 80, iron: 40, dia: 4 }, { wood: 160, stone: 105, iron: 50, dia: 5 },
-  { wood: 210, stone: 135, iron: 65, dia: 6 }];
+var HOUSE = [null, { wood: 5, stone: 3 }, { wood: 10, stone: 8, iron: 3 }, { wood: 20, stone: 15, iron: 8 },
+  { wood: 30, stone: 20, iron: 10 }, { wood: 45, stone: 30, iron: 15 },
+  { wood: 65, stone: 45, iron: 22 }, { wood: 90, stone: 60, iron: 30 },
+  { wood: 120, stone: 80, iron: 40 }, { wood: 160, stone: 105, iron: 50 },
+  { wood: 210, stone: 135, iron: 65 }];
 var FIELD = [{ wood: 3, stone: 2 }, { wood: 6, stone: 5 }, { wood: 12, stone: 8, iron: 3 }];
 var DECO = {
   tree: { name: '果樹', cost: { fruit: 6, wood: 3 }, pts: 5 },
   fountain: { name: '噴水池', cost: { stone: 10, iron: 5 }, pts: 10 },
-  tower: { name: '瞭望塔', cost: { wood: 15, iron: 10, dia: 1 }, pts: 20 }
+  tower: { name: '瞭望塔', cost: { wood: 15, iron: 10 }, pts: 20 }
 };
 /* 果樹可以種很多棵：會自己長大（幼苗 → 小樹 → 結果樹），結果樹每隔一段時間長出水果，累積最多 TREE_CAP 顆，要自己去摘 */
 var TREE_MAX = 6, TREE_GROW = [5 * 60 * 1000, 20 * 60 * 1000], TREE_EVERY = 20 * 60 * 1000, TREE_CAP = 3;
 function treeCost_(n) { return { fruit: 6 + 2 * n, wood: 3 + n }; }   // 第 1 棵 🍎6 🪵3，之後每多一棵貴一點
 /* 噴水池、瞭望塔可以升級到 Lv3：[null, Lv1, Lv2, Lv3]（Lv1 = 原本的蓋法）；施工時間 = DECO_MS × LV_MULT */
 var UPC = {
-  fountain: [null, { stone: 10, iron: 5 }, { stone: 20, iron: 10, wood: 8 }, { stone: 35, iron: 18, dia: 1 }],
-  tower: [null, { wood: 15, iron: 10, dia: 1 }, { wood: 30, iron: 18, stone: 12, dia: 1 }, { wood: 50, iron: 30, stone: 25, dia: 2 }]
+  fountain: [null, { stone: 10, iron: 5 }, { stone: 20, iron: 10, wood: 8 }, { stone: 35, iron: 18 }],
+  tower: [null, { wood: 15, iron: 10 }, { wood: 30, iron: 18, stone: 12 }, { wood: 50, iron: 30, stone: 25 }]
 };
 var FT_PTS = { fountain: [0, 10, 20, 35], tower: [0, 20, 40, 70] };
 var LV_MULT = [1, 1.6, 3];
