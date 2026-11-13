@@ -1024,7 +1024,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-sc{position:absolute;line-height:1;pointer-events:none;opacity:.95}
 .mi-house{position:absolute;left:27%;top:19%;transform:translateX(-50%);text-align:center;line-height:1}
 .mi-house span{display:block;font-size:80px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35))}
-.mi-house.lv0 span{font-size:54px;opacity:.85}.mi-house.lv3 span{font-size:104px}
+.mi-house.lv0 span{font-size:54px;opacity:.85}.mi-house.lv3 span,.mi-house.lv4 span,.mi-house.lv5 span,.mi-house.lv6 span,.mi-house.lv7 span,.mi-house.lv8 span,.mi-house.lv9 span,.mi-house.lv10 span{font-size:104px}
 .mi-house em{position:relative;z-index:3;display:inline-block;margin-top:6px;padding:1px 8px;border-radius:8px;font-style:normal;font-size:12px;font-weight:800;color:#1f3d12;background:rgba(255,255,255,.85)}
 .mi-fields{position:absolute;left:47%;top:38%;display:flex;gap:6px}
 .mi-plot{display:grid;place-items:center;width:46px;height:40px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
@@ -1362,7 +1362,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
         <li>🔊 打開上方喇叭，點擊會有音效和特效。</li>
       </ul></section>
       <section class="hp" data-p="2" hidden><ul>
-        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵5 🪨3；Lv2 🪵10 🪨8 🔩3；Lv3 🪵20 🪨15 🔩8 💎1。<b>蓋東西都要施工</b>：小屋 Lv1 1 分、Lv2 5 分、Lv3 15 分；菜田 1／2／4 分；果樹 2 分、噴水池 5 分、瞭望塔 10 分。資源一開始就扣，蓋好才算數，不同的東西可以同時蓋。小屋等級就是可以養的寵物數。</li>
+        <li>🏝️ 登島後你有自己的小島，用物資蓋房子：<br>🏠 小屋 Lv1 🪵5 🪨3；Lv2 🪵10 🪨8 🔩3；Lv3 🪵20 🪨15 🔩8 💎1。<b>蓋東西都要施工</b>：小屋 Lv1 1 分、Lv2 5 分、Lv3 15 分；菜田 1／2／4 分；果樹 2 分、噴水池 5 分、瞭望塔 10 分。資源一開始就扣，蓋好才算數，不同的東西可以同時蓋。小屋可升到 Lv10，寵物名額每級增加 1 隻至 Lv8，最多 8 隻。</li>
         <li>🟫 菜田最多 3 塊（🪵5 🪨5／🪵10 🪨10／🪵20 🪨15 🔩5）。裝飾：🌳 果樹、⛲ 噴水池、🗼 瞭望塔各一座，島主分 +5／+10／+20。</li>
         <li>🌱 <b>種菜</b>：用 🍎 水果換種子，照真實時間長大——🥕 4 小時、🥬 8 小時、🎃 24 小時；熟了要自己收成，放著不會壞。</li>
         <li>🏆 島主分＝小屋等級×10＋裝飾分＋寵物親密度，會上「島主」排行榜。</li>
@@ -2812,7 +2812,7 @@ var ANI_KEYS=['hamster','rabbit','turtle','dog','cat','parrot','fox','panda'];
 var VEGI={carrot:['🥕','胡蘿蔔',1,'4 小時',2,20],cabbage:['🥬','高麗菜',2,'8 小時',3,35],pumpkin:['🎃','南瓜',3,'24 小時',2,60]};
 var VEG_KEYS=['carrot','cabbage','pumpkin'];
 var DECOI={tree:['🌳','果樹',5],fountain:['⛲','噴水池',10],tower:['🗼','瞭望塔',20]};
-var HOUSEI=['🚧','🛖','🏠','🏡'];
+var HOUSEI=['🚧','🛖','🏠','🏡','🏡','🏡','🏘️','🏘️','🏰','🏰','🏰'];
 var TREEN=['幼苗','小樹','結果樹'],TREE_POS=[[14,58],[26,74],[8,40],[36,82],[3,70],[19,88]];
 /* 果樹現在的樣子：後台回報的是「讀取當下」的狀態，這裡依經過的時間往前推（幼苗→小樹→結果樹、果子一顆顆長出來） */
 function treeView(t,d){
@@ -3027,8 +3027,8 @@ function paintMine(){
   }).join('')+'</div>';
   o+='<p class="mi-note">蔬菜庫存：'+VEG_KEYS.map(function(k){return VEGI[k][0]+' '+(d.veg[k]||0)}).join('　')+'・種子用 🍎 水果換（你有 '+fruit+' 個）・5 顆 🎃 可在 🎒 兌換所換 1 枚金幣</p></div>';
   /* 寵物 */
-  o+='<div class="p-sec"><h4>🐾 我的寵物（'+d.pets.length+' / '+d.h+'）</h4>';
-  if(!d.pets.length)o+='<p class="mi-note">'+(d.h?'小屋可以養 '+d.h+' 隻寵物，':'先蓋小屋，')+'到寵物島領養一隻吧！</p><button class="btn btn-primary btn-sm" type="button" data-open="pets">🐾 去寵物島</button>';
+  o+='<div class="p-sec"><h4>🐾 我的寵物（'+d.pets.length+' / '+Math.min(d.h,8)+'）</h4>';
+  if(!d.pets.length)o+='<p class="mi-note">'+(d.h?'小屋可以養 '+Math.min(d.h,8)+' 隻寵物，':'先蓋小屋，')+'到寵物島領養一隻吧！</p><button class="btn btn-primary btn-sm" type="button" data-open="pets">🐾 去寵物島</button>';
   o+='<div class="mi-pets">'+d.pets.map(function(p){
     var a=ANI[p.k]||['🐾',''];
     return '<div class="mi-pc"><span class="mi-pe" data-pat="'+esc(p.id)+'">'+a[0]+'</span><div class="mi-pb"><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'・親密度 '+p.aff+'</small>'+
@@ -3041,7 +3041,7 @@ function paintMine(){
   o+='</div>';
   /* 建造 */
   var B=[];
-  B.push(d.hb?{e:'🚧',n:'小屋 Lv'+d.hb.t+' 施工中',t:'還要 <b class="mi-hbt" data-k="house">'+hbText(d)+'</b> 才會完工',done:1}:d.h<3?{k:'house',e:HOUSEI[d.h+1],n:'小屋 Lv'+(d.h+1),t:'可以養 '+(d.h+1)+' 隻寵物・施工要 '+Math.round(((R.houseMs||[0,60000,300000,900000])[d.h+1])/60000)+' 分鐘',cost:R.house[d.h+1]}:{e:'🏡',n:'小屋 Lv3',t:'已經蓋到最高級',done:1});
+  B.push(d.hb?{e:'🚧',n:'小屋 Lv'+d.hb.t+' 施工中',t:'還要 <b class="mi-hbt" data-k="house">'+hbText(d)+'</b> 才會完工',done:1}:d.h<10?{k:'house',e:HOUSEI[d.h+1],n:'小屋 Lv'+(d.h+1),t:'可以養 '+Math.min(d.h+1,8)+' 隻寵物・施工要 '+Math.round((R.houseMs[d.h+1])/60000)+' 分鐘',cost:R.house[d.h+1]}:{e:HOUSEI[10],n:'小屋 Lv10',t:'已經蓋到最高級・最多養 8 隻寵物',done:1});
   var FMS=R.fieldMs||[60000,120000,240000],DMS=R.decoMs||{tree:120000,fountain:300000,tower:600000};
   B.push(d.bb&&d.bb.field!=null?{e:'🚧',n:'菜田 第 '+(d.fields+1)+' 塊 施工中',t:'還要 <b class="mi-hbt" data-k="field">'+bText(d,'field')+'</b> 才會完工',done:1}:d.fields<R.field.length?{k:'field',e:'🟫',n:'菜田 第 '+(d.fields+1)+' 塊',t:'可以多種一種菜・施工要 '+bmin(FMS[d.fields])+' 分鐘',cost:R.field[d.fields]}:{e:'🟫',n:'菜田 3 塊',t:'菜田已經蓋滿了',done:1});
   /* 果樹：可以種很多棵（會自己長大、結果） */
@@ -3101,7 +3101,7 @@ function buildFast(kind,t){
   var dd=MI.data,R=dd&&dd.rules,cost=buildCost(kind);
   if(!dd||!R||!cost||MI.busy){mineAct({a:'build',k:kind},t,function(){fxAt(t,['🔨','✨','🎉','⭐']);playSfx('chest');toast('🔨 開始施工！')});return}
   var w=COINS.get(),ms,off=Date.now()-MI.at;
-  if(kind==='house'){ms=(R.houseMs||[0,60000,300000,900000])[dd.h+1]}
+  if(kind==='house'){ms=R.houseMs[dd.h+1]}
   else if(kind==='field'){ms=(R.fieldMs||[60000,120000,240000])[dd.fields]}
   else if(kind==='tree'){ms=(R.decoMs||{tree:120000}).tree}
   else{ms=Math.round((R.decoMs||{fountain:300000,tower:600000})[kind]*(R.upMult||[1,1.6,3])[decoLv(dd,kind)])}
@@ -3223,7 +3223,7 @@ function renderPets(){
   pBody.innerHTML='<div class="ph" style="--c:#fb7185"><span class="ph-e">🐾</span><div><div class="p-kicker">PET ISLAND・寵物島</div><h3 id="pTitle">寵物島</h3><p>花金幣領養一隻寵物，帶回你的小島一起生活</p></div></div>'+
     '<div class="pt-cap" id="ptCap">'+(w.code?'看看你的小屋還有沒有空位…':'取個暱稱、蓋好小屋，就能領養寵物。')+'</div>'+
     '<div class="pt-grid" id="ptGrid"></div>'+
-    '<div class="p-sec"><h4>領養須知</h4><ul class="notes"><li>要先在 🏝️ 我的小島蓋小屋：小屋 Lv1 可以養 1 隻，Lv2 養 2 隻，Lv3 養 3 隻。</li><li>領養要付金幣，還可以幫牠取名字（8 個字以內）。</li><li>寵物飽足度每天掉 25，用菜園種的菜或水果餵牠；每天摸摸親密度 +1，親密度每 10 點升一級。</li><li>飽足度 50 以上時摸摸，寵物會送你 1 個物資，偶爾送 1 枚金幣。餓了不會跑掉，只是不開心、不送禮。</li></ul></div>';
+    '<div class="p-sec"><h4>領養須知</h4><ul class="notes"><li>要先在 🏝️ 我的小島蓋小屋：小屋 Lv1 可以養 1 隻，Lv2 養 2 隻，Lv3 養 3 隻，Lv8 養 8 隻；小屋可升到 Lv10，最多養 8 隻。</li><li>領養要付金幣，還可以幫牠取名字（8 個字以內）。</li><li>寵物飽足度每天掉 25，用菜園種的菜或水果餵牠；每天摸摸親密度 +1，親密度每 10 點升一級。</li><li>飽足度 50 以上時摸摸，寵物會送你 1 個物資，偶爾送 1 枚金幣。餓了不會跑掉，只是不開心、不送禮。</li></ul></div>';
   $('pStep').textContent='🐾 寵物島';
   footSimple('← 回地圖','🏝️ 我的小島 →');
   MI.adopt=null;paintPets();
@@ -3231,8 +3231,8 @@ function renderPets(){
 }
 function paintPets(){
   var g=$('ptGrid'),cap=$('ptCap');if(!g)return;
-  var w=COINS.get(),d=MI.data&&MI.data.mine?MI.data:null,room=d?d.h-d.pets.length:0;
-  if(w.code&&d)cap.innerHTML=d.h?'🏠 你的小屋 Lv'+d.h+' 可以養 <b>'+d.h+'</b> 隻，已經有 <b>'+d.pets.length+'</b> 隻'+(room>0?'，還可以領養 '+room+' 隻！':'；升級小屋就能多養一隻。')+'・你有 🪙 <b>'+w.bal+'</b> 枚'+(w.admin?'（管理員免費）':''):'🚧 你還沒有小屋，先到 <button class="mb-b" type="button" data-open="mine">🏝️ 我的小島</button> 用 🪵 10・🪨 5 蓋一間。';
+  var w=COINS.get(),d=MI.data&&MI.data.mine?MI.data:null,room=d?Math.min(d.h,8)-d.pets.length:0;
+  if(w.code&&d)cap.innerHTML=d.h?'🏠 你的小屋 Lv'+d.h+' 可以養 <b>'+Math.min(d.h,8)+'</b> 隻，已經有 <b>'+d.pets.length+'</b> 隻'+(room>0?'，還可以領養 '+room+' 隻！':(d.h<8?'；升級小屋就能多養一隻。':'；寵物名額已滿。'))+'・你有 🪙 <b>'+w.bal+'</b> 枚'+(w.admin?'（管理員免費）':''):'🚧 你還沒有小屋，先到 <button class="mb-b" type="button" data-open="mine">🏝️ 我的小島</button> 用 🪵 10・🪨 5 蓋一間。';
   g.innerHTML=ANI_KEYS.map(function(k){
     var a=ANI[k],ad=MI.adopt===k,can=w.code&&d&&room>0&&(w.admin||w.bal>=a[2]);
     return '<div class="pt-c'+(a[3]?' rare':'')+'"><span class="pt-e">'+a[0]+'</span><b>'+a[1]+(a[3]?'<em>稀有</em>':'')+'</b><span class="pt-p">🪙 '+a[2]+'</span>'+
@@ -3249,7 +3249,7 @@ pBody.addEventListener('click',function(e){
     var md=MI.data;if(!md){toast('小島資料載入中，稍等一下');return}
     var a=ANI[d.pick];
     if(!md.h){toast('🚧 要先在我的小島蓋小屋，才能領養寵物');return}
-    if(md.pets.length>=md.h){toast('🏠 小屋住滿了，升級小屋就能多養一隻');return}
+    if(md.pets.length>=Math.min(md.h,8)){toast(md.h<8?'🏠 小屋住滿了，升級小屋就能多養一隻':'🏠 寵物名額已滿，最多 8 隻');return}
     if(!w.admin&&w.bal<a[2]){toast('🪙 金幣不夠，領養'+a[1]+'要 '+a[2]+' 枚（你有 '+w.bal+' 枚）');return}
     MI.adopt=d.pick;paintPets();return}
   if(d.acancel!=null){MI.adopt=null;paintPets();return}

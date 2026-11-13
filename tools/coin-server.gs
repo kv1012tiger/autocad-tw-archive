@@ -93,7 +93,7 @@ function islScale_(il, base, lv) {
   return Math.max(1, n);
 }
 var ISL_LEGACY = { fruit: 'r0', iron: 'r1', wood: 'r2', stone: 'r3' }; // 舊版網頁送的是種類名稱
-var HOUSE_MS = [0, 60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000]; // 蓋小屋／升級要花的時間：Lv1 1 分、Lv2 5 分、Lv3 15 分
+var HOUSE_MS = [0, 1, 5, 15, 30, 45, 60, 90, 120, 150, 180].map(function(m){return m*60000}); // Lv1～10 施工分鐘
 var FIELD_MS = [60 * 1000, 2 * 60 * 1000, 4 * 60 * 1000];      // 菜田第 1／2／3 塊：1、2、4 分鐘
 var DECO_MS = { tree: 2 * 60 * 1000, fountain: 5 * 60 * 1000, tower: 10 * 60 * 1000 }; // 果樹 2 分、噴水池 5 分、瞭望塔 10 分
 /* 商店島：船（0 號免費）、金幣換物資 */
@@ -121,7 +121,11 @@ var ANN_TITLE = 40, ANN_LEN = 500, ANN_KEEP = 20, VISIT_KEEP = 10, VISIT_GAP = 1
 /* ---------- 我的小島：蓋房子、種菜、養寵物 ---------- */
 var L_HEAD = ['時間', '暱稱', '登島碼', '動作', '內容'];
 var HOUR = 3600 * 1000, DAY_MS = 24 * HOUR;
-var HOUSE = [null, { wood: 5, stone: 3 }, { wood: 10, stone: 8, iron: 3 }, { wood: 20, stone: 15, iron: 8, dia: 1 }];
+var HOUSE = [null, { wood: 5, stone: 3 }, { wood: 10, stone: 8, iron: 3 }, { wood: 20, stone: 15, iron: 8, dia: 1 },
+  { wood: 30, stone: 20, iron: 10, dia: 2 }, { wood: 45, stone: 30, iron: 15, dia: 2 },
+  { wood: 65, stone: 45, iron: 22, dia: 3 }, { wood: 90, stone: 60, iron: 30, dia: 3 },
+  { wood: 120, stone: 80, iron: 40, dia: 4 }, { wood: 160, stone: 105, iron: 50, dia: 5 },
+  { wood: 210, stone: 135, iron: 65, dia: 6 }];
 var FIELD = [{ wood: 3, stone: 2 }, { wood: 6, stone: 5 }, { wood: 12, stone: 8, iron: 3 }];
 var DECO = {
   tree: { name: '果樹', cost: { fruit: 6, wood: 3 }, pts: 5 },
@@ -1122,7 +1126,7 @@ function isleAct_(a, q, r, me) {
     var kind = String(q.k || ''), cost, label, tgt = 0;
     if (kind === 'house') {
       if (o.hb) return { err: 'building' };
-      if (o.h >= 3) return { err: 'maxed' };
+      if (o.h >= 10) return { err: 'maxed' };
       cost = HOUSE[o.h + 1]; label = '小屋 Lv' + (o.h + 1) + '（施工 ' + Math.round(HOUSE_MS[o.h + 1] / 60000) + ' 分鐘）';
     } else if (kind === 'field') {
       if (o.bb.field) return { err: 'building' };
@@ -1194,7 +1198,7 @@ function isleAct_(a, q, r, me) {
     var an = ANIMALS[String(q.k || '')], name = cleanNick_(q.name).slice(0, 8);
     if (!an) return { err: 'bad' };
     if (o.h < 1) return { err: 'nohouse' };
-    if (o.pets.length >= o.h) return { err: 'petmax' };
+    if (o.pets.length >= Math.min(o.h, 8)) return { err: 'petmax' };
     if (name.length < 1) name = an.name;
     if (!me.admin) {
       if (num_(r[C.bal]) < an.cost) return { err: 'nocoin' };
