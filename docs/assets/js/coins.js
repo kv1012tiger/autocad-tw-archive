@@ -298,9 +298,7 @@
   var EXT = /\.(zip|rar|7z|dwg|dxf|dwt|pdf|lsp|vlx|fas|arx|dvb|exe|msi|ctb|stb|pat|shx|ttf)(\?|#|$)/i;
   function isDownload(a) {
     if (!a || !a.getAttribute('href')) return false;
-    if (/\/courses\/t\d+\//.test(location.pathname)) return false; // 光碟課程島：課程資源下載不扣金幣
-    if (a.hasAttribute('data-free')) return false; // 站長指定免扣金幣的下載
-    if (a.classList.contains('dl-item') || a.classList.contains('dl-btn') || a.hasAttribute('download')) return true;
+    if (a.classList.contains('dl-item') || a.classList.contains('dl-btn') || a.hasAttribute('download') || a.hasAttribute('data-download')) return true;
     if (!a.closest('.content')) return false;
     return HOST.test(a.href) || EXT.test(a.href.split('?')[0]);
   }
@@ -317,11 +315,12 @@
   }
   function confirmDownload(a) {
     if (!P.code) { welcome(function (ok) { if (ok) confirmDownload(a); }); return; }
-    if (!P.admin && P.bal < 1) { noCoin(); return; }
+    var free = /\/courses\/t\d+\//.test(location.pathname) || a.hasAttribute('data-free');
+    if (!free && !P.admin && P.bal < 1) { noCoin(); return; }
     var name = fileName(a);
     modal('<div class="cw-ic">📦</div><h3>下載資源</h3><p style="word-break:break-all">' + esc(name) + '</p>' +
-      (P.admin ? '<p>管理員帳號下載不扣金幣</p>' : '<p>下載會扣 <b>1 枚金幣</b>（目前 <b>' + P.bal + '</b> 枚）</p>') +
-      '<div class="cw-row"><button class="cw-b p" type="button" data-ok>' + (P.admin ? '⬇️ 下載' : '🪙 扣 1 枚並下載') + '</button><button class="cw-b" type="button" data-x>取消</button></div>',
+      (P.admin ? '<p>管理員帳號下載不扣金幣</p>' : free ? '<p>免費下載，會記錄下載次數</p>' : '<p>下載會扣 <b>1 枚金幣</b>（目前 <b>' + P.bal + '</b> 枚）</p>') +
+      '<div class="cw-row"><button class="cw-b p" type="button" data-ok>' + (P.admin || free ? '⬇️ 下載' : '🪙 扣 1 枚並下載') + '</button><button class="cw-b" type="button" data-x>取消</button></div>',
       function (ov, close) {
         ov.querySelector('[data-x]').addEventListener('click', close);
         ov.querySelector('[data-ok]').addEventListener('click', function () {
@@ -337,7 +336,7 @@
               return;
             }
             apply(j.p);
-            toast(P.admin ? '📦 開始下載' : '📦 已扣 1 枚金幣，開始下載（剩 ' + P.bal + ' 枚）');
+            toast(P.admin || free ? '📦 開始下載' : '📦 已扣 1 枚金幣，開始下載（剩 ' + P.bal + ' 枚）');
             if (win) { try { win.opener = null; } catch (e) {} win.location.href = a.href; }
             else { a.dataset.cwPaid = '1'; a.click(); setTimeout(function () { delete a.dataset.cwPaid; }, 500); }
           }).catch(function () { if (win) win.close(); netFail(); });

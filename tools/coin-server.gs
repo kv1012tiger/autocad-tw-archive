@@ -464,7 +464,9 @@ function handle_(q) {
       res.game = { got: gcoin, left: GAME_DAY - gx.gm[gk], day: GAME_DAY, t: GAME_T };
     } else if (a === 'dl') {
       var note = '';
+      var freeDl = /^courses\/t\d+\/$/.test(String(q.page || '')) || String(q.page || '') === 'plugins/t14746/';
       if (me.admin) note = '管理員免扣';
+      else if (freeDl) note = '免費下載';
       else if (me.bal < 1) return { ok: false, err: 'nocoin', p: me };
       else r[C.bal] = me.bal - 1;
       r[C.dls] = num_(r[C.dls]) + 1;
