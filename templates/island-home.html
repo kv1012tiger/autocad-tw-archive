@@ -2811,10 +2811,11 @@ function renderBet(k){
 }
 function betPlay(k,choice,retry){
   var state=BET[k],owner=COINS.get().code;if(state.busy)return;var pending=retry?state.pending:{kind:k,choice:choice,id:betId()};if(!pending)return;
+  betSound(k,'start');
   state.pending=pending;betStore(k,pending);state.busy=true;betDraw(k);
   COINS.api({a:'betplay',kind:k,choice:pending.choice,id:pending.id}).then(function(j){
     state.busy=false;if(COINS.get().code!==owner)return;if(!j||!j.ok){if(j&&j.err!=='bad'){state.pending=null;betStore(k,null)}toast('⚠️ '+(j&&j.err==='betmax'?'今天次數已用完':COINS.errText(j)));betDraw(k);return}
-    state.pending=null;betStore(k,null);state.result=j.bet;if(j.betstats){BET.slot.left=j.betstats.slot;BET.rps.left=j.betstats.rps}betDraw(k);
+    state.pending=null;betStore(k,null);state.result=j.bet;if(panel.classList.contains('open')&&V.t===k&&j.bet)betSound(k,j.bet.paid>1?'win':j.bet.paid===1?'tie':'lose');if(j.betstats){BET.slot.left=j.betstats.slot;BET.rps.left=j.betstats.rps}betDraw(k);
   }).catch(function(){state.busy=false;if(COINS.get().code!==owner)return;toast('⚠️ 網路中斷，請確認上一局結果');betDraw(k)});
 }
 pBody.addEventListener('click',function(e){var t=e.target.closest('button');if(!t||(V.t!=='slot'&&V.t!=='rps'))return;var k=V.t;if(t.hasAttribute('data-bet-login')){COINS.need(function(){renderBet(k)});return}if(t.hasAttribute('data-bet-retry')){betPlay(k,'',true);return}if(t.dataset.betChoice)betPlay(k,t.dataset.betChoice,false)});
@@ -3796,6 +3797,7 @@ function render(dir){
   pBody.style.setProperty('--dir',(dir||1)*24+'px');pBody.classList.remove('swap');void pBody.offsetWidth;pBody.classList.add('swap');
 }
 function openPanel(t,i,dir){
+  var wasBet=panel.classList.contains('open')&&(V.t==='slot'||V.t==='rps'),isBet=t==='slot'||t==='rps';
   V={t:t,i:i||0};render(dir);
   var vk=t==='isle'?['qa-'+V.i,ISLES[V.i].name]:t==='home'?['home','蘋果爸小島']:t==='castle'?['castle','AI課程城堡']:t==='dock'?['dock','報名碼頭']:t==='msg'?['msg','留言碼頭']:t==='game'?['game','遊戲島']:t==='pets'?['pets','寵物島']:t==='res'?['res-'+RESI[V.i].n,RESI[V.i].name]:t==='shop'?['shop','商店島']:t==='search'?['search','占卜島']:null;
   if(vk){var ph=pBody.querySelector('.ph,.home-top');if(ph){var vd=document.createElement('div');ph.parentNode.insertBefore(vd,ph.nextSibling);COINS.visit(vk[0],vk[1],vd)}}
@@ -3804,14 +3806,17 @@ function openPanel(t,i,dir){
     panel.classList.add('open');backdrop.classList.add('open');panel.setAttribute('aria-hidden','false');document.documentElement.classList.add('lock');
     setTimeout(function(){$('pClose').focus({preventScroll:true})},60);
   }
+  if(isBet)bgmStop();else if(wasBet&&SFX_ON)bgmStart();
   playSfx('tap');
 }
 function closePanel(){
+  var wasBet=panel.classList.contains('open')&&(V.t==='slot'||V.t==='rps');
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
   if(/^#(qa-\d+|res-\d+|home|castle|search|tarot|dock|msg|game|slot|rps|mine|pets|shop)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
+  if(wasBet&&SFX_ON)bgmStart();
 }
 $('pClose').addEventListener('click',closePanel);
 backdrop.addEventListener('click',closePanel);
@@ -3960,6 +3965,20 @@ var SFX={
   dog:function(){tone(320,220,.09,'square',.06);tone(320,220,.09,'square',.06,.16)}
 };
 function playSfx(t){if(!SFX_ON)return;try{SFX[t]()}catch(e){}}
+/* 每款遊戲各自有動作及結果音效；遵循海島喇叭設定。 */
+function betSound(k,event){
+  if(!SFX_ON)return;
+  try{
+    if(event==='start'){
+      if(k==='slot'){[660,880,1100].forEach(function(f,i){tone(f,f*1.12,.09,'square',.035,i*.075)})}
+      else{tone(330,600,.13,'triangle',.09);tone(600,250,.12,'triangle',.06,.12)}
+    }else if(event==='win'){
+      (k==='slot'?[784,988,1175,1568]:[523,659,784]).forEach(function(f,i){tone(f,0,.22,'triangle',.1,i*.085)});
+    }else if(event==='tie'){
+      (k==='slot'?[740,988]:[523,523]).forEach(function(f,i){tone(f,0,.14,'sine',.08,i*.11)});
+    }else{tone(k==='slot'?440:392,220,.28,'sine',.08)}
+  }catch(e){}
+}
 var sfxBtn=$('sfxBtn');
 function sfxUI(){sfxBtn.textContent=SFX_ON?'🔊':'🔇';sfxBtn.setAttribute('aria-label',SFX_ON?'關閉音效':'開啟音效')}
 sfxBtn.addEventListener('click',function(){SFX_ON=!SFX_ON;try{sessionStorage.setItem('aic-sfx',SFX_ON?'on':'off')}catch(e){}sfxUI();toast(SFX_ON?'已開啟音效與背景音樂':'已關閉音效與背景音樂');if(SFX_ON){tone(1046,0,.18,'sine',.12);bgmStart()}else bgmStop()});
@@ -3985,7 +4004,7 @@ function bgmTick(a){
 }
 
 function bgmStart(){
-  if(!SFX_ON||BGM.on||(!reader.hidden&&reader.classList.contains('game')))return;var a=ac();if(!a)return;BGM.on=true;
+  if(!SFX_ON||BGM.on||(!reader.hidden&&reader.classList.contains('game'))||(panel.classList.contains('open')&&(V.t==='slot'||V.t==='rps')))return;var a=ac();if(!a)return;BGM.on=true;
   BGM.master=a.createGain();BGM.master.gain.setValueAtTime(0,a.currentTime);BGM.master.gain.linearRampToValueAtTime(BGM_VOL,a.currentTime+2.5);BGM.master.connect(a.destination);
   try{bgmInit(a)}catch(e){}
   BGM.timer=setInterval(function(){if(!document.hidden)try{bgmTick(a)}catch(e){}},BGM_STEP);
