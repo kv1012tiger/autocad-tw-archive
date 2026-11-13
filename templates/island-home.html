@@ -1095,6 +1095,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .help-head span{font-size:34px;line-height:1}.help-head h3{margin:0;font-size:22px;font-weight:900}
 .help-tabs{flex:none;display:flex;gap:6px;overflow-x:auto;padding:6px 14px 10px;scrollbar-width:none}
 .help-tabs::-webkit-scrollbar{display:none}
+@media (min-width:561px),(hover:hover) and (pointer:fine){.help-tabs{flex-wrap:wrap;overflow-x:visible}}
 .help-tabs button{flex:none;padding:6px 13px;border-radius:999px;border:1.5px solid rgba(255,209,102,.5);background:transparent;color:var(--ink);font:800 14px var(--font);cursor:pointer;white-space:nowrap}
 .help-tabs button.on{background:#ffd166;color:#3a1a08;border-color:#ffd166}
 .help-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 20px 8px;text-align:left}
@@ -1118,7 +1119,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-lv{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);padding:0 6px;border-radius:999px;background:#0ea5e9;color:#fff;font:900 11px/1.5 "Noto Sans TC",sans-serif;font-style:normal;white-space:nowrap;box-shadow:0 0 0 2px rgba(4,46,64,.8)}
 .mi-lv.l3{background:#f59e0b}
 .mi-deco[data-pick]{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.mi-deco[data-pick]::before{content:'';position:absolute;inset:-14px}
+.mi-deco[data-pick]::before{content:'';position:absolute;inset:-3px}
 .mi-fr{position:absolute;right:-8px;top:-10px;font-size:20px;line-height:1;animation:bob 1.4s ease-in-out infinite;font-style:normal}
 .mi-fr b{position:absolute;right:-4px;bottom:-6px;min-width:16px;padding:0 3px;border-radius:99px;background:#ef4444;color:#fff;font:900 11px/16px "Noto Sans TC",sans-serif;text-align:center}
 .mi-orch{display:grid;gap:8px}
@@ -3162,12 +3163,38 @@ function fitIslandPoint(el,x,y){
 }
 function fitIslandItems(){
   var sc=document.querySelector('#miBox .mi-scene');if(!sc)return;
-  sc.querySelectorAll('.mi-fruit').forEach(function(el){var p=fitIslandPoint(el,parseFloat(el.style.left),parseFloat(el.style.top));el.style.left=p[0]+'%';el.style.top=p[1]+'%'});
   var b=sc.getBoundingClientRect(),l=sc.querySelector('.mi-land').getBoundingClientRect();if(!b.width||!b.height)return;
   var cx=(l.left+l.right)/2-b.left,cy=(l.top+l.bottom)/2-b.top,rx=l.width*.475,ry=l.height*.475;
   function rect(el){var r=el.getBoundingClientRect();return [r.left-b.left,r.top-b.top,r.right-b.left,r.bottom-b.top]}
   function overlap(a,c,pad){return a[0]<c[2]+pad&&a[2]>c[0]-pad&&a[1]<c[3]+pad&&a[3]>c[1]-pad}
   var farm=sc.querySelector('.mi-fields'),farmBox=farm?rect(farm):null;
+  var trees=Array.from(sc.querySelectorAll('.mi-fruit')),house=sc.querySelector('.mi-house'),houseBox=house?rect(house):null;
+  var base=trees.map(function(el){return {x:parseFloat(el.style.left),y:parseFloat(el.style.top),size:parseFloat(el.style.fontSize)}});
+  // 先擺果樹，再擺木材樹；一併計算果實與點擊邊界，不改變資料中的樹或果實。
+  for(var phase=0;phase<2;phase++){
+    var success=false;
+    for(var scale=1;scale>=0.699&&!success;scale-=0.1){
+      var used=[],okAll=true;
+      trees.forEach(function(el,i){el.style.fontSize=(base[i].size*scale)+'px';el.style.left=base[i].x+'%';el.style.top=base[i].y+'%'});
+      trees.forEach(function(el,i){
+        if(!okAll)return;
+        var r=rect(el),fr=el.querySelector('.mi-fr'),hit=[r[0]-3,r[1]-3,r[2]+3,r[3]+3];
+        if(fr){var f=rect(fr);hit=[Math.min(hit[0],f[0]-3),Math.min(hit[1],f[1]-3),Math.max(hit[2],f[2]+3),Math.max(hit[3],f[3]+3)]}
+        var ox=hit[0]-base[i].x*b.width/100,oy=hit[1]-base[i].y*b.height/100,w=hit[2]-hit[0],h=hit[3]-hit[1],best=null,score=Infinity;
+        for(var x=0;x<=100;x+=2.5)for(var y=0;y<=100;y+=2.5){
+          var px=x*b.width/100+ox,py=y*b.height/100+oy,box=[px,py,px+w,py+h],inside=true;
+          [[box[0],box[1]],[box[2],box[1]],[box[0],box[3]],[box[2],box[3]]].forEach(function(c){if(Math.pow((c[0]-cx)/rx,2)+Math.pow((c[1]-cy)/ry,2)>1)inside=false});
+          if(!inside||(farmBox&&overlap(box,farmBox,4))||(phase===0&&houseBox&&overlap(box,houseBox,2))||used.some(function(v){return overlap(box,v,3)}))continue;
+          var dist=Math.pow((x-base[i].x)*b.width/100,2)+Math.pow((y-base[i].y)*b.height/100,2);
+          if(dist<score){score=dist;best=[x,y,box]}
+        }
+        if(!best){okAll=false;return}
+        el.style.left=best[0]+'%';el.style.top=best[1]+'%';used.push(best[2]);
+      });
+      success=okAll;
+    }
+    if(success)break;
+  }
   var fruit=Array.from(sc.querySelectorAll('.mi-fruit')).map(function(el){var r=rect(el),fr=el.querySelector('.mi-fr');if(fr){var f=rect(fr);r=[Math.min(r[0],f[0]),Math.min(r[1],f[1]),Math.max(r[2],f[2]),Math.max(r[3],f[3])]}return r}),obstacles=Array.from(sc.querySelectorAll('.mi-house,.mi-deco:not(.mi-fruit)')).map(rect),placed=[],angles=[-110,-45,5,45,95];
   sc.querySelectorAll('.mi-wild').forEach(function(el,i){
     var a=angles[i%angles.length]*Math.PI/180,tx=cx+Math.cos(a)*rx*.78,ty=cy+Math.sin(a)*ry*.78,best=null,bestScore=Infinity;
