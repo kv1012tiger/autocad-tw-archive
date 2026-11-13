@@ -691,6 +691,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .otab.on{background:linear-gradient(135deg,#c084fc,#7c3aed);border-color:#f3e8ff;color:#fff}
 .tr-intro{margin:8px 0 14px;color:#e9d5ff;line-height:1.75}
 .tr-intro b{color:#fff}
+.td-topic{margin:8px 0;border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:9px 12px;background:rgba(255,255,255,.06)}.td-topic summary{cursor:pointer;color:#fff;font-weight:700}.td-topic p{line-height:1.8;margin:8px 0 2px}
 .tr-grid{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 12px)/2);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin}.tr-slot{scroll-snap-align:start}.tr-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0;color:#e9d5ff}
 .tr-slot{display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 8px 12px;border-radius:20px;border:1.5px solid rgba(192,132,252,.4);background:linear-gradient(180deg,rgba(91,63,176,.35),rgba(30,17,70,.5));text-align:center}
 .tr-slot h4{margin:0;font-size:17px;color:#fff}
@@ -3419,12 +3420,34 @@ function tdCopy(){
 /* 牌義說明：怎麼看塔羅＋78 張牌的圖鑑 */
 function dictDetail(c){
   var su=c.major?null:TD.suits[c.suit],rk=c.major?null:TD.ranks[c.rank];
+  function otherReadings(reverse){
+    var kw=(reverse?c.kr:c.ku).split('・'),first=kw[0],second=kw[1]||kw[0];
+    var rows=reverse?[
+      ['💰 財運','檢視金錢安排中是否有「'+first+'」的情況。暫停衝動決定，先核對收支、承諾與自己能承擔的範圍，再調整計畫。'],
+      ['🤝 人際','留意互動中的「'+first+'」與「'+second+'」。先聽清楚對方的想法，再表達自己的感受與界線，避免用猜測代替溝通。'],
+      ['🌿 健康','觀察生活節奏中是否出現「'+first+'」的感受。給自己休息和調整作息的空間；身體不適時，以實際狀況及專業建議為準。'],
+      ['📚 學業','如果學習遇到「'+first+'」，先找出卡住的環節，把目標拆小並尋求協助。調整方法或休息後，再回頭整理重點。']
+    ]:[
+      ['💰 財運','從「'+first+'」的角度檢視收入、支出與手上的資源。想想如何把「'+second+'」運用在預算或儲蓄計畫，做決定前先確認實際條件。'],
+      ['🤝 人際','在人際互動中練習「'+first+'」，也留意「'+second+'」能如何幫助彼此。主動傾聽、清楚表達，讓關係有更好的交流空間。'],
+      ['🌿 健康','把「'+first+'」當成照顧身心的提醒：觀察自己的作息、壓力與體力，挑一件能持續的小事開始。身體不適時，請依實際狀況尋求專業協助。'],
+      ['📚 學業','把「'+first+'」用在目前的學習目標，試著以「'+second+'」調整方法。將大目標拆成可完成的小步驟，定期回顧進度。']
+    ];
+    return rows.map(function(row){return '<details class="td-topic"><summary>'+row[0]+'</summary><p>'+esc(row[1])+'</p></details>'}).join('');
+  }
+  function side(reverse){
+    var words=reverse?c.kr:c.ku;
+    return '<section class="td-sec'+(reverse?' rv':'')+'"><h5>'+(reverse?'🔃 逆位':'⬆️ 正位')+'</h5>'+tdChips(words)+
+      '<p><b>如何理解：</b>'+esc(reverse?'逆位可留意這些特質是否受阻、過度或需要重新調整；它不等於一定會發生壞事。':'正位可從這些關鍵字理解牌面帶出的狀態，想想它與你目前的處境有什麼連結。')+'</p>'+
+      '<details class="td-topic"><summary>💕 愛情</summary><p>'+esc(reverse?c.lr:c.lu)+'</p></details>'+
+      '<details class="td-topic"><summary>💼 事業</summary><p>'+esc(reverse?c.cr:c.cu)+'</p></details>'+otherReadings(reverse)+'</section>';
+  }
   return '<button class="btn btn-ghost btn-sm" type="button" data-tback="1">← 回牌義圖鑑</button>'+
     '<div class="td-hero">'+tdCard(c,{size:'l'})+'<div><h4>'+esc(c.z)+'</h4><small>'+esc(c.e)+(c.major?'・大阿爾克那':'・小阿爾克那')+'</small><p>'+esc(c.sum)+'</p>'+
     (su?'<p class="td-suit">'+su.s+' '+esc(su.d)+'</p>':'')+'</div></div>'+
-    '<div class="td-sec"><h5>⬆️ 正位</h5>'+tdChips(c.ku)+'<p><b>💕 愛情：</b>'+esc(c.lu)+'</p><p><b>💼 事業：</b>'+esc(c.cu)+'</p></div>'+
-    '<div class="td-sec rv"><h5>🔃 逆位</h5>'+tdChips(c.kr)+'<p><b>💕 愛情：</b>'+esc(c.lr)+'</p><p><b>💼 事業：</b>'+esc(c.cr)+'</p></div>'+
-    (rk?'<p class="tr-note">數字「'+esc(rk.z)+'」代表：'+esc(rk.t)+'。</p>':'');
+    (rk?'<p class="tr-note">牌的數字或人物「'+esc(rk.z)+'」代表：'+esc(rk.t)+'。</p>':'')+
+    '<p class="tr-note">點選下方主題展開說明；財運、人際、健康、學業的提示根據這張牌的關鍵字整理，供自我反思。</p>'+side(false)+side(true)+
+    '<p class="tr-note">塔羅僅供娛樂與自我反思，健康及財務等重要決定請依實際情況與專業建議判斷。</p>';
 }
 function renderDict(){
   var b=$('oBody');if(!b||V.t!=='search'||V.i!==2||!TD)return;
