@@ -996,7 +996,7 @@ function islesPub_(st, r) {
 }
 
 /* ---------- 我的小島 ---------- */
-function wildGap_(seed, t) { return (20 + Math.floor(rng_(hash_('wood-gap|' + seed + '|' + t))() * 21)) * 60000; }
+function woodGrow_(seed, i, t) { return (240 + Math.floor(rng_(hash_('wood-grow|' + seed + '|' + i + '|' + t))() * 121)) * 60000; }
 function isleOf_(r) {
   var o = {};
   try { o = JSON.parse(plain_(r[C.isle]) || '{}') || {}; } catch (e) { o = {}; }
@@ -1035,17 +1035,18 @@ function isleOf_(r) {
   var cd = {};
   if (o.cd) Object.keys(o.cd).forEach(function (k) { if (ISL_MAP[k] && num_(o.cd[k]) > nowI) cd[k] = num_(o.cd[k]); });
   o.cd = cd;
-  // 野生木材樹以帳號及時間決定生長與位置；讀取與訪客看到的結果一致。
+  // 固定樹位令每棵樹可獨立計算每日採收次數；沿用 v31 已生長樹木的位置。
   var seed = String(r[C.fid] || r[C.code] || ''), first = new Date(r[C.first]).getTime();
   var base = Math.max(1794499200000, isFinite(first) ? first : 0);
-  o.wild = o.wild && Array.isArray(o.wild.items) ? o.wild : { items: [], next: base + wildGap_(seed, base) };
-  o.wild.items = o.wild.items.slice(0, 5);
-  if (!num_(o.wild.next)) o.wild.next = base + wildGap_(seed, base);
-  while (o.wild.items.length < 5 && o.wild.next <= nowI) {
-    var born = o.wild.next, rnd = rng_(hash_('wood-pos|' + seed + '|' + born));
-    var angle = rnd() * Math.PI * 2, radius = Math.sqrt(rnd());
-    o.wild.items.push({ id: String(born), x: Math.round(50 + Math.cos(angle) * radius * 31), y: Math.round(50 + Math.sin(angle) * radius * 25) });
-    o.wild.next = born + wildGap_(seed, born);
+  if (!Array.isArray(o.woodSlots)) {
+    var oldTrees = o.wild && Array.isArray(o.wild.items) ? o.wild.items.slice(0, 5) : [];
+    o.woodSlots = [];
+    for (var si=0;si<5;si++) {
+      var prior=oldTrees[si], rnd=rng_(hash_('wood-slot|' + seed + '|' + si));
+      var angle=rnd()*Math.PI*2, radius=Math.sqrt(rnd());
+      var born=base + si*1200000;
+      o.woodSlots.push({id:prior?String(prior.id):'slot'+si, x:prior?prior.x:Math.round(50+Math.cos(angle)*radius*27), y:prior?prior.y:Math.round(50+Math.sin(angle)*radius*21), start:prior?0:born, ready:prior?0:born+woodGrow_(seed,si,born), day:0, count:0});
+    }
   }
   o.layout = o.layout && typeof o.layout === 'object' && !Array.isArray(o.layout) ? o.layout : {};
   return o;
@@ -1083,7 +1084,7 @@ function islePub_(r, mine, viewer) {
   var o = isleOf_(r), now = Date.now(), wd = viewer && viewer.wd && viewer.wd.d === day_() ? viewer.wd.f : [];
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
-    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o), layout: o.layout, wild: o.wild.items, wildNext: o.wild.items.length < 5 ? Math.max(0, o.wild.next - now) : null,
+    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o), layout: o.layout, wild: o.woodSlots.map(function(t){var span=Math.max(1,num_(t.ready)-num_(t.start)), phase=now>=num_(t.ready)?2:now>=num_(t.start)+span/2?1:0;return {id:String(t.id),x:t.x,y:t.y,stage:phase,left:Math.max(0,num_(t.ready)-now),count:num_(t.day)===day_()?num_(t.count):0};}), wildNext: (function(){var next=null;o.woodSlots.forEach(function(t){var st=num_(t.start),en=num_(t.ready),half=st+(en-st)/2,n=now<half?half-now:now<en?en-now:null;if(n!=null&&(next==null||n<next))next=n;if(num_(t.day)===day_()&&num_(t.count)>=2){var reset=86400000-((now+8*3600000)%86400000);if(next==null||reset<next)next=reset;}});return next;})(),
     trees: o.trees.map(function (t) { return { st: treeStage_(t, now), ripe: treeRipe_(t, now), nx: Math.max(0, treeNext_(t, now)) }; }),
     bt: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = num_(o.bb[k].t); }); return m; })(),
     ships: o.ship.own.map(function (id) { return { k: id, n: plain_(o.ship.names[id]) || SHIPS[id].name, d: SHIPS[id].name }; }), shipCur: o.ship.cur,
@@ -1164,11 +1165,14 @@ function isleAct_(a, q, r, me) {
     if (!valid || !isFinite(x) || !isFinite(y) || x < 0 || x > 100 || y < 0 || y > 100) return { err: 'bad' };
     o.layout[mk] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
   } else if (a === 'chopwood') {
-    var wid = String(q.id || ''), wi = o.wild.items.findIndex(function (t) { return t.id === wid; });
+    var wid = String(q.id || ''), wi = o.woodSlots.findIndex(function (t) { return String(t.id) === wid; });
     if (wi < 0) return { err: 'bad' };
-    var wasFull = o.wild.items.length >= 5;
-    o.wild.items.splice(wi, 1);
-    if (wasFull || o.wild.next <= now) o.wild.next = now + wildGap_(String(r[C.fid] || r[C.code] || ''), now);
+    var tree = o.woodSlots[wi], todayW=day_();
+    if (num_(tree.day)!==todayW) { tree.day=todayW; tree.count=0; }
+    if (num_(tree.count)>=2) return { err: 'tired' };
+    if (now<num_(tree.ready)) return { err: 'notyet' };
+    tree.count=num_(tree.count)+1; tree.start=now;
+    tree.ready=now+woodGrow_(String(r[C.fid] || r[C.code] || ''),wi,now);
     r[C.wood] = num_(r[C.wood]) + 3; r[C.tres] = num_(r[C.tres]) + 3;
     out.got = { k: 'wood', n: 3 }; out.log = ['砍樹', '木材×3'];
   } else if (a === 'adopt') {

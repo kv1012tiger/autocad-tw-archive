@@ -2946,7 +2946,7 @@ function sceneHTML(d){
     var v=treeView(t,d),pp=itemPos(d,'tree'+i,TREE_POS[i%TREE_POS.length]);
     o+='<span class="mi-deco"'+moveAttr(d,'tree'+i)+(v.ripe>0&&d.mine?' data-pick="'+i+'" role="button" aria-label="摘取第 '+(i+1)+' 棵果樹"':'')+' style="left:'+pp[0]+'%;top:'+pp[1]+'%;font-size:'+(v.st===0?26:v.st===1?36:46)+'px">'+(v.st===0?'🌱':'🌳')+(v.ripe>0?'<i class="mi-fr">🍎<b>'+v.ripe+'</b></i>':'')+'</span>';
   });
-  (d.wild||[]).forEach(function(w){o+='<span class="mi-wild"'+(d.mine?' data-chop="'+esc(w.id)+'" role="button" aria-label="採收木材"':'')+' style="left:'+w.x+'%;top:'+w.y+'%">🌲</span>'});
+  (d.wild||[]).forEach(function(w){var stage=w.stage==null?2:w.stage,ready=stage===2&&(w.count||0)<2;o+='<span class="mi-wild"'+(d.mine&&ready?' data-chop="'+esc(w.id)+'" role="button" aria-label="採收木材"':'')+' style="left:'+w.x+'%;top:'+w.y+'%;font-size:'+(stage===0?22:stage===1?30:39)+'px">'+(stage===0?'🌱':stage===1?'🌿':'🌲')+'</span>'});
   Object.keys(d.bb||{}).forEach(function(k){var pp=k==='tree'?TREE_POS[(d.trees||[]).length%TREE_POS.length]:dp[k];if(pp)o+='<span class="mi-deco bld" style="left:'+pp[0]+'%;top:'+pp[1]+'%">🚧</span>'});
   o+=d.pets.map(function(p,i){var a=ANI[p.k]||['🐾',''];return '<span class="mi-pet" data-pid="'+esc((MI.fid||'me')+':'+(p.id||('i'+i)))+'" style="font-size:'+(32+Math.min(4,p.lv-1)*4)+'px"><i><u>'+a[0]+'</u></i><em>'+esc(p.n)+'</em></span>'}).join('');
   if(!d.h&&!d.fields&&!d.deco.length&&!(d.trees||[]).length&&!d.pets.length)o+='<p class="mi-empty">'+(d.mine?'這座島還是一片空地，先用 🪵 木材和 🪨 石頭蓋一間小屋吧！':'這座島還是一片空地')+'</p>';
@@ -3011,14 +3011,14 @@ function paintMine(){
   $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
   var o=sceneHTML(d)+wipHTML(d)+harborHTML(d);
   if(d.mine){var lt=landTier(d);if(lt<3)o+='<p class="mi-note">🌱 你的島會長大：多蓋小屋、菜田和裝飾，陸地就會越來越大（現在是「'+TIERN[lt]+'」）。</p>'}
-  if(d.mine)o+='<p class="mi-note">👆 點果樹摘果、點 🌲 採木材；長按房子、設施、菜田或果樹可拖曳位置。</p>';
+  if(d.mine)o+='<p class="mi-note">👆 點果樹摘果、點成熟 🌲 採木材（每棵每天最多 2 次）；長按房子、設施、菜田或果樹可拖曳並自動對齊。</p>';
   if(d.mine)o+=mineTop(d);
   if(!d.mine){
     var growing=d.f.some(function(c){return c&&cropView(c).left>0});
     if(!d.friend)o+=strangerBox();else o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
       (d.watered?'<button class="btn btn-ghost btn-sm" type="button" disabled>💧 今天已經澆過水了</button>':growing?'<button class="btn btn-primary btn-sm" type="button" data-mwater>💧 幫 '+esc(d.nick)+' 澆水</button>':'<button class="btn btn-ghost btn-sm" type="button" disabled>他的田裡現在沒有在長的菜</button>')+'</div>';
     if(d.pets.length)o+='<div class="p-sec"><h4>🐾 '+esc(d.nick)+' 的寵物</h4><div class="mi-pets">'+d.pets.map(function(p){var a=ANI[p.k]||['🐾',''];return '<div class="mi-pc"><span class="mi-pe">'+a[0]+'</span><div><b>'+esc(p.n)+'</b><small>'+a[1]+'・Lv'+p.lv+' '+petTitle(p.lv)+'</small></div></div>'}).join('')+'</div></div>';
-    box.innerHTML=o;pwStart();return;
+    box.innerHTML=o;fitIslandItems();pwStart();return;
   }
   var R=d.rules,w=COINS.get(),fruit=(w.bag||{}).fruit||0;
   /* 菜園 */
@@ -3068,7 +3068,7 @@ function paintMine(){
   o+='<div class="p-sec"><h4>🏗️ 建造</h4><div class="mi-build">'+B.map(function(b){
     return '<div class="mi-bd'+(b.done?' done':'')+'"><span class="mi-be">'+b.e+'</span><div><b>'+b.n+'</b><small>'+b.t+'</small>'+(b.cost?'<div class="mi-cost">'+costHTML(b.cost)+'</div>'+(costOK(b.cost)?'':'<div class="mi-miss">還缺：'+missText(missOf(b.cost))+'</div>')+'<button class="btn btn-primary btn-sm'+(costOK(b.cost)?'':' need')+'" type="button" data-build="'+b.k+'">'+(b.bt||'🔨 建造')+'</button>':'')+'</div></div>'}).join('')+'</div></div>';
   o+='<div class="p-sec"><h4>👣 最近訪客</h4>'+(d.vis&&d.vis.length?'<div class="mi-vis">'+d.vis.map(function(v){return '<span class="mi-v"><i>'+esc(v.a||'🙂')+'</i>'+esc(v.n)+'<small>'+ago(v.t)+'</small></span>'}).join('')+'</div>':'<p class="mi-note">還沒有人來拜訪。開放參觀後，別人就能航向你的島。</p>')+'</div>';
-  box.innerHTML=o;pwStart();
+  box.innerHTML=o;fitIslandItems();pwStart();
 }
 /* 小島動作一次只送一個，避免舊的回覆蓋掉新的畫面 */
 function mineAct(q,btn,okFn){
@@ -3126,6 +3126,23 @@ function buildFast(kind,t){
 }
 function fxAt(el,em){if(!el)return;var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,em)}
 var GIFT_I={coin:['🪙','金幣'],fruit:['🍎','水果'],iron:['🔩','鐵礦'],wood:['🪵','木材'],stone:['🪨','石頭']};
+// 依實際島形和物件範圍找最近的 5% 網格；同時救回舊版存到島外的物件。
+function fitIslandPoint(el,x,y){
+  var sc=el.closest('.mi-scene'), land=sc&&sc.querySelector('.mi-land');if(!land)return [x,y];
+  var b=sc.getBoundingClientRect(),l=land.getBoundingClientRect(),er=el.getBoundingClientRect();
+  if(!b.width||!b.height)return [x,y];
+  var ox=er.left-b.left-(parseFloat(el.style.left)||0)*b.width/100,oy=er.top-b.top-(parseFloat(el.style.top)||0)*b.height/100;
+  var cx=(l.left+l.right)/2-b.left,cy=(l.top+l.bottom)/2-b.top,rx=l.width/2*.95,ry=l.height/2*.95;
+  var best=null,bd=Infinity;
+  for(var gx=0;gx<=100;gx+=5)for(var gy=0;gy<=100;gy+=5){
+    var px=gx*b.width/100+ox,py=gy*b.height/100+oy,ok=true;
+    [[px,py],[px+er.width,py],[px,py+er.height],[px+er.width,py+er.height]].forEach(function(c){if(Math.pow((c[0]-cx)/rx,2)+Math.pow((c[1]-cy)/ry,2)>1)ok=false});
+    var dist=Math.pow((gx-x)*b.width/100,2)+Math.pow((gy-y)*b.height/100,2);
+    if(ok&&dist<bd){best=[gx,gy];bd=dist}
+  }
+  return best||[50,50];
+}
+function fitIslandItems(){var sc=document.querySelector('#miBox .mi-scene');if(!sc)return;sc.querySelectorAll('.mi-house,.mi-plot.island-plot,.mi-deco,.mi-wild').forEach(function(el){var x=parseFloat(el.style.left),y=parseFloat(el.style.top);if(!isFinite(x)||!isFinite(y))return;var p=fitIslandPoint(el,x,y);el.style.left=p[0]+'%';el.style.top=p[1]+'%';});}
 // 長按後移動；短點維持採收，位置由後端保存並供訪客查看。
 pBody.addEventListener('pointerdown',function(e){
   var el=e.target.closest('.mi-scene [data-move]');if(!el||V.t!=='mine'||!MI.data||!MI.data.mine||MI.busy||e.button>0)return;
@@ -3136,8 +3153,7 @@ pBody.addEventListener('pointerdown',function(e){
 pBody.addEventListener('pointermove',function(e){var z=MI.drag;if(!z||z.id!==e.pointerId)return;var dx=e.clientX-z.sx,dy=e.clientY-z.sy;
   if(!z.active){if(Math.abs(dx)+Math.abs(dy)>12){clearTimeout(z.timer);z.cancelled=true;MI.drag=null}return}
   e.preventDefault();var b=z.sc.getBoundingClientRect(),x=z.x+dx/b.width*100,y=z.y+dy/b.height*100;
-  var nx=(x-50)/40,ny=(y-50)/36,dist=Math.sqrt(nx*nx+ny*ny);if(dist>1){x=50+nx/dist*40;y=50+ny/dist*36}
-  z.el.style.left=x+'%';z.el.style.top=y+'%';
+  var pos=fitIslandPoint(z.el,x,y);z.el.style.left=pos[0]+'%';z.el.style.top=pos[1]+'%';
 });
 function endIslandDrag(e){var z=MI.drag;if(!z||z.id!==e.pointerId)return;clearTimeout(z.timer);MI.drag=null;
   if(!z.active)return;MI.suppressClick=Date.now()+800;z.el.classList.remove('dragging');
@@ -3146,7 +3162,7 @@ function endIslandDrag(e){var z=MI.drag;if(!z||z.id!==e.pointerId)return;clearTi
   if(!MI.data.layout)MI.data.layout={};MI.data.layout[k]=[x,y];miCachePut(MI.data);
   mineAct({a:'moveitem',k:k,x:x,y:y},null,function(){toast('📍 位置已保存')});
 }
-pBody.addEventListener('pointerup',endIslandDrag);pBody.addEventListener('pointercancel',endIslandDrag);
+window.addEventListener('pointerup',endIslandDrag);window.addEventListener('pointercancel',endIslandDrag);
 pBody.addEventListener('click',function(e){
   if(MI.suppressClick&&Date.now()<MI.suppressClick){MI.suppressClick=0;return}
   var t=e.target.closest('button,[data-pat],[data-pick],[data-harvest],[data-chop]');if(!t||V.t!=='mine')return;
@@ -3161,7 +3177,7 @@ pBody.addEventListener('click',function(e){
   if(d.pick!=null){var pi=+d.pick,pd=MI.data,pt=pd&&pd.trees[pi],tot2=pt?treeView(pt,pd).ripe:0;
     if(!tot2){toast('🍎 果子還沒長出來，再等一下');return}
     fastAct({a:'pick',i:pi},t,function(dd,w){var EVN=(dd.rules&&dd.rules.treeEvery)||1200000,el=Date.now()-MI.at;dd.trees[pi]={st:2,ripe:0,nx:EVN+el};if(w.bag)w.bag.fruit=(w.bag.fruit||0)+tot2},function(){fxAt(t,['🍎','🍎','✨','🧺']);playSfx('candy');toast('🧺 摘到 🍎 水果 ×'+tot2)});return}
-  if(d.chop!=null){var id=d.chop;fastAct({a:'chopwood',id:id},t,function(dd,w){dd.wild=(dd.wild||[]).filter(function(x){return String(x.id)!==id});if(w.bag)w.bag.wood=(w.bag.wood||0)+3;w.tres=(w.tres||0)+3},function(){fxAt(t,['🪵','🪵','✨']);playSfx('candy');toast('🪓 採收木材 ×3')});return}
+  if(d.chop!=null){var id=d.chop;fastAct({a:'chopwood',id:id},t,function(dd,w){(dd.wild||[]).forEach(function(x){if(String(x.id)===id){x.stage=0;x.count=(x.count||0)+1}});if(w.bag)w.bag.wood=(w.bag.wood||0)+3;w.tres=(w.tres||0)+3},function(){fxAt(t,['🪵','🪵','✨']);playSfx('candy');toast('🪓 採收木材 ×3')});return}
   if(d.harvest!=null){var hi=+d.harvest,hc=MI.data&&MI.data.f[hi],hv=hc&&VEGI[hc.v];if(!hv){mineAct({a:'harvest',i:hi},t,function(j){var v=VEGI[j.got.k];fxAt(t,[v[0],v[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+v[0]+' '+v[1]+' ×'+j.got.n)});return}
     fastAct({a:'harvest',i:hi},t,function(dd){dd.veg[hc.v]=(dd.veg[hc.v]||0)+hv[4];dd.f[hi]=null},function(){fxAt(t,[hv[0],hv[0],'✨','🧺']);playSfx('candy');toast('🧺 收成 '+hv[0]+' '+hv[1]+' ×'+hv[4])});return}
   if(d.feed){var fd=d.feed,fid=d.id;fastAct({a:'feed',id:fid,food:fd},t,function(dd,w){var pp=dd.pets.filter(function(x){return x.id===fid})[0],plus=fd==='fruit'?10:VEGI[fd][5];if(pp)pp.full=Math.min(100,pp.full+plus);if(fd==='fruit'){if(w.bag)w.bag.fruit=Math.max(0,(w.bag.fruit||0)-1)}else dd.veg[fd]=Math.max(0,(dd.veg[fd]||0)-1)},function(){fxAt(t,['😋','💕',fd==='fruit'?'🍎':VEGI[fd][0]]);playSfx('candy');toast('😋 吃得好開心！')});return}
