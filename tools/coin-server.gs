@@ -658,7 +658,7 @@ function handle_(q) {
     } else if (a === 'setopen') {
       r[C.open] = q.o ? '' : '否';
       res.island = islePub_(r, true);
-    } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'pick' || a === 'adopt' || a === 'feed' || a === 'pat') {
+    } else if (a === 'build' || a === 'plant' || a === 'harvest' || a === 'pick' || a === 'moveitem' || a === 'chopwood' || a === 'adopt' || a === 'feed' || a === 'pat') {
       var out = isleAct_(a, q, r, me);
       if (out.err) return { ok: false, err: out.err, miss: out.miss, p: me };
       if (out.add) res.add = out.add;
@@ -996,6 +996,7 @@ function islesPub_(st, r) {
 }
 
 /* ---------- 我的小島 ---------- */
+function wildGap_(seed, t) { return (20 + Math.floor(rng_(hash_('wood-gap|' + seed + '|' + t))() * 21)) * 60000; }
 function isleOf_(r) {
   var o = {};
   try { o = JSON.parse(plain_(r[C.isle]) || '{}') || {}; } catch (e) { o = {}; }
@@ -1034,6 +1035,19 @@ function isleOf_(r) {
   var cd = {};
   if (o.cd) Object.keys(o.cd).forEach(function (k) { if (ISL_MAP[k] && num_(o.cd[k]) > nowI) cd[k] = num_(o.cd[k]); });
   o.cd = cd;
+  // 野生木材樹以帳號及時間決定生長與位置；讀取與訪客看到的結果一致。
+  var seed = String(r[C.fid] || r[C.code] || ''), first = new Date(r[C.first]).getTime();
+  var base = Math.max(1794499200000, isFinite(first) ? first : 0);
+  o.wild = o.wild && Array.isArray(o.wild.items) ? o.wild : { items: [], next: base + wildGap_(seed, base) };
+  o.wild.items = o.wild.items.slice(0, 5);
+  if (!num_(o.wild.next)) o.wild.next = base + wildGap_(seed, base);
+  while (o.wild.items.length < 5 && o.wild.next <= nowI) {
+    var born = o.wild.next, rnd = rng_(hash_('wood-pos|' + seed + '|' + born));
+    var angle = rnd() * Math.PI * 2, radius = Math.sqrt(rnd());
+    o.wild.items.push({ id: String(born), x: Math.round(50 + Math.cos(angle) * radius * 31), y: Math.round(50 + Math.sin(angle) * radius * 25) });
+    o.wild.next = born + wildGap_(seed, born);
+  }
+  o.layout = o.layout && typeof o.layout === 'object' && !Array.isArray(o.layout) ? o.layout : {};
   return o;
 }
 function isleScore_(o) {
@@ -1069,7 +1083,7 @@ function islePub_(r, mine, viewer) {
   var o = isleOf_(r), now = Date.now(), wd = viewer && viewer.wd && viewer.wd.d === day_() ? viewer.wd.f : [];
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
-    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o),
+    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o), layout: o.layout, wild: o.wild.items, wildNext: o.wild.items.length < 5 ? Math.max(0, o.wild.next - now) : null,
     trees: o.trees.map(function (t) { return { st: treeStage_(t, now), ripe: treeRipe_(t, now), nx: Math.max(0, treeNext_(t, now)) }; }),
     bt: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = num_(o.bb[k].t); }); return m; })(),
     ships: o.ship.own.map(function (id) { return { k: id, n: plain_(o.ship.names[id]) || SHIPS[id].name, d: SHIPS[id].name }; }), shipCur: o.ship.cur,
@@ -1131,14 +1145,32 @@ function isleAct_(a, q, r, me) {
     o.f[hi] = null;
     out.log = ['收成', VEG[c.v].name + '×' + VEG[c.v].n];
   } else if (a === 'pick') {
-    var tot = 0;
-    o.trees.forEach(function (t) {
+    var tot = 0, pi = q.i == null ? -1 : Number(q.i);
+    if (pi !== -1 && (!isFinite(pi) || pi < 0 || pi !== Math.floor(pi) || pi >= o.trees.length)) return { err: 'bad' };
+    o.trees.forEach(function (t, i) {
+      if (pi !== -1 && i !== pi) return;
       var n = treeRipe_(t, now);
-      if (n > 0) { tot += n; t.lp = n >= TREE_CAP ? now : treeFrom_(t) + n * TREE_EVERY; }   // 沒摘滿的零頭時間保留
+      if (n > 0) { tot += n; t.lp = n >= TREE_CAP ? now : treeFrom_(t) + n * TREE_EVERY; }
     });
     if (tot < 1) return { err: 'notyet' };
     r[C.fruit] = num_(r[C.fruit]) + tot; out.got = { k: 'fruit', n: tot };
     out.log = ['摘果', '果樹 🍎×' + tot];
+  } else if (a === 'moveitem') {
+    var mk = String(q.k || ''), x = Number(q.x), y = Number(q.y), valid = mk === 'house' && (o.h > 0 || o.hb);
+    var fm = /^field(\d+)$/.exec(mk), tm = /^tree(\d+)$/.exec(mk);
+    if (fm) valid = Number(fm[1]) < o.fields;
+    if (tm) valid = Number(tm[1]) < o.trees.length;
+    if (mk === 'fountain' || mk === 'tower') valid = o.deco.indexOf(mk) >= 0;
+    if (!valid || !isFinite(x) || !isFinite(y) || x < 0 || x > 100 || y < 0 || y > 100) return { err: 'bad' };
+    o.layout[mk] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
+  } else if (a === 'chopwood') {
+    var wid = String(q.id || ''), wi = o.wild.items.findIndex(function (t) { return t.id === wid; });
+    if (wi < 0) return { err: 'bad' };
+    var wasFull = o.wild.items.length >= 5;
+    o.wild.items.splice(wi, 1);
+    if (wasFull || o.wild.next <= now) o.wild.next = now + wildGap_(String(r[C.fid] || r[C.code] || ''), now);
+    r[C.wood] = num_(r[C.wood]) + 3; r[C.tres] = num_(r[C.tres]) + 3;
+    out.got = { k: 'wood', n: 3 }; out.log = ['砍樹', '木材×3'];
   } else if (a === 'adopt') {
     var an = ANIMALS[String(q.k || '')], name = cleanNick_(q.name).slice(0, 8);
     if (!an) return { err: 'bad' };
