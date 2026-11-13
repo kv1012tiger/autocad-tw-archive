@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoCAD 2012 ARRAY 替代陣列對話方塊 | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">📄 AutoCAD 2012 ARRAY 替代陣列對話方塊</h1>
+    <p class="topic-tagline">關於ARRAY沒有對話方塊這問題，對於習慣「指令式」操作的朋友還好，但是對於習慣用「對話方塊」的人的確是個大困擾!!雖然說在編輯關…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2011-08-23</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<div>關於ARRAY沒有對話方塊這問題，對於習慣「指令式」操作的朋友還好，但是對於習慣用「對話方塊」的人的確是個大困擾!!<br>雖然說在編輯關聯式陣列物件時，依照預設會出現「功能區」讓使用者編輯，心想為何不一開始執行「陣列功能」就出現功能區，這樣使用者不就可以善用功能區了嗎...  <br><br>最近在國外網站有人分享方式，這部份算是替代方案，並不是正規的功能設定，希望未來2013版本能增加陣列對話方塊!!<br>這裡特別把它整合成三種方式，分別滿足不同的使用者需求，有興趣的朋友請繼續往下看~ <br><br>補充：AutoCAD 2013之後的版本，ARRAYCLASSIC已經為內建指令了～<br> <br><br><strong>一、功能區方式</strong> <br>請將指令語法加入到「CUI」自訂檔中，AutoCAD的陣列功能分為「矩形陣列、路徑陣列及環形陣列」這三種，所以總共有三個按鈕的指令語法要修改。<br>代碼:<code>◆矩形陣列(ARRAYRECT)指令語法：<br>^C^C(command &quot;arrayrect&quot; PAUSE &quot;&quot; &quot;1&quot; &quot;1&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ)<br><br>◆路徑陣列(ARRAYPATH)指令語法： <br>^C^C(command &quot;arraypath&quot; PAUSE &quot;&quot; PAUSE &quot;1&quot; &quot;D&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ)<br><br>◆環形陣列(ARRAYPOLAR)指令語法： <br>^C^C(command &quot;arraypolar&quot; PAUSE &quot;&quot; PAUSE &quot;&quot; &quot;&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ)</code><strong>說明：</strong>「CUI」自訂檔修改完畢後，即可透過「功能區」的陣列功能，完成陣列的需求，不需要使用指令行來輸入陣列項目了~<br><br><strong>▲影片操作及示範：</strong> <br><iframe src="https://www.youtube.com/embed/OqSU3wIhJ3g" loading="lazy" allowfullscreen></iframe><br><br><strong>二、快速性質選項板方式</strong> <br>對於使用「AutoCAD典型」傳統工具列的朋友(不使用功能區)，點選「陣列工具列」也是可以完成!<br>第一步也是將指令語法加入到「CUI」自訂檔中，就可透過使用「快速性質」選項板完成陣列項目的設置!!<br><br>初次使用時請記得打開「快速性質」，並且將預設顯示的「陣列選項」加入打勾，這樣即可完整修改陣列選項~<br><strong>說明：</strong>「快速性質」選項板優點，可以修改矩形陣列角度，「功能區」則無法修改矩形陣列角度。<br><br>▲影片操作及示範：<br><iframe src="https://www.youtube.com/embed/5pzGwWNxpoU" loading="lazy" allowfullscreen></iframe><br><br><strong>三、自訂LISP指令方式</strong> <br>以我為例，比較習慣KEY指令，所以可透過「LISP程式」方式自訂指令，無論是使用「功能區」或「快速性質」都可以滿足~<br>需要將LISP程式語法加入到系統預設的 ACAD2012.lsp 中，以後啟動 AutoCAD 2012 就可以使用自訂LISP指令!<br><br><strong>▲自訂指令別名:</strong> <br>AAS別名 &gt;&gt; 矩形陣列<br>AAD別名 &gt;&gt; 路徑陣列<br>AAF別名 &gt;&gt; 環形陣列<br><strong>補充：</strong>可依照您的習慣自行更改指令別名<br><br>代碼:<code>LISP程式語法：<br>(DEFUN C:AAS () (SETVAR &quot;CMDECHO&quot; 0)(PROMPT &quot;矩形陣列&quot;)(command &quot;arrayrect&quot; PAUSE &quot;&quot; &quot;1&quot; &quot;1&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ))<br>(DEFUN C:AAD () (SETVAR &quot;CMDECHO&quot; 0)(PROMPT &quot;路徑陣列&quot;)(command &quot;arraypath&quot; PAUSE &quot;&quot; PAUSE &quot;1&quot; &quot;D&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ))<br>(DEFUN C:AAF () (SETVAR &quot;CMDECHO&quot; 0)(PROMPT &quot;環形陣列&quot;)(command &quot;arraypolar&quot; PAUSE &quot;&quot; PAUSE &quot;&quot; &quot;&quot; &quot;X&quot;)(command &quot;select&quot; &quot;single&quot; &quot;last&quot;)(sssetfirst nil (ssget &quot;_p&quot;))(princ))</code><strong>■ACAD2012.lsp檔案位置：</strong> <br>C:\program files\autodesk\autocad 2012 - traditional chinese\support<br><br><strong>▲影片操作及示範：</strong> <br><iframe src="https://www.youtube.com/embed/DIYJRk9J1Vw" loading="lazy" allowfullscreen></iframe><br><hr><br>☆ 2012Array 安裝檔 ☆ <br>如果您嫌自訂手續太麻煩，可以使用我的「2012Array」安裝檔，既可自動幫您設定「CUI」自訂檔及LISP程式語法，下載檔案位置回覆可見(請勿灌水回覆)，請簡短發表建議或想法，使用過程中有問題歡迎提出來討論~<br>說明：安裝前請先將 AutoCAD 2012 關閉，安裝完畢後再啟動 AutoCAD 2012 即可使用。 <br><br><strong>注意：</strong>此「2012Array」安裝檔 使用預設安裝路徑，會覆蓋您的預設ACAD.CUI檔。<br>如果您的 AutoCAD 2012 不是預設安裝路徑，或是您已經有自訂cui檔則<strong>請勿安裝</strong>，請自行透過上述方式一設定即可。<br><br><hr><br>☆專屬會員請到 [專屬資源]版區 下載影片及安裝檔:<br><a href="https://servimg.com/r/4112315966/noname11.png"><img src="images/01.png" alt="" loading="lazy"></a><br><br><strong>[專屬資源]版區:</strong> <br><a href="https://www.autocad-tw.com/f35-forum">https://www.autocad-tw.com/f35-forum</a><br><br><hr><br>▼延伸閱讀主題：<br><a href="https://www.autocad-tw.com/t11332-topic">autocad 2012 陣列選框再度出現</a></div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t20494/index.html">← A360 線上及智慧型設備-DWF檢視-2...卡比獸下載</a>
+    <a class="btn-ghost" href="../t11680/index.html">[新功能]Nucleus 建模插件 for AutoCAD 2012 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t10982-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js?v=f6c15860"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js?v=5126e713"></script>
+<script src="../../assets/js/lightbox.js?v=144a3c51"></script>
+</body>
+</html>

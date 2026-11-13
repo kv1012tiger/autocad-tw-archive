@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>[密技]AutoCAD 新增自訂線型(LIN) | 論壇資源島</title>
+<meta name="theme-color" content="#053049">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏝️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span>🏝️</span>論壇資源島</a>
+    <div class="top-r"><a class="back-pill" href="../../index.html#isle-f44">← 回專案報告島</a><button class="fs-btn" id="fsBtn" type="button" aria-label="全螢幕"></button></div>
+  </header>
+  <section class="t-hero" style="--c:#ffb066;--g1:#ffc078;--g2:#d9661a">
+    <div class="res-band" aria-hidden="true"><span class="rs w b0" style="--t:9s;--d:-0.0s"><i><b>🐒</b></i></span><span class="rs w b1" style="--t:12s;--d:-2.3s"><i><b>🦧</b></i></span><span class="rs f b2" style="--t:15s;--d:-4.6s"><i><b>🦜</b></i></span></div>
+    <span class="topic-badge">📊 專案報告島</span>
+    <h1 class="topic-title">📄 [密技]AutoCAD 新增自訂線型(LIN)</h1>
+    <p class="topic-tagline">業界中的工程圖說，除了可以有自訂的字型、剖面線檔，還可以自訂線型，公司可以依照需求自由新增線型檔，這裡分成三種方式跟大家說明與討論…</p>
+    <p class="t-meta">✍ Tiger&amp;蘋果爸 · 2011-08-05</p>
+    <div class="tag-row">
+
+    </div>
+  </section>
+  <article class="card content">
+<div>業界中的工程圖說，除了可以有自訂的字型、剖面線檔，還可以自訂線型，公司可以依照需求自由新增線型檔，這裡分成三種方式跟大家說明與討論!<br><strong>註：</strong>DWG檔案在提供給其他使用者時，若有自訂的檔案(如字型、剖面線檔或線型檔)，均需要一併提供給對方，才可以完整正確顯示圖面資訊。<br> <br><br><hr><br><strong>方式一 &gt;&gt; 自訂線型檔：</strong> <br>使用者本身必須有編寫線型語法的能力，LIN 檔必須以 ASCII 格式儲存，並使用 .lin 副檔名，製作過程中如同寫程式一樣，需反覆練習與測試除錯~<br><br><strong>說明：</strong>每個樣式描述子功能變數均會指定組成線型各區段的長度，以逗號分隔 (不允許有空格): <br>十進位正數表示該長度的下筆 (虛線) 區段。 <br>十進位負數表示該長度的提筆 (空格) 區段。 <br>虛線長度為 0 時，則繪製一個圓點。<br><br><a href="https://servimg.com/r/6712315966/2021_162.png"><img src="images/01.png" alt="" loading="lazy"></a><br>上圖表示以一個 10 個圖面單位長度的線、一個 1 個圖面單位長度的空格、另一個 2 個圖面單位長度的線、一個 1 個圖面單位長度的空格、另一個 2 個圖面單位長度的線、最後一個 1 個圖面單位長度的空格開始的一種重複樣式，此樣式延續至線的長度。<br><br><strong>☆ 線型語法如下：</strong>  <br>代碼:<code>*HW,hw______ __ __ ______ __ __ _______<br>A,10,-1,2,-1,2,-1</code> <br>1.將以上線型語法用記事本,存檔格式為 DEMO.LIN (線型檔)<br>2.將 DEMO.LIN 檔案存放在以下入徑:<br>C:\Documents and Settings\&quot;使用者登入帳號&quot;\Application Data\Autodesk\AutoCAD 版本\版本代號\cht\Support<br>3.使用線型管理員 LINETYPE 指令 載入 DEMO.LIN 線型檔,選擇 HW 即可載入。<br><br><strong>範例影片：</strong> <br><iframe src="https://www.youtube.com/embed/d-xxT1cwJD4" loading="lazy" allowfullscreen></iframe><br><br><hr><br><strong>方式二 &gt;&gt; 自訂線型檔(含文字)：</strong> <br>這個方式比較簡單，可以複製預設公制線型檔(acadiso.lin)的語法，只需要改語法的文字部分即可，至於文字字串的多寡，須適當調整線型間距空格，線型間距空格這部份可參考 方式一。<br><br><strong>☆ 含文字線型語法如下：</strong> <br>代碼:<code>*ABC_LINE,ABC line ----ABC----ABC----ABC----ABC----ABC----ABC--<br>A,12.7,-5.08,[&quot;ABC&quot;,STANDARD,S=2.54,U=0.0,X=-2.54,Y=-1.27],-6.35</code>👇含文字線型語法下載：<br>https://app.box.com/s/yeyj6kgujcvhkqkrtyujreyktntre3cl<br><br><br><strong>範例影片：</strong> <br><iframe src="https://www.youtube.com/embed/9hWMkHPlwjQ" loading="lazy" allowfullscreen></iframe><br><br><hr><br><strong>方式三 &gt;&gt; 自訂造型檔：</strong> <br><a href="https://servimg.com/r/6712315966/2021_163.png"><img src="images/02.png" alt="" loading="lazy"></a><br>若要做到上述客戶自訂線型，可能要使用 Express工具 的 MKSHAPE 指令 產生原始造型檔(*.shp)及編譯造型檔(*.shx)才行，以下是將製作好的造型掛入的步驟。<br><br><strong>◆使用者自訂造型檔</strong>  <br>1.使用者需要先使用 Express工具 的 MKSHAPE指令 來製作業界自訂的特殊造型，跟製作圖塊類似請先以線、聚合線、弧、圓、橢圓等物件劃出所需的造型，在建立原始造型檔(shp)，檔名可以自訂為ATLtype.shp，並產生編譯造型檔(shx)，檔名可以自訂為ATLtype.shx。<br><a href="https://servimg.com/r/6712315966/2021_164.png"><img src="images/03.png" alt="" loading="lazy"></a><br><br>註：建立操作步驟及說明請參考以下 <strong>造型檔概述</strong> 文章。<br><a href="https://www.autocad-tw.com/t17096-topic">https://www.autocad-tw.com/t17096-topic</a><br>PS:另外下一個步驟有提供編譯造型檔範例下載。<br><br>2.請將自訂產生的 編譯造型檔(ATLtype.shx) 放置在 AutoCAD 的支援路徑下，以下支援路徑以 AutoCAD 2006版本 為例:<br>■AutoCAD 2006版本支援路徑：<br>C:\Program Files\AutoCAD 2006\Support<br><a href="https://servimg.com/r/6712315966/2021_173.png"><img src="images/04.png" alt="" loading="lazy"></a><br><br>■AutoCAD 2017版本支援路徑：<br><a href="https://servimg.com/r/6712315966/2021_168.png"><img src="images/05.png" alt="" loading="lazy"></a><br><br><strong>※自訂編譯造型檔(ATLtype.shx)及範例圖檔(ATLtype.dwg)下載：</strong><br>載點： https://app.box.com/s/yttjof2q4qry09g67i4lfeo2zvsgejnz<br>備用1： https://drive.google.com/file/d/0B41hPtWnOM8QRkF1WGxsUU5YQnM/view?usp=sharing&amp;resourcekey=0-naI6UM-P_P2TtcbLECxvsw<br><br>3.以上產生好自訂編譯造型檔之後，請再將 自訂線型語法 寫入到 AutoCAD2006 的預設公制線型檔(acadiso.lin)，使用記事本開啟後在把語法貼到最下一行，存檔後關閉 公制線型檔(acadiso.lin) 即可。<br><strong>■AutoCAD2006 公制線型檔(acadiso.lin)位置：</strong> <br>C:\Documents and Settings\&quot;使用者登入帳號&quot;\Application Data\Autodesk\AutoCAD 2006\R16.2\cht\Support<br><a href="https://servimg.com/r/6712315966/2021_169.png"><img src="images/06.png" alt="" loading="lazy"></a><br><br><strong>☆ 自訂線型語法：</strong> <br>代碼:<code>*LTYPE01,LTYPE01 __■___■___■___■__<br>A,.0001,-.2,[LTYPE01,ATLtype.shx,x=-.2,s=.2],-.2<br>*LTYPE02,LTYPE02 __□___□___□___□__<br>A,.0001,-.2,[LTYPE02,ATLtype.shx,x=-.2,s=.2],-.2<br>*LTYPE03,LTYPE03 __▲___▲___▲___▲__<br>A,.0001,-.2,[LTYPE03,ATLtype.shx,x=-.2,s=.2],-.2<br>*LTYPE04,LTYPE04 __△___△___△___△__<br>A,.0001,-.2,[LTYPE04,ATLtype.shx,x=-.2,s=.2],-.2</code> <br><a href="https://servimg.com/r/6712315966/2021_170.png"><img src="images/07.png" alt="" loading="lazy"></a><br><br>4.啟動AutOCAD2006程式，「格式」功能表：→「線型」對話方塊 →「載入」→「檔案(acadiso.lin)」→「選擇自訂線型」→「確定」。 <br><a href="https://servimg.com/r/6712315966/2021_172.png"><img src="images/08.png" alt="" loading="lazy"></a><br><br>5.以後這張圖面即可使用這4組自訂造型線型，並可調整適當的整體線型比例決定線型密度，若您掛入樣版檔中以後就不用再自行載入線型囉。<br><a href="https://servimg.com/r/6712315966/2021_171.png"><img src="images/09.png" alt="" loading="lazy"></a><br><br>註:關於自訂線型DWG圖檔必須要有 編譯造型檔(*.shx) 才能正確無誤的顯示自訂造型線型。<br><hr><br><strong>▼相關主題</strong>：<br><a href="https://www.autocad-tw.com/t18854-topic">[分享]自訂造型線型-DECK版及鐵軌-新增空調軟管</a><br><a href="https://www.autocad-tw.com/t8756-topic">[知識]CAD 的造型定義檔與造型字體檔的問題</a></div>
+
+  </article>
+  <nav class="topic-nav">
+    <a class="btn-ghost" href="../t16709/index.html">← 關於AutoCAD DWG檔案異常容量變大-II</a>
+    <a class="btn-ghost" href="../t19630/index.html">[進階]AutoCAD SCRIPT－圖檔清單+腳本建立 →</a>
+  </nav>
+  <footer class="site-footer">
+    整理自 AutoCAD顧問論壇 · <a href="https://www.autocad-tw.com/t10797-topic" target="_blank" rel="noopener">論壇原文 ↗</a>
+    <div class="license">© 蘋果爸／AutoCAD顧問論壇｜歡迎參考學習，禁止商業用途｜<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hant" target="_blank" rel="noopener license">CC BY-NC-ND 4.0 ↗</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  if (window.parent === window) return;
+  document.documentElement.classList.add("in-reader");
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".topic-nav a");
+    if (!a) return;
+    e.preventDefault();
+    if (a.getAttribute("href").indexOf("index.html") === 0 || a.getAttribute("href").indexOf("../../index.html") === 0) {
+      window.parent.postMessage("close-reader", location.origin);
+    } else {
+      location.replace(a.href);
+    }
+  });
+})();
+</script>
+<script src="../../assets/js/coins.js?v=f6c15860"></script>
+<script>if(window.COINS&&window.top===window){COINS.start({ask:false});COINS.read(location.pathname)}</script>
+<script src="../../assets/js/fullscreen.js?v=5126e713"></script>
+<script src="../../assets/js/lightbox.js?v=144a3c51"></script>
+</body>
+</html>
