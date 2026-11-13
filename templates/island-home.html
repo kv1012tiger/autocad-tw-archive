@@ -691,7 +691,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .otab.on{background:linear-gradient(135deg,#c084fc,#7c3aed);border-color:#f3e8ff;color:#fff}
 .tr-intro{margin:8px 0 14px;color:#e9d5ff;line-height:1.75}
 .tr-intro b{color:#fff}
-.tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tr-grid{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 12px)/2);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin}.tr-slot{scroll-snap-align:start}.tr-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0;color:#e9d5ff}
 .tr-slot{display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 8px 12px;border-radius:20px;border:1.5px solid rgba(192,132,252,.4);background:linear-gradient(180deg,rgba(91,63,176,.35),rgba(30,17,70,.5));text-align:center}
 .tr-slot h4{margin:0;font-size:17px;color:#fff}
 .tr-slot small{color:#d8b4fe;line-height:1.5}
@@ -1385,7 +1385,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
       </ul></section>
       <section class="hp" data-p="5" hidden><ul>
         <li>🎮 <b>遊戲島</b>有兩個 AutoCAD 指令遊戲：指令快打（60 秒）和指令跑酷（連擊），各自有全站排行榜。</li>
-        <li>🔮 占卜島可以搜尋全部文章與問答，還能每天抽一張愛情運勢、一張事業運勢的塔羅牌（附 78 張牌義說明）；🏰 城堡和 ⛵ 報名碼頭有課程介紹與報名方式。</li>
+        <li>🔮 占卜島可以搜尋全部文章與問答，還能每天各抽一張六種運勢的塔羅牌（附 78 張牌義說明）；🏰 城堡和 ⛵ 報名碼頭有課程介紹與報名方式。</li>
         <li>🎯 想再看這份說明，按上方的 📖 就能隨時打開。</li>
       </ul></section>
     </div>
@@ -3271,7 +3271,7 @@ function artCard(a,v){
   return '<a class="t-card s-art" style="--c:'+s.c+'" href="'+esc(a[0])+'"><span class="te">'+a[4]+'</span><span class="tb"><b>'+mark(a[1],v)+'</b><small>'+mark(snip(a[5],v),v)+'</small><span class="tm">📍 '+esc(s.name)+'・'+esc(a[3])+'</span></span></a>';
 }
 function renderSearch(){
-  pBody.innerHTML='<div class="ph" style="--c:#c084fc"><span class="ph-e">🔮</span><div><div class="p-kicker">占卜島・水晶球與塔羅</div><h3 id="pTitle">占卜島</h3><p>搜尋全部文章，也能抽今天的愛情與事業塔羅</p></div></div>'+
+  pBody.innerHTML='<div class="ph" style="--c:#c084fc"><span class="ph-e">🔮</span><div><div class="p-kicker">占卜島・水晶球與塔羅</div><h3 id="pTitle">占卜島</h3><p>搜尋全部文章，也能抽今天的六種運勢塔羅</p></div></div>'+
     '<div class="otabs" id="oTabs">'+['🔎 搜尋文章','🃏 塔羅占卜','📖 牌義說明'].map(function(t,i){return '<button class="otab" type="button" data-otab="'+i+'">'+t+'</button>'}).join('')+'</div><div id="oBody"></div>';
   $('pStep').textContent='🔮 占卜島';
   footSimple('← 回地圖','🔮 占卜一篇');
@@ -3302,7 +3302,8 @@ function randomArt(){
 /* ---------- 占卜島：塔羅占卜（每天愛情、事業各抽一張）與牌義說明 ---------- */
 var TD=null,tdP=null,TD_KEY='aikb-tarot',TR_SHOW='',TR_C=-1,TR_F='all',TR_SYNC={seq:0,status:'pending',u:'',d:''};
 function trSyncStatus(){return !COINS.get().code?'ready':(TR_SYNC.u===tdUser()&&TR_SYNC.d===tdDay()?TR_SYNC.status:'pending')}
-var TD_TOPIC={love:{ico:'💕',name:'愛情運勢',a:'lu',b:'lr'},career:{ico:'💼',name:'事業運勢',a:'cu',b:'cr'}};
+var TD_TOPIC={love:{ico:'💕',name:'愛情運勢',a:'lu',b:'lr'},career:{ico:'💼',name:'事業運勢',a:'cu',b:'cr'},wealth:{ico:'💰',name:'財運',focus:'金錢安排與資源運用'},social:{ico:'🤝',name:'人際運勢',focus:'與他人的互動和溝通'},health:{ico:'🌿',name:'健康運勢',focus:'身心狀態與日常照顧'},study:{ico:'📚',name:'學業運勢',focus:'學習與知識累積'}};
+var TD_KEYS=Object.keys(TD_TOPIC),TR_SCROLL=0;
 function tdLoad(){
   if(TD)return Promise.resolve(TD);
   if(tdP)return tdP;
@@ -3333,12 +3334,12 @@ function tdState(){
 function tdSync(candidateTopic,candidate){
   var code=COINS.get().code,st=tdState(),u=st.u,day=st.d;
   if(!code)return Promise.resolve(st);
-  var req={a:'tarotsync',code:code,d:day,love:st.love,career:st.career};
+  var req={a:'tarotsync',code:code,d:day};TD_KEYS.forEach(function(k){req[k]=st[k]||null});
   if(candidateTopic)req[candidateTopic]=candidate;
   return COINS.call(req,true).then(function(j){
     if(!j||!j.ok||!j.tarot||j.tarot.d!==day)throw new Error('sync');
     if(tdUser()!==u||tdDay()!==day)throw new Error('changed');
-    var cur=tdState();['love','career'].forEach(function(k){
+    var cur=tdState();TD_KEYS.forEach(function(k){
       var r=j.tarot[k];if(!r)return;
       cur[k]=r;if(!cur.h.some(function(x){return x.d===day&&x.t===k}))cur.h.push({d:day,t:k,id:r.id,rv:r.rev?1:0});
     });if(cur.h.length>40)cur.h=cur.h.slice(-40);
@@ -3351,14 +3352,14 @@ function tdRng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t
 function tdPick(topic){
   var base=tdUser()+'|'+tdDay(),rl=tdRng(tdHash(base+'|love')),love={id:Math.floor(rl()*78),rev:rl()<.35};
   if(topic==='love')return love;
-  var rc=tdRng(tdHash(base+'|career')),id=Math.floor(rc()*78),n=0;
+  var rc=tdRng(tdHash(base+'|'+topic)),id=Math.floor(rc()*78),n=0;
   while(id===love.id&&n++<8)id=Math.floor(rc()*78);
   return {id:id,rev:rc()<.35};
 }
 /* 地圖上占卜島的 🃏：今天還沒抽完才亮 */
 function tdPaint(){
   var s=SP[spotIdx('search')];if(!s||!s.el)return;
-  var st=tdState();s.el.classList.toggle('tpend',!(st.love&&st.career));
+  var st=tdState();s.el.classList.toggle('tpend',!TD_KEYS.every(function(k){return !!st[k]}));
 }
 function tdCard(c,o){
   o=o||{};
@@ -3376,16 +3377,17 @@ function trResult(topic){
   var r=tdState()[topic];if(!r)return '';
   var T=TD_TOPIC[topic],c=TD.cards[r.id];
   return '<div class="tr-res" style="--c1:'+c.c1+';--c2:'+c.c2+'"><h4>'+T.ico+' 今日'+T.name+'</h4><div class="tr-name"><b>'+esc(c.z)+'</b><small>'+esc(c.e)+'</small><em class="'+(r.rev?'rv':'up')+'">'+(r.rev?'逆位':'正位')+'</em></div>'+
-    tdChips(r.rev?c.kr:c.ku)+'<p class="tr-text">'+esc(r.rev?c[T.b]:c[T.a])+'</p><p class="tr-sum">🃏 這張牌的核心：'+esc(c.sum)+'</p>'+
+    tdChips(r.rev?c.kr:c.ku)+'<p class="tr-text">'+esc(T.focus?('關於'+T.focus+'，這張牌提醒你留意「'+(r.rev?c.kr:c.ku)+'」。'+c.sum):(r.rev?c[T.b]:c[T.a]))+'</p><p class="tr-sum">🃏 這張牌的核心：'+esc(c.sum)+'</p>'+
     '<div class="tr-act"><button class="btn btn-ghost btn-sm" type="button" data-trdict="'+c.id+'">📖 這張牌的完整說明</button><button class="btn btn-ghost btn-sm" type="button" data-trcopy="1">📋 複製今日塔羅</button></div></div>';
 }
 function renderTarot(flipTopic){
   var b=$('oBody');if(!b||V.t!=='search'||V.i!==1||!TD)return;
-  var st=tdState(),both=st.love&&st.career,sync=trSyncStatus();
-  if(!TR_SHOW||!st[TR_SHOW])TR_SHOW=st.love?'love':st.career?'career':'';
-  b.innerHTML=(sync==='pending'?'<p class="s-count">🔄 正在同步今日牌，已抽的牌可以先查看。</p>':sync==='error'?'<p class="s-count">⚠️ 暫時無法同步，已抽的牌仍可查看；請確認網路後重試。</p><button class="btn btn-ghost btn-sm" type="button" data-trretry>重新同步</button>':'')+'<p class="tr-intro">靜下心，想著你在意的事，再點水晶球。<b>每天可以抽一張愛情運勢、一張事業運勢</b>，抽到的牌今天不會改變。</p>'+
-    '<div class="tr-grid">'+trSlot('love')+trSlot('career')+'</div><div id="trRes">'+(TR_SHOW?trResult(TR_SHOW):'')+'</div>'+
-    '<p class="tr-note">'+(both?'今天的兩張都抽完囉，明天 0 點可以再抽。':'')+'塔羅僅供娛樂與自我反思，重要的決定請以事實與專業意見為準。</p>';
+  var st=tdState(),both=TD_KEYS.every(function(k){return !!st[k]}),sync=trSyncStatus();
+  if(!TR_SHOW||!st[TR_SHOW])TR_SHOW=TD_KEYS.find(function(k){return !!st[k]})||'';
+  b.innerHTML=(sync==='pending'?'<p class="s-count">🔄 正在同步今日牌，已抽的牌可以先查看。</p>':sync==='error'?'<p class="s-count">⚠️ 暫時無法同步，已抽的牌仍可查看；請確認網路後重試。</p><button class="btn btn-ghost btn-sm" type="button" data-trretry>重新同步</button>':'')+'<p class="tr-intro">靜下心，想著你在意的事，再點水晶球。<b>六種運勢每天各可抽一張</b>，抽到的牌今天不會改變。</p>'+
+    '<div class="tr-nav"><button type="button" class="btn btn-ghost btn-sm" data-trmove="-1" aria-label="前兩個運勢">←</button><span>左右滑動，查看六種運勢</span><button type="button" class="btn btn-ghost btn-sm" data-trmove="1" aria-label="後兩個運勢">→</button></div><div class="tr-grid">'+TD_KEYS.map(trSlot).join('')+'</div><div id="trRes">'+(TR_SHOW?trResult(TR_SHOW):'')+'</div>'+
+    '<p class="tr-note">'+(both?'今天的六張都抽完囉，明天 0 點可以再抽。':'')+'塔羅僅供娛樂與自我反思，重要的決定請以事實與專業意見為準。</p>';
+  var grid=b.querySelector('.tr-grid');grid.scrollLeft=TR_SCROLL;grid.addEventListener('scroll',function(){TR_SCROLL=grid.scrollLeft});
   if(sync!=='ready')b.querySelectorAll('[data-trdraw]').forEach(function(btn){btn.disabled=true});
   tdPaint();
   if(flipTopic){
@@ -3408,7 +3410,7 @@ function trDraw(topic,btn){
 }
 function tdCopy(){
   var st=tdState(),L=['🔮 今日塔羅（'+st.d.slice(5).replace('-','/')+'）'];
-  ['love','career'].forEach(function(k){var r=st[k];if(!r)return;var c=TD.cards[r.id],T=TD_TOPIC[k];L.push(T.ico+' '+T.name+'：'+c.z+'（'+(r.rev?'逆位':'正位')+'）— '+(r.rev?c.kr:c.ku))});
+  TD_KEYS.forEach(function(k){var r=st[k];if(!r)return;var c=TD.cards[r.id],T=TD_TOPIC[k];L.push(T.ico+' '+T.name+'：'+c.z+'（'+(r.rev?'逆位':'正位')+'）— '+(r.rev?c.kr:c.ku))});
   L.push('論壇資源島・占卜島 '+location.origin+location.pathname+'#tarot');
   var txt=L.join('\n');
   function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('📋 已複製今日塔羅')}catch(e){toast('複製失敗，請手動選取')}ta.remove()}
@@ -3458,6 +3460,7 @@ pBody.addEventListener('click',function(e){
   if(d.otab!=null){oTab(+d.otab);return}
   if(!TD)return;
   if(d.trretry!=null){paintOTab();return}
+  if(d.trmove){var g=pBody.querySelector('.tr-grid');if(g)g.scrollBy({left:Number(d.trmove)*g.clientWidth,behavior:reduce?'auto':'smooth'});return}
   if(d.trdraw){trDraw(d.trdraw,t);return}
   if(d.trshow){TR_SHOW=d.trshow;renderTarot();var x=$('trRes');if(x)x.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});return}
   if(d.trdict!=null){TR_C=+d.trdict;oTab(2);return}

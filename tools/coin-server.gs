@@ -677,7 +677,7 @@ function handle_(q) {
       var tday=String(day_()), tdate=tday.slice(0,4)+'-'+tday.slice(4,6)+'-'+tday.slice(6,8);
       if (String(q.d || '') !== tdate) return { ok:false, err:'bad', p:me };
       var ot=isleOf_(r), ts=ot.tarot && ot.tarot.d===tdate ? ot.tarot : {d:tdate,love:null,career:null};
-      for (var ti=0,tk=['love','career'];ti<tk.length;ti++) {
+      for (var ti=0,tk=['love','career','wealth','social','health','study'];ti<tk.length;ti++) {
         var key= tk[ti], incoming=q[key];
         if (incoming != null) {
           if (typeof incoming!=='object' || !Number.isInteger(incoming.id) || incoming.id<0 || incoming.id>=78 || typeof incoming.rev!=='boolean') return {ok:false,err:'bad',p:me};
