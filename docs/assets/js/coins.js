@@ -25,7 +25,7 @@
   function apply(p) {
     if (!p) return;
     P.code = p.code; P.nick = p.nick; P.bal = p.bal; P.earned = p.earned; P.streak = p.streak; P.admin = !!p.admin; P.qa = p.qa || [];
-    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann', 'dr', 'drMax', 'qs', 'qCoin', 'ship', 'cd', 'pg'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
+    ['av', 'fid', 'bag', 'dia', 'tres', 'tdia', 'today', 'gLast', 'trades', 'tradeMax', 'unread', 'friends', 'veg', 'score', 'open', 'annSeen', 'ann', 'dr', 'drMax', 'qs', 'qCoin', 'ship', 'cd', 'pg', 'starterGuide'].forEach(function (k) { if (p[k] !== undefined) P[k] = p[k]; });
     if (p.cd !== undefined) P.cdT = Date.now();
     save(); emit({ t: 'sync' });
   }
@@ -44,8 +44,9 @@
   }
   /* 帶登島碼呼叫，自動更新錢包；登島碼失效就登出 */
   function api(o, post) {
-    o.code = P.code;
+    var requestedCode = P.code; o.code = requestedCode;
     return call(o, post).then(function (j) {
+      if (P.code !== requestedCode) return j;
       if (j && j.p) apply(j.p);
       if (j && !j.ok && j.err === 'nocode') { logout(); toast('請重新登島'); }
       if (j && j.add) emit({ t: 'add', n: j.add });

@@ -1409,7 +1409,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 <div class="toast" id="toast" role="status"></div>
 
 <script src="assets/js/pets.js?v=6aafb7b3"></script>
-<script src="assets/js/coins.js?v=f3c31df5"></script>
+<script src="assets/js/coins.js?v=02608071"></script>
 <script>
 (function(){
 'use strict';
@@ -1557,6 +1557,8 @@ var PET_SPOT={k:'pets',e:'🐾',name:'寵物島',sub:'領養狗狗・貓貓・�
 SP.splice(1,0,MINE_SPOT);SP.splice(13,0,PET_SPOT);
 SP.push({k:'castle',e:'🏰',name:'AI課程城堡',sub:'9 個單元・課程內容',c:'#7bdff2',g:['#b08aff','#4a2a9a'],dc:['🦜','🧭','💰'],res:[['🐎','w'],['🐐','w'],['🦅','f']]});
 SP.push({k:'dock',e:'⛵',name:'報名碼頭',sub:'場次・費用・報名方式',c:'#ff8a2a',g:['#ffc27a','#b8611f'],dc:['⚓','🏮','🧭'],res:[['🦀','w'],['🐢','w'],['🐦','f']]});
+SP.push({k:'slot',e:'🎰',name:'拉霸角子島',sub:'1 枚金幣・試試手氣',c:'#fbbf24',g:['#fde68a','#b45309'],dc:['🪙','🍒','✨']});
+SP.push({k:'rps',e:'✊',name:'剪刀石頭島',sub:'1 枚金幣・猜拳對決',c:'#fb7185',g:['#fda4af','#be123c'],dc:['✋','✌️','⭐']});
 SP.forEach(function(s,i){s.si=i});
 function pad(n){return (n<10?'0':'')+n}
 var ISLE_OF={};ISLES.forEach(function(s,i){s.rows.forEach(function(r){ISLE_OF[r]=i})});
@@ -1894,7 +1896,7 @@ function drawIslets(W,H,f,edge){
 var G={};
 function layout(){
   hudSync();
-  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?5:12,rows=port?12:5,cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
+  var port=world.clientWidth<world.clientHeight,f=port?.64:.92,cols=port?5:12,rows=Math.max(port?12:5,Math.ceil(SP.length/cols)),cw=port?290:400,ch=port?312:375,pad=port?150:185,W=cols*cw+pad*2,H=rows*ch+pad*2,cells=spiral(cols,rows);
   SP.forEach(function(s){s.w=Math.round(s.base*f);s.el.style.setProperty('--w',s.w+'px')});
   SP.forEach(function(s,i){var c=cells[i],jx=(rnd(i,5)-.5)*.3,jy=(rnd(i,6)-.5)*.26;s.x=Math.round(pad+(c[0]+.5+jx)*cw);s.y=Math.round(pad+(c[1]+.5+jy)*ch);s.el.style.left=s.x+'px';s.el.style.top=s.y+'px'});
   G={w:W,h:H};map.style.width=W+'px';map.style.height=H+'px';
@@ -2786,6 +2788,36 @@ pBody.addEventListener('click',function(e){
 COINS.on(function(){boatSet();if(V.t==='shop')paintShop()});
 boatSet();
 
+/* 拉霸與猜拳：伺服器處理下注、結果與派彩，同一局識別碼可安全重試。 */
+var BET={slot:{left:null,busy:false,pending:null,result:null},rps:{left:null,busy:false,pending:null,result:null}};
+function betKey(k){return 'aikb-bet-'+k+'-'+COINS.get().code}
+function betLoad(k){try{return JSON.parse(localStorage.getItem(betKey(k))||'null')}catch(e){return null}}
+function betStore(k,p){try{if(p)localStorage.setItem(betKey(k),JSON.stringify(p));else localStorage.removeItem(betKey(k))}catch(e){}}
+function betId(){var a=new Uint32Array(4);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else for(var i=0;i<4;i++)a[i]=Math.floor(Math.random()*4294967296);return Array.from(a).map(function(x){return x.toString(36)}).join('-')+'-'+Date.now().toString(36)}
+function betStatus(k){var owner=COINS.get().code;COINS.api({a:'betstatus'}).then(function(j){if(COINS.get().code===owner&&j&&j.ok&&j.betstats){BET.slot.left=j.betstats.slot;BET.rps.left=j.betstats.rps;if(V.t===k)betDraw(k)}}).catch(function(){if(V.t===k)toast('⚠️ 暫時無法讀取今日次數')})}
+function betDraw(k){
+  var b=$('betBox');if(!b||V.t!==k)return;var state=BET[k],w=COINS.get(),slot=k==='slot',s=state.result,icons=['🍒','🍋','⭐','💎'],hands={rock:'✊ 石頭',paper:'✋ 布',scissors:'✌️ 剪刀'};
+  var result=s?'<div class="p-sec"><h4>🎲 '+esc(s.result)+'</h4><p>'+(slot?s.roll.map(function(x){return icons[x]}).join('　'):'你：'+hands[s.roll[0]]+'　電腦：'+hands[s.roll[1]])+'</p><p>回得 <b>'+s.paid+'</b> 枚金幣（包含本金）</p></div>':'';
+  var disable=state.busy||!w.code||(!state.pending&&(state.left==null||(w.bal||0)<1||state.left===0));
+  var buttons=state.pending?'<button class="btn btn-primary" data-bet-retry '+(state.busy?'disabled':'')+'>🔄 確認上一局結果</button>':slot?'<button class="btn btn-primary" data-bet-choice="spin" '+(disable?'disabled':'')+'>🎰 下注 1 枚・開始拉霸</button>':['rock','paper','scissors'].map(function(x){return '<button class="btn btn-primary btn-sm" data-bet-choice="'+x+'" '+(disable?'disabled':'')+'>'+hands[x]+'</button>'}).join(' ');
+  b.innerHTML='<div class="p-sec"><p>🪙 錢包：<b>'+(w.bal||0)+'</b> 枚　・　今天剩餘：<b>'+(state.left==null?(w.code?'載入中':'登島後顯示'):state.left)+'</b> 局</p>'+(w.code?'':'<p>先登島才能下注。</p><button class="btn btn-primary btn-sm" data-bet-login>🏝️ 登島</button>')+(state.pending?'<p>上一局結果尚未確認，請按按鈕查詢，系統不會重複下注。</p>':'')+'<div class="row2">'+buttons+'</div></div>'+result;
+}
+function renderBet(k){
+  var slot=k==='slot',name=slot?'拉霸角子島':'剪刀石頭島',owner=COINS.get().code;
+  if(BET.owner!==owner){BET.owner=owner;['slot','rps'].forEach(function(t){BET[t]={left:null,busy:false,pending:null,result:null}})}
+  pBody.innerHTML='<div class="ph" style="--c:#fbbf24"><span class="ph-e">'+(slot?'🎰':'✊')+'</span><div><div class="p-kicker">GAME ISLAND・遊戲島</div><h3 id="pTitle">'+name+'</h3><p>每局下注 1 枚金幣，每天最多 10 局</p></div></div><div id="betBox"></div><div class="p-sec"><h4>📖 遊戲規則</h4><p>'+(slot?'三個相同回得 6 枚，恰有兩個相同回得 1 枚，全不同沒有回報；三輪從四種圖案各自等機率抽出。':'贏了回得 2 枚、平手回得 1 枚、輸了沒有回報；電腦從三種手勢等機率選擇。')+'回得的金幣包含下注本金。</p></div>';
+  $('pStep').textContent=name;footSimple('← 回地圖','');pNext.hidden=true;
+  BET[k].pending=betLoad(k);betDraw(k);if(COINS.get().code)betStatus(k);
+}
+function betPlay(k,choice,retry){
+  var state=BET[k],owner=COINS.get().code;if(state.busy)return;var pending=retry?state.pending:{kind:k,choice:choice,id:betId()};if(!pending)return;
+  state.pending=pending;betStore(k,pending);state.busy=true;betDraw(k);
+  COINS.api({a:'betplay',kind:k,choice:pending.choice,id:pending.id}).then(function(j){
+    state.busy=false;if(COINS.get().code!==owner)return;if(!j||!j.ok){if(j&&j.err!=='bad'){state.pending=null;betStore(k,null)}toast('⚠️ '+(j&&j.err==='betmax'?'今天次數已用完':COINS.errText(j)));betDraw(k);return}
+    state.pending=null;betStore(k,null);state.result=j.bet;if(j.betstats){BET.slot.left=j.betstats.slot;BET.rps.left=j.betstats.rps}betDraw(k);
+  }).catch(function(){state.busy=false;if(COINS.get().code!==owner)return;toast('⚠️ 網路中斷，請確認上一局結果');betDraw(k)});
+}
+pBody.addEventListener('click',function(e){var t=e.target.closest('button');if(!t||(V.t!=='slot'&&V.t!=='rps'))return;var k=V.t;if(t.hasAttribute('data-bet-login')){COINS.need(function(){renderBet(k)});return}if(t.hasAttribute('data-bet-retry')){betPlay(k,'',true);return}if(t.dataset.betChoice)betPlay(k,t.dataset.betChoice,false)});
 function renderGame(){
   pBody.innerHTML='<div class="ph" style="--c:#38bdf8"><span class="ph-e">🎮</span><div><div class="p-kicker">GAME ISLAND・遊戲島</div><h3 id="pTitle">遊戲島</h3><p>邊玩邊記 AutoCAD 指令，挑戰全站排行榜</p></div></div>'+
     GAMES.map(function(g,i){
@@ -2793,7 +2825,7 @@ function renderGame(){
         '<div class="gm-b"><h4>'+g.e+' '+esc(g.name)+'</h4><p>'+esc(g.desc)+'</p><div class="gm-tags">'+g.tags.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>'+
         '<div class="row2"><button class="btn btn-primary btn-sm" type="button" data-play="'+i+'">▶ 開始遊戲</button><a class="btn btn-ghost btn-sm" href="'+g.url+'" target="_blank" rel="noopener">↗ 另開視窗</a></div></div></div>';
     }).join('')+
-    '<div class="gm-reward">🪙 <b>打遊戲賺金幣</b>：每玩完一場，分數 150 分以上送 1 枚、500 分以上 2 枚、1000 分以上 3 枚；每個遊戲每天最多 8 枚（要先登島，金幣會自動加進你的錢包）。</div><p class="fav-note">兩個遊戲各有自己的排行榜，玩完可以留下名字。手機玩跑酷建議轉成橫向。</p>';
+    '<div class="gm-reward">🪙 <b>打遊戲賺金幣</b>：每玩完一場，分數 150 分以上送 1 枚、500 分以上 2 枚、1000 分以上 3 枚；每個遊戲每天最多 8 枚（要先登島，遊戲結束後按「領取金幣獎勵」）。</div><p class="fav-note">兩個遊戲各有自己的排行榜，玩完可以留下名字。手機玩跑酷建議轉成橫向。</p>';
   $('pStep').textContent='🎮 遊戲島';
   footSimple('← 回地圖','🍎 果園島 →');
 }
@@ -2838,6 +2870,7 @@ function treeTotal(d){return (d.trees||[]).reduce(function(a,t){return a+treeVie
 var COSTI={fruit:'🍎',iron:'🔩',wood:'🪵',stone:'🪨',dia:'💎'};
 var PET_TITLE=['新朋友','好朋友','家人','最佳拍檔','靈魂伴侶'];
 var MI={data:null,fid:null,at:0,seq:0,timer:0,hbT:0,adopt:null};
+var GUIDE={step:0,replay:false,prompted:'',saving:false};
 function petTitle(lv){return PET_TITLE[Math.min(PET_TITLE.length,lv)-1]}
 function bLeft(d,k){var ms=k==='house'?(d.hb?d.hb.left:0):(d.bb&&d.bb[k]!=null?d.bb[k]:0);return Math.max(0,ms-(Date.now()-MI.at))}
 function bText(d,k){var s=Math.ceil(bLeft(d,k)/1000),m=Math.floor(s/60);s%=60;return m+':'+(s<10?'0':'')+s}
@@ -3005,14 +3038,28 @@ function pwTick(t){
   PW.raf=requestAnimationFrame(pwTick);
 }
 function pwStart(){if(PW.raf)cancelAnimationFrame(PW.raf);PW.raf=0;PW.t0=0;PW.g=null;pwTick(performance.now())}
+function guideHTML(d){
+  if(!d.mine||(!GUIDE.replay&&d.starterGuide!==0))return '';
+  var steps=[['🏝️ 歡迎上島','你已有免費 Lv1 小屋，島會隨建造慢慢成長。'],['🌳 免費種果樹','向下找到「建造」，第一棵果樹不需材料。長大結果後，點樹就能摘果。'],['🥕 菜田','你已有一塊菜田，用水果換種子種菜；成熟後點田收成。'],['🌲 木材樹','島上有一棵成熟的贈送木材樹，點它採木材，之後會再生長。'],['⛏️ 採集資源','回地圖前往果園、森林、礦山和採石島採集，材料可以建造和升級。']];
+  var k=Math.max(0,Math.min(steps.length-1,GUIDE.step)),v=steps[k];
+  return '<div class="p-sec"><h4>🧭 新手導引 '+(k+1)+' / '+steps.length+'：'+v[0]+'</h4><p class="mi-note">'+v[1]+'</p><div class="row2">'+(k?'<button class="btn btn-ghost btn-sm" type="button" data-guide-prev>← 上一步</button>':'')+'<button class="btn btn-primary btn-sm" type="button" data-guide-next>'+(k===steps.length-1?'完成教學':'下一步 →')+'</button><button class="btn btn-ghost btn-sm" type="button" data-guide-skip>跳過</button></div></div>';
+}
+function guideFinish(){
+  if(GUIDE.saving)return;
+  if(GUIDE.replay){GUIDE.replay=false;GUIDE.step=0;paintMine();return}
+  GUIDE.saving=true;COINS.api({a:'starterguide'}).then(function(j){GUIDE.saving=false;if(!j||!j.ok){toast('⚠️ 無法儲存導引進度，請稍後再試');return}if(MI.data&&!MI.fid){MI.data.starterGuide=1;miCachePut(MI.data);if(V.t==='mine')paintMine()}}).catch(function(){GUIDE.saving=false;toast('⚠️ 網路不穩，請再試一次')});
+}
+function guideMaybe(w){if(!w||!w.code||w.starterGuide!==0||GUIDE.prompted===w.code)return;GUIDE.prompted=w.code;GUIDE.step=0;GUIDE.replay=false;setTimeout(function(){if(COINS.get().code===w.code&&COINS.get().starterGuide===0)openPanel('mine',0)},300)}
+COINS.on(function(ev,w){guideMaybe(w)});
 function paintMine(){
   var d=MI.data,box=$('miBox');if(!d||!box||MI.drag)return;
   $('pTitle').textContent=d.nick+' 的小島';
   $('miSub').innerHTML=COINS.av(d)+' 🏝️ 島主分 <b>'+d.score+'</b>・小屋 Lv'+d.h+'・'+d.pets.length+' 隻寵物';
-  var o=sceneHTML(d)+wipHTML(d)+harborHTML(d);
+  var o=guideHTML(d)+sceneHTML(d)+wipHTML(d)+harborHTML(d);
   if(d.mine){var lt=landTier(d);if(lt<3)o+='<p class="mi-note">🌱 你的島會長大：多蓋小屋、菜田和裝飾，陸地就會越來越大（現在是「'+TIERN[lt]+'」）。</p>'}
+  if(d.mine&&d.starterTree)o+='<p class="mi-note">🌳 第一棵果樹免費，在下方「建造」點果樹即可種植。</p>';
   if(d.mine)o+='<p class="mi-note">👆 點果樹摘果、點成熟 🌲 採木材（每棵每天最多 2 次）。</p>';
-  if(d.mine)o+=mineTop(d);
+  if(d.mine)o+=mineTop(d)+'<button class="btn btn-ghost btn-sm" type="button" data-guide-open>🧭 查看新手導引</button>';
   if(!d.mine){
     var growing=d.f.some(function(c){return c&&cropView(c).left>0});
     if(!d.friend)o+=strangerBox();else o+='<div class="p-sec"><h4>💧 幫忙澆水</h4><p class="mi-note">每天可以幫每位好友澆一次水：他的菜提早 1 小時長好，你也會拿到 1 個隨機物資。</p>'+
@@ -3226,6 +3273,10 @@ function fitIslandItems(){
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button,[data-pat],[data-pick],[data-harvest],[data-chop]');if(!t||V.t!=='mine')return;
   var d=t.dataset;
+  if(d.guideOpen!=null){GUIDE.step=0;GUIDE.replay=true;paintMine();pBody.scrollTop=0;return}
+  if(d.guidePrev!=null){GUIDE.step=Math.max(0,GUIDE.step-1);paintMine();return}
+  if(d.guideNext!=null){if(GUIDE.step>=4)guideFinish();else{GUIDE.step++;paintMine()}return}
+  if(d.guideSkip!=null){guideFinish();return}
   if(d.mjoin2!=null){COINS.need(function(){renderMine(null)});return}
   if(d.voyage!=null){openPanel('voyage');return}
   if(d.setopen!=null){mineAct({a:'setopen',o:+d.setopen},t,function(){toast(+d.setopen?'🔓 已開放別人參觀你的小島':'🔒 現在只有好友能參觀你的小島')});return}
@@ -3729,7 +3780,7 @@ function applySync(code){
 }
 function actsHTML(){
   var s=null,h='',title='';
-  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock'||V.t==='msg'||V.t==='game'||V.t==='pets'||V.t==='shop'||(V.t==='mine'&&!V.i))s=SP[spotIdx(V.t)];else if(V.t==='res')s=RESI[V.i];else if(V.t==='session')s=SP[spotIdx('dock')];
+  if(V.t==='isle')s=ISLES[V.i];else if(V.t==='home'||V.t==='castle'||V.t==='search'||V.t==='dock'||V.t==='msg'||V.t==='game'||V.t==='slot'||V.t==='rps'||V.t==='pets'||V.t==='shop'||(V.t==='mine'&&!V.i))s=SP[spotIdx(V.t)];else if(V.t==='res')s=RESI[V.i];else if(V.t==='session')s=SP[spotIdx('dock')];
   if(V.t==='hut'&&SCN){h=spotHash(SCN)+'/'+V.i;title=SCN.name+'・'+SCN.huts[V.i].name}
   else if(s){h=spotHash(s);title=s.name}
   if(!h)return '';
@@ -3737,7 +3788,7 @@ function actsHTML(){
 }
 function render(dir){
   pNext.hidden=false;
-  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();else if(V.t==='shop')renderShop();else if(V.t==='mine')renderMine(V.i===1?MI.visitFid:null);else if(V.t==='pets')renderPets();else if(V.t==='sail')renderSail();else if(V.t==='voyage')renderVoyage();
+  if(V.t==='isle')renderIsle(V.i);else if(V.t==='hut')renderHut(V.i);else if(V.t==='home')renderHome();else if(V.t==='castle')renderCastle();else if(V.t==='dock')renderDock();else if(V.t==='session')renderSession(V.i);else if(V.t==='msg')renderMsg();else if(V.t==='res')renderRes(V.i);else if(V.t==='game')renderGame();else if(V.t==='slot'||V.t==='rps')renderBet(V.t);else if(V.t==='shop')renderShop();else if(V.t==='mine')renderMine(V.i===1?MI.visitFid:null);else if(V.t==='pets')renderPets();else if(V.t==='sail')renderSail();else if(V.t==='voyage')renderVoyage();
   else if(V.t==='search')renderSearch();else if(V.t==='fav')renderFav();else if(V.t==='hist')renderHist();
   $('pActs').innerHTML=actsHTML();var pb=$('pFavBtn');if(pb)favBtn(pb,SP[+pb.dataset.fav]);
   pBody.scrollTop=0;
@@ -3756,7 +3807,7 @@ function openPanel(t,i,dir){
 }
 function closePanel(){
   var hh=location.hash,mm=hh.match(/^(#isle-[^/]+)\/\d+$/);
-  if(/^#(qa-\d+|res-\d+|home|castle|search|tarot|dock|msg|game|mine|pets|shop)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
+  if(/^#(qa-\d+|res-\d+|home|castle|search|tarot|dock|msg|game|slot|rps|mine|pets|shop)$/.test(hh))history.replaceState(history.state,'',location.pathname+location.search);
   else if(mm)history.replaceState(history.state,'',mm[1]);
   panel.classList.remove('open');backdrop.classList.remove('open');panel.setAttribute('aria-hidden','true');document.documentElement.classList.remove('lock');
   if(opener&&opener.focus)opener.focus({preventScroll:true});
@@ -3955,7 +4006,7 @@ var seen=false;try{seen=sessionStorage.getItem('aikb-intro')==='1'}catch(e){}
 var HASH=location.hash.replace(/^#/,''),HASH_SP=-1,hm;
 if((hm=HASH.match(/^isle-([^/]+)/)))SP.forEach(function(s){if(s.k==='forum'&&s.id===decodeURIComponent(hm[1]))HASH_SP=s.si});
 else if((hm=HASH.match(/^qa-(\d+)$/))&&ISLES[+hm[1]])HASH_SP=ISLES[+hm[1]].si;
-else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg'||HASH==='game'||HASH==='mine'||HASH==='pets'||HASH==='shop')HASH_SP=spotIdx(HASH);
+else if(HASH==='home'||HASH==='castle'||HASH==='search'||HASH==='dock'||HASH==='msg'||HASH==='game'||HASH==='slot'||HASH==='rps'||HASH==='mine'||HASH==='pets'||HASH==='shop')HASH_SP=spotIdx(HASH);
 else if(HASH==='tarot')HASH_SP=spotIdx('search');
 else if((hm=HASH.match(/^res-(\d+)$/))&&RESI[+hm[1]])HASH_SP=RESI[+hm[1]].si;
 if(HASH_SP>=0)seen=true;
@@ -4097,7 +4148,7 @@ function minePrefetchForce(){var w=COINS.get();if(!w.code)return;COINS.api({a:'i
 setInterval(mapBuild,1000);
 if(window.IntersectionObserver&&MINE_SPOT&&MINE_SPOT.el)new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))minePrefetch()},{rootMargin:'300px'}).observe(MINE_SPOT.el);
 setTimeout(msgPrefetch,6000); /* 不管看不看得到留言碼頭，閒下來就先抓一份，打開時才不用等 */
-layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
+guideMaybe(COINS.get());layout();refresh();favPaint();route();centerOn(HASH_SP>=0?HASH_SP:0,false);showGuide();
 })();
 </script>
 <script>

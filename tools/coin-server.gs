@@ -322,6 +322,7 @@ function newRow_(code, nick, admin, init, fid) {
   r[C.code] = code; r[C.nick] = text_(nick, 12); r[C.bal] = init; r[C.earned] = init; r[C.streak] = 0; r[C.last] = 0;
   r[C.first] = now; r[C.seen] = now; r[C.dls] = 0; r[C.admin] = admin ? '是' : ''; r[C.day] = day_();
   r[C.onl] = 0; r[C.rd] = 0; r[C.qa] = 0; r[C.fid] = fid;
+  r[C.isle] = JSON.stringify({h:1, fields:1, starterTree:true, starterGuide:0, starterWood:true});
   return r;
 }
 function list_(v) { return plain_(v).split(',').filter(String); }
@@ -340,7 +341,7 @@ function profile_(r) {
     av: plain_(r[C.av]), fid: String(r[C.fid] || ''), bag: bag_(r), dia: num_(r[C.dia]),
     tres: num_(r[C.tres]), tdia: num_(r[C.tdia]), today: counts_(r[C.gToday]), gLast: num_(r[C.gLast]),
     trades: num_(r[C.trades]), tradeMax: TRADE_MAX, unread: num_(r[C.unread]), friends: list_(r[C.friends]).length,
-    veg: io.veg, score: isleScore_(io), ship: io.ship, pg: !!io.pg,
+    veg: io.veg, score: isleScore_(io), ship: io.ship, pg: !!io.pg, starterGuide:io.starterGuide===0?0:1,
     cd: (function () { var m = {}, nw = Date.now(); Object.keys(io.cd).forEach(function (k) { m[k] = Math.ceil((io.cd[k] - nw) / 1000); }); return m; })(),
     open: r[C.open] !== '否', annSeen: num_(r[C.annSeen]), ann: r[C.admin] === '是' || r[C.ann] === '是',
     dr: io.dr && io.dr.d === pd && Array.isArray(io.dr.k)
@@ -431,7 +432,31 @@ function handle_(q) {
     var res = { ok: true, add: 0 };
     var touched = {}; // 一起被改到的其他玩家（加好友、送禮、悄悄話）
 
-    if (a === 'login' || a === 'me') {
+    if (a === 'starterguide') {
+      var guideIsland=isleOf_(r); if (guideIsland.starterGuide===0) guideIsland.starterGuide=1;
+      r[C.isle]=JSON.stringify(guideIsland);
+    } else if (a === 'betstatus' || a === 'betplay') {
+      var betIsland=isleOf_(r), betDay=day_(), bets=betIsland.bets||{};
+      if (bets.d!==betDay) bets={d:betDay,slot:0,rps:0,receipts:Array.isArray(bets.receipts)?bets.receipts.slice(-100):[]};
+      if (!Array.isArray(bets.receipts)) bets.receipts=[];
+      if (a==='betplay') {
+        var bt=String(q.kind||''),bid=String(q.id||''),choice=String(q.choice||'');
+        if ((bt!=='slot'&&bt!=='rps')||! /^[A-Za-z0-9_-]{12,80}$/.test(bid)||(bt==='rps'&&['rock','paper','scissors'].indexOf(choice)<0)) return {ok:false,err:'bad',p:me};
+        var existing=bets.receipts.find(function(x){return x.id===bid});
+        if (existing) { if(existing.kind!==bt) return {ok:false,err:'bad',p:me}; res.bet=existing.result; }
+        else {
+          var betTime=parseInt(bid.split('-').pop(),36);if(!isFinite(betTime)||Math.abs(Date.now()-betTime)>86400000) return {ok:false,err:'expired',p:me};
+          if (num_(bets[bt])>=10) return {ok:false,err:'betmax',p:me};
+          if (num_(r[C.bal])<1) return {ok:false,err:'nocoin',p:me};
+          var roll=[],paid=0,result='';
+          if (bt==='slot') {for(var br=0;br<3;br++)roll.push(Math.floor(Math.random()*4)); var uniq=roll.filter(function(x,i){return roll.indexOf(x)===i}).length;paid=uniq===1?6:uniq===2?1:0;result=uniq===1?'三個相同':uniq===2?'兩個相同':'沒有相同';}
+          else {var hands=['rock','paper','scissors'],cpu=hands[Math.floor(Math.random()*3)],player=hands.indexOf(choice),op=hands.indexOf(cpu);paid=player===op?1:(player-op+3)%3===1?2:0;roll=[choice,cpu];result=paid===2?'獲勝':paid===1?'平手':'落敗';}
+          r[C.bal]=num_(r[C.bal])-1+paid;r[C.earned]=num_(r[C.earned])+Math.max(0,paid-1);bets[bt]=num_(bets[bt])+1;
+          res.bet={kind:bt,roll:roll,paid:paid,result:result};bets.receipts.push({id:bid,kind:bt,result:res.bet});if(bets.receipts.length>100)bets.receipts=bets.receipts.slice(-100);
+        }
+      }
+      betIsland.bets=bets;r[C.isle]=JSON.stringify(betIsland);res.betstats={slot:10-num_(bets.slot),rps:10-num_(bets.rps)};
+    } else if (a === 'login' || a === 'me') {
       // 只回傳資料
     } else if (a === 'daily') {
       var t = day_();
@@ -457,15 +482,22 @@ function handle_(q) {
       var gk = String(q.game || ''), gsc = Math.floor(num_(q.score));
       if (!GAME_KEYS[gk] || gsc < 0 || gsc > 1000000) return { ok: false, err: 'bad', p: me };
       var gx = isleOf_(r), gnow = Date.now(), gtd = day_();
-      if (!gx.gm || gx.gm.d !== gtd) gx.gm = { d: gtd, quick: 0, runner: 0, t: {} };
+      if (!gx.gm || gx.gm.d !== gtd) gx.gm = { d: gtd, quick: 0, runner: 0, t: {}, receipts:gx.gm && Array.isArray(gx.gm.receipts)?gx.gm.receipts.slice(-100):[] };
       if (!gx.gm.t) gx.gm.t = {};
+      var grid=String(q.id||'');
+      if(grid && !/^[A-Za-z0-9_-]{12,80}$/.test(grid)) return {ok:false,err:'bad',p:me};
+      gx.gm.receipts=Array.isArray(gx.gm.receipts)?gx.gm.receipts:[];
+      var grOld=grid&&gx.gm.receipts.find(function(x){return x.id===grid});
+      if(grOld){if(grOld.kind!==gk) return {ok:false,err:'bad',p:me};return {ok:true,p:me,game:grOld.result};}
+      if(grid){var grTime=parseInt(grid.split('-').pop(),36);if(!isFinite(grTime)||Math.abs(Date.now()-grTime)>86400000) return {ok:false,err:'expired',p:me};}
       var gcoin = gsc >= GAME_T[2] ? 3 : gsc >= GAME_T[1] ? 2 : gsc >= GAME_T[0] ? 1 : 0;
-      if (gnow - num_(gx.gm.t[gk]) < GAME_GAP) gcoin = 0;      // 連著亂送太快不算
+      if (gnow - num_(gx.gm.t[gk]) < GAME_GAP) { if(grid) return {ok:false,err:'gamecool',p:me}; gcoin = 0; }      // 連著亂送太快不算
       gcoin = Math.max(0, Math.min(gcoin, GAME_DAY - num_(gx.gm[gk])));
       gx.gm.t[gk] = gnow; gx.gm[gk] = num_(gx.gm[gk]) + gcoin;
+      res.game = { got: gcoin, left: GAME_DAY - gx.gm[gk], day: GAME_DAY, t: GAME_T };
+      if(grid){gx.gm.receipts.push({id:grid,kind:gk,result:res.game});if(gx.gm.receipts.length>100)gx.gm.receipts=gx.gm.receipts.slice(-100)}
       r[C.isle] = JSON.stringify(gx);
       if (gcoin) res.add = gcoin;
-      res.game = { got: gcoin, left: GAME_DAY - gx.gm[gk], day: GAME_DAY, t: GAME_T };
     } else if (a === 'dl') {
       var note = '';
       var freeDl = /^courses\/t\d+\/$/.test(String(q.page || '')) || String(q.page || '') === 'plugins/t14746/';
@@ -1047,6 +1079,7 @@ function isleOf_(r) {
   var nowI = Date.now();
   if (o.hb && num_(o.hb.e) <= nowI) { o.h = Math.max(o.h, num_(o.hb.t)); o.hb = null; } // 施工時間到了，小屋完工
   if (!o.hb) o.hb = null;
+  if (o.h < 1) { o.h = 1; if (o.hb && num_(o.hb.t) <= 1) o.hb = null; }
   o.ship = o.ship && Array.isArray(o.ship.own) ? o.ship : { cur: 0, own: [0] };
   if (o.ship.own.indexOf(0) < 0) o.ship.own.unshift(0);
   if (!o.ship.names || typeof o.ship.names !== 'object') o.ship.names = {}; // 每艘船可以自己取名字
@@ -1064,7 +1097,8 @@ function isleOf_(r) {
       var prior=oldTrees[si], rnd=rng_(hash_('wood-slot|' + seed + '|' + si));
       var angle=rnd()*Math.PI*2, radius=Math.sqrt(rnd());
       var born=base + si*1200000;
-      o.woodSlots.push({id:prior?String(prior.id):'slot'+si, x:prior?prior.x:Math.round(50+Math.cos(angle)*radius*27), y:prior?prior.y:Math.round(50+Math.sin(angle)*radius*21), start:prior?0:born, ready:prior?0:born+woodGrow_(seed,si,born), day:0, count:0});
+      if (o.starterWood && si===0 && !prior) born=0;
+      o.woodSlots.push({id:prior?String(prior.id):'slot'+si, x:prior?prior.x:Math.round(50+Math.cos(angle)*radius*27), y:prior?prior.y:Math.round(50+Math.sin(angle)*radius*21), start:prior?0:born, ready:(prior||(o.starterWood&&si===0))?0:born+woodGrow_(seed,si,born), day:0, count:0});
     }
   }
   o.layout = o.layout && typeof o.layout === 'object' && !Array.isArray(o.layout) ? o.layout : {};
@@ -1103,7 +1137,7 @@ function islePub_(r, mine, viewer) {
   var o = isleOf_(r), now = Date.now(), wd = viewer && viewer.wd && viewer.wd.d === day_() ? viewer.wd.f : [];
   var out = {
     nick: plain_(r[C.nick]), av: plain_(r[C.av]), fid: String(r[C.fid] || ''), mine: !!mine,
-    h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o), layout: o.layout, wild: o.woodSlots.map(function(t){var span=Math.max(1,num_(t.ready)-num_(t.start)), phase=now>=num_(t.ready)?2:now>=num_(t.start)+span/2?1:0;return {id:String(t.id),x:t.x,y:t.y,stage:phase,left:Math.max(0,num_(t.ready)-now),count:num_(t.day)===day_()?num_(t.count):0};}), wildNext: (function(){var next=null;o.woodSlots.forEach(function(t){var st=num_(t.start),en=num_(t.ready),half=st+(en-st)/2,n=now<half?half-now:now<en?en-now:null;if(n!=null&&(next==null||n<next))next=n;if(num_(t.day)===day_()&&num_(t.count)>=2){var reset=86400000-((now+8*3600000)%86400000);if(next==null||reset<next)next=reset;}});return next;})(),
+    starterGuide:o.starterGuide, starterTree:!!o.starterTree, h: o.h, fields: o.fields, deco: o.deco, dl: o.dl, score: isleScore_(o), layout: o.layout, wild: o.woodSlots.map(function(t){var span=Math.max(1,num_(t.ready)-num_(t.start)), phase=now>=num_(t.ready)?2:now>=num_(t.start)+span/2?1:0;return {id:String(t.id),x:t.x,y:t.y,stage:phase,left:Math.max(0,num_(t.ready)-now),count:num_(t.day)===day_()?num_(t.count):0};}), wildNext: (function(){var next=null;o.woodSlots.forEach(function(t){var st=num_(t.start),en=num_(t.ready),half=st+(en-st)/2,n=now<half?half-now:now<en?en-now:null;if(n!=null&&(next==null||n<next))next=n;if(num_(t.day)===day_()&&num_(t.count)>=2){var reset=86400000-((now+8*3600000)%86400000);if(next==null||reset<next)next=reset;}});return next;})(),
     trees: o.trees.map(function (t) { return { st: treeStage_(t, now), ripe: treeRipe_(t, now), nx: Math.max(0, treeNext_(t, now)) }; }),
     bt: (function () { var m = {}; Object.keys(o.bb).forEach(function (k) { m[k] = num_(o.bb[k].t); }); return m; })(),
     ships: o.ship.own.map(function (id) { return { k: id, n: plain_(o.ship.names[id]) || SHIPS[id].name, d: SHIPS[id].name }; }), shipCur: o.ship.cur,
@@ -1115,7 +1149,7 @@ function islePub_(r, mine, viewer) {
     })
   };
   if (mine) { out.open = r[C.open] !== '否'; out.vis = o.vis.map(function (x) { return { n: x.n, a: x.a, t: x.t, f: x.f }; }); out.veg = o.veg; out.rules = { house: HOUSE, houseMs: HOUSE_MS, fieldMs: FIELD_MS, decoMs: DECO_MS, field: FIELD, deco: DECO,
-    up: UPC, upPts: FT_PTS, upMult: LV_MULT, treeMax: TREE_MAX, treeCost: Array.apply(null, Array(TREE_MAX)).map(function (x, n) { return treeCost_(n); }), treeGrow: TREE_GROW, treeEvery: TREE_EVERY, treeCap: TREE_CAP, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
+    up: UPC, upPts: FT_PTS, upMult: LV_MULT, treeMax: TREE_MAX, treeCost: Array.apply(null, Array(TREE_MAX)).map(function (x, n) { return o.starterTree && n===0 ? {} : treeCost_(n); }), treeGrow: TREE_GROW, treeEvery: TREE_EVERY, treeCap: TREE_CAP, veg: VEG, animals: ANIMALS, fruitFood: FRUIT_FOOD }; }
   else out.watered = wd.indexOf(out.fid) >= 0;
   return out;
 }
@@ -1136,7 +1170,7 @@ function isleAct_(a, q, r, me) {
       if (o.bb[kind]) return { err: 'building' };
       if (kind === 'tree') {
         if (o.trees.length >= TREE_MAX) return { err: 'maxed' };
-        tgt = 0; cost = treeCost_(o.trees.length); label = '果樹 第 ' + (o.trees.length + 1) + ' 棵（施工 ' + Math.round(DECO_MS.tree / 60000) + ' 分鐘）';
+        tgt = 0; cost = o.starterTree && !o.trees.length ? {} : treeCost_(o.trees.length); label = '果樹 第 ' + (o.trees.length + 1) + ' 棵（施工 ' + Math.round(DECO_MS.tree / 60000) + ' 分鐘）';
       } else {
         var curLv = num_(o.dl[kind]) || (o.deco.indexOf(kind) >= 0 ? 1 : 0);
         if (curLv >= 3) return { err: 'maxed' };
@@ -1146,6 +1180,7 @@ function isleAct_(a, q, r, me) {
     } else return { err: 'bad' };
     if (!hasCost_(r, cost)) return { err: 'few', miss: missCost_(r, cost) }; // 一併告訴網頁還缺什麼
     payCost_(r, cost);
+    if (kind === 'tree' && o.starterTree && !o.trees.length) o.starterTree=false;
     if (kind === 'house') o.hb = { t: o.h + 1, e: now + HOUSE_MS[o.h + 1] };
     else if (kind === 'field') o.bb.field = { e: now + FIELD_MS[o.fields] };
     else o.bb[kind] = { e: now + decoMs_(kind, tgt), t: tgt };

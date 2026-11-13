@@ -1,54 +1,33 @@
-/* 打遊戲送金幣：給 AutoCAD 指令快打、指令跑酷（autocad-game）用。
-   遊戲結束時呼叫  AIKB_GAME_DONE('quick' 或 'runner', 分數)
-   → 用這台瀏覽器裡的登島碼（和論壇資源島同一個網站，localStorage 共用）回報給金幣小島，依分數送 1～3 枚金幣。
-   沒登島就只跳一個小提示，不會影響遊戲本身。 */
+/* 遊戲結束後由玩家按鈕領獎；同一局的識別碼可安全重試。 */
 (function () {
   'use strict';
-  var API = 'https://script.google.com/macros/s/AKfycbyvv3G6pw8MywtKOpG4pSCu79lsYvDbxDlsMSrUOYsPVCOirw5v1m1rLeyfm_4Dbm84/exec';
-  var KEY = 'aikb-player';
-  var ISLAND = 'https://kv1012tiger.github.io/autocad-tw-island/';
-  var T = [150, 500, 1000];
-  var box = null, timer = 0;
-
-  function toast(html) {
-    try {
-      if (!box) {
-        box = document.createElement('div');
-        box.setAttribute('role', 'status');
-        box.style.cssText = 'position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;max-width:92vw;padding:10px 18px;border-radius:999px;background:rgba(3,42,60,.96);border:2px solid #ffd166;color:#fff8e7;font:700 15px/1.5 "Noto Sans TC",system-ui,sans-serif;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.45);transition:opacity .3s;opacity:0';
-        document.body.appendChild(box);
-      }
-      box.innerHTML = html;
-      box.style.opacity = '1';
-      clearTimeout(timer);
-      timer = setTimeout(function () { box.style.opacity = '0'; }, 6500);
-    } catch (e) {}
-  }
-
-  function player() {
-    try { var P = JSON.parse(localStorage.getItem(KEY) || 'null'); return P && P.code ? P : null; } catch (e) { return null; }
-  }
-
-  window.AIKB_GAME_DONE = function (game, score) {
-    score = Math.floor(Number(score) || 0);
-    var P = player();
-    if (!P) {
-      if (score >= T[0]) toast('🪙 打到 ' + score + ' 分！到 <a href="' + ISLAND + '" style="color:#7fd8ff">論壇資源島</a> 登島，打遊戲就能賺金幣');
-      return;
-    }
-    var q = { a: 'gameplay', code: P.code, game: game, score: score };
-    fetch(API + '?q=' + encodeURIComponent(JSON.stringify(q)), { cache: 'no-store' })
-      .then(function (r) { return r.json(); })
-      .then(function (j) {
-        if (!j || !j.ok || !j.game) return;
-        try { // 把最新的金幣數字存回去，回到論壇資源島時就是對的
-          if (j.p) { var cur = JSON.parse(localStorage.getItem(KEY) || 'null'); if (cur && cur.code === j.p.code) { cur.bal = j.p.bal; cur.earned = j.p.earned; localStorage.setItem(KEY, JSON.stringify(cur)); } }
-        } catch (e) {}
-        var g = j.game;
-        if (g.got > 0) toast('🪙 +' + g.got + ' 枚金幣！' + (g.left > 0 ? '這款遊戲今天還能再拿 ' + g.left + ' 枚' : '這款遊戲今天的金幣領完了'));
-        else if (g.left <= 0) toast('🪙 這款遊戲今天的金幣已經領完了，明天再來');
-        else if (score < T[0]) toast('🪙 打到 ' + T[0] + ' 分以上就有金幣（500 分 2 枚、1000 分 3 枚）');
-      })
-      .catch(function () {});
+  var API='https://script.google.com/macros/s/AKfycbyvv3G6pw8MywtKOpG4pSCu79lsYvDbxDlsMSrUOYsPVCOirw5v1m1rLeyfm_4Dbm84/exec';
+  var KEY='aikb-player',ISLAND='https://kv1012tiger.github.io/autocad-tw-island/';
+  function player(){try{var p=JSON.parse(localStorage.getItem(KEY)||'null');return p&&p.code?p:null}catch(e){return null}}
+  function id(){var a=new Uint32Array(4);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else for(var i=0;i<a.length;i++)a[i]=Math.floor(Math.random()*4294967296);return Array.from(a).map(function(n){return n.toString(36)}).join('-')+'-'+Date.now().toString(36)}
+  window.AIKB_GAME_DONE=function(game,score){
+    score=Math.floor(Number(score)||0);var ticket=id(),bound=player();bound=bound&&bound.code;
+    setTimeout(function(){
+      var again=document.getElementById(game==='quick'?'acm-game-again':'acr-game-again');if(!again||!again.parentNode)return;
+      var old=document.getElementById('aikb-reward-box');if(old)old.remove();
+      var wrap=document.createElement('div');wrap.id='aikb-reward-box';wrap.style.cssText='margin:8px auto 12px;max-width:440px;text-align:center';
+      var btn=document.createElement('button');btn.type='button';btn.style.cssText='width:100%;padding:11px;border:0;border-radius:12px;background:#ffbd3f;color:#351900;font:800 16px system-ui;cursor:pointer';btn.textContent='🪙 領取金幣獎勵';
+      var status=document.createElement('p');status.setAttribute('role','status');status.style.cssText='margin:6px 0;color:#fff;font:600 14px/1.5 system-ui';
+      wrap.appendChild(btn);wrap.appendChild(status);again.parentNode.insertBefore(wrap,again);
+      if(score<150){btn.disabled=true;btn.style.opacity='.55';status.textContent='達到 150 分即可領取金幣。';return}
+      status.textContent='本場達標，點按鈕領取金幣。';
+      btn.addEventListener('click',function(){
+        var p=player();if(!p){status.textContent='請先到論壇資源島登島，再回來按領取。';var link=document.createElement('a');link.href=ISLAND;link.target='_blank';link.rel='noopener';link.style.color='#8ae4ff';link.textContent=' 前往登島';status.appendChild(link);return}
+        if(bound&&bound!==p.code){status.textContent='請切回本局原本的登島帳號，再領取獎勵。';return}bound=p.code;
+        btn.disabled=true;status.textContent='正在確認獎勵…';
+        var q={a:'gameplay',code:p.code,game:game,score:score,id:ticket};
+        fetch(API+'?q='+encodeURIComponent(JSON.stringify(q)),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('http');return r.json()}).then(function(j){
+          if(!j||!j.ok||!j.game){btn.disabled=!!(j&&j.err==='expired');status.textContent=j&&j.err==='gamecool'?'領獎間隔尚未結束，請稍後再按一次。':j&&j.err==='expired'?'本場領獎已逾時，請再玩一場。':'暫時無法領獎，請再試一次。';return}
+          try{if(j.p){var cur=JSON.parse(localStorage.getItem(KEY)||'null');if(cur&&cur.code===j.p.code){cur.bal=j.p.bal;cur.earned=j.p.earned;localStorage.setItem(KEY,JSON.stringify(cur))}}}catch(e){}
+          btn.textContent=j.game.got?'✅ 已領取 '+j.game.got+' 枚金幣':'今日金幣獎勵已領完';btn.disabled=true;
+          status.textContent=j.game.got?'已加入錢包，這款遊戲今天還能領 '+j.game.left+' 枚。':'每款遊戲每日最多 8 枚，明天再來。';
+        }).catch(function(){btn.disabled=false;status.textContent='網路不穩，請再次按領取確認結果；不會重複領獎。'});
+      });
+    },0);
   };
 })();
