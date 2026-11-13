@@ -666,6 +666,19 @@ function handle_(q) {
       if (out.got) res.got = out.got;
       if (out.log) sheet_('小島紀錄', L_HEAD).appendRow([new Date(), r[C.nick], r[C.code], out.log[0], out.log[1]]);
       res.island = islePub_(r, true);
+    } else if (a === 'tarotsync') {
+      // 在同一把寫入鎖內合併已抽牌；先存入的結果優先，不因其他裝置的空資料覆蓋。
+      var tday=String(day_()), tdate=tday.slice(0,4)+'-'+tday.slice(4,6)+'-'+tday.slice(6,8);
+      if (String(q.d || '') !== tdate) return { ok:false, err:'bad', p:me };
+      var ot=isleOf_(r), ts=ot.tarot && ot.tarot.d===tdate ? ot.tarot : {d:tdate,love:null,career:null};
+      for (var ti=0,tk=['love','career'];ti<tk.length;ti++) {
+        var key= tk[ti], incoming=q[key];
+        if (incoming != null) {
+          if (typeof incoming!=='object' || !Number.isInteger(incoming.id) || incoming.id<0 || incoming.id>=78 || typeof incoming.rev!=='boolean') return {ok:false,err:'bad',p:me};
+          if (!ts[key]) ts[key]={id:incoming.id,rev:incoming.rev};
+        }
+      }
+      ot.tarot=ts; r[C.isle]=JSON.stringify(ot); res.tarot=ts;
     } else if (a === 'water') {
       var jw = findFid_(rows, q.fid);
       if (jw < 0 || jw === i) return { ok: false, err: 'bad', p: me };

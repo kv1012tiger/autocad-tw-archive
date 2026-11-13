@@ -3313,13 +3313,13 @@ function tdLoad(){
   });
   return tdP;
 }
-function tdDay(){function p(n){return (n<10?'0':'')+n}var d=new Date();return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
+function tdDay(){return new Date(Date.now()+8*3600000).toISOString().slice(0,10)}
 function tdUser(){
   var c=COINS.get().code;if(c)return 'c:'+c;
   var id='';try{id=localStorage.getItem('aikb-tid')||'';if(!id){id=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('aikb-tid',id)}}catch(e){id='x'}
   return 'd:'+id;
 }
-/* 今天抽過的牌：存在這台裝置；結果由「登島碼（或這台裝置）＋日期」算出，所以同一天不管怎麼重開都是同一張 */
+/* 登島帳號同步當日牌；本機保留暫存與舊版資料，未登島時維持裝置本機抽牌。 */
 function tdState(){
   var st=null;try{st=JSON.parse(localStorage.getItem(TD_KEY)||'null')}catch(e){}
   if(!st||typeof st!=='object')st={};
@@ -3327,6 +3327,23 @@ function tdState(){
   if(st.d!==day||st.u!==u)st={d:day,u:u,love:null,career:null,h:Array.isArray(st.h)?st.h:[]};
   if(!Array.isArray(st.h))st.h=[];
   return st;
+}
+/* 登島帳號：合併本機既有當日牌與後端，帳號切換或跨日後不套用舊回應。 */
+function tdSync(candidateTopic,candidate){
+  var code=COINS.get().code,st=tdState(),u=st.u,day=st.d;
+  if(!code)return Promise.resolve(st);
+  var req={a:'tarotsync',code:code,d:day,love:st.love,career:st.career};
+  if(candidateTopic)req[candidateTopic]=candidate;
+  return COINS.call(req,true).then(function(j){
+    if(!j||!j.ok||!j.tarot||j.tarot.d!==day)throw new Error('sync');
+    if(tdUser()!==u||tdDay()!==day)throw new Error('changed');
+    var cur=tdState();['love','career'].forEach(function(k){
+      var r=j.tarot[k];if(!r)return;
+      cur[k]=r;if(!cur.h.some(function(x){return x.d===day&&x.t===k}))cur.h.push({d:day,t:k,id:r.id,rv:r.rev?1:0});
+    });if(cur.h.length>40)cur.h=cur.h.slice(-40);
+    try{localStorage.setItem(TD_KEY,JSON.stringify(cur))}catch(e){throw new Error('storage')}
+    return cur;
+  });
 }
 function tdHash(str){var h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0;i<str.length;i++){var ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (h1^h2)>>>0}
 function tdRng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
@@ -3380,9 +3397,10 @@ function trDraw(topic,btn){
   var slot=btn.closest('.tr-slot');btn.disabled=true;if(slot)slot.classList.add('shuffling');playSfx('chest');
   setTimeout(function(){
     var st=tdState();if(st[topic]){renderTarot();return}
-    var r=tdPick(topic);st[topic]=r;st.h.push({d:st.d,t:topic,id:r.id,rv:r.rev?1:0});if(st.h.length>40)st.h=st.h.slice(-40);
-    try{localStorage.setItem(TD_KEY,JSON.stringify(st))}catch(e){}
-    TR_SHOW=topic;renderTarot(topic);
+    var r=tdPick(topic);
+    if(!COINS.get().code){st[topic]=r;st.h.push({d:st.d,t:topic,id:r.id,rv:r.rev?1:0});if(st.h.length>40)st.h=st.h.slice(-40);try{localStorage.setItem(TD_KEY,JSON.stringify(st))}catch(e){} TR_SHOW=topic;renderTarot(topic);return}
+    tdSync(topic,r).then(function(){TR_SHOW=topic;if(V.t==='search'&&V.i===1)renderTarot(topic)})
+      .catch(function(){if(V.t==='search'&&V.i===1){renderTarot();toast('⚠️ 同步失敗，請檢查網路再抽一次')}});
   },reduce?80:1100);
 }
 function tdCopy(){
@@ -3419,7 +3437,12 @@ function paintOTab(){
   var b=$('oBody');if(!b)return;
   if(V.i===0){renderSearchBody(b);return}
   b.innerHTML='<p class="s-count">🔮 水晶球暖機中…</p>';
-  tdLoad().then(function(){if(V.i===1)renderTarot();else if(V.i===2)renderDict()}).catch(function(){var x=$('oBody');if(x)x.innerHTML='<p class="s-count">⚠️ 暫時載入不了塔羅牌，請稍後再試。</p>'});
+  tdLoad().then(function(){
+    if(V.t!=='search')return;
+    if(V.i===2){renderDict();return}
+    if(V.i!==1)return;
+    return tdSync().then(function(){if(V.t==='search'&&V.i===1)renderTarot()}).catch(function(){var x=$('oBody');if(x&&V.t==='search'&&V.i===1){renderTarot();x.insertAdjacentHTML('afterbegin','<p class="s-count">⚠️ 暫時無法同步，已抽的牌仍可查看；請確認網路後重試。</p><button class="btn btn-ghost btn-sm" type="button" data-trretry>重新同步</button>');x.querySelectorAll('[data-trdraw]').forEach(function(btn){btn.disabled=true})}});
+  }).catch(function(){var x=$('oBody');if(x)x.innerHTML='<p class="s-count">⚠️ 暫時載入不了塔羅牌，請稍後再試。</p>'});
 }
 function oTab(i){V.i=i;paintOTab();pBody.scrollTop=0}
 pBody.addEventListener('click',function(e){
@@ -3427,6 +3450,7 @@ pBody.addEventListener('click',function(e){
   var t=e.target.closest('button');if(!t)return;var d=t.dataset;
   if(d.otab!=null){oTab(+d.otab);return}
   if(!TD)return;
+  if(d.trretry!=null){paintOTab();return}
   if(d.trdraw){trDraw(d.trdraw,t);return}
   if(d.trshow){TR_SHOW=d.trshow;renderTarot();var x=$('trRes');if(x)x.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});return}
   if(d.trdict!=null){TR_C=+d.trdict;oTab(2);return}
