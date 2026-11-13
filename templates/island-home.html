@@ -3300,7 +3300,8 @@ function randomArt(){
   loadArt().then(function(d){if(!d.length)return;var a=d[Math.floor(Math.random()*d.length)];toast('🔮 水晶球幫你抽到：'+a[1]);openReader(a[0],a[1])});
 }
 /* ---------- 占卜島：塔羅占卜（每天愛情、事業各抽一張）與牌義說明 ---------- */
-var TD=null,tdP=null,TD_KEY='aikb-tarot',TR_SHOW='',TR_C=-1,TR_F='all';
+var TD=null,tdP=null,TD_KEY='aikb-tarot',TR_SHOW='',TR_C=-1,TR_F='all',TR_SYNC={seq:0,status:'pending',u:'',d:''};
+function trSyncStatus(){return !COINS.get().code?'ready':(TR_SYNC.u===tdUser()&&TR_SYNC.d===tdDay()?TR_SYNC.status:'pending')}
 var TD_TOPIC={love:{ico:'💕',name:'愛情運勢',a:'lu',b:'lr'},career:{ico:'💼',name:'事業運勢',a:'cu',b:'cr'}};
 function tdLoad(){
   if(TD)return Promise.resolve(TD);
@@ -3380,11 +3381,12 @@ function trResult(topic){
 }
 function renderTarot(flipTopic){
   var b=$('oBody');if(!b||V.t!=='search'||V.i!==1||!TD)return;
-  var st=tdState(),both=st.love&&st.career;
+  var st=tdState(),both=st.love&&st.career,sync=trSyncStatus();
   if(!TR_SHOW||!st[TR_SHOW])TR_SHOW=st.love?'love':st.career?'career':'';
-  b.innerHTML='<p class="tr-intro">靜下心，想著你在意的事，再點水晶球。<b>每天可以抽一張愛情運勢、一張事業運勢</b>，抽到的牌今天不會改變。</p>'+
+  b.innerHTML=(sync==='pending'?'<p class="s-count">🔄 正在同步今日牌，已抽的牌可以先查看。</p>':sync==='error'?'<p class="s-count">⚠️ 暫時無法同步，已抽的牌仍可查看；請確認網路後重試。</p><button class="btn btn-ghost btn-sm" type="button" data-trretry>重新同步</button>':'')+'<p class="tr-intro">靜下心，想著你在意的事，再點水晶球。<b>每天可以抽一張愛情運勢、一張事業運勢</b>，抽到的牌今天不會改變。</p>'+
     '<div class="tr-grid">'+trSlot('love')+trSlot('career')+'</div><div id="trRes">'+(TR_SHOW?trResult(TR_SHOW):'')+'</div>'+
     '<p class="tr-note">'+(both?'今天的兩張都抽完囉，明天 0 點可以再抽。':'')+'塔羅僅供娛樂與自我反思，重要的決定請以事實與專業意見為準。</p>';
+  if(sync!=='ready')b.querySelectorAll('[data-trdraw]').forEach(function(btn){btn.disabled=true});
   tdPaint();
   if(flipTopic){
     var el=b.querySelector('[data-trslot="'+flipTopic+'"] .tc');
@@ -3393,6 +3395,7 @@ function renderTarot(flipTopic){
   }
 }
 function trDraw(topic,btn){
+  if(trSyncStatus()!=='ready')return;
   if(tdState()[topic]){TR_SHOW=topic;renderTarot();return}
   var slot=btn.closest('.tr-slot');btn.disabled=true;if(slot)slot.classList.add('shuffling');playSfx('chest');
   setTimeout(function(){
@@ -3437,12 +3440,16 @@ function paintOTab(){
   var b=$('oBody');if(!b)return;
   if(V.i===0){renderSearchBody(b);return}
   b.innerHTML='<p class="s-count">🔮 水晶球暖機中…</p>';
+  var tab=V.i,seq=++TR_SYNC.seq;
+  if(tab===1){
+    TR_SYNC.u=tdUser();TR_SYNC.d=tdDay();TR_SYNC.status=COINS.get().code?'pending':'ready';
+    tdSync().then(function(){if(seq===TR_SYNC.seq){TR_SYNC.status='ready';if(V.t==='search'&&V.i===1&&TD)renderTarot()}})
+      .catch(function(){if(seq===TR_SYNC.seq){TR_SYNC.status='error';if(V.t==='search'&&V.i===1&&TD)renderTarot()}});
+  }
   tdLoad().then(function(){
-    if(V.t!=='search')return;
-    if(V.i===2){renderDict();return}
-    if(V.i!==1)return;
-    return tdSync().then(function(){if(V.t==='search'&&V.i===1)renderTarot()}).catch(function(){var x=$('oBody');if(x&&V.t==='search'&&V.i===1){renderTarot();x.insertAdjacentHTML('afterbegin','<p class="s-count">⚠️ 暫時無法同步，已抽的牌仍可查看；請確認網路後重試。</p><button class="btn btn-ghost btn-sm" type="button" data-trretry>重新同步</button>');x.querySelectorAll('[data-trdraw]').forEach(function(btn){btn.disabled=true})}});
-  }).catch(function(){var x=$('oBody');if(x)x.innerHTML='<p class="s-count">⚠️ 暫時載入不了塔羅牌，請稍後再試。</p>'});
+    if(seq!==TR_SYNC.seq||V.t!=='search'||V.i!==tab)return;
+    if(tab===2)renderDict();else if(tab===1)renderTarot();
+  }).catch(function(){var x=$('oBody');if(seq===TR_SYNC.seq&&x&&V.t==='search'&&V.i===tab)x.innerHTML='<p class="s-count">⚠️ 暫時載入不了塔羅牌，請稍後再試。</p>'});
 }
 function oTab(i){V.i=i;paintOTab();pBody.scrollTop=0}
 pBody.addEventListener('click',function(e){
