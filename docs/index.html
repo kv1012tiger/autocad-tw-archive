@@ -1030,6 +1030,8 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-plot{display:grid;place-items:center;width:46px;height:40px;border-radius:8px;background:repeating-linear-gradient(0deg,#7a4a22 0 6px,#8f5a2a 6px 12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
 .mi-plot b{font-size:27px;line-height:1;animation:miGrow 2.4s ease-in-out infinite}
 .mi-plot.ready{box-shadow:0 0 0 2px #ffd166,0 0 14px #ffd166}
+.mi-plot[data-harvest]{position:relative;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mi-plot[data-harvest]::before{content:'';position:absolute;inset:-3px}
 @keyframes miGrow{50%{transform:translateY(-3px) rotate(4deg)}}
 .mi-deco{position:absolute;font-size:46px;line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
 .mi-pet{position:absolute;left:0;top:0;margin:-.5em 0 0 -.5em;line-height:1;will-change:transform}
@@ -2928,7 +2930,7 @@ function sceneHTML(d){
   if(t>=2)o+='<span class="mi-sc" style="left:40%;top:76%;font-size:22px">🌸</span><span class="mi-sc" style="left:87%;top:62%;font-size:26px">🪨</span>';
   if(t>=3)o+='<span class="mi-sc" style="left:89%;top:38%;font-size:40px">🌴</span><span class="mi-sc" style="left:28%;top:86%;font-size:20px">🌷</span><span class="mi-sc" style="left:4%;top:62%;font-size:34px">🌴</span>';
   o+='<div class="mi-house lv'+d.h+'"><span>'+HOUSEI[d.h]+'</span><em>'+(d.hb?'🔨 Lv'+d.hb.t+' <b class="mi-hbt" data-k="house">'+hbText(d)+'</b>':d.h?'小屋 Lv'+d.h:'空地')+'</em></div>';
-  o+='<div class="mi-fields">'+d.f.map(function(c){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"><b>'+cv.e+'</b></i>'}).join('')+(d.bb&&d.bb.field!=null?'<i class="mi-plot bld"><b>🚧</b></i>':'')+'</div>';
+  o+='<div class="mi-fields">'+d.f.map(function(c,i){if(!c)return '<i class="mi-plot"></i>';var cv=cropView(c);return '<i class="mi-plot'+(cv.ready?' ready':'')+'"'+(cv.ready&&d.mine?' data-harvest="'+i+'" role="button" aria-label="收成第 '+(i+1)+' 塊田"':'')+'><b>'+cv.e+'</b></i>'}).join('')+(d.bb&&d.bb.field!=null?'<i class="mi-plot bld"><b>🚧</b></i>':'')+'</div>';
   var dp={fountain:[64,58],tower:[70,20]},dl=d.dl||{};
   d.deco.forEach(function(k){if(!dp[k])return;var lv=Math.min(3,dl[k]||1);o+='<span class="mi-deco" style="left:'+dp[k][0]+'%;top:'+dp[k][1]+'%;font-size:'+(44+(lv-1)*9)+'px">'+DECOI[k][0]+'<em class="mi-lv l'+lv+'">Lv'+lv+'</em></span>'});
   (d.trees||[]).forEach(function(t,i){
@@ -3114,7 +3116,7 @@ function buildFast(kind,t){
 function fxAt(el,em){if(!el)return;var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,em)}
 var GIFT_I={coin:['🪙','金幣'],fruit:['🍎','水果'],iron:['🔩','鐵礦'],wood:['🪵','木材'],stone:['🪨','石頭']};
 pBody.addEventListener('click',function(e){
-  var t=e.target.closest('button,[data-pat],[data-pick]');if(!t||V.t!=='mine')return;
+  var t=e.target.closest('button,[data-pat],[data-pick],[data-harvest]');if(!t||V.t!=='mine')return;
   var d=t.dataset;
   if(d.mjoin2!=null){COINS.need(function(){renderMine(null)});return}
   if(d.voyage!=null){openPanel('voyage');return}
