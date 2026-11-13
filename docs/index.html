@@ -1035,6 +1035,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 .mi-scene [data-move].dragging{cursor:grabbing;z-index:90;opacity:.85}
 .mi-plot.island-plot{position:absolute}
 .mi-wild{position:absolute;width:40px;height:40px;display:grid;place-items:center;font-size:39px;line-height:1;cursor:pointer;touch-action:manipulation}
+.mi-wood-overflow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 12px;border-radius:12px;background:rgba(3,30,44,.55);color:#fff}.mi-wood-overflow>span:first-child{font-weight:800}
 .mi-plot[data-harvest]{position:relative;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .mi-plot.island-plot[data-harvest]{position:absolute}
 .mi-plot[data-harvest]::before{content:'';position:absolute;inset:-3px}
@@ -3195,19 +3196,32 @@ function fitIslandItems(){
     }
     if(success)break;
   }
-  var fruit=Array.from(sc.querySelectorAll('.mi-fruit')).map(function(el){var r=rect(el),fr=el.querySelector('.mi-fr');if(fr){var f=rect(fr);r=[Math.min(r[0],f[0]),Math.min(r[1],f[1]),Math.max(r[2],f[2]),Math.max(r[3],f[3])]}return r}),obstacles=Array.from(sc.querySelectorAll('.mi-house,.mi-deco:not(.mi-fruit)')).map(rect),placed=[],angles=[-110,-45,5,45,95];
+  var fruit=Array.from(sc.querySelectorAll('.mi-fruit')).map(function(el){var r=rect(el),fr=el.querySelector('.mi-fr');if(fr){var f=rect(fr);r=[Math.min(r[0],f[0]),Math.min(r[1],f[1]),Math.max(r[2],f[2]),Math.max(r[3],f[3])]}return r}),obstacles=Array.from(sc.querySelectorAll('.mi-house,.mi-deco:not(.mi-fruit),.mi-deco:not(.mi-fruit) .mi-lv')).map(rect),placed=[],angles=[-110,-45,5,45,95];
+  var overflow=[];
   sc.querySelectorAll('.mi-wild').forEach(function(el,i){
-    var a=angles[i%angles.length]*Math.PI/180,tx=cx+Math.cos(a)*rx*.78,ty=cy+Math.sin(a)*ry*.78,best=null,bestScore=Infinity;
-    // 固定樹冠大小計算，避免不同生長階段改變樹位；優先避開所有設施與果樹。
-    for(var pass=0;pass<3&&!best;pass++)for(var x=0;x<=100;x+=2.5)for(var y=0;y<=100;y+=2.5){
-      var px=x*b.width/100,py=y*b.height/100,box=[px,py,px+40,py+40],ok=true;
-      [[box[0],box[1]],[box[2],box[1]],[box[0],box[3]],[box[2],box[3]]].forEach(function(c){if(Math.pow((c[0]-cx)/rx,2)+Math.pow((c[1]-cy)/ry,2)>1)ok=false});
-      if(!ok||(farmBox&&overlap(box,farmBox,6))||fruit.some(function(r){return overlap(box,r,16)})||(pass<2&&placed.some(function(r){return overlap(box,r,3)})))continue;
-      if(pass===0&&obstacles.some(function(r){return overlap(box,r,3)}))continue;
-      var dx=px+20-tx,dy=py+20-ty,score=dx*dx+dy*dy;if(score<bestScore){bestScore=score;best=[x,y,box]}
-    }
-    if(best){el.style.left=best[0]+'%';el.style.top=best[1]+'%';placed.push(best[2])}
+    var a=angles[i%angles.length]*Math.PI/180,tx=cx+Math.cos(a)*rx*.78,ty=cy+Math.sin(a)*ry*.78,best=null,baseFont=parseFloat(el.style.fontSize)||39;
+    // 擁擠時逐步縮小樹冠；任何階段都保留相同佔位，絕不放寬建築及果樹避讓。
+    [40,34,28,24].some(function(size){
+      var scoreBest=Infinity;
+      for(var x=0;x<=100;x+=2.5)for(var y=0;y<=100;y+=2.5){
+        var px=x*b.width/100,py=y*b.height/100,box=[px,py,px+size,py+size],ok=true;
+        [[box[0],box[1]],[box[2],box[1]],[box[0],box[3]],[box[2],box[3]]].forEach(function(c){if(Math.pow((c[0]-cx)/rx,2)+Math.pow((c[1]-cy)/ry,2)>1)ok=false});
+        if(!ok||(farmBox&&overlap(box,farmBox,5))||fruit.some(function(r){return overlap(box,r,8)})||obstacles.some(function(r){return overlap(box,r,5)})||placed.some(function(r){return overlap(box,r,4)}))continue;
+        var dx=px+size/2-tx,dy=py+size/2-ty,score=dx*dx+dy*dy;
+        if(score<scoreBest){scoreBest=score;best=[x,y,box,size]}
+      }
+      return !!best;
+    });
+    if(best){el.style.left=best[0]+'%';el.style.top=best[1]+'%';el.style.width=best[3]+'px';el.style.height=best[3]+'px';el.style.fontSize=(baseFont*best[3]/40)+'px';placed.push(best[2])}
+    else overflow.push(el);
   });
+  // 島上真的沒有空間時，移到場景下方的木材林，確保不遮擋且仍可採收。
+  if(overflow.length){
+    var grove=document.createElement('div');grove.className='mi-wood-overflow';
+    var label=document.createElement('span');label.textContent='🌲 木材林';grove.appendChild(label);
+    overflow.forEach(function(el){el.style.position='relative';el.style.left='auto';el.style.top='auto';grove.appendChild(el)});
+    sc.insertAdjacentElement('afterend',grove);
+  }
 }
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button,[data-pat],[data-pick],[data-harvest],[data-chop]');if(!t||V.t!=='mine')return;
