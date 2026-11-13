@@ -26,6 +26,7 @@
           try{if(j.p){var cur=JSON.parse(localStorage.getItem(KEY)||'null');if(cur&&cur.code===j.p.code){cur.bal=j.p.bal;cur.earned=j.p.earned;localStorage.setItem(KEY,JSON.stringify(cur))}}}catch(e){}
           btn.textContent=j.game.got?'✅ 已領取 '+j.game.got+' 枚金幣':'今日金幣獎勵已領完';btn.disabled=true;
           status.textContent=j.game.got?'已加入錢包，這款遊戲今天還能領 '+j.game.left+' 枚。':'每款遊戲每日最多 8 枚，明天再來。';
+          var leave=document.createElement('button');leave.type='button';leave.style.cssText='width:100%;padding:11px;border:1px solid #8ae4ff;border-radius:12px;background:#164961;color:#fff;font:800 16px system-ui;cursor:pointer';leave.textContent='← 離開遊戲';leave.addEventListener('click',function(){if(window.parent!==window)window.parent.postMessage('close-reader',location.origin);else location.href=ISLAND});wrap.appendChild(leave);
         }).catch(function(){btn.disabled=false;status.textContent='網路不穩，請再次按領取確認結果；不會重複領獎。'});
       });
     },0);

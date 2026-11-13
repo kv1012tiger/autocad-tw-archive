@@ -2186,11 +2186,11 @@ function openReader(href,title){
   readerF.contentWindow.location.replace(href);
   history.pushState({reader:1},'');
 }
-function closeReader(){if(reader.hidden)return;reader.hidden=true;readerF.contentWindow.location.replace('about:blank')}
+function closeReader(){if(reader.hidden)return;var wasGame=reader.classList.contains('game');reader.hidden=true;readerF.contentWindow.location.replace('about:blank');if(wasGame&&SFX_ON)bgmStart()}
 readerF.addEventListener('load',function(){try{var t=readerF.contentDocument.title.split(' | ')[0];if(t&&!reader.hidden)readerT.textContent=t}catch(e){}});
 $('readerBack').addEventListener('click',function(){history.back()});
 window.addEventListener('popstate',closeReader);
-window.addEventListener('message',function(e){if(e.origin===location.origin&&e.data==='close-reader'&&!reader.hidden)history.back()});
+window.addEventListener('message',function(e){if(e.origin===location.origin&&e.source===readerF.contentWindow&&e.data==='close-reader'&&!reader.hidden)history.back()});
 function spotIdx(k){for(var i=0;i<SP.length;i++)if(SP[i].k===k)return i;return 0}
 
 /* ---------- 進度顯示 ---------- */
@@ -2832,6 +2832,7 @@ function renderGame(){
 var readerBackTxt=$('readerBack').textContent;
 function openGame(i){
   var g=GAMES[i];if(!g)return;
+  bgmStop();
   $('readerBack').textContent='← 回遊戲島';readerT.textContent=g.e+' '+g.name;reader.hidden=false;reader.classList.add('game');
   readerF.contentWindow.location.replace(g.url);
   history.pushState({reader:1},'');
@@ -3984,7 +3985,7 @@ function bgmTick(a){
 }
 
 function bgmStart(){
-  if(!SFX_ON||BGM.on)return;var a=ac();if(!a)return;BGM.on=true;
+  if(!SFX_ON||BGM.on||(!reader.hidden&&reader.classList.contains('game')))return;var a=ac();if(!a)return;BGM.on=true;
   BGM.master=a.createGain();BGM.master.gain.setValueAtTime(0,a.currentTime);BGM.master.gain.linearRampToValueAtTime(BGM_VOL,a.currentTime+2.5);BGM.master.connect(a.destination);
   try{bgmInit(a)}catch(e){}
   BGM.timer=setInterval(function(){if(!document.hidden)try{bgmTick(a)}catch(e){}},BGM_STEP);
