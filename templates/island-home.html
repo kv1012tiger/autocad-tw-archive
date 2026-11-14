@@ -2736,18 +2736,39 @@ function boatSet(){
 }
 
 /* ---------- 商店島：買船、金幣換物資、鑽石換金幣 ---------- */
-var SH={busy:false};
+var SH={busy:false,pending:null,shadow:null,owner:''};
+function shopKey(code){return 'aikb-shop-pending-'+code}
+function shopRead(code){try{return JSON.parse(localStorage.getItem(shopKey(code))||'null')}catch(e){return null}}
+function shopStore(code,p){try{if(p){localStorage.setItem(shopKey(code),JSON.stringify(p));return !!localStorage.getItem(shopKey(code))}localStorage.removeItem(shopKey(code));return true}catch(e){return false}}
+function shopTicket(){var a=new Uint32Array(4);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else for(var i=0;i<4;i++)a[i]=Math.floor(Math.random()*4294967296);return Array.from(a).map(function(x){return x.toString(36)}).join('-')+'-'+Date.now().toString(36)}
+function shopPreview(q,w){
+  var v=JSON.parse(JSON.stringify(w)),b=v.bag||{},n=Number(v.bal)||0;v.bag=b;
+  if(q.a==='xbuy'){var cost=q.k==='dia'?20:1;if(n<cost)return null;v.bal=n-cost;if(q.k==='dia')v.dia=(+v.dia||0)+1;else b[q.k]=(+b[q.k]||0)+6}
+  else if(q.a==='xswap'){if((+b[q.f]||0)<3)return null;b[q.f]-=3;b[q.t]=(+b[q.t]||0)+2}
+  else if(q.a==='trade'){if((+v.trades||0)>=(+v.tradeMax||3))return null;if(q.k==='dia'){if((+v.dia||0)<1)return null;v.dia--;v.bal=n+10}else{if((+b[q.k]||0)<10)return null;b[q.k]-=10;v.bal=n+1}v.trades=(+v.trades||0)+1;v.earned=(+v.earned||0)+(q.k==='dia'?10:1)}
+  return v;
+}
+function shopSync(){
+  var p=SH.pending;if(!p||SH.busy||COINS.get().code!==p.owner)return;SH.busy=true;paintShop();
+  COINS.api(p.q).then(function(j){
+    if(COINS.get().code!==p.owner){SH.busy=false;return}
+    SH.busy=false;if(!j.ok){if(j.err==='expired'||j.err==='bad'||j.err==='few'||j.err==='nocoin'||j.err==='trademax'){shopStore(p.owner,null);SH.pending=null;SH.shadow=null}toast('⚠️ '+(j.err==='expired'?'交易已逾時，請重新確認餘額':COINS.errText(j)));paintShop();return}
+    shopStore(p.owner,null);SH.pending=null;SH.shadow=null;toast(p.ok+' ✅');paintShop();
+  }).catch(function(){SH.busy=false;if(COINS.get().code!==p.owner)return;SH.shadow=null;toast('⚠️ 正在確認交易結果，請按「確認兌換」');paintShop()});
+}
 function renderShop(){
   pBody.innerHTML='<div class="ph" style="--c:#fb923c"><span class="ph-e">🏪</span><div><div class="p-kicker">SHOP ISLAND・商店島</div><h3 id="pTitle">商店島</h3><p>買自己的船、用金幣換物資、鑽石換金幣</p></div></div><div id="shBox"></div>';
   $('pStep').textContent='🏪 商店島';
   footSimple('← 回地圖','');
-  paintShop();
+  var code=COINS.get().code||'';if(SH.owner!==code){SH.owner=code;SH.pending=code?shopRead(code):null;SH.shadow=null;SH.busy=false} else if(!SH.pending&&code)SH.pending=shopRead(code);
+  paintShop();if(SH.pending)shopSync();
 }
 function paintShop(){
   var box=$('shBox');if(!box||V.t!=='shop')return;
-  var w=COINS.get();
+  var prevFrom=$('shFrom'),prevTo=$('shTo'),fromVal=prevFrom?prevFrom.value:'fruit',toVal=prevTo?prevTo.value:'wood';
+  var w=SH.shadow||COINS.get();
   if(!w.code){box.innerHTML='<div class="mb-login"><p>取個暱稱登島，就能在商店買船、換物資。</p><button class="btn btn-primary btn-sm" type="button" data-shjoin>🏝️ 取暱稱・登島</button></div>';return}
-  var sh=w.ship&&w.ship.own?w.ship:{cur:0,own:[0]},b=w.bag||{},o='';
+  var sh=w.ship&&w.ship.own?w.ship:{cur:0,own:[0]},b=w.bag||{},o=SH.pending?'<div class="mb-hint">'+(SH.busy?'🔄 兌換已送出，正在確認':'⚠️ 上一筆兌換結果尚待確認')+' <button class="btn btn-primary btn-sm" type="button" data-shop-retry '+(SH.busy?'disabled':'')+'>確認兌換</button></div>':'';
   o+='<div class="p-sec"><h4>我的錢包</h4><div class="rs-bag"><span>🪙 <b>'+(w.bal||0)+'</b> 金幣</span>'+RTYPE.map(function(x){return '<span>'+x.it+' <b>'+(b[x.rk]||0)+'</b> '+x.item+'</span>'}).join('')+'<span>💎 <b>'+(w.dia||0)+'</b> 鑽石</span></div></div>';
   o+='<div class="p-sec"><h4>⛵ 船塢（你有 '+sh.own.length+' / '+SHIPC.length+' 艘）</h4><div class="sh-ships">'+SHIPC.map(function(c,i){
     var own=sh.own.indexOf(i)>=0,cur=sh.cur===i;
@@ -2764,11 +2785,12 @@ function paintShop(){
     RTYPE.map(function(x){return '<button class="mb-b" type="button" data-sell="'+x.rk+'"'+((b[x.rk]||0)<10||!left?' disabled':'')+'>'+x.it+'×10 → 🪙1<small>'+x.item+'</small></button>'}).join('')+'</div>'+
     '<p class="mi-note">賣出每天最多 '+(w.tradeMax||3)+' 次（今天還剩 '+left+' 次）。買東西和互換不限次數。買 1 枚金幣只能換 6 個物資，賣出要 10 個才換 1 枚，所以不能無限賺。</p></div>';
   box.innerHTML=o;
-  var f=$('shFrom'),t=$('shTo');if(f&&t){f.value='fruit';t.value='wood'}
+  var f=$('shFrom'),t=$('shTo');if(f&&t){f.value=fromVal;t.value=toVal} if(SH.pending)box.querySelectorAll('button:not([data-shop-retry])').forEach(function(b){b.disabled=true});
 }
 pBody.addEventListener('click',function(e){
   var t=e.target.closest('button');if(!t||V.t!=='shop')return;
   var d=t.dataset,q=null,ok='';
+  if(d.shopRetry!=null){shopSync();return}if(SH.pending)return;
   if(d.shjoin!=null){COINS.need(function(){paintShop()});return}
   if(d.buyship!=null){
     var bi=+d.buyship,w1=COINS.get();
@@ -2784,6 +2806,13 @@ pBody.addEventListener('click',function(e){
   else if(d.xswap!=null){var f=$('shFrom').value,to=$('shTo').value;if(f===to){toast('⚠️ 要選兩種不同的物資');return}q={a:'xswap',f:f,t:to,n:1};ok='🔁 互換完成'}
   else if(d.sell!=null){q={a:'trade',k:d.sell};ok='🪙 賣出成功'}
   if(!q||SH.busy)return;
+  if(q.a==='xbuy'||q.a==='xswap'||q.a==='trade'){
+    var owner=COINS.get().code,preview=shopPreview(q,COINS.get());
+    if(!preview){toast('⚠️ 資源或可兌換次數不足');return}
+    q.tx=shopTicket();var pending={owner:owner,q:q,ok:ok};
+    if(!shopStore(owner,pending)){toast('⚠️ 無法安全保存交易，請確認瀏覽器允許儲存資料');return}
+    SH.owner=owner;SH.pending=pending;SH.shadow=preview;paintShop();shopSync();return;
+  }
   SH.busy=true;t.disabled=true;
   COINS.api(q).then(function(j){
     SH.busy=false;

@@ -432,6 +432,18 @@ function handle_(q) {
     var me = profile_(r);
     var res = { ok: true, add: 0 };
     var touched = {}; // 一起被改到的其他玩家（加好友、送禮、悄悄話）
+    /* 商店請求識別碼與交易結果一起存入玩家資料，同一請求重送不重複扣款。 */
+    var shopId = String(q.tx || ''), shopOp = a === 'xbuy' || a === 'xswap' || a === 'trade', shopSig = '', shopRecords = null;
+    if (shopOp && shopId) {
+      if (!/^[A-Za-z0-9_-]{12,80}$/.test(shopId)) return {ok:false,err:'bad',p:me};
+      shopSig = JSON.stringify([a,String(q.k||''),String(q.f||''),String(q.t||''),num_(q.n)]);
+      var shopData = isleOf_(r), allShopRecords = Array.isArray(shopData.shopReceipts) ? shopData.shopReceipts : [];
+      var priorShop = allShopRecords.find(function(x){return x.id === shopId});
+      if (priorShop) { if (priorShop.sig !== shopSig) return {ok:false,err:'bad',p:me}; return {ok:true,add:0,replayed:true,p:me}; }
+      var shopTime = parseInt(shopId.split('-').pop(),36);
+      if (!isFinite(shopTime) || Math.abs(Date.now()-shopTime) > 86400000) return {ok:false,err:'expired',p:me};
+      shopRecords = allShopRecords.filter(function(x){return num_(x.time) >= Date.now()-86400000});
+    }
 
     if (a === 'starterguide') {
       var guideIsland=isleOf_(r); if (guideIsland.starterGuide===0) guideIsland.starterGuide=1;
@@ -893,6 +905,11 @@ function handle_(q) {
       return { ok: false, err: 'bad' };
     }
 
+    if (shopOp && shopId) {
+      var shopSaved = isleOf_(r);
+      shopRecords.push({id:shopId,sig:shopSig,time:Date.now()}); shopSaved.shopReceipts = shopRecords;
+      r[C.isle] = JSON.stringify(shopSaved);
+    }
     if (res.add) { r[C.bal] = num_(r[C.bal]) + res.add; r[C.earned] = num_(r[C.earned]) + res.add; }
     r[C.seen] = new Date();
     sh.getRange(i + 2, 1, 1, P_HEAD.length).setValues([r]);
