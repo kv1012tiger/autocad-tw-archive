@@ -39,6 +39,7 @@ var C = { code: 0, nick: 1, bal: 2, earned: 3, streak: 4, last: 5, first: 6, see
 var D_HEAD = ['時間', '暱稱', '登島碼', '文章', '文章網址', '檔案', '下載後剩餘金幣', '備註'];
 var V_HEAD = ['時間', '暱稱', '登島碼', '小島代號', '小島', '日期', '管理員'];
 var M_HEAD = ['編號', '時間', '暱稱', '登島碼', '頭像', '內容', '回覆', '回覆時間', '回覆修改時間', '狀態'];
+var MR_HEAD = ['留言編號', '時間', '暱稱', '登島碼', '頭像', '內容'];
 var R_HEAD = ['代號', '物資島', '日期', '今日總量', '已採集', '鑽石藏在第幾份', '已撿到鑽石'];
 var N_HEAD = ['時間', '寄件海島編號', '寄件暱稱', '收件海島編號', '收件暱稱', '內容'];
 var DAILY = 3;      // 第 1 天 3 枚、第 2 天 4 枚
@@ -858,6 +859,18 @@ function handle_(q) {
       r[C.msgLast] = Date.now();
       sheet_('留言板', M_HEAD).appendRow(['M' + Date.now().toString(36).toUpperCase(), new Date(), r[C.nick], r[C.code], r[C.av], body, '', '', '', '']);
       bump_('msgs');
+    } else if (a === 'msgreply') {
+      var parentSheet = sheet_('留言板', M_HEAD), parentRow = msgRow_(parentSheet, q.id);
+      if (!parentRow) return { ok: false, err: 'bad', p: me };
+      var parent = parentSheet.getRange(parentRow, 1, 1, M_HEAD.length).getValues()[0];
+      if (parent[9] === '隱藏' || parent[9] === '刪除') return { ok: false, err: 'bad', p: me };
+      var replyBody = body_(q.text, MSG_LEN);
+      if (plain_(replyBody).length < 2) return { ok: false, err: 'msgshort', p: me };
+      var replyWait = num_(r[C.msgLast]) + MSG_GAP - Date.now();
+      if (replyWait > 0 && !me.admin) return { ok: false, err: 'msgcool', wait: Math.ceil(replyWait / 1000), p: me };
+      if (num_(r[C.msgN]) >= MSG_DAY && !me.admin) return { ok: false, err: 'msgmax', p: me };
+      sheet_('留言回覆', MR_HEAD).appendRow([String(parent[0]), new Date(), r[C.nick], r[C.code], r[C.av], replyBody]);
+      r[C.msgN] = num_(r[C.msgN]) + 1; r[C.msgLast] = Date.now(); bump_('msgs');
     } else if (a === 'reply' || a === 'hide' || a === 'mdel') {
       var ms = sheet_('留言板', M_HEAD), mrow = msgRow_(ms, q.id);
       if (!mrow) return { ok: false, err: 'bad', p: me };
@@ -1325,6 +1338,12 @@ function msgsBuild_(admin, prefix) {
         reply: plain_(v[6]), rt: fmt_(v[7]), re: fmt_(v[8]), hidden: st === '隱藏', w: who });
     }
   }
+  var replySheet = sheet_('留言回覆', MR_HEAD), replyCount = replySheet.getLastRow() - 1, byParent = {};
+  if (replyCount > 0) replySheet.getRange(2, 1, replyCount, MR_HEAD.length).getValues().forEach(function (v) {
+    var id = String(v[0] || ''), who = String(v[3] || '').toUpperCase(); if (!id) return;
+    (byParent[id] || (byParent[id] = [])).push({ t: fmt_(v[1]), nick: plain_(v[2]), av: avOf[who] || plain_(v[4]), text: plain_(v[5]) });
+  });
+  list.forEach(function (m) { m.replies = byParent[m.id] || []; });
   var total = list.length, pages = Math.max(1, Math.ceil(total / MSG_PAGE)), all = {}, first = {};
   for (var p = 1; p <= Math.min(pages, MSG_CACHE_PAGES); p++) {
     first = { total: total, pending: admin ? pending : 0, pages: pages, list: list.slice((p - 1) * MSG_PAGE, p * MSG_PAGE) };
@@ -1345,7 +1364,7 @@ function msgs_(q) {
   }
   return { ok: true, total: pg.total, pending: pg.pending, admin: admin, page: page, pages: pg.pages,
     list: pg.list.map(function (m) {
-      return { id: m.id, t: m.t, nick: m.nick, av: m.av, text: m.text, reply: m.reply, rt: m.rt, re: m.re, hidden: m.hidden, mine: !!code && m.w === code };
+      return { id: m.id, t: m.t, nick: m.nick, av: m.av, text: m.text, reply: m.reply, rt: m.rt, re: m.re, replies: m.replies || [], hidden: m.hidden, mine: !!code && m.w === code };
     }) };
 }
 

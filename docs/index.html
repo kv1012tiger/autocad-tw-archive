@@ -1382,7 +1382,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
       <section class="hp" data-p="4" hidden><ul>
         <li>🎒 背包裡有你的 <b>海島編號</b>（5 碼，可以公開給朋友）。輸入對方的編號就能互加好友。</li>
         <li>好友可以：🎁 每天送對方 1 個物資、✉️ 傳悄悄話（100 字）、🏝️ 參觀小島、💧 澆水。</li>
-        <li>📮 <b>留言碼頭</b>：留言給蘋果爸（300 字，每天 10 則，可貼網址），蘋果爸會回覆你。</li>
+        <li>📮 <b>留言碼頭</b>：公開留言與互相回覆（300 字，每天合計 10 則，可貼網址）。</li>
         <li>📢 <b>公告</b>：站長發的最新消息，登島時會通知你，也能按上方 📢 重看。</li>
         <li>🏆 <b>排行榜</b>有四頁：金幣、物資、鑽石、島主。</li>
       </ul></section>
@@ -2348,10 +2348,10 @@ function renderCastle(){
   footSimple('← 回地圖','⛵ 去報名碼頭 →');
 }
 /* ---------- 留言碼頭：大家留言，站長回覆（回覆後可再編輯）；網址自動變成連結 ---------- */
-var MB={page:1,list:[],edit:null,seq:0};
+var MB={page:1,list:[],edit:null,thread:null,seq:0};
 function renderMsg(){
   if(MSGA.cur!=null){msgSeenSet(MSGA.cur);msgPaint(false)}
-  pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，蘋果爸會回覆你</p></div></div>'+
+  pBody.innerHTML='<div class="ph" style="--c:#f9a8d4"><span class="ph-e">📮</span><div><div class="p-kicker">MESSAGE DOCK・留言碼頭</div><h3 id="pTitle">留言碼頭</h3><p>想問的、想分享的都可以留言，大家可以互相回覆</p></div></div>'+
     '<p class="s-count" id="mbOn" style="margin:2px 0 8px;font-weight:700">🟢 現在 … 位在線</p><div class="mb-new" id="mbNew"></div><div id="mbList"><p class="s-count">載入留言中…</p></div>';
   if(COINS.stats)COINS.stats(function(t){var el=$('mbOn');if(el&&V.t==='msg'&&t&&t.n!=null)el.textContent=(t.on!=null?'🟢 現在 '+t.on+' 位船長在線　':'')+'⚓ 共 '+t.n+' 位船長'});
   $('pStep').textContent='📮 留言碼頭';
@@ -2392,7 +2392,7 @@ function loadMsgs(page,fresh){
   COINS.call({a:'msgs',code:code,page:page}).then(function(j){
     if(page===1)msgCache(j,code);
     if(my!==MB.seq||!$('mbList'))return;
-    if(MB.edit&&shown)return; /* 正在編輯回覆時不要把畫面換掉 */
+    if((MB.edit||MB.thread)&&shown)return; /* 正在編輯回覆時不要把畫面換掉 */
     msgRender(j,$('mbList'));
   }).catch(function(){if(my===MB.seq&&$('mbList')&&!shown)$('mbList').innerHTML='<p class="s-count">⚠️ 暫時連不上留言碼頭，請稍後再試。</p>'});
 }
@@ -2400,10 +2400,13 @@ function msgHTML(m){
   var ed=MB.edit===m.id;
   return '<article class="mb'+(m.hidden?' hid':'')+'" data-mid="'+esc(m.id)+'"><div class="mb-h"><span class="mb-av">'+COINS.av(m)+'</span><b>'+esc(m.nick)+'</b><small>'+esc(m.t)+'</small>'+(m.hidden?'<em>已隱藏</em>':'')+'</div>'+
     '<div class="mb-t">'+COINS.linkify(m.text)+'</div>'+
+    (m.replies||[]).map(function(r){return '<div class="qa-a mb-r"><span class="mb-av">'+COINS.av(r)+'</span><div><small>'+esc(r.nick)+'・'+esc(r.t)+'</small><p>'+COINS.linkify(r.text)+'</p></div></div>'}).join('')+
     (m.reply&&!ed?'<div class="qa-a mb-r"><span class="tav" aria-hidden="true"></span><div><small>🍎 蘋果爸回覆・'+esc(m.rt)+(m.re?'・已編輯 '+esc(m.re):'')+'</small><p>'+COINS.linkify(m.reply)+'</p></div></div>':'')+
     (ed?'<textarea class="mb-ta" data-rta maxlength="300" placeholder="回覆內容（清空後儲存＝刪除回覆）">'+esc(m.reply||'')+'</textarea><div class="mb-k"><button class="btn btn-primary btn-sm" type="button" data-msave="'+esc(m.id)+'">💾 儲存回覆</button><button class="btn btn-ghost btn-sm" type="button" data-mcancel>取消</button></div>':
      (MB.admin||m.mine?'<div class="mb-k">'+(MB.admin?'<button class="mb-b" type="button" data-mrep="'+esc(m.id)+'">'+(m.reply?'✏️ 編輯回覆':'💬 回覆')+'</button><button class="mb-b" type="button" data-mhide="'+esc(m.id)+'" data-h="'+(m.hidden?0:1)+'">'+(m.hidden?'👁️ 取消隱藏':'🙈 隱藏')+'</button>':'')+
        (m.mine?'<button class="mb-b" type="button" data-mdel="'+esc(m.id)+'">🗑️ 刪除</button>':'')+'</div>':''))+
+    (!m.hidden?'<div class="mb-k"><button class="mb-b" type="button" data-thread="'+esc(m.id)+'">💬 回覆留言</button></div>':'')+
+    (MB.thread===m.id?'<textarea class="mb-ta" data-thread-text maxlength="300" placeholder="寫下你的公開回覆…（300 字內）"></textarea><div class="mb-k"><button class="btn btn-primary btn-sm" type="button" data-thread-send="'+esc(m.id)+'">📮 送出回覆</button><button class="btn btn-ghost btn-sm" type="button" data-thread-cancel>取消</button></div><p class="mb-hint">公開回覆與留言合計每天最多 10 則，每則間隔 1 分鐘。</p>':'')+
     '</article>';
 }
 function markPending(n){
@@ -2425,7 +2428,10 @@ pBody.addEventListener('click',function(e){
     }).catch(function(){t.disabled=false;t.textContent='📮 送出留言';toast('⚠️ 暫時連不上，請稍後再試')});
     return;
   }
-  if(d.mpg){loadMsgs(+d.mpg);var b=$('mbList');if(b)b.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});return}
+  if(d.thread){if(!COINS.get().code){COINS.need(function(){msgForm();loadMsgs(MB.page,1)});return}var old=MB.thread;MB.thread=d.thread;if(old&&old!==MB.thread)redrawMsg(old);redrawMsg(MB.thread);var rt=pBody.querySelector('[data-thread-text]');if(rt)rt.focus();return}
+  if(d.threadCancel!=null){var oldThread=MB.thread;MB.thread=null;redrawMsg(oldThread);return}
+  if(d.threadSend){var parentId=d.threadSend,field=pBody.querySelector('[data-mid="'+parentId+'"] [data-thread-text]'),value=field?field.value.trim():'';if(value.length<2){toast('回覆至少要 2 個字');if(field)field.focus();return}t.disabled=true;COINS.api({a:'msgreply',id:parentId,text:value},true).then(function(j){if(!j.ok){t.disabled=false;toast('⚠️ '+COINS.errText(j));return}MB.thread=null;toast('💬 回覆已送出');loadMsgs(MB.page,1)}).catch(function(){t.disabled=false;toast('⚠️ 暫時連不上，請稍後再試')});return}
+  if(d.mpg){MB.thread=null;loadMsgs(+d.mpg);var b=$('mbList');if(b)b.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});return}
   if(d.mrep){MB.edit=d.mrep;redrawMsg(d.mrep);var r=pBody.querySelector('[data-rta]');if(r)r.focus();return}
   if(d.mcancel!=null){var id=MB.edit;MB.edit=null;redrawMsg(id);return}
   var act=d.msave?'reply':d.mhide?'hide':d.mdel?'mdel':'';if(!act)return;
