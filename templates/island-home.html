@@ -3681,6 +3681,7 @@ function msgNote(ma){
 }
 function resLoad(){
   clearTimeout(RSV.timer);
+  if(!document.hidden&&COINS.get().code)COINS.api({a:'me'}).catch(function(){}); /* 定期同步個人未讀通知 */
   COINS.call({a:'isl'}).then(function(j){if(j&&j.ok&&j.left){RSV.left=j.left;if(j.op)RSV.op=j.op;RSV.t=Date.now();resPaint()}if(j&&j.ok&&j.ma!=null)msgNote(j.ma);resPre()}).catch(function(){}).then(function(){
     RSV.timer=setTimeout(function(){if(document.hidden)RSV.timer=setTimeout(resLoad,60000);else resLoad()},45000);
   });

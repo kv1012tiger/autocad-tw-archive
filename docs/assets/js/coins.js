@@ -508,7 +508,7 @@
         function inboxHTML() {
           if (!INBOX) return '<button class="cw-mini" type="button" data-inbox>打開收件匣</button>';
           if (!INBOX.length) return '<small>還沒有人傳悄悄話給你。</small>';
-          return INBOX.map(function (n) { return '<div class="cw-note">' + av(n) + ' <b>' + esc(n.nick) + '</b> <small>' + esc(n.t) + '</small><br>' + linkify(n.text) + '</div>'; }).join('');
+          return INBOX.map(function (n) { return '<div class="cw-note">' + av(n) + ' <b>' + esc(n.nick) + '</b> <small>' + esc(n.t) + '</small><br>' + linkify(n.text) + (String(n.text || '').indexOf('📮 回覆了你的留言：') === 0 ? '<br><button class="cw-mini" type="button" data-msgdock>📮 前往留言碼頭</button>' : '') + '</div>'; }).join('');
         }
         function busy(btn) { if (btn) { btn.disabled = true; btn.textContent = '…'; } }
         function fail(j) { toast('⚠️ ' + errText(j)); paint(); }
@@ -516,7 +516,8 @@
         ov.addEventListener('click', function (e) {
           var t = e.target.closest('button'); if (!t || !box.contains(t)) return;
           var d = t.dataset;
-          if (d.qclaim) {
+          if (d.msgdock != null) { close(); if (location.hash !== '#msg') location.hash = '#msg'; else window.dispatchEvent(new Event('hashchange')); }
+          else if (d.qclaim) {
             busy(t);
             api({ a: 'qclaim', id: d.qclaim }).then(function (j) {
               if (!j.ok) return fail(j);

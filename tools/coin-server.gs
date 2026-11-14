@@ -870,7 +870,7 @@ function handle_(q) {
       if (replyWait > 0 && !me.admin) return { ok: false, err: 'msgcool', wait: Math.ceil(replyWait / 1000), p: me };
       if (num_(r[C.msgN]) >= MSG_DAY && !me.admin) return { ok: false, err: 'msgmax', p: me };
       sheet_('留言回覆', MR_HEAD).appendRow([String(parent[0]), new Date(), r[C.nick], r[C.code], r[C.av], replyBody]);
-      r[C.msgN] = num_(r[C.msgN]) + 1; r[C.msgLast] = Date.now(); bump_('msgs');
+      r[C.msgN] = num_(r[C.msgN]) + 1; r[C.msgLast] = Date.now(); notifyMsgReply_(rows, r, parent, replyBody, touched); bump_('msgs');
     } else if (a === 'reply' || a === 'hide' || a === 'mdel') {
       var ms = sheet_('留言板', M_HEAD), mrow = msgRow_(ms, q.id);
       if (!mrow) return { ok: false, err: 'bad', p: me };
@@ -879,7 +879,7 @@ function handle_(q) {
         if (!me.admin) return { ok: false, err: 'admin', p: me };
         var rep = body_(q.text, MSG_LEN);
         if (!plain_(rep)) { mv[6] = ''; mv[7] = ''; mv[8] = ''; }
-        else { if (mv[6] && mv[7]) mv[8] = new Date(); else mv[7] = new Date(); mv[6] = rep; }
+        else { var isNewReply = !mv[6]; if (mv[6] && mv[7]) mv[8] = new Date(); else mv[7] = new Date(); mv[6] = rep; if (isNewReply && mv[9] !== '隱藏' && mv[9] !== '刪除') notifyMsgReply_(rows, r, mv, rep, touched); }
       } else if (a === 'hide') {
         if (!me.admin) return { ok: false, err: 'admin', p: me };
         mv[9] = q.h ? '隱藏' : '';
@@ -1305,6 +1305,15 @@ function inbox_(rows, fid) {
 }
 
 /* ---------- 留言碼頭 ---------- */
+/* 用既有帳號收件匣保存通知，與悄悄話共用未讀數；自己回覆不通知。 */
+function notifyMsgReply_(rows, actor, parent, content, touched) {
+  var recipient = find_(rows, parent[3]);
+  if (recipient < 0 || String(rows[recipient][C.code]).toUpperCase() === String(actor[C.code]).toUpperCase()) return;
+  var fid = String(rows[recipient][C.fid] || '');
+  if (!fid) { fid = newFid_(rows); rows[recipient][C.fid] = fid; }
+  rows[recipient][C.unread] = num_(rows[recipient][C.unread]) + 1; touched[recipient] = 1;
+  sheet_('悄悄話', N_HEAD).appendRow([new Date(), actor[C.fid], actor[C.nick], fid, rows[recipient][C.nick], '📮 回覆了你的留言：' + plain_(content)]);
+}
 function msgRow_(sh, id) {
   id = String(id || '');
   var n = sh.getLastRow() - 1;
