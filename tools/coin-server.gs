@@ -839,13 +839,13 @@ function handle_(q) {
       if (list_(r[C.friends]).indexOf(gfid) < 0) return { ok: false, err: 'notfriend', p: me };
       var gl = list_(r[C.gifts]);
       if (gl.indexOf(gfid) >= 0) return { ok: false, err: 'gifted', p: me };
-      if (num_(r[RES[gk].col]) < 1) return { ok: false, err: 'few', p: me };
-      r[RES[gk].col] = num_(r[RES[gk].col]) - 1;
-      rows[jg][RES[gk].col] = num_(rows[jg][RES[gk].col]) + 1;
+      if (num_(r[RES[gk].col]) < 5) return { ok: false, err: 'few', p: me };
+      r[RES[gk].col] = num_(r[RES[gk].col]) - 5;
+      rows[jg][RES[gk].col] = num_(rows[jg][RES[gk].col]) + 5;
       rows[jg][C.unread] = num_(rows[jg][C.unread]) + 1;
       touched[jg] = 1;
       gl.push(gfid); r[C.gifts] = gl.join(',');
-      sheet_('悄悄話', N_HEAD).appendRow([new Date(), r[C.fid], r[C.nick], gfid, rows[jg][C.nick], '🎁 送你 1 個' + RES[gk].item]);
+      sheet_('悄悄話', N_HEAD).appendRow([new Date(), r[C.fid], r[C.nick], gfid, rows[jg][C.nick], '🎁 送你 5 個' + RES[gk].item]);
       res.friends = friendsOf_(rows, r);
     } else if (a === 'note') {
       var jn = findFid_(rows, q.fid), txt = body_(q.text, NOTE_LEN);

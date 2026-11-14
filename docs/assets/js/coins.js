@@ -472,7 +472,7 @@
         }
         function paint() {
           var b = P.bag || {}, left = Math.max(0, (P.tradeMax || 3) - (P.trades || 0));
-          var h = questHTML() + (P.earned >= 5 ? '<div class="cw-sec"><h4>🎁 提示詞禮物包</h4><small style="margin-bottom:8px">累積拿滿 5 枚金幣就能領；<b>領取要花 5 枚金幣</b>，領一次之後可以免費重複查看。</small><button class="cw-b p" type="button" data-gift>🎁 領取禮物包（5 枚金幣）</button></div>' : '') + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
+          var h = questHTML() + (P.earned >= 5 ? '<div class="cw-sec"><h4>🎁 提示詞禮物包</h4><small style="margin-bottom:8px">累積拿滿 5 枚金幣就能領；<b>領取要花 5 枚金幣</b>，領一次之後可以免費重複查看。</small><button class="cw-b p" type="button" data-giftpack>🎁 領取禮物包（5 枚金幣）</button></div>' : '') + '<div class="cw-sec"><h4>🧺 我的物資</h4><div class="cw-bag">' +
             RES_KEYS.map(function (k) { return '<div><i>' + RES[k][0] + '</i><b>' + (b[k] || 0) + '</b><small>' + RES[k][1] + '</small></div>'; }).join('') +
             '<div><i>💎</i><b>' + (P.dia || 0) + '</b><small>鑽石</small></div></div>' +
             '<small style="margin-top:6px">🥕 ' + ((P.veg || {}).carrot || 0) + '　🥬 ' + ((P.veg || {}).cabbage || 0) + '　🎃 ' + ((P.veg || {}).pumpkin || 0) + '（菜園收成，用來餵寵物）</small>' +
@@ -500,7 +500,7 @@
               '<div class="k">' + (f.gifted ? '<span class="cw-mini" style="opacity:.6;cursor:default">🎁 今天送過了</span>' : '<button class="cw-mini" type="button" data-op="gift" data-f="' + esc(f.fid) + '">🎁 送禮</button>') +
               (window.ISLE_VISIT ? '<button class="cw-mini" type="button" data-visit="' + esc(f.fid) + '">🏝️ 參觀</button>' : '') +
               '<button class="cw-mini" type="button" data-op="note" data-f="' + esc(f.fid) + '">✉️ 悄悄話</button><button class="cw-mini" type="button" data-fdel="' + esc(f.fid) + '" data-n="' + esc(f.nick) + '">移除</button></div>' +
-              (o === 'gift' ? '<div class="k" style="margin-top:6px">' + RES_KEYS.map(function (k) { return '<button class="cw-mini p" type="button" data-gift="' + k + '" data-f="' + esc(f.fid) + '"' + ((P.bag || {})[k] ? '' : ' disabled') + '>' + RES[k][0] + ' 送 1 個</button>'; }).join('') + '</div><small>每天可以送每位好友 1 個物資（從你的背包扣）。</small>' : '') +
+              (o === 'gift' ? '<div class="k" style="margin-top:6px">' + RES_KEYS.map(function (k) { return '<button class="cw-mini p" type="button" data-gift="' + k + '" data-f="' + esc(f.fid) + '"' + '>' + RES[k][0] + ' 送 5 個</button>'; }).join('') + '</div><small>每天可以送每位好友 5 個物資（從你的背包扣）。</small>' : '') +
               (o === 'note' ? '<textarea class="cw-ta" maxlength="100" placeholder="寫給 ' + esc(f.nick) + ' 的悄悄話（100 字內）" data-nt="' + esc(f.fid) + '"></textarea><button class="cw-mini p" type="button" data-send="' + esc(f.fid) + '">送出</button>' : '') +
               '</div>';
           }).join('') + '</div>';
@@ -530,7 +530,7 @@
               toast('🏪 換到 ' + j.add + ' 枚金幣！'); paint();
             }).catch(function () { netFail(); paint(); });
           } else if (d.visit) { close(); window.ISLE_VISIT(d.visit); }
-          else if (d.gift != null) { close(); if (window.COINS && window.COINS.giftOpen) window.COINS.giftOpen(); }
+          else if (d.giftpack != null) { close(); if (window.COINS && window.COINS.giftOpen) window.COINS.giftOpen(function () { bag(); }); }
           else if (d.copyfid != null) copy('#' + P.fid, '🪪 已複製海島編號 #' + P.fid);
           else if (d.fadd != null) {
             var inp = ov.querySelector('[data-fidin]'), v = inp.value.replace(/[^0-9a-z]/gi, '').toUpperCase(), fe = ov.querySelector('[data-ferr]');
@@ -547,10 +547,11 @@
             api({ a: 'fdel', fid: d.fdel }).then(function (j) { if (j.ok) FR = j.friends; paint(); }).catch(function () { netFail(); paint(); });
           } else if (d.op) { open[d.f] = open[d.f] === d.op ? '' : d.op; paint(); var ta = ov.querySelector('[data-nt="' + d.f + '"]'); if (ta) ta.focus(); }
           else if (d.gift) {
+            if (((P.bag || {})[d.gift] || 0) < 5) { toast('⚠️ ' + RES[d.gift][1] + '不足 5 個，無法送禮'); return; }
             busy(t);
             api({ a: 'gift', fid: d.f, k: d.gift }).then(function (j) {
               if (!j.ok) return fail(j);
-              FR = j.friends; open[d.f] = ''; paint(); toast('🎁 送出 1 個' + RES[d.gift][1] + '！');
+              FR = j.friends; open[d.f] = ''; paint(); toast('🎁 送出 5 個' + RES[d.gift][1] + '！');
             }).catch(function () { netFail(); paint(); });
           } else if (d.send) {
             var tx = ov.querySelector('[data-nt="' + d.send + '"]'), msg = tx ? tx.value.trim() : '';

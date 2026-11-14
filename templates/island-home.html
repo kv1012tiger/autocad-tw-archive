@@ -3944,13 +3944,13 @@ socialPaint(COINS.get());
 COINS.on(function(ev,w){(w.qa||[]).forEach(function(k){var i=+String(k).slice(1);if(ISLES[i]&&!ST.c[i]){ST.c[i]=1;save()}});refresh();if(ev.t==='add'){var cb=$('candyBtn');cb.classList.remove('bump');void cb.offsetWidth;cb.classList.add('bump');if(w.earned>=5&&!ST.chest){ST.chest=1;save();setTimeout(function(){toast('🎁 累積拿滿 5 枚了！到背包花 5 枚金幣，就能領「提示詞禮物包」')},1400)}}});
 $('resetBtn').addEventListener('click',function(){if(!confirm('要清除這台裝置上的探險進度嗎？'))return;ST={f:{},c:{},chest:0};save();refresh();toast('已清除進度，重新出發！')});
 /* 領提示詞禮物包要花 5 枚金幣：先問清楚再扣，領過一次之後可以免費重複看 */
-function giftAsk(){
+function giftAsk(onCancel){
   var w=COINS.get();
   if(!w.code){COINS.need(function(){});return}
   if(w.pg){openChest();return}
   if((w.earned||0)<5){toast('🎁 累積拿滿 5 枚金幣，才能領提示詞禮物包');return}
   if((w.bal||0)<5){toast('🎁 領提示詞禮物包要花 5 枚金幣，你現在有 '+(w.bal||0)+' 枚，再賺 '+(5-(w.bal||0))+' 枚就能領');return}
-  if(!confirm('🎁 領取「提示詞禮物包」要花 5 枚金幣'+'\n'+'（你現在有 '+w.bal+' 枚，領完剩 '+(w.bal-5)+' 枚）。'+'\n'+'領一次之後，可以免費重複查看。'+'\n\n'+'要領取嗎？'))return;
+  if(!confirm('🎁 領取「提示詞禮物包」要花 5 枚金幣'+'\n'+'（你現在有 '+w.bal+' 枚，領完剩 '+(w.bal-5)+' 枚）。'+'\n'+'領一次之後，可以免費重複查看。'+'\n\n'+'要領取嗎？')){if(typeof onCancel==='function')onCancel();return;}
   COINS.api({a:'pgclaim'}).then(function(j){
     if(!j.ok){toast('⚠️ '+COINS.errText(j));return}
     toast('🎁 已花 5 枚金幣，禮物包打開囉！');openChest();
