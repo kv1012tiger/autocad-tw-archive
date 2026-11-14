@@ -562,6 +562,11 @@ body{overflow:hidden;background:#1581bd}
 .map::after{display:none}
 .islets{position:absolute;left:0;top:0;pointer-events:none}
 .route{z-index:1;width:auto;height:auto}
+.sea-rail{position:absolute;left:0;top:0;z-index:1;overflow:visible;pointer-events:none}
+.sea-rail .rail-bed{fill:none;stroke:#684e3a;stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+.sea-rail .rail-ties{fill:none;stroke:#cba67a;stroke-width:14;stroke-dasharray:4 11;stroke-linejoin:round}
+.sea-rail .rails{fill:none;stroke:#dce8e4;stroke-width:1.8;stroke-dasharray:none}
+.world.zooming .sea-rail{visibility:hidden}
 .route .r1{stroke:rgba(255,246,214,.14);stroke-width:12}
 .route .r2{stroke:rgba(255,243,201,.75);stroke-width:3.5;animation:none}
 .isl{position:absolute;left:-10%;top:-12%;width:120%;height:124%;overflow:visible}
@@ -1202,6 +1207,7 @@ html:not(.hud-full) .hud:not(.mini){box-shadow:0 8px 24px rgba(0,30,50,.4)}
 <section class="world" id="world" aria-label="論壇資源島地圖">
   <div class="map-size" id="mapSize"><div class="map" id="map">
     <svg class="islets" id="islets" aria-hidden="true"></svg>
+    <svg class="sea-rail" id="seaRail" aria-hidden="true"></svg>
     <svg class="route" id="route" aria-hidden="true"><path class="r1" id="r1"/><path class="r2" id="r2"/></svg>
     <div id="spots"></div>
     <div class="boat" id="boat" aria-hidden="true"><span><svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 6v50" stroke="#4a2a12" stroke-width="3"/><path d="M40 8l18 5-18 5z" fill="#e11d2e"/><path d="M42 20c14 2 22 11 22 28H42z" fill="#20222c" stroke="#0b0c10" stroke-width="1.5"/><path d="M38 20c-14 2-22 11-22 28h22z" fill="#2c2f3b" stroke="#0b0c10" stroke-width="1.5"/><g fill="#fff"><circle cx="53" cy="33" r="5"/><rect x="50.6" y="36.5" width="4.8" height="4" rx="1"/></g><g fill="#20222c"><circle cx="51.2" cy="32.6" r="1.3"/><circle cx="54.8" cy="32.6" r="1.3"/></g><path d="M46 42l14 3M60 42l-14 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M8 52h64l-8 17a5 5 0 0 1-4.5 3h-39a5 5 0 0 1-4.5-3z" fill="#8a5527" stroke="#3b2210" stroke-width="2"/><path d="M12 59h56" stroke="#5f3816" stroke-width="2"/><circle cx="26" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="40" cy="64" r="2.4" fill="#2a1a0c"/><circle cx="54" cy="64" r="2.4" fill="#2a1a0c"/></svg></span></div>
@@ -1893,6 +1899,26 @@ function drawIslets(W,H,f,edge){
   function puff(px,py,k){var rr=(62+rnd(k,13)*72)*(f<.8?.85:1);c+='<circle cx="'+px+'" cy="'+py+'" r="'+rr.toFixed(0)+'" fill="#fff"/>'}
   var svg=$('islets');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.innerHTML=o+c;
 }
+/* 海上列車為景觀：鐵道與車站不接收點擊，不影響原本開船。 */
+function drawSeaRail(W,H,rows,ch,pad){
+  var svg=$('seaRail'),left=pad*.48,right=W-pad*.48,ys=[],r;
+  for(r=0;r<rows;r++)ys.push(pad+(r+1)*ch);
+  var d='M '+left+' '+ys[0];
+  for(r=0;r<rows;r++){
+    d+=' L '+(r%2===0?right:left)+' '+ys[r];
+    if(r<rows-1)d+=' L '+(r%2===0?right:left)+' '+ys[r+1];
+  }
+  var end=rows%2===0?left:right,outer=end===left?Math.max(20,left-42):Math.min(W-20,right+42);
+  d+=' L '+outer+' '+ys[rows-1]+' L '+outer+' '+Math.max(20,ys[0]-50)+' L '+left+' '+Math.max(20,ys[0]-50)+' Z';
+  var stations='',count=Math.min(4,rows);
+  for(var i=0;i<count;i++){
+    var rr=Math.round(i*(rows-1)/Math.max(1,count-1)),x=(i%2?right-95:left+95),y=ys[rr];
+    stations+='<g transform="translate('+x+' '+y+')"><ellipse cy="5" rx="51" ry="19" fill="#147c91" opacity=".55"/><rect x="-42" y="-21" width="84" height="24" rx="10" fill="#e4c890" stroke="#9a6b43" stroke-width="3"/><path d="M-29 -20v-18l29-14 29 14v18" fill="#fff2cb" stroke="#76543d" stroke-width="3"/><path d="M-34 -36L0 -54 34 -36" fill="none" stroke="#c6483f" stroke-width="7" stroke-linecap="round"/><rect x="-10" y="-35" width="20" height="15" rx="3" fill="#55b9c7"/><circle cx="0" cy="-42" r="3" fill="#f8ce65"/></g>';
+  }
+  var train='<g><ellipse cx="0" cy="5" rx="58" ry="17" fill="#075766" opacity=".35"/><rect x="-58" y="-12" width="52" height="24" rx="9" fill="#b53e35" stroke="#73332f" stroke-width="3"/><rect x="-2" y="-13" width="58" height="26" rx="12" fill="#d9503e" stroke="#73332f" stroke-width="3"/><path d="M-50 -6h35v10h-35z M8 -7h30v11H8z" fill="#b9eced" stroke="#f9d89a" stroke-width="3"/><circle cx="48" cy="0" r="4" fill="#ffe79a"/><circle cx="-20" cy="-14" r="3" fill="#ffcc69"/>'+(reduce?'':'<animateMotion dur="'+Math.max(100,rows*28)+'s" repeatCount="indefinite" rotate="auto" path="'+d+'"/>')+'</g>';
+  svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.innerHTML='<path class="rail-bed" d="'+d+'"/><path class="rail-ties" d="'+d+'"/><path class="rails" transform="translate(0 -5)" d="'+d+'"/><path class="rails" transform="translate(0 5)" d="'+d+'"/>'+stations+(reduce?'<g transform="translate('+left+' '+ys[0]+')">'+train+'</g>':train);
+}
 var G={};
 function layout(){
   hudSync();
@@ -1903,6 +1929,7 @@ function layout(){
   var route=$('route');route.setAttribute('viewBox','0 0 '+W+' '+H);route.setAttribute('width',W);route.setAttribute('height',H);
   var d=crPath(SP);$('r1').setAttribute('d',d);$('r2').setAttribute('d',d);
   drawIslets(W,H,f,pad);
+  drawSeaRail(W,H,rows,ch,pad);
   placeBoat(boatAt,true);
   baseFont=port?20:22;Zmax=port?1.2:1.6;TKN=port?7.4:10.2;fitZoom();applyZoom();
 }
